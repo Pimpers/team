@@ -387,7 +387,7 @@ public class BossBrain : MonoBehaviour
         Sfx.Play("slam", 1f, 0.7f);
         Sfx.Play("land_heavy", 1f, 0.7f);
         var at = new Vector3(transform.position.x, floorY, 0f);
-        Vfx.Play("rupture", at, 2.2f);
+        Vfx.Play("rupture", at, 2f);
         Vfx.Play("dust_big", at + Vector3.left * 1.2f, 2f);
         Vfx.Play("dust_big", at + Vector3.right * 1.2f, 2f, flipX: true);
         CameraFollow.Shake(0.45f, 0.3f);
@@ -453,7 +453,7 @@ public class BossBrain : MonoBehaviour
         transform.position = new Vector3(transform.position.x, floorY, transform.position.z);
         enemy.damageTakenMultiplier = StaggerDamage;
         if (stars != null) Destroy(stars);
-        stars = Vfx.Loop("stun", enemy.HeadPoint, seconds, 1.1f, parent: transform);
+        stars = Vfx.Loop("stun", enemy.HeadPoint, seconds, 1f, parent: transform);
         DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY + 0.6f, 0f), Loc.T("boss.opening"), new Color(1f, 0.85f, 0.35f));
         Sfx.Play("land_heavy", 0.8f, 0.6f);
         CameraFollow.Shake(0.2f, 0.2f);
@@ -491,7 +491,7 @@ public class BossBrain : MonoBehaviour
         // Where the paw lands: the front edge of the paw-down pose.
         var b = enemy.Renderer.bounds;
         var slamAt = new Vector3(enemy.Facing > 0 ? b.max.x - 0.35f : b.min.x + 0.35f, floorY, 0f);
-        Vfx.Play("rupture", slamAt, 2.2f);                          // the floor splits where it lands
+        Vfx.Play("rupture", slamAt, 2f);                            // the floor splits where it lands
         Vfx.Play("ring_small", slamAt + Vector3.up * 0.2f, 2f, tint: new Color(1f, 0.8f, 0.6f)); // small: the dust + cracks carry the hit
         Vfx.Play("dust_big", slamAt + Vector3.left * 1.5f, 2f);
         Vfx.Play("dust_big", slamAt + Vector3.right * 1.5f, 2f, flipX: true);

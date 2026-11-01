@@ -246,7 +246,8 @@ public class PlayerStats : MonoBehaviour
             var run = RunManager.Instance;
             if (run != null && run.hudText != null && run.hudText.canvas != null)
                 StageBanner.Show(run.hudText.canvas.rootCanvas, run.hudText.font, $"{setName} {milestone}!", CardPool.SetText[i][now - 1], 1.45f);
-            Vfx.Play("heal", transform.position, now == 2 ? 1.45f : 1.15f, tint: col, parent: transform);
+            // At the feet (the heal glow stands on its bottom edge; transform.position is the body centre), cat-sized.
+            Vfx.Play("heal", transform.position + Vector3.down * (animator != null ? animator.feetOffset : 0.67f), now == 2 ? 1f : 0.5f, tint: col, parent: transform);
             CameraFollow.Shake(now == 2 ? 0.36f : 0.24f, now == 2 ? 0.28f : 0.18f);
             Sfx.Play("stage_clear", now == 2 ? 0.95f : 0.7f, now == 2 ? 1.5f : 1.3f);
         }
@@ -261,7 +262,7 @@ public class PlayerStats : MonoBehaviour
         {
             // A warm glow around the cat, following it while it plays.
             float feet = animator != null ? animator.feetOffset : 0.67f;
-            Vfx.Play("heal", transform.position + Vector3.down * feet, 0.9f, parent: transform);
+            Vfx.Play("heal", transform.position + Vector3.down * feet, 0.5f, parent: transform); // 0.5: x1 (3.8 units) dwarfed the cat
         }
     }
 

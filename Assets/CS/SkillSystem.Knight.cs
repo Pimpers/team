@@ -108,7 +108,7 @@ public partial class SkillSystem
             cut.Add(e);
         }
         yield return new WaitForSeconds(0.14f);
-        Vfx.Play("ring_big", Me, 1f, tint: new Color(0.75f, 0.9f, 1f)); // the flash (blue like the rest of the knight)
+        Vfx.Play("ring_big", Me, 0.5f, tint: new Color(0.75f, 0.9f, 1f)); // the flash (blue like the rest of the knight); x1 was twice the cat
         Vfx.Play("dust_mid", Feet, 1f);
         HitStop.Do(0.12f);
         CameraFollow.Shake(0.35f, 0.25f);

@@ -71,7 +71,7 @@ public partial class Enemy
             }
             if (definition != null && !string.IsNullOrEmpty(definition.deathSound)) Sfx.Play(definition.deathSound, 1f, isBoss ? 0.7f : 1f);
             if (definition != null)
-                PlayEffects(definition.deathEffect, b.center, isBoss ? 0.65f : definition.deathEffectScale);
+                PlayEffects(definition.deathEffect, b.center, isBoss ? 0.5f : definition.deathEffectScale); // 0.5: the pixel-art explosion only draws at x0.5 / x1
             RunStats.Kills++;
             if (IsElite) RunStats.EliteKills++; // elites already pay x4 gold; cards come only from the clear chest
             if (isBoss)

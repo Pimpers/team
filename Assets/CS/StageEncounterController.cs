@@ -113,7 +113,7 @@ public abstract class StageEncounterController : MonoBehaviour
         {
             if (enemy == null) continue;
             enemy.gameObject.SetActive(true);
-            Vfx.Play("blink", enemy.transform.position + Vector3.up * 0.6f, 0.55f);
+            Vfx.Play("blink", enemy.transform.position + Vector3.up * 0.6f, 0.5f);
         }
         if (player != null && rooms[room].Count > 0)
             DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.new_area"), GateEffectColor);
@@ -123,7 +123,7 @@ public abstract class StageEncounterController : MonoBehaviour
     {
         gate.open = true;
         RemoveBarrier(gate.edge);
-        Vfx.Play("rupture", GateEffectPosition(gate.edge), 1.15f, tint: GateEffectColor);
+        Vfx.Play("rupture", GateEffectPosition(gate.edge), 1f, tint: GateEffectColor);
         if (gate.root != null) Destroy(gate.root);
         Sfx.Play("stage_clear", 0.52f, 1.33f);
         OnRoomOpened();

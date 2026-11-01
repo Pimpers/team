@@ -158,8 +158,8 @@ public class SkillChuru : MonoBehaviour
         var c = go.AddComponent<SkillChuru>();
         c.life = seconds;
         c.loopFx = Vfx.Loop("lure", floor + Vector3.up * 0.6f, seconds, 1f);
-        Vfx.Play("charm", floor + Vector3.up * 0.6f, 1.4f); // a pink burst so the bait is seen landing
-        Vfx.Play("smoke", floor + Vector3.up * 0.3f, 0.6f);
+        Vfx.Play("charm", floor + Vector3.up * 0.6f, 0.5f); // a pink burst so the bait is seen landing (1.4 drew at x1: twice the cat)
+        Vfx.Play("smoke", floor + Vector3.up * 0.3f, 0.5f);
         Sfx.Play("card_pick", 0.8f, 1.8f);
     }
 
@@ -168,7 +168,7 @@ public class SkillChuru : MonoBehaviour
         age += Time.deltaTime;
         if (age >= life)
         {
-            Vfx.Play("smoke", transform.position, 0.7f);
+            Vfx.Play("smoke", transform.position, 0.5f);
             if (loopFx != null) Destroy(loopFx);
             Destroy(gameObject);
             return;

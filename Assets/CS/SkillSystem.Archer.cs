@@ -118,7 +118,7 @@ public partial class SkillSystem
         a.gravity = 18f;
         a.bounces = 2;
         a.maxHits = 3;
-        a.onHit += (e, p) => Vfx.Play("yarn_hit", p, 0.8f);
+        a.onHit += (e, p) => Vfx.Play("yarn_hit", p, 1f);
     }
 
     // 냥이의 미소: hearts fly out; monsters close by are charmed (stand still) for a while.
@@ -208,7 +208,7 @@ public partial class SkillSystem
         body.FaceTowards(aim.x);
         float back = -Facing;
         invulnTimer = Mathf.Max(invulnTimer, 0.45f);
-        Vfx.Play("smoke", Feet + Vector3.up * 0.3f, 0.8f);
+        Vfx.Play("smoke", Feet + Vector3.up * 0.3f, 1f);
         Sfx.Play("jump", 1f, 1.1f);
         body.Launch(9f);
         float release = Windup(2, 2.5f, 0.2f); // drawn from the hop's start, so the arrow leaves on the release frame
@@ -309,7 +309,7 @@ public partial class SkillSystem
         float draw = Windup(1, 1.8f);
         if (draw > 0f) yield return new WaitForSeconds(draw);
         var yarn = Vfx.Sprite("a_homing_fx");
-        Vfx.Play("yarn_hit", BowPoint, 0.8f);
+        Vfx.Play("yarn_hit", BowPoint, 1f);
         Sfx.Play("arrow", 1f, 1.3f);
         for (int i = 0; i < 3; i++)
         {
@@ -318,7 +318,7 @@ public partial class SkillSystem
             a.homing = true;
             a.trailInterval = 0.04f;                       // a pink wake so the three balls can be followed
             a.trailColor = new Color(1f, 0.6f, 0.85f, 0.55f);
-            a.onHit += (e, p) => Vfx.Play("yarn_hit", p, 0.9f);
+            a.onHit += (e, p) => Vfx.Play("yarn_hit", p, 1f);
             yield return new WaitForSeconds(0.06f);
         }
         yield return new WaitForSeconds(0.1f);
@@ -333,7 +333,7 @@ public partial class SkillSystem
         body.FaceTowards(aim.x);
         invulnTimer = Mathf.Max(invulnTimer, 0.7f);
         float draw = Windup(2, 0.86f, 0.6f); // a slow, full draw: the can flies on the release frame
-        Vfx.Play("charge", BowPoint, 1.2f);
+        Vfx.Play("charge", BowPoint, 1f);
         Sfx.Play("dash", 1f, 0.5f);
         yield return new WaitForSeconds(draw);
 
@@ -344,7 +344,7 @@ public partial class SkillSystem
         {
             a.hitRadius = 0.9f;
             a.strong = true;
-            a.onHit += (e, p) => { Vfx.Play("explosion", p, 0.6f); CameraFollow.Shake(0.15f, 0.1f); };
+            a.onHit += (e, p) => { Vfx.Play("explosion", p, 0.5f); CameraFollow.Shake(0.15f, 0.1f); };
             a.onEnd += p =>
             {
                 Vfx.Play("beam_end", p, 1f, rotationZ: angle);

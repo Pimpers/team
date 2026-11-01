@@ -111,9 +111,9 @@ public partial class SkillSystem
         if (lv <= 0) return;
         float size = lv >= 2 ? 1.25f : 1f;
         Vector3 at = Feet;
-        Vfx.Play("k_tower_fx", at, size);
-        Vfx.Play("rupture", at + Vector3.right * 1.2f * size, 0.7f * size);
-        Vfx.Play("rupture", at - Vector3.right * 1.2f * size, 0.7f * size, flipX: true);
+        Vfx.Play("k_tower_fx", at, 1f);
+        Vfx.Play("rupture", at + Vector3.right * 1.2f * size, lv >= 2 ? 1f : 0.5f); // whole steps: 0.7 x 1.25 jumped from x0.5 to x1
+        Vfx.Play("rupture", at - Vector3.right * 1.2f * size, lv >= 2 ? 1f : 0.5f, flipX: true);
         Vfx.Play("dust_big", at, 1.6f * size);
         Sfx.Play("slam", 1f, 0.8f);
         CameraFollow.Shake(0.3f, 0.2f);

@@ -340,7 +340,7 @@ public partial class SkillSystem : MonoBehaviour
 
     void Explode(Vector3 at, float radius, float mult, string fx = "explosion")
     {
-        Vfx.Play(fx, at, radius / 1.8f);
+        Vfx.Play(fx, at, radius >= 2.7f ? 2f : radius >= 1.35f ? 1f : 0.5f); // the pixel-art step closest to radius / 1.8
         Sfx.Play("slam", 0.8f, 1.3f);
         CameraFollow.Shake(0.15f, 0.12f);
         HitCircle(at, radius, mult);

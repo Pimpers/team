@@ -14,6 +14,9 @@ public static class Vfx
     static VfxLibrary library;
     static readonly Dictionary<string, VfxLibrary.Entry> byId = new Dictionary<string, VfxLibrary.Entry>();
     static int active;
+#if UNITY_EDITOR
+    static readonly HashSet<string> warnedSnap = new HashSet<string>();
+#endif
     // Live one-shot effects, oldest first. When the cap is hit we recycle the oldest instead of dropping
     // the new one on the floor (a boss AoE or a fast skill would silently show no hit otherwise). Looping
     // effects (beams, poison) are never evicted here - they own their own lifetime and would pop out mid-cast.
@@ -63,7 +66,13 @@ public static class Vfx
         {
             // Pixel-art sheets keep whole pixels: only x0.5 / x1 / x2, and quarter turns unless it
             // points along a flight (a free angle there reads better than a snapped one).
-            scale = scale < 0.75f ? 0.5f : scale < 1.5f ? 1f : 2f;
+            float snapped = scale < 0.75f ? 0.5f : scale < 1.5f ? 1f : 2f;
+#if UNITY_EDITOR
+            // A scale that isn't one of the steps lies about the size drawn (1.4 draws at x1, 1.6 at x2): say so once.
+            if (!Mathf.Approximately(snapped, scale) && warnedSnap.Add(id))
+                Debug.LogWarning($"[Vfx] '{id}' is pixel-snapped: scale {scale} draws at x{snapped}. Pass 0.5, 1 or 2.");
+#endif
+            scale = snapped;
             if (!e.freeRotation) rotationZ = Mathf.Round(rotationZ / 90f) * 90f;
         }
 
