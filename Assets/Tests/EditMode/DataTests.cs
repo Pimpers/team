@@ -38,7 +38,7 @@ public class DataTests
     [Test]
     public void EveryTableLine_FormatsAndHasItsColoursResolved()
     {
-        var dummy = new object[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        var dummy = new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }; // sheet.stats takes nine
         foreach (var pair in Loc.All)
         {
             string format = Regex.Replace(pair.Value, "\\{[a-z]+\\}", ""); // card texts' named numbers (CardPool.Fill)

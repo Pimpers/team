@@ -14,7 +14,11 @@ using UnityEngine.InputSystem;
 public partial class SkillSystem : MonoBehaviour
 {
     public const int MaxActiveSlots = 3;
-    public static readonly string[] SlotKeys = { "Q", "E", "R" };
+    // The keys bound to the three slots (Q / E / R unless changed in the settings' key bindings).
+    public static string[] SlotKeys => new[]
+    {
+        GameInput.BindingName(GameInput.Action.Skill1), GameInput.BindingName(GameInput.Action.Skill2), GameInput.BindingName(GameInput.Action.Skill3),
+    };
     public static SkillSystem Instance { get; private set; }
 
     PlayerStats stats;

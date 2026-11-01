@@ -8,31 +8,33 @@ using UnityEngine;
 public static class Corruption
 {
     public const int MaxLevel = 5;
+    public const int Easy = -1; // 편하게: below the normal tier, always open - softer enemy hits and less HP, unlocks nothing
 
     public static int Unlocked => Mathf.Clamp(GameSave.Data.corruptionUnlocked, 0, MaxLevel);
 
-    // The tier the next / current run is played at (0 = normal).
+    // The tier the next / current run is played at (0 = normal, Easy = -1).
     public static int Level
     {
-        get => Mathf.Clamp(GameSave.Data.corruptionSelected, 0, Unlocked);
+        get => Mathf.Clamp(GameSave.Data.corruptionSelected, Easy, Unlocked);
         set
         {
-            GameSave.Data.corruptionSelected = Mathf.Clamp(value, 0, Unlocked);
+            GameSave.Data.corruptionSelected = Mathf.Clamp(value, Easy, Unlocked);
             GameSave.Save();
         }
     }
 
     // Per-tier modifiers (level 0 = all neutral).
-    public static float HpMultiplier(int lv) => 1f + 0.3f * lv;            // +30% per tier
-    public static float SpeedMultiplier(int lv) => 1f + 0.06f * lv;        // +6% per tier
-    public static float ExtraDamage(int lv) => lv >= 4 ? 1f : lv >= 2 ? 0.5f : 0f; // hearts per hit
-    public static int ExtraElites(int lv) => (lv + 1) / 2;                 // +1 at 1, +2 at 3, +3 at 5
-    public static float GoldMultiplier(int lv) => 1f + 0.25f * lv;         // +25% per tier
+    public static float HpMultiplier(int lv) => lv < 0 ? 0.7f : 1f + 0.3f * lv;   // +30% per tier, Easy -30%
+    public static float SpeedMultiplier(int lv) => lv < 0 ? 1f : 1f + 0.06f * lv; // +6% per tier
+    public static float ExtraDamage(int lv) => lv >= 4 ? 1f : lv >= 2 ? 0.5f : lv < 0 ? -0.5f : 0f; // hearts per hit (Easy: half less)
+    public static int ExtraElites(int lv) => Mathf.Max(0, (lv + 1) / 2);         // +1 at 1, +2 at 3, +3 at 5
+    public static float GoldMultiplier(int lv) => lv < 0 ? 1f : 1f + 0.25f * lv;  // +25% per tier
 
     // Shown on the world map selector and the stage HUD.
     public static string Describe(int lv)
     {
-        if (lv <= 0) return Loc.T("corruption.none");
+        if (lv < 0) return Loc.T("corruption.easy");
+        if (lv == 0) return Loc.T("corruption.none");
         string s = Loc.F("corruption.enemy_hp_speed", 30 * lv, 6 * lv);
         float dmg = ExtraDamage(lv);
         if (dmg > 0f) s += Loc.T(dmg >= 1f ? "corruption.enemy_damage_full" : "corruption.enemy_damage_half");
@@ -45,9 +47,10 @@ public static class Corruption
     public static void ApplyTo(Enemy e)
     {
         int lv = Level;
-        if (lv <= 0 || e.definition == null) return;
-        e.hp = Mathf.CeilToInt(e.hp * HpMultiplier(lv));
-        e.contactDamage += ExtraDamage(lv);
+        if (lv == 0 || e.definition == null) return;
+        e.hp = Mathf.Max(1, Mathf.CeilToInt(e.hp * HpMultiplier(lv)));
+        // Easy takes half a heart off a hit, but a hit never drops below half a heart (nor rises when it was less).
+        e.contactDamage = Mathf.Max(Mathf.Min(e.contactDamage, 0.5f), e.contactDamage + ExtraDamage(lv));
         e.speedMultiplier *= SpeedMultiplier(lv);
         e.goldReward = Mathf.Max(e.goldReward + 1, Mathf.RoundToInt(e.goldReward * GoldMultiplier(lv)));
     }
@@ -56,7 +59,7 @@ public static class Corruption
     // unlocked tier, or -1.
     public static int RegisterClear(int lv)
     {
-        if (lv < Unlocked || Unlocked >= MaxLevel) return -1;
+        if (lv < 0 || lv < Unlocked || Unlocked >= MaxLevel) return -1;
         int next = Unlocked + 1;
         GameSave.Data.corruptionUnlocked = next;
         GameSave.Save();

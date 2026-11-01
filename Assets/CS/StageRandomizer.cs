@@ -229,7 +229,7 @@ public class StageRandomizer : MonoBehaviour
         // The first stage teaches the controls. Its base difficulty has no early elite;
         // corruption can still add one for experienced players.
         var run = FindAnyObjectByType<RunManager>();
-        bool gentleFirstStage = run != null && run.stageNumber == 1 && Corruption.Level == 0;
+        bool gentleFirstStage = run != null && run.stageNumber == 1 && Corruption.Level <= 0;
         if (gentleFirstStage && stageOneFinale != null) stageOneFinale.MakeElite();
         int elites = (gentleFirstStage ? 0 : eliteCount) + Corruption.ExtraElites(Corruption.Level);
         for (int i = 0; i < Mathf.Min(elites, monsters.Count); i++)

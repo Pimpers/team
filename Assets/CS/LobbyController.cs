@@ -50,6 +50,7 @@ public class LobbyController : MonoBehaviour
     static readonly Color WarningColor = UISkin.InkWarning;
 
     int selected = -1;
+    int padHover = -1; // gamepad: the cat the d-pad points at in the overview (A picks it)
     Camera cam;
     float warningShake;
 
@@ -119,11 +120,20 @@ public class LobbyController : MonoBehaviour
         nameInput.MoveTextEnd(false);
     }
 
+    System.Collections.IEnumerator SelectConfirmNextFrame()
+    {
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+        yield return null;
+        yield return null;
+        GameInput.SelectForPad(confirmButton);
+    }
+
     void Update()
     {
         UpdateCamera();
 
-        if (selected >= 0) return; // panel is open - only its buttons are clickable
+        if (selected >= 0) { PadPanel(); return; } // panel is open - only its buttons are clickable
+        if (PadOverview()) return;
         var mouse = Mouse.current;
         if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
@@ -132,6 +142,42 @@ public class LobbyController : MonoBehaviour
         Vector2 world = cam.ScreenToWorldPoint(mouse.position.ReadValue());
         for (int i = 0; i < displays.Length; i++)
             if (displays[i].Contains(world)) { Select(i); break; }
+    }
+
+    // Gamepad in the overview: left / right walks along the cats (the one pointed at strikes its pose), A picks it,
+    // B goes back to the title. True when the pad did something this frame.
+    bool PadOverview()
+    {
+        int dx = GameInput.PadNavX;
+        if (dx != 0 && displays.Length > 0)
+        {
+            if (padHover >= 0) displays[padHover].SetSelected(false);
+            padHover = padHover < 0 ? (dx > 0 ? 0 : displays.Length - 1) : (padHover + dx + displays.Length) % displays.Length;
+            displays[padHover].SetSelected(true);
+            Sfx.Play("ui_click", 0.4f);
+            return true;
+        }
+        if (GameInput.PadSubmitPressed)
+        {
+            int pick = padHover >= 0 ? padHover : 0;
+            if (padHover >= 0) displays[padHover].SetSelected(false);
+            padHover = -1;
+            Select(pick);
+            return true;
+        }
+        if (GameInput.PadBackPressed) { SceneManager.LoadScene(titleSceneName); return true; }
+        return false;
+    }
+
+    // Gamepad on the naming panel: no on-screen keyboard, so an empty name becomes the cat's own name (still editable
+    // from the keyboard); the d-pad moves between the name box and the buttons, B goes back to the cats.
+    void PadPanel()
+    {
+        if (GameInput.PadBackPressed) { Cancel(); return; }
+        if (!GameInput.UsingGamepad) return;
+        if (string.IsNullOrWhiteSpace(nameInput.text) && !nameInput.isFocused)
+            nameInput.text = displays[selected].character.displayName;
+        GameInput.KeepPadSelection(namingPanel.transform, confirmButton);
     }
 
     void UpdateCamera()
@@ -180,7 +226,8 @@ public class LobbyController : MonoBehaviour
         // Always starts empty - there is no default name, the player names the cat here.
         nameInput.text = "";
         ShowHint(false);
-        StartCoroutine(FocusNameInput());
+        if (GameInput.UsingGamepad) StartCoroutine(SelectConfirmNextFrame()); // the A that picked the cat must not press 출정
+        else StartCoroutine(FocusNameInput());
     }
 
     void Cancel()

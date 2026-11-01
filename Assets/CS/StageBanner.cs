@@ -46,6 +46,8 @@ public static class StageBanner
         var fade = go.AddComponent<FadeBanner>();
         fade.delay = last != null ? Mathf.Max(0f, lastEnds - Time.unscaledTime) : 0f;
         fade.hold = hold;
+        fade.sfx = "ui_open"; // a soft whoosh as the ribbon drops in (StageBanner waits its turn, so on show, not now)
+        fade.sfxVolume = compact ? 0.2f : 0.3f;
         last = go;
         lastEnds = Time.unscaledTime + fade.delay + fade.fadeIn + hold + fade.fadeOut;
         Object.Destroy(go, fade.delay + fade.fadeIn + hold + fade.fadeOut + 0.1f);

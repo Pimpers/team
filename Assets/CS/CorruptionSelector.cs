@@ -3,8 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 
 // World map panel for picking the 타락도 (difficulty tier) of the next run: "<  타락도 N  >"
-// plus what the tier changes. Built at runtime by WorldMapController, and only once the
-// chapter has been beaten (Corruption.Unlocked > 0) - before that the map stays as it was.
+// plus what the tier changes. Built at runtime by WorldMapController. Always there: below the normal tier sits
+// 편하게 (Corruption.Easy), open from the start; the higher tiers appear once the chapter has been beaten.
 public class CorruptionSelector : MonoBehaviour
 {
     TMP_Text levelText, descText;
@@ -12,7 +12,7 @@ public class CorruptionSelector : MonoBehaviour
 
     public static CorruptionSelector Create(Canvas canvas, TMP_FontAsset font)
     {
-        if (canvas == null || Corruption.Unlocked <= 0) return null;
+        if (canvas == null) return null;
         var skin = UISkin.Instance;
 
         var panel = new GameObject("CorruptionSelector", typeof(RectTransform), typeof(Image));
@@ -40,12 +40,12 @@ public class CorruptionSelector : MonoBehaviour
         Refresh();
     }
 
-    void Refresh()
+    public void Refresh()
     {
         int lv = Corruption.Level;
-        levelText.text = lv == 0 ? Loc.T("corruption.selector.none") : Loc.F("corruption.selector.level", lv);
+        levelText.text = lv < 0 ? Loc.T("corruption.selector.easy") : lv == 0 ? Loc.T("corruption.selector.none") : Loc.F("corruption.selector.level", lv);
         descText.text = Corruption.Describe(lv);
-        prev.interactable = lv > 0;
+        prev.interactable = lv > Corruption.Easy;
         next.interactable = lv < Corruption.Unlocked;
     }
 

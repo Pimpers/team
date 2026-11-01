@@ -69,6 +69,18 @@ public static class GameSettings
         new ToggleSetting { onKey = "options.hitstop.on", offKey = "options.hitstop.off", get = () => HitStopEnabled, set = v => HitStopEnabled = v },
     };
 
+    // The rebindable keys (KeyBindPanel, opened from both settings screens' "키 설정" button).
+    public struct BindingSetting { public string labelKey; public GameInput.Action action; }
+    public static readonly BindingSetting[] Bindings =
+    {
+        new BindingSetting { labelKey = "keys.attack", action = GameInput.Action.Attack },
+        new BindingSetting { labelKey = "keys.dash", action = GameInput.Action.Dash },
+        new BindingSetting { labelKey = "keys.jump", action = GameInput.Action.Jump },
+        new BindingSetting { labelKey = "keys.skill1", action = GameInput.Action.Skill1 },
+        new BindingSetting { labelKey = "keys.skill2", action = GameInput.Action.Skill2 },
+        new BindingSetting { labelKey = "keys.skill3", action = GameInput.Action.Skill3 },
+    };
+
     public static string ToggleText(ToggleSetting t) => Loc.T(t.get() ? t.onKey : t.offKey);
 
     public static void Quit()

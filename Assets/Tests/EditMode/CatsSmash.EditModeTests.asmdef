@@ -1,6 +1,6 @@
 {
   "name": "CatsSmash.EditModeTests",
-  "references": ["CatsSmash.Runtime", "Unity.TextMeshPro"],
+  "references": ["CatsSmash.Runtime", "Unity.TextMeshPro", "Unity.InputSystem"],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

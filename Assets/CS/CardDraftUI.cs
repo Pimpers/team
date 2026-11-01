@@ -50,7 +50,6 @@ public class CardDraftUI : MonoBehaviour
         {
             var t = new GameObject("SetTip", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
             t.rectTransform.SetParent(panel.transform, false);
-            t.rectTransform.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 180f); // under the reroll button
             t.rectTransform.sizeDelta = new Vector2(1200f, 48f);
             t.font = card1Label.font;
             t.fontSize = UiTheme.TextSmall;
@@ -63,9 +62,23 @@ public class CardDraftUI : MonoBehaviour
             t.text = Loc.T("draft.set_tip");
             tip = t.transform;
         }
+        ((RectTransform)tip).anchoredPosition = new Vector2(0f, CardsBottom - 180f); // under the reroll button
         bool first = !GameSave.Data.seenSetTip;
         tip.gameObject.SetActive(first);
         if (first) { GameSave.Data.seenSetTip = true; GameSave.Save(); }
+    }
+
+    // The bottom edge of the cards where they rest, in panel units: the cards sit lower than the panel's centre in the
+    // scenes, so what goes under them (preview line, reroll, set tip) is placed from here, not from the centre.
+    float CardsBottom
+    {
+        get
+        {
+            var card = card1Label != null ? card1Label.transform.parent as RectTransform : null;
+            if (card == null) return -CardH * 0.5f;
+            float y = homePos.TryGetValue(card, out var home) ? home.y : card.anchoredPosition.y;
+            return y - CardH * 0.5f;
+        }
     }
 
     // ---- Reroll
@@ -95,7 +108,6 @@ public class CardDraftUI : MonoBehaviour
         var rt = (RectTransform)go.transform;
         rt.SetParent(panel.transform, false);
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 110f); // under the cards' preview line
         rt.sizeDelta = new Vector2(440f, 78f); // room for "다시 뽑기  (gold)10  (보유 35)"
         var img = go.GetComponent<Image>();
         if (UISkin.Instance != null) UISkin.Apply(img, UISkin.Instance.buttonWood, UISkin.SmallScale);
@@ -123,6 +135,8 @@ public class CardDraftUI : MonoBehaviour
     {
         BuildReroll();
         if (rerollButton == null) return;
+        ((RectTransform)rerollButton.transform).anchoredPosition = new Vector2(0f, CardsBottom - 110f); // under the preview line
+
         var stats = PlayerStats.Instance;
         bool afford = stats != null && stats.Gold >= RerollCost;
         rerollButton.interactable = afford;
@@ -226,6 +240,7 @@ public class CardDraftUI : MonoBehaviour
                     revealedAt[i] = now;
                     int tier = i < offered.Count ? (int)offered[i].tier : 0;
                     Sfx.Play("card_pick", 0.75f, RevealPitch[tier]);
+                    if (i < offered.Count && SetBadge(offered[i]) != null) Sfx.Play("coin", 0.3f, 1.5f); // a set badge glints
                 }
                 // Pop on the flip.
                 float since = revealedAt[i] < 0f ? -1f : now - revealedAt[i];
@@ -615,6 +630,8 @@ public class CardHover : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHa
     public void Refresh()
     {
         bool on = over || selected;
+        // A light tick when the preview line comes up (not on the way down, nor while the card is being dealt).
+        if (on && preview != null && !preview.activeSelf && isActiveAndEnabled) Sfx.Play("ui_click", 0.2f, 1.35f);
         if (corners != null) corners.enabled = on;
         if (preview != null) preview.SetActive(on);
     }

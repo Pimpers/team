@@ -123,8 +123,13 @@ public class ResultUI : MonoBehaviour
             goldText.text = Loc.F("result.gold", Currency.Icon, goldEarned, MetaProgress.Gold) +
                             (unlockedCorruption > 0 ? Loc.F("result.corruption_unlocked", unlockedCorruption) : Loc.T("result.gold_hint"));
             // The fish-bone icon is taller than the text; grow the box so the two lines fit.
+            // 36 at most (it was 48 and ran past the board's sides), shrinking to 24 inside a box the board's width.
             var rt = goldText.rectTransform;
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, Mathf.Max(rt.sizeDelta.y, goldText.preferredHeight));
+            goldText.enableAutoSizing = true;
+            goldText.fontSizeMax = UiTheme.TextLarge;
+            goldText.fontSizeMin = UiTheme.TextSmall;
+            goldText.textWrappingMode = TextWrappingModes.NoWrap;
+            rt.sizeDelta = new Vector2(1000f, 110f);
         }
 
         // Upgrades moved to the village blacksmith.
@@ -160,7 +165,7 @@ public class ResultUI : MonoBehaviour
         string cause = !win && !string.IsNullOrEmpty(RunStats.LastHitBy) ? Loc.F("result.last_hit", RunStats.LastHitBy) : "";
         string worst = !win && !string.IsNullOrEmpty(RunStats.MostDamageSource) ? Loc.F("result.worst_enemy", RunStats.MostDamageSource) : "";
         // A loss gets advice; a win the next goal (the next 타락도 tier, or that every tier is beaten).
-        string goal = Corruption.Level < Corruption.MaxLevel ? Loc.F("result.next_goal", Corruption.Level + 1) : Loc.T("result.all_clear");
+        string goal = Corruption.Level < Corruption.MaxLevel ? Loc.F("result.next_goal", Mathf.Max(0, Corruption.Level) + 1) : Loc.T("result.all_clear");
         string tip = Loc.F("result.next_tip", win ? goal : RunStats.DefeatTip);
         string reroll = RunStats.Rerolls > 0 ? Loc.F("result.rerolls", RunStats.Rerolls, Currency.Icon, RunStats.GoldSpent) : "";
         statsText.text =
@@ -173,38 +178,22 @@ public class ResultUI : MonoBehaviour
             Loc.F("result.damage_taken", RunStats.DamageTaken) + cause + worst + tip + reroll;
         buildText.text = BuildLines();
         BuildIcons((RectTransform)buildText.transform.parent, buildText);
-        // A long build doesn't fit at 32: then all of it at 24 (sizes off the pixel grid smear the font).
-        buildText.fontSize = UiTheme.TextBody;
-        buildText.ForceMeshUpdate();
-        if (buildText.preferredHeight > buildText.rectTransform.rect.height) buildText.fontSize = 24f;
-        statsText.fontSize = UiTheme.TextBody;
-        statsText.ForceMeshUpdate();
-        if (statsText.preferredHeight > ((RectTransform)statsText.transform.parent).sizeDelta.y - 32f) statsText.fontSize = 24f;
+        // 24 throughout: at 32 (which the pixel font draws as 36) the record ran out of its sheet.
+        buildText.fontSize = UiTheme.TextSmall;
+        statsText.fontSize = UiTheme.TextSmall;
+        statsText.lineSpacing = 2f;
     }
 
-    // The cards taken (skills first, by when they were taken; then the stat cards with their levels) and the sets.
+    // The build, short: how many cards and the sets reached. The cards themselves are the icon strip below, and the
+    // full list is the Tab sheet during the run (BuildSheet).
     static string BuildLines()
     {
         var stats = PlayerStats.Instance;
         var sb = new System.Text.StringBuilder(Loc.T("result.build"));
         if (stats == null) return sb.ToString();
-        int lines = 0;
-        foreach (var id in stats.SkillOrder)
-        {
-            var c = CardPool.Get(id);
-            if (c == null) continue;
-            int lv = stats.CardLevel(id);
-            sb.Append(c.name).Append(lv >= 2 ? " <color=" + UiTheme.Html("gold") + ">+</color>" : "").Append('\n');
-            lines++;
-        }
-        var statCards = new System.Collections.Generic.List<string>();
-        foreach (var c in CardPool.Stats)
-        {
-            int lv = stats.CardLevel(c.id);
-            if (lv > 0) statCards.Add("<nobr>" + (lv > 1 ? $"{c.name} x{lv}" : c.name) + "</nobr>"); // a name never breaks mid-word
-        }
-        if (statCards.Count > 0) { sb.Append("<size=70%><color=" + UiTheme.Html("dimlabel") + ">").Append(string.Join(", ", statCards)).Append("</color></size>\n"); lines++; }
-        if (lines == 0) sb.Append(Loc.T("result.no_cards"));
+        int lines = stats.SkillOrder.Count;
+        foreach (var c in CardPool.Stats) if (stats.CardLevel(c.id) > 0) lines++;
+        sb.Append(lines == 0 ? Loc.T("result.no_cards") : Loc.F("result.card_count", lines));
         var sets = new System.Collections.Generic.List<string>();
         for (int t = 0; t < CardPool.TagNames.Length; t++)
         {

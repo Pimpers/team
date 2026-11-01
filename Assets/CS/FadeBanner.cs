@@ -11,6 +11,10 @@ public class FadeBanner : MonoBehaviour
     public float fadeOut = 0.5f;
     [Tooltip("Slides down this many UI units while fading in.")]
     public float slide = 30f;
+    [Tooltip("Sfx id played (quietly) the moment the banner starts to show, after any delay. Empty = none.")]
+    public string sfx;
+    public float sfxVolume = 0.3f;
+    bool sounded;
 
     CanvasGroup group;
     RectTransform rt;
@@ -32,6 +36,7 @@ public class FadeBanner : MonoBehaviour
         t += Time.unscaledDeltaTime;
         float u = t - delay;
         float a;
+        if (u >= 0f && !sounded) { sounded = true; if (!string.IsNullOrEmpty(sfx)) Sfx.Play(sfx, sfxVolume); }
         if (u < 0f) a = 0f;
         else if (u < fadeIn) a = u / fadeIn;
         else if (u < fadeIn + hold) a = 1f;

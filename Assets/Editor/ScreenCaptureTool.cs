@@ -33,7 +33,13 @@ public static class ScreenCaptureTool
     [MenuItem("Cats Smash/Capture Screens")]
     public static void Run() => Start(false);
 
-    public static void RunBatch() => Start(true);
+    // Batch: the shots use a copy of the save (the blacksmith visit, the easy tier...) and never write the player's
+    // real save file - a copy of the project in a temp folder still shares it (same company / product name).
+    public static void RunBatch()
+    {
+        GameSave.ResetForTests(GameSave.Parse(JsonUtility.ToJson(GameSave.Data)));
+        Start(true);
+    }
 
     static T Find<T>() where T : UnityEngine.Object => UnityEngine.Object.FindAnyObjectByType<T>(FindObjectsInactive.Include);
 
@@ -51,11 +57,25 @@ public static class ScreenCaptureTool
         Add("MainScene", "blacksmith_talk", () => Find<BlacksmithUI>().Open());
         Add("MainScene", "blacksmith", () => Find<BlacksmithUI>().OpenShop());
         Add("MainScene", "options", () => Find<OptionsUI>().Open());
+        Add("MainScene", "keybinds", () => { Find<OptionsUI>().Open(); KeyBindPanel.Show(Find<OptionsUI>().panel.GetComponentInParent<Canvas>(), Find<OptionsUI>().volumeValue.font); });
+        Add("TitleScene", "title_settings", () => TitleSettings.Show(Find<Canvas>().rootCanvas, Find<TMPro.TMP_Text>().font));
         Add("WorldMapScene", "worldmap");
+        Add("WorldMapScene", "worldmap_easy", () => { Corruption.Level = Corruption.Easy; Find<CorruptionSelector>().Refresh(); });
+        Add("Tutorial", "tutorial_tips", () => Find<TutorialController>().JumpToStepForCapture(11));
         Add("LobbyScene", "lobby");
         Add("Stage2", "hud", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); });
         Add("Stage2", "pause", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<PauseMenu>().OpenForPlaytest(); });
         Add("Stage2", "draft", () => Find<CardDraftUI>().Show(() => { }));
+        // The first draft (set tip shown) with a card under the selection, so its preview line shows.
+        Add("Stage2", "draft_first", () =>
+        {
+            GameSave.Data.seenSetTip = false;
+            var draft = Find<CardDraftUI>();
+            draft.Show(() => { });
+            var card = draft.card2Label.GetComponentInParent<UnityEngine.UI.Button>();
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(card.gameObject);
+        });
+        Add("Stage2", "buildsheet", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); BuildSheet.ForceShow = true; });
         Add("Stage2", "result", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<ResultUI>().Show(false, 12, 1); });
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
@@ -81,9 +101,10 @@ public static class ScreenCaptureTool
             {
                 var s = steps[index];
                 if (!prepared) { Prepare(); prepared = true; at = now + 0.6; return; }
-                if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 1.0; return; }
+                if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 2.0; return; } // past a set banner (1.45 s) the cards may raise
                 Shot(s.shot);
                 Release();
+                BuildSheet.ForceShow = false;
                 loaded = false;
             }
         }

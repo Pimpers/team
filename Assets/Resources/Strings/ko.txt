@@ -42,6 +42,8 @@ chest.hits = 평타  {0}/{1}
 
 # Corruption
 corruption.none = 기본 난이도
+corruption.easy = 적 공격 -반칸  ·  적 체력 -30%\n<color=$muted>타락도 해금 없음</color>
+corruption.selector.easy = <color=$key>편하게</color>
 corruption.enemy_hp_speed = 적 체력 +{0}%  ·  이동 속도 +{1}%
 corruption.enemy_damage_full = \n적 공격 +1칸
 corruption.enemy_damage_half = \n적 공격 +반칸
@@ -235,12 +237,14 @@ tutorial.step.fight = 실전! 쥐를 물리치세요   (<color=$key>ESC</color> 
 tutorial.tip.sets = 카드의 <color=$key>#태그</color>를 2장 모으면 세트 효과, 3장이면 완성!
 tutorial.tip.route = 갈림길: 위 <color=$key>사냥 길</color>은 정예와 보물, 아래 <color=$key>안전 길</color>은 적이 적어요
 tutorial.tip.skills = 액티브 카드는 <color=$key>Q</color> <color=$key>E</color> <color=$key>R</color> 키에 순서대로 들어가요
+tutorial.tip.sheet = 전투 중 <color=$key>Tab</color>(패드 View)을 누르고 있으면 능력치와 카드 확인
 tutorial.tip.corruption = 클리어 후 <color=$key>타락도</color>를 올리면 적이 강해지고 보상도 커져요
 tutorial.good = <color=$good>좋아요!</color>
 tutorial.done_rich = <color=$good>튜토리얼 완료!</color>
 tutorial.done = 튜토리얼 완료!
 tutorial.done_sub = 이제 진짜 의뢰를 떠나요
 tutorial.skip = 튜토리얼 건너뛰기
+tutorial.skip_tips = 팁 모두 건너뛰기 <color=$key>(ESC)</color>
 
 # WorldMapController
 worldmap.locked = 아직 갈 수 없는 지역입니다
@@ -391,6 +395,20 @@ smith.buy = 강화
 ui.leave = 나가기
 ui.back = < 뒤로
 options.volume = 전체 볼륨
+
+# KeyBindPanel (settings > 키 설정)
+keys.title = 키 설정
+keys.attack = 공격
+keys.dash = 대시
+keys.jump = 점프
+keys.skill1 = 스킬 1
+keys.skill2 = 스킬 2
+keys.skill3 = 스킬 3
+keys.reset = 기본값
+keys.press = <color=$gold>키를 누르세요</color>
+keys.mouse_left = 마우스 왼쪽
+keys.mouse_right = 마우스 오른쪽
+keys.mouse_middle = 마우스 휠
 worldmap.back = < 항구
 worldmap.hint = 고대 숲을 눌러 출정하세요
 worldmap.chapter1 = CHAPTER 1 · 고대 숲
@@ -458,3 +476,14 @@ smith.talk.prompt = 자, 무엇을 강화하겠냥?
 smith.talk.next = <size=70%>클릭해서 넘기기</size> ▼
 result.next_goal = 다음엔 타락도 {0}에 도전해 보세요!
 result.all_clear = 모든 타락도를 정복했어요. 최고 기록에 도전!
+
+# BuildSheet (held Tab)
+sheet.title = 지금 내 고양이
+sheet.stats_head = 능력치
+sheet.cards_head = 고른 카드
+sheet.stats = 공격력  <color=$gold>{0}</color>\n하트  <color=$gold>{1} / {2}</color>\n이동 속도  <color=$gold>{3}%</color>\n공격 속도  <color=$gold>{4}%</color>\n치명타  <color=$gold>{5}%</color>\n사거리  <color=$gold>{6}%</color>\n대시  <color=$gold>{7}회</color>\n공중 점프  <color=$gold>{8}회</color>
+sheet.card = {0}  <color=$gold>Lv.{1}/{2}</color>
+sheet.no_cards = 아직 고른 카드가 없어요
+sheet.sets = 세트  {0}
+sheet.no_sets = <color=$dimlabel>세트 없음</color>
+result.card_count = 카드 {0}장\n

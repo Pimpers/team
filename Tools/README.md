@@ -27,3 +27,42 @@ the source of truth** - change sizes and positions there, not in the builder:
 
 `Cats Smash > Capture Screens` (`Editor/ScreenCaptureTool.cs`) saves every main screen to `Screenshots/` to check a
 layout change by eye.
+
+## Tests and the verification copy
+
+`run_tests.ps1` runs every automated check (EditMode, PlayMode, the full-run autoplay, the screen captures) on
+**this project folder**, so the Unity editor must be closed first:
+
+    powershell -ExecutionPolicy Bypass -File Tools/run_tests.ps1
+
+With the editor open, run the same checks on a copy instead. `sync_verify.ps1` refreshes the copy
+(`%TEMP%\cs_verify` by default) and proves it is the same code:
+
+    powershell -ExecutionPolicy Bypass -File Tools/sync_verify.ps1            # or -Dest D:\cs_verify, -Extra font,UI
+
+- Mirrors `Assets/CS, Editor, Tests, Resources, Scenes, Enemies` (deletes what the project no longer has), copies
+  every other changed / new `.meta` under `Assets` and `Packages/manifest.json`. Assets outside those folders
+  (art in `Assets/Characters`, `Assets/font`...) are only copied when the copy is first created - pass `-Extra` to
+  mirror more folders.
+- Then compares SHA-256 of every mirrored file with the original. Last line `sync_verify: OK, N files identical`,
+  exit code 0; anything else lists `MISSING / DIFFERS / EXTRA` and exits 1 - don't trust test results then.
+- Paths come from the script's own location and go to robocopy as separate arguments: the Korean folder names in
+  the project path broke an earlier copy step, and the tests passed on old code.
+
+Then run Unity on the copy (same arguments as `run_tests.ps1`, other `-projectPath`):
+
+    $U = "C:\Program Files\Unity\Hub\Editor\6000.5.4f1\Editor\Unity.exe"; $P = "$env:TEMP\cs_verify"
+    function U { Start-Process $U -ArgumentList (@('-batchmode', '-projectPath', "`"$P`"") + $args) -Wait }
+    U -logFile "$P\editmode.log" -runTests -testPlatform EditMode -testResults "$P\editmode.xml"
+    U -logFile "$P\playmode.log" -runTests -testPlatform PlayMode -testResults "$P\playmode.xml"
+    U -logFile "$P\fullrun.log" -executeMethod FullRunPlaytest.Run -fullRunPlaytest -playtestOut "$P\fullrun"
+    U -logFile "$P\screens.log" -executeMethod ScreenCaptureTool.RunBatch      # PNGs land in $P\Screenshots
+
+(Unity.exe is a windowed program: PowerShell's `&` doesn't wait for it, `Start-Process -Wait` does.)
+
+## Dynamic font asset
+
+`Assets/font/Galmuri/Galmuri11 Dynamic SDF.asset` is a dynamic TMP font: it collects glyphs as text is drawn.
+`Editor/DynamicFontGuard.cs` keeps that out of git - saves of it are skipped while playing, and back in edit mode
+(or when the editor quits) its dynamic data is cleared, which is the committed state. A build clears it anyway
+(`ClearDynamicDataOnBuild`). Menu: `Cats Smash > Clear Dynamic Font Data`.

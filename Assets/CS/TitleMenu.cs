@@ -93,8 +93,11 @@ public static class TitleSettings
             label.text = GameSettings.ToggleText(toggle);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); label.text = GameSettings.ToggleText(toggle); });
         }
-        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(0f, -295f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
+        var keys = MakeButton(prt, Loc.T("keys.title"), new Vector2(-130f, -295f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
+        keys.onClick.AddListener(() => KeyBindPanel.Show(canvas, font));
+        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(130f, -295f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
         close.onClick.AddListener(() => Object.Destroy(shade));
+        GameInput.SelectForPad(close);
     }
 
     static void Row(RectTransform panel, string label, float value, System.Action<float> set, float y, TMP_FontAsset font)

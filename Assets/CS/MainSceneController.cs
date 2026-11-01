@@ -58,6 +58,29 @@ public class MainSceneController : MonoBehaviour
         if (blacksmithButton != null) blacksmithButton.onClick.AddListener(() => blacksmith.Open());
         if (settingsButton != null && options != null) settingsButton.onClick.AddListener(() => options.Open());
         CreateGoldDisplay();
+        SetUpPadNavigation();
+    }
+
+    // Gamepad: the four icons (대장간 / 라운지 / 설정 / 출항하기) are UI buttons, so the d-pad moves between them
+    // (automatic navigation) and A presses the selected one; a warm tint shows which. Update keeps something
+    // selected - in the open popup while one is up, else the icons (출항하기 first).
+    void SetUpPadNavigation()
+    {
+        foreach (var b in new[] { blacksmithButton, tavernButton, settingsButton, departButton })
+        {
+            if (b == null) continue;
+            var nav = b.navigation; nav.mode = Navigation.Mode.Automatic; b.navigation = nav;
+            var colors = b.colors; colors.selectedColor = new Color(1f, 0.86f, 0.45f); b.colors = colors;
+        }
+    }
+
+    void KeepPadSelection()
+    {
+        if (KeyBindPanel.IsOpen) return; // it keeps its own selection
+        if (blacksmith != null && blacksmith.panel != null && blacksmith.panel.activeInHierarchy) GameInput.KeepPadSelection(blacksmith.panel.transform);
+        else if (blacksmith != null && blacksmith.IsOpen) return; // the blacksmith is talking: A moves the line on
+        else if (options != null && options.IsOpen) GameInput.KeepPadSelection(options.panel.transform);
+        else if (departButton != null) GameInput.KeepPadSelection(departButton.transform.parent, departButton);
     }
 
     // Saved gold (golden fish bones) on a dark pill just left of the settings gear, styled
@@ -119,6 +142,7 @@ public class MainSceneController : MonoBehaviour
     void Update()
     {
         RefreshGold();
+        KeepPadSelection();
 
         // Idle animation
         timer += Time.deltaTime;

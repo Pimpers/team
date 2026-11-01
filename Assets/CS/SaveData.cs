@@ -26,13 +26,17 @@ public class SaveData
     public bool hitStopEnabled = true;
     public bool fullscreen = true;
     public bool tutorialDone;
+    // Keyboard / mouse bindings for GameInput.Action (attack, dash, jump, skill 1-3): a Key enum value, or
+    // GameInput.MouseLeft / MouseRight. Empty = the defaults (GameInput.DefaultBindings). Added in version 2.
+    public int[] keyBindings = new int[0];
 }
 
 // Versioned persistent save with one backup. Existing PlayerPrefs values are imported
 // only when no JSON save exists, preserving players from earlier builds.
 public static class GameSave
 {
-    public const int CurrentVersion = 1;
+    // 1: first JSON save. 2: rerollLevel, seenSetTip, wins, bestClear, smithVisits checked, keyBindings added.
+    public const int CurrentVersion = 2;
     static SaveData data;
     static bool loaded;
     static bool? playtest;
@@ -85,8 +89,7 @@ public static class GameSave
         try
         {
             if (!File.Exists(path)) return null;
-            var value = JsonUtility.FromJson<SaveData>(File.ReadAllText(path));
-            return value != null && value.version > 0 ? value : null;
+            return Parse(File.ReadAllText(path));
         }
         catch (Exception e)
         {
@@ -129,7 +132,37 @@ public static class GameSave
         level = maximum;
     }
 
-    static void UpgradeAndClamp()
+    // A save file's text to data, upgraded to CurrentVersion and clamped; null when it isn't a save.
+    public static SaveData Parse(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json) || !json.Contains("\"version\"")) return null; // {} would read as a new save
+        var value = JsonUtility.FromJson<SaveData>(json);
+        if (value == null || value.version <= 0) return null;
+        Migrate(value, json);
+        Clamp(value);
+        return value;
+    }
+
+    // Older saves miss fields added since. JsonUtility leaves a missing field at its initializer, but an older build
+    // could also have written a field before it meant what it means now, so each step fixes up what that version
+    // could not have known. `json` is the raw text, to tell "missing" from "written as 0".
+    static void Migrate(SaveData value, string json)
+    {
+        if (value.version < 2)
+        {
+            if (!json.Contains("\"wins\"")) value.wins = value.corruptionUnlocked; // each unlocked tier took a win
+            if (!json.Contains("\"bestClear\"")) value.bestClear = value.wins > 0 ? Mathf.Max(0, value.corruptionUnlocked - 1) : -1;
+            if (value.wins <= 0) { value.wins = 0; value.bestClear = -1; }
+            if (!json.Contains("\"rerollLevel\"")) value.rerollLevel = 0;
+            if (!json.Contains("\"seenSetTip\"")) value.seenSetTip = value.tutorialDone; // a returning player has seen sets
+            if (!json.Contains("\"smithVisits\"")) value.smithVisits = 0;
+            value.keyBindings = new int[0];
+        }
+    }
+
+    static void UpgradeAndClamp() => Clamp(data);
+
+    static void Clamp(SaveData data)
     {
         if (data.characterNames == null || data.characterNames.Length < 2)
         {
@@ -144,11 +177,15 @@ public static class GameSave
         data.rerollLevel = Mathf.Clamp(data.rerollLevel, 0, 2);
         data.selectedCharacter = Mathf.Clamp(data.selectedCharacter, 0, 1);
         data.corruptionUnlocked = Mathf.Clamp(data.corruptionUnlocked, 0, Corruption.MaxLevel);
-        data.corruptionSelected = Mathf.Clamp(data.corruptionSelected, 0, data.corruptionUnlocked);
+        data.corruptionSelected = Mathf.Clamp(data.corruptionSelected, Corruption.Easy, data.corruptionUnlocked);
         data.masterVolume = Mathf.Clamp01(data.masterVolume);
         data.musicVolume = Mathf.Clamp01(data.musicVolume);
         data.sfxVolume = Mathf.Clamp01(data.sfxVolume);
         data.shakeStrength = Mathf.Clamp01(data.shakeStrength);
+        data.wins = Mathf.Max(0, data.wins);
+        data.smithVisits = Mathf.Max(0, data.smithVisits);
+        data.bestClear = Mathf.Clamp(data.bestClear, -1, Corruption.MaxLevel);
+        if (data.keyBindings == null) data.keyBindings = new int[0];
     }
 
     public static void Save()
@@ -183,6 +220,7 @@ public static class GameSave
     {
         data = value ?? new SaveData();
         loaded = true;
+        playtest = true; // tests never write the player's real save file
     }
 #endif
 }

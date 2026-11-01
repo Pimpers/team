@@ -93,9 +93,17 @@ public class OptionsUI : MonoBehaviour
         for (int i = 0; i < GameSettings.Toggles.Length; i++)
         {
             var toggle = GameSettings.Toggles[i];
-            var b = CloneButton("Toggle" + i, new Vector2(-190f + 380f * i, -272f), new Vector2(360f, 80f), wood, out toggleLabels[i]);
+            var b = CloneButton("Toggle" + i, new Vector2(-250f + 250f * i, -272f), new Vector2(240f, 80f), wood, out toggleLabels[i]);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); RefreshButtons(); });
         }
+        // 키 설정 (KeyBindPanel), third in the toggles' row.
+        var keys = CloneButton("KeysButton", new Vector2(250f, -272f), new Vector2(240f, 80f), wood, out var keysLabel);
+        if (keysLabel != null) keysLabel.text = Loc.T("keys.title");
+        keys.onClick.AddListener(() =>
+        {
+            var canvas = panel != null ? panel.GetComponentInParent<Canvas>() : null;
+            KeyBindPanel.Show(canvas, keysLabel != null ? keysLabel.font : null);
+        });
         quitButton = CloneButton("QuitButton", new Vector2(-250f, -372f), new Vector2(230f, 80f), wood, out quitLabel); // wood, not the green "go" button
         quitButton.onClick.AddListener(OnQuit);
         creditsButton = CloneButton("CreditsButton", new Vector2(0f, -372f), new Vector2(230f, 80f), wood, out var creditsLabel);

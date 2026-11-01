@@ -227,6 +227,7 @@ public class PauseMenu : MonoBehaviour
     void Update()
     {
         if (!GameInput.PausePressed) return; // ESC or the gamepad's Start
+        if (!IsOpen && TutorialController.InTips) return; // the tutorial's tips: ESC skips them instead
         if (IsOpen) Close();
         else if (CanOpen()) Open();
     }
