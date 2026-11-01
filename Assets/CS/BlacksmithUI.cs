@@ -152,8 +152,9 @@ public class BlacksmithUI : MonoBehaviour
             if (MetaProgress.Gold >= MetaProgress.Cost(u)) canBuy = true;
         }
         if (!anyLeft) { lineMoods = new[] { Mood.Happy }; return new[] { Loc.T("smith.talk.maxed") }; }
-        lineMoods = new[] { canBuy ? Mood.Happy : Mood.Sad, Mood.Neutral };
-        return new[] { Loc.T(canBuy ? "smith.talk.rich" : "smith.talk.poor"), Loc.T("smith.talk.prompt") };
+        // A regular: one line and straight to the shop (two lines to click through every visit got tedious).
+        lineMoods = new[] { canBuy ? Mood.Happy : Mood.Sad };
+        return new[] { Loc.T(canBuy ? "smith.talk.rich" : "smith.talk.poor") };
     }
 
     void StartLine()
@@ -197,7 +198,7 @@ public class BlacksmithUI : MonoBehaviour
         var prt = portrait.rectTransform;
         prt.SetParent(canvas.transform, false);
         prt.anchorMin = prt.anchorMax = prt.pivot = new Vector2(0f, 0f);
-        prt.anchoredPosition = new Vector2(70f, 250f);
+        prt.anchoredPosition = new Vector2(70f, 190f);
         prt.sizeDelta = new Vector2(120f * 2.25f, 126f * 2.25f); // the 120 x 126 frames (smith_0..7)
         for (int i = 0; i < faces.Length; i++) faces[i] = Resources.Load<Sprite>("Village/smith_" + i);
         portrait.sprite = faces[0];
@@ -211,7 +212,7 @@ public class BlacksmithUI : MonoBehaviour
         brt.SetParent(canvas.transform, false);
         brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 0f);
         brt.anchoredPosition = new Vector2(0f, 30f);
-        brt.sizeDelta = new Vector2(1560f, 230f);
+        brt.sizeDelta = new Vector2(1560f, 170f); // one or two lines: 230 left the bottom half empty
         var box = talkBox.GetComponent<Image>();
         if (skin != null && skin.buttonCream != null) UISkin.Apply(box, skin.buttonCream, 3f);
         else box.color = new Color(1f, 0.95f, 0.82f);
@@ -222,7 +223,7 @@ public class BlacksmithUI : MonoBehaviour
         plate.rectTransform.anchoredPosition = new Vector2(560f, 6f);
         plate.rectTransform.sizeDelta = new Vector2(380f, 64f);
         if (skin != null) UISkin.Apply(plate, skin.buttonWood, UISkin.SmallScale);
-        var name = TalkText(plate.rectTransform, Loc.T("smith.name"), UiTheme.TextSmall, Color.white, font);
+        var name = TalkText(plate.rectTransform, Loc.T("smith.name"), UiTheme.TextLarge, Color.white, font);
         name.alignment = TextAlignmentOptions.Center;
 
         talkText = TalkText(brt, "", UiTheme.TextLarge, UISkin.Ink, font);
@@ -233,7 +234,7 @@ public class BlacksmithUI : MonoBehaviour
 
         nextMark = TalkText(brt, Loc.T("smith.talk.next"), UiTheme.TextSmall, UISkin.Ink, font);
         nextMark.rectTransform.offsetMin = new Vector2(0f, 18f);
-        nextMark.rectTransform.offsetMax = new Vector2(-40f, -180f);
+        nextMark.rectTransform.offsetMax = new Vector2(-40f, -120f);
         nextMark.alignment = TextAlignmentOptions.BottomRight;
 
         portrait.transform.SetAsLastSibling(); // in front of the box

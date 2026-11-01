@@ -45,6 +45,9 @@ Galmuri11 / Lee Minseo (SIL OFL 1.1)
 Departure Mono / Helena Zhang (OFL)
 DreamHeumulKR
 
+## 도구
+pixelfx / Patch, Hugo Duprez (MIT) - 스탯 카드 그림, 배경 이펙트
+
 ## 엔진
 Unity
 

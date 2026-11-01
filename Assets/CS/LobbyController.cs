@@ -196,7 +196,7 @@ public class LobbyController : MonoBehaviour
     void Confirm()
     {
         if (selected < 0) return;
-        if (string.IsNullOrWhiteSpace(nameInput.text))
+        if (string.IsNullOrWhiteSpace(nameInput.text) || System.Linq.Enumerable.All(nameInput.text.Trim(), char.IsDigit)) // no blank or digits-only names ("111")
         {
             ShowHint(true);
             StartCoroutine(FocusNameInput());
