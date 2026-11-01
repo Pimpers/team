@@ -172,8 +172,11 @@ public class BlacksmithUI : MonoBehaviour
         bool done = shownChars >= total;
         if (!done)
         {
+            int before = (int)shownChars;
             shownChars += Time.unscaledDeltaTime * CharsPerSecond;
             talkText.maxVisibleCharacters = Mathf.Min(total, (int)shownChars);
+            // a soft blip every few letters, his "voice" (a high, quiet card flick)
+            if ((int)shownChars / 3 > before / 3) Sfx.Play("card_pick", 0.18f, Random.Range(1.7f, 2.0f));
         }
         else talkUntil = 0f; // the whole line is out: mouth shut
         nextMark.gameObject.SetActive(done && Mathf.Repeat(Time.unscaledTime, 0.8f) < 0.5f);

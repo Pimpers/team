@@ -159,7 +159,9 @@ public class ResultUI : MonoBehaviour
         string reached = win ? Loc.T("result.boss_down") : Loc.F("result.stage_of", Mathf.Max(1, RunStats.Stage), total);
         string cause = !win && !string.IsNullOrEmpty(RunStats.LastHitBy) ? Loc.F("result.last_hit", RunStats.LastHitBy) : "";
         string worst = !win && !string.IsNullOrEmpty(RunStats.MostDamageSource) ? Loc.F("result.worst_enemy", RunStats.MostDamageSource) : "";
-        string tip = !win ? Loc.F("result.next_tip", RunStats.DefeatTip) : "";
+        // A loss gets advice; a win the next goal (the next 타락도 tier, or that every tier is beaten).
+        string goal = Corruption.Level < Corruption.MaxLevel ? Loc.F("result.next_goal", Corruption.Level + 1) : Loc.T("result.all_clear");
+        string tip = Loc.F("result.next_tip", win ? goal : RunStats.DefeatTip);
         string reroll = RunStats.Rerolls > 0 ? Loc.F("result.rerolls", RunStats.Rerolls, Currency.Icon, RunStats.GoldSpent) : "";
         statsText.text =
             Loc.T("result.title") +
