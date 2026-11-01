@@ -93,6 +93,22 @@ public class PlayerStats : MonoBehaviour
     public float DashDistanceMultiplier => (1f + 0.2f * CardLevel("dash")) * SkillSystem.DashDistanceMultiplier(this); // same duration, faster = farther
     public int ExtraAirJumps => CardLevel("jump");
     public int ExtraDashes => CardLevel("dash_more"); // 연속 대시: 2 -> 3 -> 4 dashes in a row
+    public float CritChance => CardPool.Crit(CardLevel("crit")) + SkillSystem.CritBonus(this) + ClawCrit;
+
+    // What `read` gives with card `id` taken once more (the draft's preview line); the card levels and sets are put
+    // back right after, and nothing else (HP, skills, banners) is touched.
+    public T Preview<T>(string id, System.Func<T> read)
+    {
+        int had = CardLevel(id);
+        cardLevels[id] = had + 1;
+        RecountSets();
+        try { return read(); }
+        finally
+        {
+            if (had == 0) cardLevels.Remove(id); else cardLevels[id] = had;
+            RecountSets();
+        }
+    }
 
     // Damage for one hit: attack x move multiplier (+50% per finisher level on the strong
     // moves), then a crit roll that doubles it.
@@ -100,7 +116,7 @@ public class PlayerStats : MonoBehaviour
     {
         float mult = moveMultiplier;
         if (moveMultiplier > 1f) mult *= 1f + 0.5f * CardLevel("finisher");
-        crit = RunRng.Value < CardPool.Crit(CardLevel("crit")) + SkillSystem.CritBonus(this) + ClawCrit;
+        crit = RunRng.Value < CritChance;
         float dmg = AttackPower * mult * ClawDamage * (crit ? 2f : 1f);
         return Mathf.Max(1, Mathf.RoundToInt(dmg));
     }

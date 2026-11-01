@@ -49,8 +49,8 @@ public class AmbientFx : MonoBehaviour
         Place(bg, "campfire", 0.633f, 0.5f, 0.035f, 4, 1f);     // the campfire in the square
         Place(bg, "chimney", 0.51f, 0.19f, 0.09f, 4, 0.75f);    // smoke off the roofs
         Place(bg, "birds", 0.3f, 0.12f, 0.03f, 6, 1f);          // gulls over the harbor
-        Place(bg, "ripples", 0.18f, 0.77f, 0.06f, 4, 0.8f);     // water round the boats
-        Place(bg, "ripples", 0.43f, 0.9f, 0.06f, 4, 0.8f);
+        Place(bg, "ripples", 0.08f, 0.45f, 0.06f, 4, 0.8f);     // open water: clear of the blacksmith's portrait and dialogue box (bottom-left)
+        Place(bg, "ripples", 0.2f, 0.12f, 0.06f, 4, 0.8f);
     }
 
     // `width`: the loop's width as a fraction of the background's.

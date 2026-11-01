@@ -25,16 +25,18 @@ public class HeartHUD : MonoBehaviour
 
     void Awake()
     {
+        // A size up from the scenes' 40 x 35 (same sprites): the hearts, dash bars and plate read as one block.
+        heartSize = new Vector2(48f, 42f);
         var portrait = Resources.Load<Sprite>("ItchUI/cat_portrait");
         if (portrait == null) return;
-        heartOffset = 46f;
+        heartOffset = 56f;
         var go = new GameObject("CatPortrait", typeof(RectTransform), typeof(Image));
         var rt = (RectTransform)go.transform;
         rt.SetParent(transform, false);
         rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
         rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = new Vector2(40f, 40f); // as tall as a heart row: stays clear of the dash bar below
-        rt.anchoredPosition = new Vector2(20f, -17f);
+        rt.sizeDelta = new Vector2(48f, 48f); // as tall as a heart row: stays clear of the dash bar below
+        rt.anchoredPosition = new Vector2(24f, -21f);
         var image = go.GetComponent<Image>();
         image.sprite = portrait;
         image.preserveAspect = true;

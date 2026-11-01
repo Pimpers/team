@@ -7,7 +7,8 @@ using TMPro;
 // through the controls one at a time - a prompt at the top of the screen, and the next one
 // only once they've actually done it:
 //   move -> jump a ledge -> double jump a wall -> drop through a platform (S) -> dash ->
-//   3-hit combo on a dummy -> jump attack -> a real fight with two rats.
+//   3-hit combo on a dummy -> jump attack -> a real fight with two rats -> four read-only tips
+//   (sets, the route fork, Q/E/R skills, corruption).
 // The terrain forces the movement steps (the wall needs the double jump, the platform walk
 // ends in a wall so S is the only way on). The player can't die here (PlayerStats.Immortal).
 // Finishing or skipping marks it done (TutorialProgress) and starts the real run.
@@ -44,7 +45,16 @@ public class TutorialController : MonoBehaviour
         Loc.T("tutorial.step.attack"),
         Loc.T("tutorial.step.slam"),
         Loc.T("tutorial.step.fight"),
+        Loc.T("tutorial.tip.sets"),
+        Loc.T("tutorial.tip.route"),
+        Loc.T("tutorial.tip.skills"),
+        Loc.T("tutorial.tip.corruption"),
     };
+    // The last steps only explain what comes later in a run (sets, the route fork, Q/E/R skills, corruption):
+    // nothing to do but read, so each moves on by itself after a while, or at once on Space / Enter / pad A.
+    const int FirstTipStep = 8;
+    const float TipTime = 5f;
+    float stepTime;
 
     void Awake()
     {
@@ -104,6 +114,11 @@ public class TutorialController : MonoBehaviour
             case 6: return plunged;
             case 7: return rats.TrueForAll(r => r == null || r.IsDead);
         }
+        if (s >= FirstTipStep)
+        {
+            float shown = Time.unscaledTime - stepTime;
+            return shown >= TipTime || (shown > 0.3f && GameInput.SubmitPressed);
+        }
         return false;
     }
 
@@ -111,6 +126,7 @@ public class TutorialController : MonoBehaviour
     {
         Sfx.Play("card_pick");
         if (step >= Prompts.Length - 1) { Finish(); return; }
+        if (step >= FirstTipStep) { step++; ShowStep(); return; } // reading, not doing: no "good" in between
         promptText.text = Loc.T("tutorial.good");
         doneTimer = 0.8f;
     }
@@ -129,6 +145,7 @@ public class TutorialController : MonoBehaviour
         promptText.text = Prompts[step];
         counterText.text = $"{step + 1} / {Prompts.Length}";
         plunged = false;
+        stepTime = Time.unscaledTime;
     }
 
     void Finish()

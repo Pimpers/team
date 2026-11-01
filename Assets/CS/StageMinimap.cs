@@ -151,7 +151,7 @@ public class StageMinimap : MonoBehaviour
         plate.anchorMin = plate.anchorMax = new Vector2(1f, 0f);
         plate.pivot = new Vector2(1f, 1f);
         plate.anchoredPosition = new Vector2(0f, -6f);
-        plate.sizeDelta = new Vector2(360f, 32f);
+        plate.sizeDelta = new Vector2(540f, 48f); // room for the legend at 36 (24 read small next to the map)
         var plateImage = plateGo.GetComponent<Image>();
         plateImage.color = UISkin.OverlayBack;
         plateImage.raycastTarget = false;
@@ -163,7 +163,7 @@ public class StageMinimap : MonoBehaviour
         legend.rectTransform.offsetMin = new Vector2(8f, 0f);
         legend.rectTransform.offsetMax = new Vector2(-8f, 0f);
         if (font != null) legend.font = font;
-        legend.fontSize = UISkin.FontHud;
+        legend.fontSize = UiTheme.TextLarge;
         legend.alignment = TextAlignmentOptions.Right;
         legend.textWrappingMode = TextWrappingModes.NoWrap;
         legend.raycastTarget = false;

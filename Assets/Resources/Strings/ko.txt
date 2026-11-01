@@ -232,6 +232,10 @@ tutorial.step.dash = <color=$key>마우스 오른쪽 클릭</color>으로 대시
 tutorial.step.attack = <color=$key>마우스 클릭</color> 으로 허수아비 공격! 연속 클릭하면 3단 콤보
 tutorial.step.slam = 점프한 뒤 공중에서 <color=$key>클릭</color> 하면 내려찍기!
 tutorial.step.fight = 실전! 쥐를 물리치세요   (<color=$key>ESC</color> : 일시정지)
+tutorial.tip.sets = 카드의 <color=$key>#태그</color>를 2장 모으면 세트 효과, 3장이면 완성!
+tutorial.tip.route = 갈림길: 위 <color=$key>사냥 길</color>은 정예와 보물, 아래 <color=$key>안전 길</color>은 적이 적어요
+tutorial.tip.skills = 액티브 카드는 <color=$key>Q</color> <color=$key>E</color> <color=$key>R</color> 키에 순서대로 들어가요
+tutorial.tip.corruption = 클리어 후 <color=$key>타락도</color>를 올리면 적이 강해지고 보상도 커져요
 tutorial.good = <color=$good>좋아요!</color>
 tutorial.done_rich = <color=$good>튜토리얼 완료!</color>
 tutorial.done = 튜토리얼 완료!
@@ -417,7 +421,20 @@ worldmap.region.lagoon = 해골 석호
 worldmap.region.atoll = 생선뼈 환초
 
 # Card draft: badge over a card that would open (2 cards) or finish (3 cards) a set
-draft.badge.unlock = ★ {0} 세트 해금
+draft.preview.attack = 공격력 {0} → <color=$gold>{1}</color>
+draft.preview.maxhp = 최대 HP {0} → <color=$gold>{1}</color>
+draft.preview.hp = HP {0} → <color=$gold>{1}</color>
+draft.preview.crit = 치명타 {0}% → <color=$gold>{1}%</color>
+draft.preview.speed = 이동 {0}% → <color=$gold>{1}%</color>
+draft.preview.attack_speed = 공속 {0}% → <color=$gold>{1}%</color>
+draft.preview.reach = 사거리 {0}% → <color=$gold>{1}%</color>
+draft.preview.jumps = 점프 {0}회 → <color=$gold>{1}회</color>
+draft.preview.dashes = 대시 {0}회 → <color=$gold>{1}회</color>
+draft.preview.set_unlock = <color={0}>#{1} {2}/{3} → {4}/{5}</color> <color=$gold>해금</color>
+draft.preview.set_complete = <color={0}>#{1} {2}/{3} → {4}/{5}</color> <color=$gold>완성</color>
+draft.preview.slot = <color=$key>{0}</color>키에 장착
+draft.preview.level = Lv.{0} → <color=$gold>{1}</color>
+draft.badge.unlock =★ {0} 세트 해금
 draft.badge.complete = ★ {0} 세트 완성
 draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음)</color></size>
 

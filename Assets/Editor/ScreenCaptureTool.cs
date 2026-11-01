@@ -10,8 +10,11 @@ using UnityEngine.SceneManagement;
 //
 // Plays through the main screens and saves a PNG of each to <project>/Screenshots/ (git-ignored), so a layout
 // change can be checked by eye on every screen in a minute: title, village (+ blacksmith, settings), world map,
-// lobby, the in-run HUD, pause, card draft, result. Overlay canvases are drawn through the camera for the shot
-// (world sprites with a higher sorting order can then show on top of a panel - in the game the UI is always on top).
+// lobby, the in-run HUD, pause, card draft, result. Each scene is shown at 16:9 (Width x Height) whatever the editor
+// window is (a batch run's screen is 640 x 480): the main camera renders into a texture of that size and the overlay
+// canvases are drawn through it, so they lay themselves out for that size - for a few frames before the action and
+// the shot, so code that fits the UI to the canvas (Update) has run too. (World sprites with a higher sorting order
+// can then show on top of a panel - in the game the UI is always on top.)
 public static class ScreenCaptureTool
 {
     struct Step { public string scene, shot; public Action act; }
@@ -21,6 +24,11 @@ public static class ScreenCaptureTool
     static bool loaded, batch, savedOptionsEnabled;
     static EnterPlayModeOptions savedOptions;
     static string outDir;
+    const int Width = 1920, Height = 1080;
+    static bool prepared;
+    static RenderTexture target;
+    static Camera targetCam;
+    static readonly List<(Canvas canvas, RenderMode mode)> converted = new List<(Canvas, RenderMode)>();
 
     [MenuItem("Cats Smash/Capture Screens")]
     public static void Run() => Start(false);
@@ -72,17 +80,20 @@ public static class ScreenCaptureTool
             if (index >= 0 && loaded)
             {
                 var s = steps[index];
+                if (!prepared) { Prepare(); prepared = true; at = now + 0.6; return; }
                 if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 1.0; return; }
                 Shot(s.shot);
+                Release();
                 loaded = false;
             }
         }
-        catch (Exception e) { Debug.LogError($"[ScreenCapture] {steps[index].shot}: {e}"); loaded = false; }
+        catch (Exception e) { Debug.LogError($"[ScreenCapture] {steps[index].shot}: {e}"); Release(); loaded = false; }
         index++;
         if (index >= steps.Count) { Finish(); return; }
         GameClock.ResetAll();
         SceneManager.LoadScene(steps[index].scene);
         loaded = true;
+        prepared = false;
         at = now + 2.5;
     }
 
@@ -107,42 +118,52 @@ public static class ScreenCaptureTool
         new System.Threading.Thread(() => { System.Threading.Thread.Sleep(15000); System.Diagnostics.Process.GetCurrentProcess().Kill(); }) { IsBackground = true }.Start();
     }
 
-    // The screen at 3x, with overlay canvases drawn through the camera (they don't render into a camera target).
+    // The main camera draws into a Width x Height texture from now on, and the overlay canvases through it.
+    static void Prepare()
+    {
+        targetCam = Camera.main;
+        if (targetCam == null) return;
+        target = new RenderTexture(Width, Height, 24);
+        targetCam.targetTexture = target;
+        ConvertCanvases();
+    }
+
+    // Overlay canvases (also ones opened since Prepare) onto the camera, in their sorting order.
+    static void ConvertCanvases()
+    {
+        foreach (var c in UnityEngine.Object.FindObjectsByType<Canvas>())
+        {
+            if (!c.isRootCanvas || c.renderMode != RenderMode.ScreenSpaceOverlay) continue;
+            converted.Add((c, c.renderMode));
+            c.renderMode = RenderMode.ScreenSpaceCamera;
+            c.worldCamera = targetCam;
+            c.planeDistance = 1f + (32000 - c.sortingOrder) * 0.0001f;
+        }
+    }
+
     static void Shot(string name)
     {
-        var cam = Camera.main;
-        if (cam == null) return;
-        int w = Screen.width * 3, h = Screen.height * 3; // same aspect as the screen the UI was laid out for
-        var canvases = UnityEngine.Object.FindObjectsByType<Canvas>();
-        var modes = new RenderMode[canvases.Length];
-        for (int i = 0; i < canvases.Length; i++)
-        {
-            modes[i] = canvases[i].renderMode;
-            if (canvases[i].isRootCanvas && modes[i] == RenderMode.ScreenSpaceOverlay)
-            {
-                canvases[i].renderMode = RenderMode.ScreenSpaceCamera;
-                canvases[i].worldCamera = cam;
-                canvases[i].planeDistance = 1f + (32000 - canvases[i].sortingOrder) * 0.0001f;
-            }
-        }
-        var rt = new RenderTexture(w, h, 24);
-        cam.targetTexture = rt;
+        if (targetCam == null || target == null) return;
+        ConvertCanvases();
         Canvas.ForceUpdateCanvases();
-        cam.Render();
-        RenderTexture.active = rt;
-        var tex = new Texture2D(w, h, TextureFormat.RGB24, false);
-        tex.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+        targetCam.Render();
+        RenderTexture.active = target;
+        var tex = new Texture2D(Width, Height, TextureFormat.RGB24, false);
+        tex.ReadPixels(new Rect(0, 0, Width, Height), 0, 0);
         tex.Apply();
         File.WriteAllBytes(Path.Combine(outDir, name + ".png"), tex.EncodeToPNG());
         RenderTexture.active = null;
-        cam.targetTexture = null;
-        UnityEngine.Object.DestroyImmediate(rt);
         UnityEngine.Object.DestroyImmediate(tex);
-        for (int i = 0; i < canvases.Length; i++)
-            if (canvases[i] != null && canvases[i].isRootCanvas)
-            {
-                canvases[i].renderMode = modes[i];
-                if (modes[i] == RenderMode.ScreenSpaceOverlay) canvases[i].worldCamera = null;
-            }
+    }
+
+    // Back to the screen (canvases kept across scenes, like the fader, must not stay on a camera that is unloaded).
+    static void Release()
+    {
+        foreach (var (c, mode) in converted)
+            if (c != null) { c.renderMode = mode; if (mode == RenderMode.ScreenSpaceOverlay) c.worldCamera = null; }
+        converted.Clear();
+        if (targetCam != null) targetCam.targetTexture = null;
+        if (target != null) UnityEngine.Object.DestroyImmediate(target);
+        target = null; targetCam = null;
     }
 }

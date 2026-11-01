@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class DashBar : MonoBehaviour
 {
     // Bigger than the first version (40 x 20): a dash is the main dodge, its charges must read at a glance mid-fight.
-    const float BarW = 64f, BarH = 32f, Gap = 8f, Pad = 8f; // inside the plate's wood rim (5 art pixels at 2 units each)
+    const float BarW = 72f, BarH = 36f, Gap = 8f, Pad = 8f; // inside the plate's wood rim (5 art pixels at 2 units each)
     static readonly Color Ready = new Color(1f, 0.8f, 0.22f), Shine = new Color(1f, 0.95f, 0.7f),
                           Charging = new Color(0.45f, 0.78f, 1f), Slot = new Color(0.13f, 0.09f, 0.11f, 0.95f);
 

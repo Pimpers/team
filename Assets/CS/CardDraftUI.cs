@@ -50,7 +50,7 @@ public class CardDraftUI : MonoBehaviour
         {
             var t = new GameObject("SetTip", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
             t.rectTransform.SetParent(panel.transform, false);
-            t.rectTransform.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 140f); // under the reroll button
+            t.rectTransform.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 180f); // under the reroll button
             t.rectTransform.sizeDelta = new Vector2(1200f, 48f);
             t.font = card1Label.font;
             t.fontSize = UiTheme.TextSmall;
@@ -95,7 +95,7 @@ public class CardDraftUI : MonoBehaviour
         var rt = (RectTransform)go.transform;
         rt.SetParent(panel.transform, false);
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 70f);
+        rt.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 110f); // under the cards' preview line
         rt.sizeDelta = new Vector2(440f, 78f); // room for "다시 뽑기  (gold)10  (보유 35)"
         var img = go.GetComponent<Image>();
         if (UISkin.Instance != null) UISkin.Apply(img, UISkin.Instance.buttonWood, UISkin.SmallScale);
@@ -439,6 +439,21 @@ public class CardDraftUI : MonoBehaviour
         if (hover == null) hover = button.gameObject.AddComponent<CardHover>();
         hover.corners = corners;
 
+        // What taking it changes ("공격력 5 → 6  #발톱 1/2 → 2/2 해금"), one line under the card, shown with the
+        // corners while the card is under the mouse or selected with the pad.
+        var preview = Child<TextMeshProUGUI>(button, "CardPreview", new Vector2(0f, -CardH * 0.5f - 30f), new Vector2(CardW + 120f, 40f));
+        preview.font = label.font;
+        preview.text = PreviewLine(card);
+        preview.fontSize = UiTheme.TextSmall;
+        preview.color = UiTheme.Cream;
+        preview.alignment = TextAlignmentOptions.Center;
+        preview.textWrappingMode = TextWrappingModes.NoWrap;
+        preview.outlineWidth = 0.2f;
+        preview.outlineColor = new Color32(24, 14, 10, 255);
+        preview.raycastTarget = false;
+        hover.preview = preview.gameObject;
+        hover.Refresh();
+
         // The grade's card back, over everything; shown while the card is dealt face down (DealIn).
         var back = Child<Image>(button, "CardBack", Vector2.zero, new Vector2(CardW, CardH));
         back.sprite = Back(card.tier);
@@ -483,6 +498,51 @@ public class CardDraftUI : MonoBehaviour
                 return Loc.F(lv >= 2 ? "draft.badge.complete" : "draft.badge.unlock", CardPool.TagNames[(int)t]);
         }
         return null;
+    }
+
+    // The draft's preview line: the numbers the card moves (before → after) and the set step it reaches.
+    static string PreviewLine(CardPool.Card card)
+    {
+        var s = PlayerStats.Instance;
+        if (s == null) return "";
+        if (card.id == "heal")
+            return Loc.F("draft.preview.hp", s.CurrentHP.ToString("0.#"), Mathf.Min(s.MaxHP, s.CurrentHP + 2f).ToString("0.#"));
+
+        var parts = new List<string>();
+        void Num(string key, float before, float after, string format)
+        {
+            if (Mathf.Abs(after - before) > 0.0001f) parts.Add(Loc.F(key, before.ToString(format), after.ToString(format)));
+        }
+        Num("draft.preview.attack", s.AttackPower, s.Preview(card.id, () => (float)s.AttackPower), "0");
+        Num("draft.preview.maxhp", s.MaxHP, s.Preview(card.id, () => s.MaxHP), "0.#");
+        Num("draft.preview.crit", s.CritChance * 100f, s.Preview(card.id, () => s.CritChance) * 100f, "0");
+        Num("draft.preview.speed", s.MoveSpeed / s.baseMoveSpeed * 100f, s.Preview(card.id, () => s.MoveSpeed) / s.baseMoveSpeed * 100f, "0");
+        Num("draft.preview.attack_speed", s.AttackSpeedMultiplier * 100f, s.Preview(card.id, () => s.AttackSpeedMultiplier) * 100f, "0");
+        Num("draft.preview.reach", s.ReachMultiplier * 100f, s.Preview(card.id, () => s.ReachMultiplier) * 100f, "0");
+        Num("draft.preview.jumps", s.ExtraAirJumps + 1, s.Preview(card.id, () => s.ExtraAirJumps) + 1, "0");
+        Num("draft.preview.dashes", s.ExtraDashes + 2, s.Preview(card.id, () => s.ExtraDashes) + 2, "0");
+        if (parts.Count > 2) parts.RemoveRange(2, parts.Count - 2); // one line under a 320-wide card
+
+        // The set step a new card reaches (a level-up doesn't count again).
+        if (s.CardLevel(card.id) == 0)
+            foreach (var t in CardPool.TagsOf(card.id))
+            {
+                int have = s.SetCount(t), lv = CardPool.SetLevel(have + 1);
+                if (lv <= CardPool.SetLevel(have)) continue;
+                int goal = lv >= 2 ? CardPool.SetStep2 : CardPool.SetStep1;
+                int was = have >= CardPool.SetStep1 ? CardPool.SetStep2 : CardPool.SetStep1;
+                parts.Add(Loc.F(lv >= 2 ? "draft.preview.set_complete" : "draft.preview.set_unlock",
+                    CardPool.TagColors[(int)t], CardPool.TagNames[(int)t], have, was, have + 1, goal));
+                break;
+            }
+
+        if (parts.Count == 0)
+        {
+            int lv = s.CardLevel(card.id);
+            if (card.kind == CardPool.Kind.Active && lv == 0) parts.Add(Loc.F("draft.preview.slot", ActiveKey(card.id)));
+            else if (card.maxLevel > 0) parts.Add(Loc.F("draft.preview.level", lv, lv + 1));
+        }
+        return string.Join("   ", parts);
     }
 
     static T Child<T>(RectTransform parent, string name, Vector2 pos, Vector2 size) where T : Component
@@ -539,18 +599,29 @@ public class CardDraftUI : MonoBehaviour
 }
 
 // Corner brackets round the card under the mouse, breathing a little (unscaled time: the draft pauses the game).
-public class CardHover : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler
+public class CardHover : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler,
+    UnityEngine.EventSystems.ISelectHandler, UnityEngine.EventSystems.IDeselectHandler
 {
     [HideInInspector] public Image corners;
-    bool over;
+    [HideInInspector] public GameObject preview; // the "what changes" line under the card
+    bool over, selected;
 
-    public void OnPointerEnter(UnityEngine.EventSystems.PointerEventData e) { over = true; if (corners != null) corners.enabled = true; }
-    public void OnPointerExit(UnityEngine.EventSystems.PointerEventData e) { over = false; if (corners != null) corners.enabled = false; }
-    void OnDisable() { over = false; if (corners != null) corners.enabled = false; }
+    public void OnPointerEnter(UnityEngine.EventSystems.PointerEventData e) { over = true; Refresh(); }
+    public void OnPointerExit(UnityEngine.EventSystems.PointerEventData e) { over = false; Refresh(); }
+    public void OnSelect(UnityEngine.EventSystems.BaseEventData e) { selected = true; Refresh(); }
+    public void OnDeselect(UnityEngine.EventSystems.BaseEventData e) { selected = false; Refresh(); }
+    void OnDisable() { over = selected = false; Refresh(); }
+
+    public void Refresh()
+    {
+        bool on = over || selected;
+        if (corners != null) corners.enabled = on;
+        if (preview != null) preview.SetActive(on);
+    }
 
     void Update()
     {
-        if (!over || corners == null) return;
+        if (!(over || selected) || corners == null) return;
         // whole-pixel steps (4 units = one art pixel), out and back twice a second
         float k = Mathf.Repeat(Time.unscaledTime * 2f, 1f) < 0.5f ? 0f : 8f;
         corners.rectTransform.sizeDelta = new Vector2(CardDraftUI.CardWidth + 28f + k, CardDraftUI.CardHeight + 28f + k);

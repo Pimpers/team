@@ -121,11 +121,11 @@ public class RunManager : MonoBehaviour
         if (IsStageScene && !tutorial && (stageNumber == 1 || stageNumber == 3) && StageMap.Instance != null)
             StartCoroutine(SetupHorizontalEncounters());
         // Side-scrolling scenes: dash charges as a row of bars right under the hearts; the text plate moves
-        // down to make room (hearts end 53 px from the top, the bars take 58-78).
+        // down to make room (hearts end 66 px from the top, the bars take 76-112, the plate starts at 122).
         if (StageMap.Instance != null && hudText != null && hudText.canvas != null)
         {
-            hudText.rectTransform.anchoredPosition = new Vector2(28f, -110f);
-            DashBar.Create(hudText.rectTransform.parent, new Vector2(20f, -62f), hudText.font);
+            hudText.rectTransform.anchoredPosition = new Vector2(20f + HudPadX, -136f); // plate left edge in line with the hearts and bars
+            DashBar.Create(hudText.rectTransform.parent, new Vector2(20f, -76f), hudText.font);
         }
         if (IsStageScene && hudText != null && hudText.canvas != null)
         {
