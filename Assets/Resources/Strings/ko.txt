@@ -242,7 +242,6 @@ tutorial.done_rich = <color=$good>튜토리얼 완료!</color>
 tutorial.done = 튜토리얼 완료!
 tutorial.done_sub = 이제 진짜 의뢰를 떠나요
 tutorial.skip = 튜토리얼 건너뛰기
-tutorial.skip_tips = 팁 모두 건너뛰기 <color=$key>(ESC)</color>
 
 # WorldMapController
 worldmap.locked = 아직 갈 수 없는 지역입니다
@@ -498,8 +497,8 @@ smith.locked = <b>???</b>\n<size=75%><color=$muted>대장간에 {0}번 오면 �
 smith.locked_say = 그건 아직 꺼내 줄 수 없다냥. {0}번째 방문 때 보자냥.
 tip.title = <color=$gold>팁</color>
 card.dash_cut.name = 대시 베기
-card.dash_cut.text = 대시로 지나간 적을\n공격력 60% 피해
-card.dash_cut.text2 = 대시로 지나간 적을\n공격력 100% 피해
+card.dash_cut.text = 대시로 지나간 적을\n공격력 40% 피해
+card.dash_cut.text2 = 대시로 지나간 적을\n공격력 70% 피해
 card.execute.name = 사냥 본능
 card.execute.text = 체력 15% 이하로\n남은 적은 바로 처치
 card.execute.text2 = 체력 25% 이하로\n남은 적은 바로 처치

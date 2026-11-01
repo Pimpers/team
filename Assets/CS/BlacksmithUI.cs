@@ -144,7 +144,7 @@ public class BlacksmithUI : MonoBehaviour
             lineMoods = new[] { Mood.Happy, Mood.Neutral, Mood.Happy };
             return new[] { Loc.T("smith.talk.first1"), Loc.T("smith.talk.first2"), Loc.T("smith.talk.prompt") };
         }
-        // Milestones (once, on that visit): the lucky bell comes out on the third visit; a regular gets a word at the tenth.
+        // Milestones (once, on that visit): the lucky bell comes out on the second visit; a regular gets a word at the tenth.
         int visit = GameSave.Data.smithVisits + 1;
         if (visit == RerollUnlockVisit && MetaProgress.Level(MetaProgress.Upgrade.Reroll) == 0)
         {
@@ -272,8 +272,8 @@ public class BlacksmithUI : MonoBehaviour
         return t;
     }
 
-    // The 행운의 방울 is kept behind the counter until the third visit (unless it was already bought).
-    const int RerollUnlockVisit = 3, RegularVisit = 10;
+    // The 행운의 방울 is kept behind the counter until the second visit (unless it was already bought).
+    const int RerollUnlockVisit = 2, RegularVisit = 10;
     static bool Locked(MetaProgress.Upgrade u) =>
         u == MetaProgress.Upgrade.Reroll && GameSave.Data.smithVisits < RerollUnlockVisit && MetaProgress.Level(u) == 0;
 

@@ -22,9 +22,9 @@ public static class MetaProgress
 
     public static int MaxLevel(Upgrade upgrade) =>
         upgrade == Upgrade.Attack ? 3 : upgrade == Upgrade.Speed ? 3 : upgrade == Upgrade.Reroll ? 2 : 5;
-    // One curve for every upgrade: 12, 24, 36... (the next level costs 12 more). A lost run brings ~10-20 gold, so each
-    // first level comes within a run or two and the last ones take a few good runs, whichever upgrade it is.
-    const int CostStep = 12;
+    // One curve for every upgrade: 10, 20, 30... (the next level costs 10 more; all five hearts 150 in all). A lost run
+    // brings ~10-20 gold, so each first level comes within a run and the last ones take a few good runs.
+    const int CostStep = 10;
     static int BaseCost(Upgrade upgrade) => CostStep;
 
     public static int Level(Upgrade upgrade)

@@ -29,6 +29,15 @@ if (-not (Test-Path -LiteralPath $dstAssets)) {
   Invoke-Robo @($srcAssets, $dstAssets, '/E')
 }
 
+# Its own product name, so its batch runs keep their save under LocalLow/<company>/team_verify instead of writing
+# the player's real save (the same company/product would share one file).
+$settings = Join-Path $Dest 'ProjectSettings\ProjectSettings.asset'
+if (Test-Path -LiteralPath $settings) {
+  $text = [IO.File]::ReadAllText($settings)
+  $named = [regex]::Replace($text, '(?m)^  productName: .*$', '  productName: team_verify')
+  if ($named -ne $text) { [IO.File]::WriteAllText($settings, $named) }
+}
+
 foreach ($f in $folders) {
   $s = Join-Path $srcAssets $f
   if (-not (Test-Path -LiteralPath $s)) { Write-Warning "skip missing Assets/$f"; continue }

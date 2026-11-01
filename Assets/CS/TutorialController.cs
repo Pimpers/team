@@ -47,15 +47,6 @@ public class TutorialController : MonoBehaviour
         Loc.T("tutorial.step.slam"),
         Loc.T("tutorial.step.fight"),
     };
-    // Read-only tip steps after the fight (none at present - the tips moved into the run, see the top): any steps
-    // past FirstTipStep would move on by themselves after a while, or at once on Space / Enter / pad A.
-    const int FirstTipStep = 8;
-    const float TipTime = 5f;
-    float stepTime;
-    GameObject skipTips; // "팁 모두 건너뛰기": shown only during the tips (ESC does the same)
-
-    // True while the read-only tips are up: ESC skips them instead of pausing (PauseMenu checks this).
-    public static bool InTips { get; private set; }
 
     void Awake()
     {
@@ -65,7 +56,6 @@ public class TutorialController : MonoBehaviour
     void OnDestroy()
     {
         PlayerStats.Immortal = false;
-        InTips = false;
         if (player != null) player.PlungeLanded -= OnPlunge;
     }
 
@@ -91,7 +81,6 @@ public class TutorialController : MonoBehaviour
     {
         FitPrompt();
         if (finished || player == null) return;
-        if (InTips && doneTimer <= 0f && Time.unscaledTime - stepTime > 0.3f && GameInput.PausePressed) { SkipTips(); return; }
 
         if (doneTimer > 0f)
         {
@@ -117,11 +106,6 @@ public class TutorialController : MonoBehaviour
             case 6: return plunged;
             case 7: return rats.TrueForAll(r => r == null || r.IsDead);
         }
-        if (s >= FirstTipStep)
-        {
-            float shown = Time.unscaledTime - stepTime;
-            return shown >= TipTime || (shown > 0.3f && GameInput.SubmitPressed);
-        }
         return false;
     }
 
@@ -129,7 +113,6 @@ public class TutorialController : MonoBehaviour
     {
         Sfx.Play("card_pick");
         if (step >= Prompts.Length - 1) { Finish(); return; }
-        if (step >= FirstTipStep) { step++; ShowStep(); return; } // reading, not doing: no "good" in between
         promptText.text = Loc.T("tutorial.good");
         doneTimer = 0.8f;
     }
@@ -148,30 +131,16 @@ public class TutorialController : MonoBehaviour
         promptText.text = Prompts[step];
         counterText.text = $"{step + 1} / {Prompts.Length}";
         plunged = false;
-        stepTime = Time.unscaledTime;
-        InTips = step >= FirstTipStep;
-        if (skipTips != null) skipTips.SetActive(InTips);
-        if (InTips) Sfx.Play("ui_open", 0.25f, 1.2f); // a page-turn for each tip
     }
 
 #if UNITY_EDITOR
-    // ScreenCaptureTool: shows step `s` (e.g. a tip, with its skip button) without playing up to it.
+    // ScreenCaptureTool: shows step `s` without playing up to it.
     public void JumpToStepForCapture(int s) { step = Mathf.Clamp(s, 0, Prompts.Length - 1); doneTimer = -1f; ShowStep(); }
 #endif
-
-    // Skips the rest of the tips (all read-only) and ends the tutorial as if they had been read.
-    void SkipTips()
-    {
-        if (finished || !InTips) return;
-        step = Prompts.Length - 1;
-        Finish();
-    }
 
     void Finish()
     {
         finished = true;
-        InTips = false;
-        if (skipTips != null) skipTips.SetActive(false);
         promptText.text = Loc.T("tutorial.done_rich");
         TutorialProgress.Done = true;
         var hud = RunManager.Instance != null ? RunManager.Instance.hudText : null;
@@ -211,7 +180,7 @@ public class TutorialController : MonoBehaviour
         promptText.enableAutoSizing = true; // a narrower panel shrinks the text instead of clipping it
         promptText.fontSizeMax = 36f;
         promptText.fontSizeMin = 22f;
-        promptText.textWrappingMode = TextWrappingModes.Normal; // a long tip takes two lines rather than running out of the panel
+        promptText.textWrappingMode = TextWrappingModes.Normal; // a long step takes two lines rather than running out of the panel
         var prt = promptText.rectTransform;
         prt.anchorMin = Vector2.zero; prt.anchorMax = Vector2.one;
         prt.offsetMin = new Vector2(140f, 10f); prt.offsetMax = new Vector2(-40f, -10f); // left: clear of the step counter
@@ -236,19 +205,6 @@ public class TutorialController : MonoBehaviour
         label.text = Loc.T("tutorial.skip");
         label.rectTransform.anchorMin = Vector2.zero; label.rectTransform.anchorMax = Vector2.one;
         label.rectTransform.offsetMin = label.rectTransform.offsetMax = Vector2.zero;
-
-        // Skip the tips, above the skip button, only while the tips are up.
-        skipTips = Instantiate(skipGo, canvas.transform, false);
-        skipTips.name = "SkipTips";
-        var trt = (RectTransform)skipTips.transform;
-        trt.anchoredPosition = new Vector2(-30f, 132f);
-        var tipBtn = skipTips.GetComponent<Button>();
-        tipBtn.onClick.RemoveAllListeners();
-        tipBtn.onClick.AddListener(SkipTips);
-        var tipLabel = skipTips.GetComponentInChildren<TMP_Text>();
-        tipLabel.text = Loc.T("tutorial.skip_tips");
-        tipLabel.fontSize = 28f;
-        skipTips.SetActive(false);
     }
 
     static TMP_Text Text(RectTransform parent, string name, float size, Color color, TMP_FontAsset font, TextAlignmentOptions align)

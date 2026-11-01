@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Stat cards that change how the cat plays rather than a number (CardPool "dash_cut", "execute"):
-//   대시 베기 (dash_cut): a dash cuts every monster it passes through, once each per dash - the dodge becomes
-//       a way in, not only a way out.
+//   대시 베기 (dash_cut): a dash cuts every monster it passes through, once each per dash, for 40% / 70% of the
+//       attack - the dodge becomes a way in, not only a way out, without outdamaging the combo (2-4 dashes in a row).
 //   사냥 본능 (execute): a hit that leaves a monster (not the boss) at 15% / 25% of its health or less finishes it -
 //       worth switching to the wounded one instead of the fresh one. (Checked in Enemy.ReceiveDamage.)
 public partial class SkillSystem
@@ -19,7 +19,7 @@ public partial class SkillSystem
         if (lv <= 0) return;
         if (!body.IsDashing) { dashCut.Clear(); return; }
         var me = new Bounds(Me, new Vector3(1.4f, 1.4f, 1f));
-        int damage = Mathf.Max(1, Mathf.RoundToInt(stats.AttackPower * (lv >= 2 ? 1f : 0.6f)));
+        int damage = Mathf.Max(1, Mathf.RoundToInt(stats.AttackPower * (lv >= 2 ? 0.7f : 0.4f)));
         foreach (var e in Enemy.All)
         {
             if (e == null || e.IsDead || dashCut.Contains(e)) continue;

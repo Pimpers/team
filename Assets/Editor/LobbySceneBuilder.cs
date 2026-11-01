@@ -21,7 +21,7 @@ public static class LobbySceneBuilder
 {
     const string LobbyScene = "Assets/Scenes/LobbyScene.unity";
     const string TitleScene = "Assets/Scenes/TitleScene.unity";
-    const string LobbyImage = "Assets/Lobby.png";
+    const string LobbyImage = "Assets/Backgrounds/Lobby.png";
     const float FloorY = -3.1f;          // tavern floor line in Lobby.png (PPU 100, centered)
     const float CharacterScale = 9f; // was 12: the cats were far chunkier than the painted backgrounds (see ConceptPolish)
     const float LoadingCatScale = 10f; // was 12

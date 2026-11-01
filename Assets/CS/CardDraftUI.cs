@@ -89,7 +89,9 @@ public class CardDraftUI : MonoBehaviour
     TextMeshProUGUI rerollLabel;
     // 행운의 방울 (MetaProgress.Upgrade.Reroll): the run's first rerolls are free, one per level.
     static int FreeRerollsLeft => Mathf.Max(0, MetaProgress.Level(MetaProgress.Upgrade.Reroll) - RunStats.Rerolls);
-    int RerollCost => FreeRerollsLeft > 0 ? 0 : RerollBase * (PaidRerolls + 1);
+    // Capped at 20: past the fourth paid reroll the price stops climbing, so late in a run it stays a choice.
+    const int RerollMaxSteps = 4;
+    int RerollCost => FreeRerollsLeft > 0 ? 0 : RerollBase * Mathf.Min(PaidRerolls + 1, RerollMaxSteps);
 
     void Reroll()
     {

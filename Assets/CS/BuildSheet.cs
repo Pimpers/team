@@ -19,6 +19,7 @@ public class BuildSheet : MonoBehaviour
     TextMeshProUGUI statsText, setsText, emptyText;
     RectTransform cardArea;
     string shownKey;
+    int shownLevels = -1;
 
     public static BuildSheet Create(Canvas canvas, TMP_FontAsset font)
     {
@@ -99,20 +100,34 @@ public class BuildSheet : MonoBehaviour
         Refresh(stats);
     }
 
+    // The numbers last shown: the stat text is rebuilt only when one changes (not every frame Tab is held).
+    int shownStatsHash;
+
     void Refresh(PlayerStats s)
     {
         var body = s.Body;
-        statsText.text = Loc.F("sheet.stats",
-            s.AttackPower,
-            s.CurrentHP.ToString("0.#"), s.MaxHP.ToString("0.#"),
-            (s.MoveSpeed / s.baseMoveSpeed * 100f).ToString("0"),
-            (s.AttackSpeedMultiplier * 100f).ToString("0"),
-            (s.CritChance * 100f).ToString("0"),
-            (s.ReachMultiplier * 100f).ToString("0"),
-            body != null ? body.MaxDashes : 2 + s.ExtraDashes,
-            1 + s.ExtraAirJumps);
+        int dashes = body != null ? body.MaxDashes : 2 + s.ExtraDashes;
+        int hash = System.HashCode.Combine(s.AttackPower, s.CurrentHP, s.MaxHP, s.MoveSpeed, s.AttackSpeedMultiplier, s.CritChance, s.ReachMultiplier, System.HashCode.Combine(dashes, s.ExtraAirJumps));
+        if (hash != shownStatsHash)
+        {
+            shownStatsHash = hash;
+            statsText.text = Loc.F("sheet.stats",
+                s.AttackPower,
+                s.CurrentHP.ToString("0.#"), s.MaxHP.ToString("0.#"),
+                (s.MoveSpeed / s.baseMoveSpeed * 100f).ToString("0"),
+                (s.AttackSpeedMultiplier * 100f).ToString("0"),
+                (s.CritChance * 100f).ToString("0"),
+                (s.ReachMultiplier * 100f).ToString("0"),
+                dashes,
+                1 + s.ExtraAirJumps);
+        }
 
-        // The card rows and the set line only change with a pick: rebuilt when the levels do.
+        // The card rows and the set line only change with a pick: rebuilt when the levels do (checked by a count of
+        // the levels, which only grows, so the list and key are built only then).
+        int levels = 0;
+        foreach (var kv in s.CardLevels) levels += kv.Value;
+        if (levels == shownLevels) return;
+        shownLevels = levels;
         var cards = new List<CardPool.Card>();
         foreach (var id in s.SkillOrder) { var c = CardPool.Get(id); if (c != null) cards.Add(c); }
         foreach (var c in CardPool.Stats) if (s.CardLevel(c.id) > 0) cards.Add(c);

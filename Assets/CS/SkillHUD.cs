@@ -31,6 +31,7 @@ public class SkillHUD : MonoBehaviour
     TMP_FontAsset font;
     int shownCount = -1;
     CanvasGroup group;
+    Canvas canvas;
     static Sprite white;
 
     public static SkillHUD Create(Canvas canvas, TMP_FontAsset font)
@@ -301,7 +302,7 @@ public class SkillHUD : MonoBehaviour
         var cam = Camera.main;
         if (cam == null) return false;
         Vector2 sp = cam.WorldToScreenPoint(world);
-        var canvas = GetComponentInParent<Canvas>();
+        if (canvas == null) canvas = GetComponentInParent<Canvas>(); // (found once: this ran per frame)
         var uiCam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
         return RectTransformUtility.RectangleContainsScreenPoint((RectTransform)transform, sp, uiCam);
     }

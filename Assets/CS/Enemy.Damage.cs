@@ -24,8 +24,7 @@ public partial class Enemy
         // 사냥 본능 (execute card): a hit that leaves a monster nearly dead finishes it (never the boss).
         if (!quiet && !isBoss && hp > 0 && hp <= MaxHP * SkillSystem.ExecuteThreshold(PlayerStats.Instance))
         {
-            hp = 0;
-            crit = true; // lands with the critical hit's weight (stop, shake, number)
+            hp = 0; // (a kill's own stop and shake follow; no crit weight on top - in a crowd that stuttered)
             DamagePopup.SpawnLabel(new Vector3(transform.position.x, BodyTopY + 0.4f, 0f), Loc.T("skill.execute"), new Color(1f, 0.4f, 0.3f));
         }
         // A health bar under the feet from the first hit on (the boss has its own at the top of the screen).

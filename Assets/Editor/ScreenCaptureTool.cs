@@ -13,8 +13,8 @@ using UnityEngine.SceneManagement;
 // lobby, the in-run HUD, pause, card draft, result. Each scene is shown at 16:9 (Width x Height) whatever the editor
 // window is (a batch run's screen is 640 x 480): the main camera renders into a texture of that size and the overlay
 // canvases are drawn through it, so they lay themselves out for that size - for a few frames before the action and
-// the shot, so code that fits the UI to the canvas (Update) has run too. (World sprites with a higher sorting order
-// can then show on top of a panel - in the game the UI is always on top.)
+// the shot, so code that fits the UI to the canvas (Update) has run too. (The canvases are lifted above every world
+// sprite's sorting order for the shot, as an overlay is in the game.)
 public static class ScreenCaptureTool
 {
     struct Step { public string scene, shot; public Action act; }
@@ -28,7 +28,7 @@ public static class ScreenCaptureTool
     static bool prepared;
     static RenderTexture target;
     static Camera targetCam;
-    static readonly List<(Canvas canvas, RenderMode mode)> converted = new List<(Canvas, RenderMode)>();
+    static readonly List<(Canvas canvas, RenderMode mode, int order)> converted = new List<(Canvas, RenderMode, int)>();
 
     [MenuItem("Cats Smash/Capture Screens")]
     public static void Run() => Start(false);
@@ -63,6 +63,8 @@ public static class ScreenCaptureTool
         Add("WorldMapScene", "worldmap_easy", () => { Corruption.Level = Corruption.Easy; Find<CorruptionSelector>().Refresh(); });
         Add("Tutorial", "tutorial", () => Find<TutorialController>().JumpToStepForCapture(7));
         Add("LobbyScene", "lobby");
+        Add("Stage1", "legend"); // the first stage shows the minimap legend for its first seconds
+        Add("Stage2", "tip_skills", () => { GameSave.Data.seenTips = ""; OneTimeTip.ShowInRun("skills"); }); // a one-time tip in a run
         Add("Stage2", "hud", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); });
         Add("Stage2", "pause", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<PauseMenu>().OpenForPlaytest(); });
         Add("Stage2", "draft", () => Find<CardDraftUI>().Show(() => { }));
@@ -76,7 +78,13 @@ public static class ScreenCaptureTool
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(card.gameObject);
         });
         Add("Stage2", "buildsheet", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); BuildSheet.ForceShow = true; });
-        Add("Stage2", "result", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<ResultUI>().Show(false, 12, 1); });
+        Add("Stage2", "result", () =>
+        {
+            foreach (var id in cards) PlayerStats.Instance.ApplyCard(id);
+            // (The set banners the cards just raised would still be up: in a real run the result comes long after.)
+            foreach (var t in UnityEngine.Object.FindObjectsByType<RectTransform>()) if (t != null && t.name == "StageBanner") UnityEngine.Object.Destroy(t.gameObject);
+            Find<ResultUI>().Show(false, 12, 1);
+        });
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;
@@ -101,7 +109,7 @@ public static class ScreenCaptureTool
             {
                 var s = steps[index];
                 if (!prepared) { Prepare(); prepared = true; at = now + 0.6; return; }
-                if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 2.0; return; } // past a set banner (1.45 s) the cards may raise
+                if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 3.0; return; } // past a set banner (fade in, 1.45 s, fade out) the cards may raise
                 Shot(s.shot);
                 Release();
                 BuildSheet.ForceShow = false;
@@ -155,10 +163,12 @@ public static class ScreenCaptureTool
         foreach (var c in UnityEngine.Object.FindObjectsByType<Canvas>())
         {
             if (!c.isRootCanvas || c.renderMode != RenderMode.ScreenSpaceOverlay) continue;
-            converted.Add((c, c.renderMode));
+            converted.Add((c, c.renderMode, c.sortingOrder));
             c.renderMode = RenderMode.ScreenSpaceCamera;
             c.worldCamera = targetCam;
             c.planeDistance = 1f + (32000 - c.sortingOrder) * 0.0001f;
+            // Over every world sprite, as an overlay is in the game (a camera canvas sorts with the sprites).
+            c.sortingOrder = Mathf.Min(32000, 20000 + c.sortingOrder);
         }
     }
 
@@ -180,8 +190,8 @@ public static class ScreenCaptureTool
     // Back to the screen (canvases kept across scenes, like the fader, must not stay on a camera that is unloaded).
     static void Release()
     {
-        foreach (var (c, mode) in converted)
-            if (c != null) { c.renderMode = mode; if (mode == RenderMode.ScreenSpaceOverlay) c.worldCamera = null; }
+        foreach (var (c, mode, order) in converted)
+            if (c != null) { c.renderMode = mode; c.sortingOrder = order; if (mode == RenderMode.ScreenSpaceOverlay) c.worldCamera = null; }
         converted.Clear();
         if (targetCam != null) targetCam.targetTexture = null;
         if (target != null) UnityEngine.Object.DestroyImmediate(target);
