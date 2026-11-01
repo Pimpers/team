@@ -232,6 +232,14 @@ public class StageRandomizer : MonoBehaviour
         bool gentleFirstStage = run != null && run.stageNumber == 1 && Corruption.Level <= 0;
         if (gentleFirstStage && stageOneFinale != null) stageOneFinale.MakeElite();
         int elites = (gentleFirstStage ? 0 : eliteCount) + Corruption.ExtraElites(Corruption.Level);
+        // Fixed difficulty bands whatever the shuffle did: the elites are the monsters furthest from the start, so a
+        // run never opens on one by luck and the hardest fight is always the last stretch before the exit.
+        var map = GetComponent<StageMap>();
+        if (map != null)
+        {
+            Vector2 start = map.playerStart;
+            monsters.Sort((a, b) => Vector2.Distance(b.transform.position, start).CompareTo(Vector2.Distance(a.transform.position, start)));
+        }
         for (int i = 0; i < Mathf.Min(elites, monsters.Count); i++)
             monsters[i].MakeElite();
     }

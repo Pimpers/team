@@ -48,7 +48,7 @@ corruption.enemy_hp_speed = 적 체력 +{0}%  ·  이동 속도 +{1}%
 corruption.enemy_damage_full = \n적 공격 +1칸
 corruption.enemy_damage_half = \n적 공격 +반칸
 corruption.elites =   ·  정예 +{0}
-corruption.gold = \n<color=$amber>골드 +{0}%</color>
+corruption.gold = \n<color=$amber>보상  골드 x{0}  (+{1}%)</color>
 
 # CorruptionSelector
 corruption.selector.none = 타락도 없음
@@ -130,7 +130,6 @@ result.lose = 쓰러지고 말았다...
 result.gold = 획득 {0}+{1} (보유 {2})
 # the second line under the gold: the blacksmith hint, or (in its place) a newly opened 타락도 tier
 result.gold_hint = \n<size=80%>마을 대장간에서 강화할 수 있습니다</size>
-result.corruption_unlocked = \n<nobr><size=85%><color=$gold>타락도 {0} 해금!</color> <size=80%>(월드맵에서 선택)</size></size></nobr>
 result.boss_down = <color=$gold>보스 처치!</color>
 result.stage_of = 스테이지 {0} / {1}
 result.last_hit = \n<color=$dimlabel>마지막 공격</color><pos=40%><color=$hurt>{0}</color>
@@ -234,7 +233,6 @@ tutorial.step.dash = <color=$key>마우스 오른쪽 클릭</color>으로 대시
 tutorial.step.attack = <color=$key>마우스 클릭</color> 으로 허수아비 공격! 연속 클릭하면 3단 콤보
 tutorial.step.slam = 점프한 뒤 공중에서 <color=$key>클릭</color> 하면 내려찍기!
 tutorial.step.fight = 실전! 쥐를 물리치세요   (<color=$key>ESC</color> : 일시정지)
-tutorial.tip.sets = 카드의 <color=$key>#태그</color>를 2장 모으면 세트 효과, 3장이면 완성!
 tutorial.tip.route = 갈림길: 위 <color=$key>사냥 길</color>은 정예와 보물, 아래 <color=$key>안전 길</color>은 적이 적어요
 tutorial.tip.skills = 액티브 카드는 <color=$key>Q</color> <color=$key>E</color> <color=$key>R</color> 키에 순서대로 들어가요
 tutorial.tip.sheet = 전투 중 <color=$key>Tab</color>(패드 View)을 누르고 있으면 능력치와 카드 확인
@@ -452,7 +450,9 @@ draft.preview.set_unlock = <color={0}>#{1} {2}/{3} → {4}/{5}</color> <color=$g
 draft.preview.set_complete = <color={0}>#{1} {2}/{3} → {4}/{5}</color> <color=$gold>완성</color>
 draft.preview.slot = <color=$key>{0}</color>키에 장착
 draft.preview.level = Lv.{0} → <color=$gold>{1}</color>
-draft.badge.unlock =★ {0} 세트 해금
+draft.badge.to_unlock = {0} 세트까지 {1}장
+draft.badge.to_complete = {0} 완성까지 {1}장
+draft.badge.unlock = ★ {0} 세트 해금
 draft.badge.complete = ★ {0} 세트 완성
 draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음)</color></size>
 
@@ -487,3 +487,20 @@ sheet.no_cards = 아직 고른 카드가 없어요
 sheet.sets = 세트  {0}
 sheet.no_sets = <color=$dimlabel>세트 없음</color>
 result.card_count = 카드 {0}장\n
+result.news = \n<nobr><size=85%><color=$gold>{0}</color></size></nobr>
+result.unlock.corruption = 타락도 {0} 해금! <size=80%>(월드맵)</size>
+result.unlock.first_win = 첫 승리!
+result.unlock.best = 최고 기록 갱신!
+result.unlock.smith = 대장간 강화 {0}개 가능
+smith.talk.reroll_unlock = 자주 오는구냥. 특별히 <color=$gold>행운의 방울</color>을 꺼내 주겠다냥!
+smith.talk.regular = 이제 완전히 단골이다냥. 자네 발톱 소리만 들어도 알겠다냥.
+smith.locked = <b>???</b>\n<size=75%><color=$muted>대장간에 {0}번 오면 해금</color></size>
+smith.locked_say = 그건 아직 꺼내 줄 수 없다냥. {0}번째 방문 때 보자냥.
+tip.title = <color=$gold>팁</color>
+card.dash_cut.name = 대시 베기
+card.dash_cut.text = 대시로 지나간 적을\n공격력 60% 피해
+card.dash_cut.text2 = 대시로 지나간 적을\n공격력 100% 피해
+card.execute.name = 사냥 본능
+card.execute.text = 체력 15% 이하로\n남은 적은 바로 처치
+card.execute.text2 = 체력 25% 이하로\n남은 적은 바로 처치
+skill.execute = 처치!

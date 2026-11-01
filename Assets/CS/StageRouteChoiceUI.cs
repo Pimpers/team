@@ -28,6 +28,7 @@ public class StageRouteChoiceUI : MonoBehaviour
         ui.group.blocksRaycasts = false;
         GameClock.Pause("route");
         ui.StartCoroutine(ui.Open());
+        OneTimeTip.Show("route", canvas, font); // the first fork: what the two roads mean
     }
 
     IEnumerator Open()

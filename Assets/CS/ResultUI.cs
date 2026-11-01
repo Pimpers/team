@@ -120,8 +120,10 @@ public class ResultUI : MonoBehaviour
         if (goldText != null)
         {
             // Two lines at most: a third ran into the buttons, so a newly opened tier takes the hint's place.
+            string news = Unlocks(win, goldEarned, unlockedCorruption);
             goldText.text = Loc.F("result.gold", Currency.Icon, goldEarned, MetaProgress.Gold) +
-                            (unlockedCorruption > 0 ? Loc.F("result.corruption_unlocked", unlockedCorruption) : Loc.T("result.gold_hint"));
+                            (news.Length > 0 ? Loc.F("result.news", news) : Loc.T("result.gold_hint"));
+            NewBest = false;
             // The fish-bone icon is taller than the text; grow the box so the two lines fit.
             // 36 at most (it was 48 and ran past the board's sides), shrinking to 24 inside a box the board's width.
             var rt = goldText.rectTransform;
@@ -135,6 +137,24 @@ public class ResultUI : MonoBehaviour
         // Upgrades moved to the village blacksmith.
         foreach (var label in new[] { attackButtonLabel, speedButtonLabel, hpButtonLabel })
             if (label != null && label.transform.parent != null) label.transform.parent.gameObject.SetActive(false);
+    }
+
+    // Set by RunManager when a win beats the best 타락도 cleared so far.
+    public static bool NewBest;
+
+    // What this run opened up, on one line: a new 타락도 tier, the first win / a new best, and the blacksmith
+    // upgrades the gold just brought within reach (affordable now, not before the run).
+    static string Unlocks(bool win, int goldEarned, int unlockedCorruption)
+    {
+        var parts = new System.Collections.Generic.List<string>();
+        if (unlockedCorruption > 0) parts.Add(Loc.F("result.unlock.corruption", unlockedCorruption));
+        if (win && GameSave.Data.wins == 1) parts.Add(Loc.T("result.unlock.first_win"));
+        else if (win && NewBest) parts.Add(Loc.T("result.unlock.best"));
+        int before = MetaProgress.Gold - goldEarned, ready = 0;
+        foreach (MetaProgress.Upgrade u in System.Enum.GetValues(typeof(MetaProgress.Upgrade)))
+            if (!MetaProgress.IsMaxed(u) && MetaProgress.Gold >= MetaProgress.Cost(u) && before < MetaProgress.Cost(u)) ready++;
+        if (ready > 0) parts.Add(Loc.F("result.unlock.smith", ready));
+        return string.Join("  ·  ", parts);
     }
 
     // ---------------------------------------------------------------- the run, looked back on

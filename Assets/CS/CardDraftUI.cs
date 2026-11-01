@@ -11,8 +11,8 @@ using TMPro;
 // in the box underneath.
 // The three buttons in the scene still call ChooseAttack / ChooseSpeed / ChooseHP from
 // their OnClick - those now simply mean "slot 1 / 2 / 3".
-// Under the cards, "다시 뽑기" deals three new ones for some of this run's gold (5, then 10, 15... within one
-// draft) - so the gold picked up in a run has a use there and then, at the price of less to bank at the end.
+// Under the cards, "다시 뽑기" deals three new ones for some of this run's gold (5, then 10, 15... over the
+// whole run) - so the gold picked up in a run has a use there and then, at the price of less to bank at the end.
 public class CardDraftUI : MonoBehaviour
 {
     public GameObject panel;
@@ -35,7 +35,6 @@ public class CardDraftUI : MonoBehaviour
     {
         onChosenCallback = onChosen;
         fastDeal = RunStats.CardDrafts > 0;
-        rerolls = 0;
         Deal();
         ShowSetTip();
         if (card1Label != null) GameInput.SelectForPad(card1Label.GetComponentInParent<Button>()); // pad: A picks, d-pad moves
@@ -83,19 +82,19 @@ public class CardDraftUI : MonoBehaviour
 
     // ---- Reroll
     const int RerollBase = 5;
-    int rerolls;
+    // Paid rerolls so far this run (the free ones first): the price climbs over the whole run, not anew each draft,
+    // so rerolling is a spend to weigh rather than a free retry every stage.
+    static int PaidRerolls => Mathf.Max(0, RunStats.Rerolls - MetaProgress.Level(MetaProgress.Upgrade.Reroll));
     Button rerollButton;
     TextMeshProUGUI rerollLabel;
     // 행운의 방울 (MetaProgress.Upgrade.Reroll): the run's first rerolls are free, one per level.
     static int FreeRerollsLeft => Mathf.Max(0, MetaProgress.Level(MetaProgress.Upgrade.Reroll) - RunStats.Rerolls);
-    int RerollCost => FreeRerollsLeft > 0 ? 0 : RerollBase * (rerolls + 1);
+    int RerollCost => FreeRerollsLeft > 0 ? 0 : RerollBase * (PaidRerolls + 1);
 
     void Reroll()
     {
         var stats = PlayerStats.Instance;
-        bool free = FreeRerollsLeft > 0;
         if (stats == null || dealing != null || !stats.SpendGold(RerollCost)) { Sfx.Play("ui_error", 0.6f); return; }
-        if (!free) rerolls++; // only paid rerolls raise the price
         RunStats.Rerolls++;
         Sfx.Play("coin", 1f, 0.8f);
         Deal();
@@ -512,6 +511,14 @@ public class CardDraftUI : MonoBehaviour
             if (lv > CardPool.SetLevel(have))
                 return Loc.F(lv >= 2 ? "draft.badge.complete" : "draft.badge.unlock", CardPool.TagNames[(int)t]);
         }
+        // No step reached by this card: how far its set still is ("발톱 세트까지 1장"), so every pick shows its way there.
+        foreach (var t in CardPool.TagsOf(card.id))
+        {
+            int after = s.SetCount(t) + 1;
+            if (after >= CardPool.SetStep2) continue;
+            int goal = after >= CardPool.SetStep1 ? CardPool.SetStep2 : CardPool.SetStep1;
+            return Loc.F(goal >= CardPool.SetStep2 ? "draft.badge.to_complete" : "draft.badge.to_unlock", CardPool.TagNames[(int)t], goal - after);
+        }
         return null;
     }
 
@@ -610,6 +617,7 @@ public class CardDraftUI : MonoBehaviour
         if (panel != null) panel.SetActive(false);
         GameClock.Resume("draft");
         onChosenCallback?.Invoke();
+        OneTimeTip.ShowInRun("sheet"); // after the first card: where to see the build
     }
 }
 

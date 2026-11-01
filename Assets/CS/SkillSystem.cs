@@ -109,6 +109,7 @@ public partial class SkillSystem : MonoBehaviour
         if (id == "k_loaf") shieldUp = true;
         if (id == "a_watch") Vfx.Play("a_watch_fx", Feet, 1f);
         DamagePopup.SpawnLabel(transform.position + Vector3.up * 1.4f, c.name, new Color(1f, 0.85f, 0.4f));
+        if (c.kind == CardPool.Kind.Active) OneTimeTip.ShowInRun("skills"); // the first active: which key it went to
     }
 
     // PlayerStats.TakeDamage: a hit landed (not blocked or dodged).
@@ -133,6 +134,7 @@ public partial class SkillSystem : MonoBehaviour
         if (body.IsDead) { StopCast(); return; }
 
         UpdatePassives(dt);
+        UpdateDashCut();
 
         if (PauseMenu.IsOpen || (RunManager.Instance != null && RunManager.Instance.RunEnded)) return;
         var actives = stats.ActiveSkills;

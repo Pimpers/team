@@ -383,6 +383,7 @@ public class RunManager : MonoBehaviour
         {
             // Records for the world map (a reason to go again besides the next 타락도 tier).
             GameSave.Data.wins++;
+            ResultUI.NewBest = Corruption.Level > GameSave.Data.bestClear; // shown on the result board as this run's news
             GameSave.Data.bestClear = Mathf.Max(GameSave.Data.bestClear, Corruption.Level);
             GameSave.Save();
         }

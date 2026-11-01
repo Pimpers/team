@@ -39,7 +39,7 @@ public static class Corruption
         float dmg = ExtraDamage(lv);
         if (dmg > 0f) s += Loc.T(dmg >= 1f ? "corruption.enemy_damage_full" : "corruption.enemy_damage_half");
         s += Loc.F("corruption.elites", ExtraElites(lv));
-        s += Loc.F("corruption.gold", 25 * lv);
+        s += Loc.F("corruption.gold", GoldMultiplier(lv).ToString("0.##"), 25 * lv); // the reward, as a number next to the cost
         return s;
     }
 

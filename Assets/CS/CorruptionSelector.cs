@@ -47,6 +47,7 @@ public class CorruptionSelector : MonoBehaviour
         descText.text = Corruption.Describe(lv);
         prev.interactable = lv > Corruption.Easy;
         next.interactable = lv < Corruption.Unlocked;
+        if (Corruption.Unlocked > 0) OneTimeTip.Show("corruption", GetComponentInParent<Canvas>(), levelText.font); // the first tier on offer
     }
 
     static TMP_Text Text(RectTransform parent, string name, string text, float size, Color color, TMP_FontAsset font, Vector2 pos, Vector2 box)

@@ -21,6 +21,13 @@ public partial class Enemy
         if (damageTakenMultiplier != 1f) amount = Mathf.Max(1, Mathf.RoundToInt(amount * damageTakenMultiplier));
         RunStats.DamageDealt += Mathf.Min(amount, Mathf.Max(0, hp)); // (overkill doesn't count)
         hp -= amount;
+        // 사냥 본능 (execute card): a hit that leaves a monster nearly dead finishes it (never the boss).
+        if (!quiet && !isBoss && hp > 0 && hp <= MaxHP * SkillSystem.ExecuteThreshold(PlayerStats.Instance))
+        {
+            hp = 0;
+            crit = true; // lands with the critical hit's weight (stop, shake, number)
+            DamagePopup.SpawnLabel(new Vector3(transform.position.x, BodyTopY + 0.4f, 0f), Loc.T("skill.execute"), new Color(1f, 0.4f, 0.3f));
+        }
         // A health bar under the feet from the first hit on (the boss has its own at the top of the screen).
         if (hpBar == null && !isBoss && definition != null && hp > 0) hpBar = EnemyHPBar.Attach(this);
         Bounds b = sr != null ? sr.bounds : new Bounds(transform.position, Vector3.one);
@@ -32,7 +39,9 @@ public partial class Enemy
         {
             Sfx.Play(strong || crit ? "hit_strong" : "hit", 1f, crit ? 1.15f : 1f);
             // Hit feel: a tiny freeze, a damage number, and a knockback slide.
-            HitStop.Do(hp <= 0 ? (isBoss ? 0.2f : 0.12f) : finisher ? 0.13f : strong ? 0.09f : 0.05f); // one stop per hit (a second would count as a streak and be cut short)
+            // Graded by weight: kill > crit + finisher > finisher > crit > strong > a plain hit (a crit used to stop as
+            // short as a plain hit and only showed in its number).
+            HitStop.Do(hp <= 0 ? (isBoss ? 0.2f : crit ? 0.15f : 0.12f) : finisher ? (crit ? 0.16f : 0.13f) : crit ? 0.1f : strong ? 0.09f : 0.05f); // one stop per hit (a second would count as a streak and be cut short)
             HitReaction(strong, finisher);
             DamagePopup.Spawn(new Vector3(b.center.x, BodyTopY, 0f), amount, strong, crit);
             // Hit flash: a pixel star burst - bigger for strong hits, orange for crits.
@@ -41,7 +50,8 @@ public partial class Enemy
             // Shove the view the way the hit flies (more for a strong hit or a crit).
             float kickDir = push != 0f ? Mathf.Sign(push) : (player != null ? Mathf.Sign(Center.x - PlayerCenter.x) : -facing);
             CameraFollow.Kick(new Vector2(kickDir, 0f), finisher ? 0.16f : strong || crit ? 0.1f : 0.04f);
-            if (finisher) CameraFollow.Shake(0.14f, 0.12f);
+            if (finisher) CameraFollow.Shake(crit ? 0.2f : 0.14f, crit ? 0.15f : 0.12f);
+            else if (crit) CameraFollow.Shake(0.08f, 0.08f);
         }
         if (!quiet && definition != null && !definition.superArmor)
         {
@@ -65,6 +75,7 @@ public partial class Enemy
                 else
                 {
                     knockVelocity = away * KnockSpeed * 1.8f;
+                    CameraFollow.Shake(finisher || crit ? 0.16f : 0.1f, 0.1f); // a kill thumps, a finishing or critical one harder
                     hopHeight = 0.45f;
                     hopTimer = HopTime;
                 }

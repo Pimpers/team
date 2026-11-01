@@ -28,6 +28,8 @@
     {"id":"guard","kind":"Stat","job":"Any","tier":"Common","maxLevel":2,"icon":"parry","cooldown":0,"enhance":"","tags":["Fur"],"offensive":false},
     {"id":"greed","kind":"Stat","job":"Any","tier":"Common","maxLevel":2,"icon":"sparkle","cooldown":0,"enhance":"","tags":["Treat"],"offensive":false},
     {"id":"jump","kind":"Stat","job":"Any","tier":"Common","maxLevel":1,"icon":"pulse_mid","cooldown":0,"enhance":"","tags":["Wind"],"offensive":false},
+    {"id":"dash_cut","kind":"Stat","job":"Any","tier":"Rare","maxLevel":2,"icon":"dust_side","cooldown":0,"enhance":"","tags":["Wind","Claw"],"offensive":true},
+    {"id":"execute","kind":"Stat","job":"Any","tier":"Rare","maxLevel":2,"icon":"rupture","cooldown":0,"enhance":"","tags":["Hunt"],"offensive":true},
     {"id":"finisher","kind":"Stat","job":"Any","tier":"Common","maxLevel":2,"icon":"rupture","cooldown":0,"enhance":"","tags":["Claw"],"offensive":true},
     {"id":"k_combo","kind":"Active","job":"Knight","tier":"Common","maxLevel":2,"icon":"slash","cooldown":6,"enhance":"","tags":["Claw"],"offensive":false},
     {"id":"k_highcut","kind":"Active","job":"Knight","tier":"Rare","maxLevel":2,"icon":"slash","cooldown":7,"enhance":"","tags":["Claw","Wind"],"offensive":false},

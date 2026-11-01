@@ -7,8 +7,9 @@ using TMPro;
 // through the controls one at a time - a prompt at the top of the screen, and the next one
 // only once they've actually done it:
 //   move -> jump a ledge -> double jump a wall -> drop through a platform (S) -> dash ->
-//   3-hit combo on a dummy -> jump attack -> a real fight with two rats -> five read-only tips
-//   (sets, the route fork, Q/E/R skills, the Tab sheet, corruption).
+//   3-hit combo on a dummy -> jump attack -> a real fight with two rats.
+// What comes later in a run (sets, the route fork, Q/E/R, the Tab sheet, corruption) is no longer read out here in
+// a row: each tip shows once when its moment first comes (OneTimeTip, CardDraftUI.ShowSetTip).
 // The terrain forces the movement steps (the wall needs the double jump, the platform walk
 // ends in a wall so S is the only way on). The player can't die here (PlayerStats.Immortal).
 // Finishing or skipping marks it done (TutorialProgress) and starts the real run.
@@ -45,14 +46,9 @@ public class TutorialController : MonoBehaviour
         Loc.T("tutorial.step.attack"),
         Loc.T("tutorial.step.slam"),
         Loc.T("tutorial.step.fight"),
-        Loc.T("tutorial.tip.sets"),
-        Loc.T("tutorial.tip.route"),
-        Loc.T("tutorial.tip.skills"),
-        Loc.T("tutorial.tip.sheet"),
-        Loc.T("tutorial.tip.corruption"),
     };
-    // The last steps only explain what comes later in a run (sets, the route fork, Q/E/R skills, the Tab sheet, corruption):
-    // nothing to do but read, so each moves on by itself after a while, or at once on Space / Enter / pad A.
+    // Read-only tip steps after the fight (none at present - the tips moved into the run, see the top): any steps
+    // past FirstTipStep would move on by themselves after a while, or at once on Space / Enter / pad A.
     const int FirstTipStep = 8;
     const float TipTime = 5f;
     float stepTime;
@@ -218,7 +214,7 @@ public class TutorialController : MonoBehaviour
         promptText.textWrappingMode = TextWrappingModes.Normal; // a long tip takes two lines rather than running out of the panel
         var prt = promptText.rectTransform;
         prt.anchorMin = Vector2.zero; prt.anchorMax = Vector2.one;
-        prt.offsetMin = new Vector2(140f, 10f); // clear of the step counter prt.offsetMax = new Vector2(-40f, -10f);
+        prt.offsetMin = new Vector2(140f, 10f); prt.offsetMax = new Vector2(-40f, -10f); // left: clear of the step counter
 
         counterText = Text(rt, "Counter", 26f, UISkin.InkSoft, font, TextAlignmentOptions.Left);
         var crt = counterText.rectTransform;

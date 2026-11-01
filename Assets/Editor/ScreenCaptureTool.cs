@@ -61,7 +61,7 @@ public static class ScreenCaptureTool
         Add("TitleScene", "title_settings", () => TitleSettings.Show(Find<Canvas>().rootCanvas, Find<TMPro.TMP_Text>().font));
         Add("WorldMapScene", "worldmap");
         Add("WorldMapScene", "worldmap_easy", () => { Corruption.Level = Corruption.Easy; Find<CorruptionSelector>().Refresh(); });
-        Add("Tutorial", "tutorial_tips", () => Find<TutorialController>().JumpToStepForCapture(11));
+        Add("Tutorial", "tutorial", () => Find<TutorialController>().JumpToStepForCapture(7));
         Add("LobbyScene", "lobby");
         Add("Stage2", "hud", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); });
         Add("Stage2", "pause", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<PauseMenu>().OpenForPlaytest(); });
