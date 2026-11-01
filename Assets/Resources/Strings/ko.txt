@@ -1,0 +1,429 @@
+# Cats Smash text table (Korean). Read by CS/Loc.cs: `key = text`, one per line.
+# \n is a line break; {0} {1}... are filled in by the code (Loc.F, string.Format specs like {0:0.#} work);
+# $name inside <color=...> is a UiTheme colour (gold, key, ink, muted, amber, label, dimlabel, ...).
+# Keep a key's {n} count when editing a line: the code passes exactly that many values.
+
+# BlacksmithUI
+smith.attack = 공격력
+smith.speed = 이동 속도
+smith.heart = 하트
+smith.attack.effect = 공격력 +1
+smith.speed.effect = 이동 속도 +15%
+smith.heart.effect = 최대 하트 +1칸
+smith.greeting = 어서 오게, 용병. 무엇을 강화하겠나?
+smith.maxed_already = {0}{1} 이미 최고 수준이네. 더는 손볼 데가 없어.
+smith.maxed_now = {0} 최대 강화 달성! (Lv.{1})
+smith.upgraded = {0} 강화 완료! (Lv.{1})
+smith.no_gold = {0}가 부족하네. 의뢰를 더 해오게.
+grammar.topic_after_final = 은
+grammar.topic = 는
+smith.prompt = 무엇을 강화하겠나?
+smith.owned = 보유 {0}
+smith.max = 최대
+smith.cost = 강화 {0}
+
+# BossBrain
+boss.banner_hint = 점프·대시로 공격 회피
+boss.opening = 빈틈!
+boss.default_name = 보스
+boss.enraged = {0} - 격노
+boss.phase2 = {0} - 2페이즈
+
+# CardDraftUI
+draft.reroll = 다시 뽑기  {0}{1}  <size=75%><color=$label>(보유 {2})</color></size>
+draft.instant = 즉시
+draft.max =   최대
+draft.kind.active = <color=$active>액티브 · {0}키</color>
+draft.kind.passive = <color=$passive>패시브</color>
+draft.kind.enhance = <color=$enhance>{0} 강화</color>
+draft.set_complete = <b>{0} 완성!</b>
+
+# CardRewardChest
+chest.hits = 평타  {0}/{1}
+
+# Corruption
+corruption.none = 기본 난이도
+corruption.enemy_hp_speed = 적 체력 +{0}%  ·  이동 속도 +{1}%
+corruption.enemy_damage_full = \n적 공격 +1칸
+corruption.enemy_damage_half = \n적 공격 +반칸
+corruption.elites =   ·  정예 +{0}
+corruption.gold = \n<color=$amber>골드 +{0}%</color>
+
+# CorruptionSelector
+corruption.selector.none = 타락도 없음
+corruption.selector.level = <color=$key>타락도 {0}</color>
+
+# CreditsPanel
+credits.title = 크레딧
+ui.close = 닫기
+
+# DamagePopup
+
+# DashBar
+hud.dash = 대시 <size=75%>· 우클릭</size>
+
+# Enemy.Behaviour
+enemy.leap_up = 도약 ↑
+enemy.leap_down = 도약 ↓
+enemy.elite_name = 정예 {0}
+damage.enemy_attack = 적 공격
+
+# Enemy
+damage.enemy_contact = 적 접촉
+
+# EnemyWeb
+enemy.web = 거미줄!
+
+# HorizontalEncounterController
+encounter.area_clear_heal = 구역 완료 · 하트 +0.5
+
+# LobbyController
+lobby.name_prompt = 이름을 알려주세요!
+lobby.name_max = 최대 {0}글자
+lobby.role_group = 역할군  |  {0}
+
+# OptionsUI
+options.music = 음악 볼륨
+options.sfx = 효과음 볼륨
+options.shake = 화면 흔들림
+options.fullscreen.on = 화면: 전체 화면
+options.fullscreen.off = 화면: 창 모드
+options.hitstop.on = 히트스톱: 켜짐
+options.hitstop.off = 히트스톱: 꺼짐
+ui.quit_confirm = 정말 종료
+ui.quit = 게임 종료
+
+# PauseMenu
+pause.title = 일시정지
+pause.resume = 계속하기
+pause.give_up = 포기하고 마을로
+pause.quit_note = 종료해도 모은 골드는\n마을에 바로 정산됩니다
+controls.move = 이동
+controls.jump = 점프 · 공중 2단 점프
+controls.drop = 발판 아래로 내려가기
+controls.right_click = 마우스 우클릭
+controls.dash = 대시 · 무적 · 2회
+controls.left_click = 마우스 좌클릭
+controls.attack = 공격 · 3단 콤보
+controls.skills = 카드 스킬
+controls.air_click = 공중에서 클릭
+controls.slam = 내려찍기
+pause.controls = 조작키
+pause.cards = 보유 카드
+pause.stats = 공격력 {0}   ·   하트 {1:0.#} / {2:0.#}
+pause.set_next = <color=$muted>  ({0}장: {1})</color>\n
+pause.more_cards = <color=$muted>외 {0}장</color>
+pause.no_cards = <color=$muted>아직 고른 카드가 없어요\n스테이지를 클리어하면 카드를 고를 수 있어요</color>
+pause.give_up_confirm = 정말 포기하기
+
+# PlayerStats
+card.starter = 시작 카드
+set.complete = 완성
+set.unlocked = 세트 해금
+player.healed = 회복!
+
+# ResultUI
+result.retry = 바로 재도전
+result.win = 의뢰 완수!
+result.lose = 쓰러지고 말았다...
+result.gold = 획득 {0}+{1} (보유 {2})
+# the second line under the gold: the blacksmith hint, or (in its place) a newly opened 타락도 tier
+result.gold_hint = \n<size=80%>마을 대장간에서 강화할 수 있습니다</size>
+result.corruption_unlocked = \n<nobr><size=85%><color=$gold>타락도 {0} 해금!</color> <size=80%>(월드맵에서 선택)</size></size></nobr>
+result.boss_down = <color=$gold>보스 처치!</color>
+result.stage_of = 스테이지 {0} / {1}
+result.last_hit = \n<color=$dimlabel>마지막 공격</color><pos=40%><color=$hurt>{0}</color>
+result.worst_enemy = \n<color=$dimlabel>가장 아픈 적</color><pos=40%><color=$orange>{0}</color>
+result.next_tip = \n<size=75%><color=$tip>다음 판: {0}</color></size>
+result.rerolls = \n<color=$dimlabel>다시 뽑기</color><pos=40%>{0}번 ({1}{2})
+result.title = <size=150%><color=$gold>이번 의뢰</color></size>\n
+result.reached = <color=$dimlabel>도달</color><pos=40%>{0}\n
+result.time = <color=$dimlabel>플레이 시간</color><pos=40%>{0}\n
+result.seed = <color=$dimlabel>런 씨앗</color><pos=40%>{0}\n
+result.kills = <color=$dimlabel>처치</color><pos=40%>{0}마리
+result.elite_kills =   (정예 {0})
+result.damage_dealt = <color=$dimlabel>가한 피해</color><pos=40%>{0:N0}\n
+result.damage_taken = <color=$dimlabel>받은 피해</color><pos=40%>{0:0.#}
+result.build = <size=150%><color=$gold>빌드</color></size>\n
+result.no_cards = <color=$dimlabel>(고른 카드 없음)</color>\n
+result.set_complete = {0} 완성
+result.set = {0} 세트
+
+# RouteChest
+route.treasure = 보물!  골드 +{0}
+
+# RunManager
+hud.tutorial = 튜토리얼\n
+hud.corruption = <color=$danger>타락도 {0}</color>\n
+hud.starter = <size=85%><color=$label>시작</color> <color=$gold>{0}</color></size>\n
+hud.enemies_left = <color=$label>전체 적</color> <color={0}>{1}</color>\n
+route.hunt = 사냥 길
+route.safe = 안전 길
+route.hunt.hint = 위 길 · 정예와 보물
+route.safe.hint = 아래 길 · 적 15% 감소
+route.hunt.chosen_rare = 정예 1마리 · 골드 +25% · 다음 카드 희귀 보장
+route.hunt.chosen = 정예 1마리 · 골드 +25%
+route.safe.chosen = 적 {0}마리 감소
+stage.clear = 스테이지 클리어!
+stage.clear_heal = 하트 {0:0.#}칸 회복
+
+# RunStats
+damage.unknown = 알 수 없는 공격
+tip.1.match = 거미
+tip.1 = 거미줄은 점프나 대시로 피하세요.
+tip.2.match = 슬라임
+tip.2 = 슬라임은 먼저 처치하세요.
+tip.3.match = 버섯
+tip.3 = 버섯 돌진 뒤에 공격하세요.
+tip.4.match = 쥐
+tip.4 = 쥐가 몰리면 거리를 벌리세요.
+tip.5.match = 곰
+tip.5 = 곰 돌진은 높은 발판으로 피하세요.
+tip.6.match = 함정
+tip.6 = 함정 위에 \"!\"가 뜨면 물러나세요.
+tip.default = 하트를 아끼고 위험한 적부터 처치하세요.
+time.min_sec = {0}분 {1:00}초
+time.sec = {0}초
+
+# SkillSystem.Knight
+skill.reflect = 반사!
+skill.counter = 반격!
+
+# SkillSystem.Passives
+skill.groom = 그루밍
+skill.blocked = 막음!
+
+# StageEncounterController
+encounter.enemies_left = 현재 구역 적 {0}마리
+encounter.new_area = 새 구역!
+encounter.area_clear = 구역 완료!
+
+# StageMinimap
+minimap.legend = <color=$gold>● 나</color>  <color=$map_enemy>● 적</color>  <color=$map_chest>■ 상자</color>  <color=$map_exit>◆ 출구</color>
+
+# StageRouteChoiceUI
+route.choice.title = 다음 길을 고르세요
+route.choice.subtitle = 아래는 안전 · 위는 보물
+route.choice.safe = 아래 길\n적 15% 감소
+route.choice.rare_now = <color=$gold>이번에 고르면 다음 카드 희귀 보장!</color>
+route.choice.rare_progress = 사냥 길 2번마다 희귀 카드 ({0}/2)
+route.choice.hunt = <color=$gold>보물 상자 (골드 · 하트 회복)</color>\n위 길 · 정예 1마리 · 골드 +25%\n{0}
+
+# StageTitle
+stage.name.1 = 숲 가장자리
+stage.name.2 = 노을 나무탑
+stage.name.3 = 깊은 숲
+stage.name.4 = 붉은 숲 꼭대기
+stage.name.5 = 타락한 숲의 심장
+stage.number = 스테이지 {0}-{1}
+
+# TrapHazard
+trap.fire = 불 함정
+trap.poison = 독 함정
+trap.spike = 가시 함정
+trap.saw = 톱날 함정
+trap.arrow = 화살 함정
+
+# TutorialController
+tutorial.step.move = <color=$key>A</color> / <color=$key>D</color> 키로 이동해 보세요
+tutorial.step.jump = <color=$key>Space</color> (또는 W) 로 점프! 앞의 턱을 넘어가세요
+tutorial.step.double_jump = 높은 벽! 공중에서 <color=$key>Space</color>를 한 번 더 눌러 2단 점프
+tutorial.step.drop = 발판 위에서 <color=$key>S</color> 키를 누르면 아래로 내려갈 수 있어요
+tutorial.step.dash = <color=$key>마우스 오른쪽 클릭</color>으로 대시! 2번 연속으로 쓸 수 있고, 대시하는 순간에는 공격을 피해요
+tutorial.step.attack = <color=$key>마우스 클릭</color> 으로 허수아비 공격! 연속 클릭하면 3단 콤보
+tutorial.step.slam = 점프한 뒤 공중에서 <color=$key>클릭</color> 하면 내려찍기!
+tutorial.step.fight = 실전! 쥐를 물리치세요   (<color=$key>ESC</color> : 일시정지)
+tutorial.good = <color=$good>좋아요!</color>
+tutorial.done_rich = <color=$good>튜토리얼 완료!</color>
+tutorial.done = 튜토리얼 완료!
+tutorial.done_sub = 이제 진짜 의뢰를 떠나요
+tutorial.skip = 튜토리얼 건너뛰기
+
+# WorldMapController
+worldmap.locked = 아직 갈 수 없는 지역입니다
+hud.tutorial_name = 튜토리얼
+
+# CardPool: grades, tags and set bonuses
+tier.Common = 일반
+tier.Rare = 희귀
+tier.Epic = 전설
+tag.Claw = 발톱
+set.Claw.1 = 피해 +12%
+set.Claw.2 = 피해 +25%, 치명타 +10%
+tag.Wind = 바람
+set.Wind.1 = 이동·공격 속도 +10%
+set.Wind.2 = 스킬 대기시간 -15%
+tag.Fur = 털가죽
+set.Fur.1 = 최대 하트 +1칸
+set.Fur.2 = 피격 무적 +0.4초, 클리어 회복 +1칸
+tag.Hunt = 사냥
+set.Hunt.1 = 기절·유혹 시간 +40%
+set.Hunt.2 = 상태이상 적에게 피해 +30%
+tag.Treat = 간식
+set.Treat.1 = 처치 시 골드 +1
+set.Treat.2 = 처치 시 20%로 하트 반 칸 회복
+enhance.basic = 평타
+enhance.dash = 대시
+enhance.jump_attack = 점프 공격
+# an active card at level 1: its text, then this line
+card.cooldown = \n대기 {0:0}초
+card.cooldown_word = 대기
+card.active_up = 강화: 피해 +50%\n대기시간 -20%
+
+# CardPool: the cards ({lifesteal} {crit} {dashes} are filled in for the level being bought)
+card.attack.name = 날카로운 발톱
+card.attack.text = 공격력 +1
+card.speed.name = 바람의 발걸음
+card.speed.text = 이동 속도 +12%
+card.heart.name = 튼튼한 심장
+card.heart.text = 최대 하트 +1칸
+card.heal.name = 고양이 낮잠
+card.heal.text = 하트 2칸 회복
+card.lifesteal.name = 피의 갈증
+card.lifesteal.text = 처치 시 {lifesteal}% 확률로\n하트 반 칸 회복
+card.crit.name = 급소 찌르기
+card.crit.text = 치명타 확률 {crit}%\n(피해 2배)
+card.reach.name = 긴 발톱
+card.reach.text = 공격 범위·사거리 +15%
+card.haste.name = 날렵한 몸놀림
+card.haste.text = 공격 속도 +12%
+card.dash.name = 그림자 대시
+card.dash.text = 대시 충전 시간 -25%\n대시 거리 +20%
+card.dash_more.name = 연속 대시
+card.dash_more.text = 연속 대시 +1회\n(최대 {dashes}회)
+card.guard.name = 질긴 털가죽
+card.guard.text = 피격 후 무적 +0.3초
+card.greed.name = 황금 수염
+card.greed.text = 처치 시 골드 +1
+card.jump.name = 구름 점프
+card.jump.text = 공중 점프 +1회
+card.finisher.name = 필살 일격
+card.finisher.text = 콤보 마무리·내려찍기\n피해 +50%
+card.k_combo.name = 냥냥 연속 베기
+card.k_combo.text = 앞으로 빠르게 3번 벤다
+card.k_highcut.name = 하이점프 상단 베기
+card.k_highcut.text = 높이 뛰어오르며\n위쪽을 크게 벤다
+card.k_knead.name = 꾹꾹이 베기
+card.k_knead.text = 앞으로 충격파 3번\n(잠깐 기절)
+card.k_tower.name = 캣타워 점프 찍기
+card.k_tower.text = 점프 공격 착지 때\n넓은 충격파 + 기절
+card.k_tower.text2 = 충격파 피해 +50%\n범위 +25%
+card.k_loaf.name = 식빵 자세
+card.k_loaf.text = 공격 1번 막는 보호막\n(12초마다)
+card.k_loaf.text2 = 보호막 8초마다
+card.k_groom.name = 그루밍
+card.k_groom.text = 8초간 안 맞으면\n하트 반 칸 회복
+card.k_groom.text2 = 5초간 안 맞으면 회복
+card.k_ilseom.name = 일섬: 냥냥 오의
+card.k_ilseom.text = 기를 모아 순간 돌진\n지나간 적을 X자로 벤다
+card.k_rush.name = 냥이 돌진
+card.k_rush.text = 돌진해 적을 날린다\n(돌진 중 무적)
+card.k_leap.name = 냥이의 도약
+card.k_leap.text = 대시 거리 +25%\n끝날 때 연기 폭발 피해
+card.k_leap.text2 = 연기 폭발 피해 2배
+card.k_wheel.name = 난폭한 캣휠 검무
+card.k_wheel.text = 1.6초간 빙글빙글 돌며\n주변을 계속 벤다
+card.k_paw.name = 날카로운 솜방망이
+card.k_paw.text = 평타 피해 +25%\n검에 황금 오라
+card.k_paw.text2 = 평타 피해 +50%
+card.k_hiss.name = 위협의 하악질
+card.k_hiss.text = 하악! 주변 적을\n밀쳐내고 기절시킨다
+card.k_night.name = 야간 시야
+card.k_night.text = 치명타 확률 +15%
+card.k_night.text2 = 치명타 확률 +25%
+card.k_tail.name = 꼬리 휘두르기 방어
+card.k_tail.text = 주변을 한 바퀴 베고\n보스 충격파를 되돌린다
+card.k_whisker.name = 수염 센서 반격
+card.k_whisker.text = 공격을 피하고 적 뒤로\n순간이동 반격 (10초마다)
+card.k_whisker.text2 = 7초마다 반격
+card.a_jelly.name = 기폭 젤리 화살
+card.a_jelly.text = 3발마다 화살이\n터지며 주변 피해
+card.a_jelly.text2 = 2발마다 폭발
+card.a_smile.name = 냥이의 미소
+card.a_smile.text = 하트를 날려 주변 적을\n2.5초간 홀린다
+card.a_catnip.name = 캣닙 독화살
+card.a_catnip.text = 화살에 맞은 적이\n2초간 중독
+card.a_catnip.text2 = 중독 3초 + 피해 증가
+card.a_meteor.name = 유성 화살비
+card.a_meteor.text = 마우스 위치에\n화살 비를 쏟아붓는다
+card.a_rapid.name = 연속 냥냥 사격
+card.a_rapid.text = 마우스 방향으로\n화살 4발 연사
+card.a_backstep.name = 백스텝 샷
+card.a_backstep.text = 뒤로 뛰며 관통하는\n전기 화살 (무적)
+card.a_wire.name = 방울 와이어
+card.a_wire.text = 바닥에 방울 와이어\n밟은 적 감전
+card.a_fish.name = 생선가시 화살
+card.a_fish.text = 화살이 적 3마리 관통\n피해 +10%
+card.a_fish.text2 = 무제한 관통
+card.a_trap.name = 끈적이 쥐덫
+card.a_trap.text = 발 앞에 쥐덫 설치,\n밟으면 피해 + 묶임
+card.a_churu.name = 츄르 유인책
+card.a_churu.text = 츄르를 던져 주변 적을\n4초간 끌어모은다
+card.a_curve.name = 곡선 털실 화살
+card.a_curve.text = 3발마다 튀는\n털실 공 추가
+card.a_curve.text2 = 2발마다 털실 공
+card.a_watch.name = 캣타워 관측
+card.a_watch.text = 사거리 +30%\n먼 적 피해 +15%
+card.a_watch.text2 = 먼 적 피해 +30%
+card.a_wind.name = 바람의 시위
+card.a_wind.text = 공격 속도 +15%\n화살 속도 +25%
+card.a_wind.text2 = 공격 속도 +25%
+card.a_homing.name = 유도 털실 화살
+card.a_homing.text = 적을 쫓아가는\n털실 공 3개 발사
+card.a_can.name = 전설의 캔따개 피어싱
+card.a_can.text = 거대한 캔 발사\n모든 적 관통
+
+# Scenes: texts the scene builders write (linked by Editor/SceneTextLinker.cs: a scene text whose line is
+# one of these values gets a LocText with its key)
+title.touch_to_start = 아무 곳이나 클릭하여 시작
+harbor.title = 항구
+harbor.hint = 망치로 강화하고, 준비가 되면 지도를 눌러 출항하세요
+harbor.name_placeholder = 이름
+harbor.blacksmith = 대장간
+harbor.lounge = 라운지
+harbor.settings = 설정
+harbor.depart = 출항하기
+smith.gold_placeholder = 보유 골드 : 0
+smith.buy = 강화
+ui.leave = 나가기
+ui.back = < 뒤로
+options.volume = 전체 볼륨
+worldmap.back = < 항구
+worldmap.hint = 고대 숲을 눌러 출정하세요
+worldmap.chapter1 = CHAPTER 1 · 고대 숲
+lobby.title = 용병을 고르세요
+lobby.hint = 돌아다니는 고양이를 클릭해 보세요
+lobby.cat.knight = 하양이
+lobby.cat.archer = 치즈
+lobby.name_label = 이 고양이의 이름을 지어주세요
+lobby.name_placeholder = 이름 입력
+lobby.name_hint = 최대 10글자
+lobby.cancel = 다시 고르기
+lobby.confirm = 출정하기
+draft.title = 카드를 한 장 고르세요
+result.back_to_village = 마을로 돌아가기
+
+# World map region names (CS/WorldMapLabels.cs covers the map art's English labels with these)
+worldmap.region.title = 고양이 섬
+worldmap.region.realm = 고양이 섬 던전 왕국
+worldmap.region.caverns = 그르렁 동굴
+worldmap.region.frost = 서리송곳니 던전
+worldmap.region.fortress = 폭풍발 요새
+worldmap.region.labyrinth = 쥐잡이 미궁
+worldmap.region.mountain = 야옹 산
+worldmap.region.volcano = 불꼬리 화산
+worldmap.region.crypt = 파도뼈 무덤
+worldmap.region.forest = 고대 숲
+worldmap.region.lagoon = 해골 석호
+worldmap.region.atoll = 생선뼈 환초
+
+# Card draft: badge over a card that would open (2 cards) or finish (3 cards) a set
+draft.badge.unlock = ★ {0} 세트 해금
+draft.badge.complete = ★ {0} 세트 완성
+draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음)</color></size>
+
+# Blacksmith: the fourth upgrade (MetaProgress.Upgrade.Reroll)
+smith.reroll = 행운의 방울
+smith.reroll.effect = 판마다 다시 뽑기 1회 무료
+route.treasure.title = 사냥 길 보물!
+route.treasure.reward = 골드 +{0}  ·  하트 반 칸 회복

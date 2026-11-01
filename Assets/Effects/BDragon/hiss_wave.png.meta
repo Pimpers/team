@@ -1,0 +1,646 @@
+fileFormatVersion: 2
+guid: 35bf775513302ba4aa63bf3e344c3ea6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1906504909588033071
+    second: hiss_wave_0
+  - first:
+      213: 4788322371310369716
+    second: hiss_wave_1
+  - first:
+      213: 8449369076928712356
+    second: hiss_wave_2
+  - first:
+      213: 4803530402517879647
+    second: hiss_wave_3
+  - first:
+      213: -4268935472585178696
+    second: hiss_wave_4
+  - first:
+      213: 3746467551020456253
+    second: hiss_wave_5
+  - first:
+      213: 5583238604294885805
+    second: hiss_wave_6
+  - first:
+      213: 4238122038216531978
+    second: hiss_wave_7
+  - first:
+      213: -9126569628389702360
+    second: hiss_wave_8
+  - first:
+      213: 8197140719559357432
+    second: hiss_wave_9
+  - first:
+      213: 269918538073002165
+    second: hiss_wave_10
+  - first:
+      213: 5569284430482849955
+    second: hiss_wave_11
+  - first:
+      213: 1817040726233810539
+    second: hiss_wave_12
+  - first:
+      213: 22558725069675937
+    second: hiss_wave_13
+  - first:
+      213: -1219922666216059843
+    second: hiss_wave_14
+  - first:
+      213: 8667273333749892828
+    second: hiss_wave_15
+  - first:
+      213: 3143951463454160956
+    second: hiss_wave_16
+  - first:
+      213: 916656535785378845
+    second: hiss_wave_17
+  - first:
+      213: 2382599950361940432
+    second: hiss_wave_18
+  - first:
+      213: -6043256798068636072
+    second: hiss_wave_19
+  - first:
+      213: -443135379161495832
+    second: hiss_wave_20
+  - first:
+      213: -7237245154806269867
+    second: hiss_wave_21
+  - first:
+      213: 7810474996879520132
+    second: hiss_wave_22
+  - first:
+      213: 3563606400615775117
+    second: hiss_wave_23
+  - first:
+      213: -3776959472966039430
+    second: hiss_wave_24
+  - first:
+      213: -6100734239332248268
+    second: hiss_wave_25
+  - first:
+      213: 3445787540135918448
+    second: hiss_wave_26
+  - first:
+      213: 8114697781288232608
+    second: hiss_wave_27
+  - first:
+      213: 3662303892785493837
+    second: hiss_wave_28
+  - first:
+      213: 2224366151696207213
+    second: hiss_wave_29
+  - first:
+      213: 1593085642770791613
+    second: hiss_wave_30
+  - first:
+      213: 6372815711937738224
+    second: hiss_wave_31
+  - first:
+      213: -4031718237569219088
+    second: hiss_wave_32
+  - first:
+      213: -7172750174055526875
+    second: hiss_wave_33
+  - first:
+      213: -1743308216646944034
+    second: hiss_wave_34
+  - first:
+      213: -7236402165257165517
+    second: hiss_wave_35
+  - first:
+      213: 7615160460704608178
+    second: hiss_wave_36
+  - first:
+      213: 1374886868083155953
+    second: hiss_wave_37
+  - first:
+      213: -586858309469748004
+    second: hiss_wave_38
+  - first:
+      213: 8025542171137195129
+    second: hiss_wave_39
+  - first:
+      213: -2442393554748212344
+    second: hiss_wave_40
+  - first:
+      213: 421487602581495164
+    second: hiss_wave_41
+  - first:
+      213: -8063830461239736942
+    second: hiss_wave_42
+  - first:
+      213: -6095843834354276853
+    second: hiss_wave_43
+  - first:
+      213: -6153719134359078995
+    second: hiss_wave_44
+  - first:
+      213: -5429846475889973222
+    second: hiss_wave_45
+  - first:
+      213: -5620887708993542877
+    second: hiss_wave_46
+  - first:
+      213: 5001531503867748313
+    second: hiss_wave_47
+  - first:
+      213: 5478688204226936993
+    second: hiss_wave_48
+  - first:
+      213: -1400132514658654348
+    second: hiss_wave_49
+  - first:
+      213: -7233267675634089420
+    second: hiss_wave_50
+  - first:
+      213: 7488761410957730930
+    second: hiss_wave_51
+  - first:
+      213: -1079753840067423690
+    second: hiss_wave_52
+  - first:
+      213: -2555630988930246003
+    second: hiss_wave_53
+  - first:
+      213: 4369414007368234180
+    second: hiss_wave_54
+  - first:
+      213: 3465333208389440342
+    second: hiss_wave_55
+  - first:
+      213: -6454415950958515765
+    second: hiss_wave_56
+  - first:
+      213: -5365698553553152917
+    second: hiss_wave_57
+  - first:
+      213: -3628367725675545848
+    second: hiss_wave_58
+  - first:
+      213: 6200662029206215623
+    second: hiss_wave_59
+  - first:
+      213: 7998863814756016502
+    second: hiss_wave_60
+  - first:
+      213: 5458064823342444846
+    second: hiss_wave_61
+  - first:
+      213: -3544729609358666486
+    second: hiss_wave_62
+  - first:
+      213: 2515931431898550134
+    second: hiss_wave_63
+  - first:
+      213: -2508151619730483028
+    second: hiss_wave_64
+  - first:
+      213: 8134364166767328386
+    second: hiss_wave_65
+  - first:
+      213: -4646688837110079204
+    second: hiss_wave_66
+  - first:
+      213: 3271747907403804758
+    second: hiss_wave_67
+  - first:
+      213: -1475763723646508058
+    second: hiss_wave_68
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 12.5
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: hiss_wave_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2e688a3d14457a10800000000000000
+      internalID: 1906504909588033071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bbb20cb3d9837240800000000000000
+      internalID: 4788322371310369716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ae8186a860324570800000000000000
+      internalID: 8449369076928712356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5b0edd637199a240800000000000000
+      internalID: 4803530402517879647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b10f733ec1b1c4c0800000000000000
+      internalID: -4268935472585178696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d391a1553602ef330800000000000000
+      internalID: 3746467551020456253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da19e39ede5ab7d40800000000000000
+      internalID: 5583238604294885805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a00a6aa0a85d0da30800000000000000
+      internalID: 4238122038216531978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82586f11749e75180800000000000000
+      internalID: -9126569628389702360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f3b93bdd0812c170800000000000000
+      internalID: 8197140719559357432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b05224fa71feb300800000000000000
+      internalID: 269918538073002165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a04b04aea21a4d40800000000000000
+      internalID: 5569284430482849955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b668595d9ec673910800000000000000
+      internalID: 1817040726233810539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hiss_wave_13
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ad1d5a7a05205000800000000000000
+      internalID: 22558725069675937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: d3a22756c234862499674401c3c0d835
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      hiss_wave_0: 1906504909588033071
+      hiss_wave_1: 4788322371310369716
+      hiss_wave_10: 269918538073002165
+      hiss_wave_11: 5569284430482849955
+      hiss_wave_12: 1817040726233810539
+      hiss_wave_13: 22558725069675937
+      hiss_wave_2: 8449369076928712356
+      hiss_wave_3: 4803530402517879647
+      hiss_wave_4: -4268935472585178696
+      hiss_wave_5: 3746467551020456253
+      hiss_wave_6: 5583238604294885805
+      hiss_wave_7: 4238122038216531978
+      hiss_wave_8: -9126569628389702360
+      hiss_wave_9: 8197140719559357432
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

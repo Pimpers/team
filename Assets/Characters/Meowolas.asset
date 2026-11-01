@@ -1,0 +1,198 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebddde0c815d8784dab387866d5edb98, type: 3}
+  m_Name: Meowolas
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterDefinition
+  displayName: Meowolas
+  jobName: "\uAD81\uC218"
+  tagName: "\uCE58\uC988"
+  role: "\uC6D0\uAC70\uB9AC \xB7 \uD65C\uB85C \uD654\uC0B4 \uC3D8\uAE30"
+  roleGroup: "\uC6D0\uAC70\uB9AC \uC0AC\uC218"
+  roleColor: {r: 0.18, g: 0.42, b: 0.38, a: 1}
+  description: "\uC232\uC758 \uBC14\uB78C\uC744 \uC77D\uB294 \uACE0\uC591\uC774 \uAD81\uC218.\n\uAC70\uB9AC\uB97C
+    \uBC8C\uB9AC\uACE0 \uB9C8\uC6B0\uC2A4\uB85C \uC870\uC900\uD574 \uD654\uC0B4\uC744
+    \uB0A0\uB9B0\uB2E4."
+  idleFrames:
+  - {fileID: 7257567913506708742, guid: b6c1cd025918a7c4e9907dd67ed88988, type: 3}
+  - {fileID: -7989796299022447421, guid: b6c1cd025918a7c4e9907dd67ed88988, type: 3}
+  - {fileID: 7725435616784934678, guid: b6c1cd025918a7c4e9907dd67ed88988, type: 3}
+  - {fileID: -1293103732667120055, guid: b6c1cd025918a7c4e9907dd67ed88988, type: 3}
+  - {fileID: 427913027731640163, guid: b6c1cd025918a7c4e9907dd67ed88988, type: 3}
+  - {fileID: -9045297040117572726, guid: b6c1cd025918a7c4e9907dd67ed88988, type: 3}
+  runFrames:
+  - {fileID: 8882666270506729424, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: 8418572898541717210, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: 4917221495796577052, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: 1313344751431586703, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: 6899839408514736165, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: 2926779004180474254, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: 1077218267225559216, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  - {fileID: -8495829840781382592, guid: 7c12f95faa5bf204494b884d50267451, type: 3}
+  attackFrames:
+  - {fileID: -189779573607827325, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+  - {fileID: -1124590628925479500, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+  - {fileID: -5495543167766543638, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+  - {fileID: -2583352872180053410, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+  - {fileID: -3367617551003133579, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+  - {fileID: 3583620570250692487, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: 6625285065235731280, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: -4824880374115059044, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: 578672049925620280, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: 3959965268504968989, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: -4747760369900208022, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: 1901339732604724404, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  - {fileID: 3537451169193501671, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+  damageFrames:
+  - {fileID: 5460654012597350937, guid: 7d6c964f3fbb2df47907207207eb4919, type: 3}
+  - {fileID: 8232691575546367903, guid: 7d6c964f3fbb2df47907207207eb4919, type: 3}
+  - {fileID: 4127982864690876774, guid: 7d6c964f3fbb2df47907207207eb4919, type: 3}
+  jumpFrames:
+  - {fileID: -8917990233665649701, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: -4899612814035801774, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: 7011604152971496284, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: 6397156806174477689, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: -4204598530040440377, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: -723265644726485249, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: -8624875029763868715, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: 2381486395552431856, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: 7025570540817037814, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: -8748216248132440674, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: 5744002526305867561, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  - {fileID: -7195574966712009630, guid: 124ee3a030ad3c148bafab3fb9472224, type: 3}
+  deathFrames:
+  - {fileID: 4702130304808524015, guid: e023a5cd92c6e5448b86d38e0e1d9db0, type: 3}
+  - {fileID: -1473999947189047195, guid: e023a5cd92c6e5448b86d38e0e1d9db0, type: 3}
+  - {fileID: 7323168934915647415, guid: e023a5cd92c6e5448b86d38e0e1d9db0, type: 3}
+  - {fileID: -8103781296794115882, guid: e023a5cd92c6e5448b86d38e0e1d9db0, type: 3}
+  - {fileID: -2895719404603500696, guid: e023a5cd92c6e5448b86d38e0e1d9db0, type: 3}
+  - {fileID: 8730803778273642487, guid: e023a5cd92c6e5448b86d38e0e1d9db0, type: 3}
+  dodgeFrames:
+  - {fileID: -6314596853503530733, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: 8141037478345507801, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: 1909592933328321002, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: -6026686084057075589, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: -1123097030050941572, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: 1394452038713304707, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: -839901102381325915, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: 344908325921460221, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  - {fileID: 4970169702684674208, guid: 0c5637432aa28794596b53553705f5d3, type: 3}
+  dodgeFramesPerSecond: 12
+  framesPerSecond: 8
+  attackFramesPerSecond: 14
+  damageFramesPerSecond: 10
+  jumpFramesPerSecond: 16
+  deathFramesPerSecond: 8
+  combo:
+  - name: "\uC0AC\uACA9"
+    frames:
+    - {fileID: -189779573607827325, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -1124590628925479500, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -5495543167766543638, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -2583352872180053410, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -3367617551003133579, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    framesPerSecond: 14
+    hitFrame: 3
+    recoveryFrames: 1
+    damageMultiplier: 0.85
+    reach: 0.1
+    hitsAllAround: 0
+    lunge: 0
+    projectileFrames:
+    - {fileID: -8380403922248651223, guid: 5f3b2f11ea82240469e63caedb1ac2af, type: 3}
+    projectileFps: 12
+    projectileSpeedMultiplier: 1
+    projectilePierces: 0
+    projectileSpawn: {x: 0.08, y: 0.005}
+  - name: "\uC0AC\uACA9"
+    frames:
+    - {fileID: -189779573607827325, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -1124590628925479500, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -5495543167766543638, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -2583352872180053410, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    - {fileID: -3367617551003133579, guid: 5ca2451fcb5c628428284ea8e0e26c53, type: 3}
+    framesPerSecond: 14
+    hitFrame: 3
+    recoveryFrames: 1
+    damageMultiplier: 0.85
+    reach: 0.1
+    hitsAllAround: 0
+    lunge: 0
+    projectileFrames:
+    - {fileID: -8380403922248651223, guid: 5f3b2f11ea82240469e63caedb1ac2af, type: 3}
+    projectileFps: 12
+    projectileSpeedMultiplier: 1
+    projectilePierces: 0
+    projectileSpawn: {x: 0.08, y: 0.005}
+  - name: "\uC804\uAE30 \uD654\uC0B4"
+    frames:
+    - {fileID: 3583620570250692487, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: 6625285065235731280, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: -4824880374115059044, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: 578672049925620280, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: 3959965268504968989, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: -4747760369900208022, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: 1901339732604724404, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    - {fileID: 3537451169193501671, guid: 0fcd2d333984dc546bda9bc25deb986a, type: 3}
+    framesPerSecond: 14
+    hitFrame: 6
+    recoveryFrames: 1
+    damageMultiplier: 1.7
+    reach: 0.1
+    hitsAllAround: 0
+    lunge: 0
+    projectileFrames:
+    - {fileID: 665084557563314170, guid: 9c621442b1b026747a7a86b96e977235, type: 3}
+    - {fileID: 9149732441075811258, guid: 9c621442b1b026747a7a86b96e977235, type: 3}
+    - {fileID: -6507379359386268291, guid: 9c621442b1b026747a7a86b96e977235, type: 3}
+    projectileFps: 14
+    projectileSpeedMultiplier: 1.25
+    projectilePierces: 1
+    projectileSpawn: {x: 0.08, y: 0.005}
+  comboWindow: 0.4
+  jumpAttackFallFrames:
+  - {fileID: 4145359110624825057, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+  - {fileID: -6177510423942274945, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+  - {fileID: 3838452118823916385, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+  jumpAttack:
+    name: "\uD654\uC0B4 \uD3ED\uD48D"
+    frames:
+    - {fileID: -1389520403023680034, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: 8264321097899213300, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: 7131998216000640654, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: -812608364113251558, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: -5656421078932473139, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: 1463550254930637109, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: -8175388983908845092, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    - {fileID: -8154291200091326095, guid: 5eadb12b8f2cfeb44a87f274302c5f3b, type: 3}
+    framesPerSecond: 13
+    hitFrame: 2
+    recoveryFrames: 0
+    damageMultiplier: 1.5
+    reach: 0.24
+    hitsAllAround: 1
+    lunge: 0
+    projectileFrames: []
+    projectileFps: 12
+    projectileSpeedMultiplier: 1
+    projectilePierces: 0
+    projectileSpawn: {x: 0, y: 0}
+  ranged: 1
+  bonusMaxHP: 0
+  projectileSprite: {fileID: -8380403922248651223, guid: 5f3b2f11ea82240469e63caedb1ac2af, type: 3}
+  projectileSpeed: 16
+  projectileRange: 8
+  releaseDelay: 0.21428572
+  canvasAligned: 1
+  alignSprites: []
+  alignOffsetsX: []
+  alignReferenceSize: {x: 0.16, y: 0.17}
+  alignVersion: 2

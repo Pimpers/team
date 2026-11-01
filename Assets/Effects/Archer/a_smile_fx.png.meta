@@ -1,0 +1,281 @@
+fileFormatVersion: 2
+guid: 5d8c1e664c829c04d919f27f62fdfad3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2124830412984290343
+    second: a_smile_fx_0
+  - first:
+      213: 3716440264515493159
+    second: a_smile_fx_1
+  - first:
+      213: 1362919590426009133
+    second: a_smile_fx_2
+  - first:
+      213: 2606709514873927928
+    second: a_smile_fx_3
+  - first:
+      213: -2078305937275124580
+    second: a_smile_fx_4
+  - first:
+      213: -8232364636356718150
+    second: a_smile_fx_5
+  - first:
+      213: 919039583433655986
+    second: a_smile_fx_6
+  - first:
+      213: -858897438058471431
+    second: a_smile_fx_7
+  - first:
+      213: -739606791450133661
+    second: a_smile_fx_8
+  - first:
+      213: 2501303174770634944
+    second: a_smile_fx_9
+  - first:
+      213: 7061350881343290647
+    second: a_smile_fx_10
+  - first:
+      213: 1913085715627694951
+    second: a_smile_fx_11
+  - first:
+      213: -8824045648902599313
+    second: a_smile_fx_12
+  - first:
+      213: 4226578640663442508
+    second: a_smile_fx_13
+  - first:
+      213: -6930015045717866383
+    second: a_smile_fx_14
+  - first:
+      213: 7920796570112465454
+    second: a_smile_fx_15
+  - first:
+      213: 4274296087054193534
+    second: a_smile_fx_16
+  - first:
+      213: 3193100914044189248
+    second: a_smile_fx_17
+  - first:
+      213: 7845342294125180115
+    second: a_smile_fx_18
+  - first:
+      213: -4816500331958216478
+    second: a_smile_fx_19
+  - first:
+      213: -2587118057852234454
+    second: a_smile_fx_20
+  - first:
+      213: 1879256721960327770
+    second: a_smile_fx_21
+  - first:
+      213: -3684476650805997515
+    second: a_smile_fx_22
+  - first:
+      213: 3830153460589942327
+    second: a_smile_fx_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 12.5
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: a_smile_fx_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5078125, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72c00e5b00aec7d10800000000000000
+      internalID: 2124830412984290343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_smile_fx_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5078125, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72d9763eab2739330800000000000000
+      internalID: 3716440264515493159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_smile_fx_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5078125, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2e53cc75201ae210800000000000000
+      internalID: 1362919590426009133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_smile_fx_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5078125, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f8f0ba2e74ec2420800000000000000
+      internalID: 2606709514873927928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e99e6c90d3dabb04b8ff8f5430c8de67
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      a_smile_fx_0: 2124830412984290343
+      a_smile_fx_1: 3716440264515493159
+      a_smile_fx_2: 1362919590426009133
+      a_smile_fx_3: 2606709514873927928
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

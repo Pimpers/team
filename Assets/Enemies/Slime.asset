@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d414bbd92a256b64dbefb9041ae4df21, type: 3}
+  m_Name: Slime
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDefinition
+  displayName: "\uC2AC\uB77C\uC784"
+  isBoss: 0
+  combatRole: 2
+  idleFrames:
+  - {fileID: 21300000, guid: b1b0ac4ceee5d7949a6c1b38ba74738d, type: 3}
+  - {fileID: 21300000, guid: b07eec31ef9388148b7c388fddee6507, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 59b17e9f54d2be349ba54586620b3543, type: 3}
+  - {fileID: 21300000, guid: d32249fb8a4501143b360fece193ba1b, type: 3}
+  - {fileID: 21300000, guid: d8e904ecd42e74e478b29b55d03b3df3, type: 3}
+  - {fileID: 21300000, guid: a57a0e5e7e4d91b498fa86974fc57c93, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: aaa3da41da0bdf448b4d28efe653bb80, type: 3}
+  - {fileID: 21300000, guid: 6c06178f18e514e4eb088fb9edc6c5d8, type: 3}
+  - {fileID: 21300000, guid: 76c8120a302482f4baa40ad5d5629225, type: 3}
+  - {fileID: 21300000, guid: 903329f7018bd8c43b6947e9c5b7b022, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 7d3f86da56b502b4bafce88151ea3c6c, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 18e18dd5e10b1af4ca2502de83da3fe1, type: 3}
+  - {fileID: 21300000, guid: 8aa3996c814974f49a91e43283b151c3, type: 3}
+  - {fileID: 21300000, guid: 31a0d81f6cc919d4f849c095071e1f84, type: 3}
+  idleFps: 3
+  moveFps: 8
+  attackFps: 7
+  deathFps: 5
+  walkStridePixels: 5
+  attackHitFrame: 3
+  hp: 20
+  goldReward: 2
+  damage: 0.5
+  moveSpeed: 2
+  scale: 0.8000001
+  hitRadius: 0.74666667
+  bodyHalfWidth: 0.48000002
+  aggroRange: 7
+  attackRange: 1.12
+  attackCooldown: 1.5
+  knockback: 1
+  patrolRange: 3
+  lungeDistance: 1.0666667
+  alertTime: 2.5
+  superArmor: 0
+  ranged: 0
+  keepAway: 0
+  attackSound: land_heavy
+  deathSound: enemy_death
+  deathEffect: poison_hit
+  deathEffectScale: 1
+  attackEffect: poison_hit
+  attackEffectScale: 0.7
+  fallingRock: {fileID: 0}
+  bossTitle: 

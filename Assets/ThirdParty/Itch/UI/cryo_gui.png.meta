@@ -1,0 +1,4433 @@
+fileFormatVersion: 2
+guid: effaba2bb4f7df14d8b9791c00558313
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5721945172623357691
+    second: cryo_gui_0
+  - first:
+      213: -8681218041585654933
+    second: cryo_gui_1
+  - first:
+      213: 6678946637985542229
+    second: cryo_gui_2
+  - first:
+      213: 2668009143147028554
+    second: cryo_gui_3
+  - first:
+      213: 6050596895280487716
+    second: cryo_gui_4
+  - first:
+      213: -7002109247371078546
+    second: cryo_gui_5
+  - first:
+      213: 8303808198531140130
+    second: cryo_gui_6
+  - first:
+      213: 7567298509151454441
+    second: cryo_gui_7
+  - first:
+      213: -8054728081633186199
+    second: cryo_gui_8
+  - first:
+      213: 4999002225310270237
+    second: cryo_gui_9
+  - first:
+      213: -2659334899045647650
+    second: cryo_gui_10
+  - first:
+      213: -7807354198195783396
+    second: cryo_gui_11
+  - first:
+      213: -4283029527711464837
+    second: cryo_gui_12
+  - first:
+      213: 1155028864108594397
+    second: cryo_gui_13
+  - first:
+      213: -3923597666110514657
+    second: cryo_gui_14
+  - first:
+      213: -5774507762142335278
+    second: cryo_gui_15
+  - first:
+      213: 8629279189727742845
+    second: cryo_gui_16
+  - first:
+      213: 6778895488000424506
+    second: cryo_gui_17
+  - first:
+      213: 8044361131003753502
+    second: cryo_gui_18
+  - first:
+      213: -2463324745879006619
+    second: cryo_gui_19
+  - first:
+      213: 7700479614339917420
+    second: cryo_gui_20
+  - first:
+      213: -4652917059189810326
+    second: cryo_gui_21
+  - first:
+      213: -6313819780844712896
+    second: cryo_gui_22
+  - first:
+      213: 1746528582330218677
+    second: cryo_gui_23
+  - first:
+      213: -8563753047783746469
+    second: cryo_gui_24
+  - first:
+      213: 7715908875584702847
+    second: cryo_gui_25
+  - first:
+      213: -4144750340462555817
+    second: cryo_gui_26
+  - first:
+      213: -8390830670397567945
+    second: cryo_gui_27
+  - first:
+      213: 1226531499767068968
+    second: cryo_gui_28
+  - first:
+      213: -2675949958002964075
+    second: cryo_gui_29
+  - first:
+      213: -4325679094537270255
+    second: cryo_gui_30
+  - first:
+      213: 5170697969691471790
+    second: cryo_gui_31
+  - first:
+      213: -3812679585686845434
+    second: cryo_gui_32
+  - first:
+      213: -1729930831583741412
+    second: cryo_gui_33
+  - first:
+      213: -6221863537378794130
+    second: cryo_gui_34
+  - first:
+      213: -135942132687360178
+    second: cryo_gui_35
+  - first:
+      213: -6150386062777118911
+    second: cryo_gui_36
+  - first:
+      213: -1903064962206912536
+    second: cryo_gui_37
+  - first:
+      213: -4619301680153145032
+    second: cryo_gui_38
+  - first:
+      213: -7468107354333580449
+    second: cryo_gui_39
+  - first:
+      213: -3712723957976035167
+    second: cryo_gui_40
+  - first:
+      213: -8926231770213694570
+    second: cryo_gui_41
+  - first:
+      213: -7434665077649299800
+    second: cryo_gui_42
+  - first:
+      213: -1714921664489718080
+    second: cryo_gui_43
+  - first:
+      213: 6682924623017422246
+    second: cryo_gui_44
+  - first:
+      213: -1226064064081053932
+    second: cryo_gui_45
+  - first:
+      213: 4830047897018357534
+    second: cryo_gui_46
+  - first:
+      213: -969837560358306070
+    second: cryo_gui_47
+  - first:
+      213: 7989723569586594608
+    second: cryo_gui_48
+  - first:
+      213: -5978435872278535412
+    second: cryo_gui_49
+  - first:
+      213: 2004746955251073648
+    second: cryo_gui_50
+  - first:
+      213: 7735069215384529176
+    second: cryo_gui_51
+  - first:
+      213: 2253168759861561201
+    second: cryo_gui_52
+  - first:
+      213: -3577665063424106606
+    second: cryo_gui_53
+  - first:
+      213: -8480929100869915733
+    second: cryo_gui_54
+  - first:
+      213: -8306049535974459338
+    second: cryo_gui_55
+  - first:
+      213: -80504302991347266
+    second: cryo_gui_56
+  - first:
+      213: 6989419773253905180
+    second: cryo_gui_57
+  - first:
+      213: -1389707191183966819
+    second: cryo_gui_58
+  - first:
+      213: -3701200423841439474
+    second: cryo_gui_59
+  - first:
+      213: 6295603169636820963
+    second: cryo_gui_60
+  - first:
+      213: 7793128263580257707
+    second: cryo_gui_61
+  - first:
+      213: 652024452487214807
+    second: cryo_gui_62
+  - first:
+      213: -7952331531063811727
+    second: cryo_gui_63
+  - first:
+      213: -2797335643978805057
+    second: cryo_gui_64
+  - first:
+      213: -5361035588217659005
+    second: cryo_gui_65
+  - first:
+      213: -3970553339209863592
+    second: cryo_gui_66
+  - first:
+      213: -6225797152116987371
+    second: cryo_gui_67
+  - first:
+      213: -1759130027675218574
+    second: cryo_gui_68
+  - first:
+      213: 2564648904829868118
+    second: cryo_gui_69
+  - first:
+      213: -3880563692583291285
+    second: cryo_gui_70
+  - first:
+      213: 5485564338223358948
+    second: cryo_gui_71
+  - first:
+      213: -820175072386195503
+    second: cryo_gui_72
+  - first:
+      213: -4477047698054540596
+    second: cryo_gui_73
+  - first:
+      213: -4590526945222255322
+    second: cryo_gui_74
+  - first:
+      213: 6975697942128175066
+    second: cryo_gui_75
+  - first:
+      213: 5997347279708954373
+    second: cryo_gui_76
+  - first:
+      213: 1236333196179817121
+    second: cryo_gui_77
+  - first:
+      213: -5643459103241666876
+    second: cryo_gui_78
+  - first:
+      213: 7584782866408483801
+    second: cryo_gui_79
+  - first:
+      213: 2921978149580405654
+    second: cryo_gui_80
+  - first:
+      213: -8951623341165894037
+    second: cryo_gui_81
+  - first:
+      213: 1287755226768176027
+    second: cryo_gui_82
+  - first:
+      213: -2614652317706255445
+    second: cryo_gui_83
+  - first:
+      213: 433383365048106890
+    second: cryo_gui_84
+  - first:
+      213: -2010703533021028391
+    second: cryo_gui_85
+  - first:
+      213: -3211851623593443878
+    second: cryo_gui_86
+  - first:
+      213: -1338363950999906154
+    second: cryo_gui_87
+  - first:
+      213: -1190760045218039093
+    second: cryo_gui_88
+  - first:
+      213: 3712313128192444264
+    second: cryo_gui_89
+  - first:
+      213: -8801989594834531258
+    second: cryo_gui_90
+  - first:
+      213: -3252509180038162881
+    second: cryo_gui_91
+  - first:
+      213: -8671833670385353272
+    second: cryo_gui_92
+  - first:
+      213: -1494376989699850708
+    second: cryo_gui_93
+  - first:
+      213: 581399265108023190
+    second: cryo_gui_94
+  - first:
+      213: 6320382459046054576
+    second: cryo_gui_95
+  - first:
+      213: 4726605429099791070
+    second: cryo_gui_96
+  - first:
+      213: 1968317150476508398
+    second: cryo_gui_97
+  - first:
+      213: 5973376293882984505
+    second: cryo_gui_98
+  - first:
+      213: 7568880453073459009
+    second: cryo_gui_99
+  - first:
+      213: 4388609311163663473
+    second: cryo_gui_100
+  - first:
+      213: 2087774087793436671
+    second: cryo_gui_101
+  - first:
+      213: 1365017178175277710
+    second: cryo_gui_102
+  - first:
+      213: -9193519740690002753
+    second: cryo_gui_103
+  - first:
+      213: 4405197748943009052
+    second: cryo_gui_104
+  - first:
+      213: 4328358646032567178
+    second: cryo_gui_105
+  - first:
+      213: -577754810777218972
+    second: cryo_gui_106
+  - first:
+      213: -5290013525821171715
+    second: cryo_gui_107
+  - first:
+      213: -4498883405564538934
+    second: cryo_gui_108
+  - first:
+      213: -9194517682016652291
+    second: cryo_gui_109
+  - first:
+      213: -3536766416492266139
+    second: cryo_gui_110
+  - first:
+      213: 8855129049178619765
+    second: cryo_gui_111
+  - first:
+      213: -3192444054443364652
+    second: cryo_gui_112
+  - first:
+      213: -1847054722848904551
+    second: cryo_gui_113
+  - first:
+      213: -3261072250100384195
+    second: cryo_gui_114
+  - first:
+      213: 2338573095521244470
+    second: cryo_gui_115
+  - first:
+      213: 3067087050700341585
+    second: cryo_gui_116
+  - first:
+      213: 5316167851159135403
+    second: cryo_gui_117
+  - first:
+      213: -3361528107482195767
+    second: cryo_gui_118
+  - first:
+      213: -1777759761511111842
+    second: cryo_gui_119
+  - first:
+      213: -8060791641340189495
+    second: cryo_gui_120
+  - first:
+      213: -7823203271747182600
+    second: cryo_gui_121
+  - first:
+      213: 6904653817476840519
+    second: cryo_gui_122
+  - first:
+      213: 2539546425271043943
+    second: cryo_gui_123
+  - first:
+      213: -2214794442048429605
+    second: cryo_gui_124
+  - first:
+      213: -351875841385204510
+    second: cryo_gui_125
+  - first:
+      213: 6308299429448492044
+    second: cryo_gui_126
+  - first:
+      213: 2209015037846454217
+    second: cryo_gui_127
+  - first:
+      213: 1198697326895022476
+    second: cryo_gui_128
+  - first:
+      213: 138393398910170588
+    second: cryo_gui_129
+  - first:
+      213: 1797325196050852573
+    second: cryo_gui_130
+  - first:
+      213: 4368157150176851652
+    second: cryo_gui_131
+  - first:
+      213: -4418594333320840224
+    second: cryo_gui_132
+  - first:
+      213: 847593146079856159
+    second: cryo_gui_133
+  - first:
+      213: 8105127485101211582
+    second: cryo_gui_134
+  - first:
+      213: -4448341656029389762
+    second: cryo_gui_135
+  - first:
+      213: 5202965835339626497
+    second: cryo_gui_136
+  - first:
+      213: -3302420939604453232
+    second: cryo_gui_137
+  - first:
+      213: -4890916257403751807
+    second: cryo_gui_138
+  - first:
+      213: 7683728953265569846
+    second: cryo_gui_139
+  - first:
+      213: -583595949434516055
+    second: cryo_gui_140
+  - first:
+      213: -7409123857231562417
+    second: cryo_gui_141
+  - first:
+      213: 3871038426787664508
+    second: cryo_gui_142
+  - first:
+      213: -179168651968951153
+    second: cryo_gui_143
+  - first:
+      213: 5503752240724498882
+    second: cryo_gui_144
+  - first:
+      213: 7707280175389567866
+    second: cryo_gui_145
+  - first:
+      213: 6828227419213734373
+    second: cryo_gui_146
+  - first:
+      213: 3085923593958623204
+    second: cryo_gui_147
+  - first:
+      213: -420639568437772658
+    second: cryo_gui_148
+  - first:
+      213: 4279940052463479899
+    second: cryo_gui_149
+  - first:
+      213: -7937084285086937853
+    second: cryo_gui_150
+  - first:
+      213: 5692796434513622572
+    second: cryo_gui_151
+  - first:
+      213: 2126981864896123219
+    second: cryo_gui_152
+  - first:
+      213: -2696264502307146928
+    second: cryo_gui_153
+  - first:
+      213: 3303819232747975628
+    second: cryo_gui_154
+  - first:
+      213: 2072565405252490787
+    second: cryo_gui_155
+  - first:
+      213: 1255432104122817356
+    second: cryo_gui_156
+  - first:
+      213: -4615968027939143456
+    second: cryo_gui_157
+  - first:
+      213: -6114919742139028186
+    second: cryo_gui_158
+  - first:
+      213: -7986284467758468634
+    second: cryo_gui_159
+  - first:
+      213: 503165290660406813
+    second: cryo_gui_160
+  - first:
+      213: 5229298235153575167
+    second: cryo_gui_161
+  - first:
+      213: 8775074726924880015
+    second: cryo_gui_162
+  - first:
+      213: -3163027186401153857
+    second: cryo_gui_163
+  - first:
+      213: -8994958549840490032
+    second: cryo_gui_164
+  - first:
+      213: -1510878928396525660
+    second: cryo_gui_165
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cryo_gui_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50906818e219790b0800000000000000
+      internalID: -5721945172623357691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 135
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b63239daf2e168780800000000000000
+      internalID: -8681218041585654933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_2
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 550fae6a49260bc50800000000000000
+      internalID: 6678946637985542229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_3
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 135
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a40e5c21e2ca60520800000000000000
+      internalID: 2668009143147028554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_4
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42d564e91d908f350800000000000000
+      internalID: 6050596895280487716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_5
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 135
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6418fffcb283de90800000000000000
+      internalID: -7002109247371078546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_6
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 144
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22acc64af8d0d3370800000000000000
+      internalID: 8303808198531140130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_7
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 127
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e4c05b96e1740960800000000000000
+      internalID: 7567298509151454441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_8
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 144
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96ee3eb4c7bd73090800000000000000
+      internalID: -8054728081633186199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_9
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 127
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d13810fb906006540800000000000000
+      internalID: 4999002225310270237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_10
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 144
+        width: 18
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edab593cff4281bd0800000000000000
+      internalID: -2659334899045647650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_11
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 127
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c19b2ecc8b4b6a390800000000000000
+      internalID: -7807354198195783396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_12
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 144
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b72cf36465f9f84c0800000000000000
+      internalID: -4283029527711464837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_13
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 127
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd4048ed1ac770010800000000000000
+      internalID: 1155028864108594397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_14
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 144
+        width: 19
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1a5ee5f5b49c89c0800000000000000
+      internalID: -3923597666110514657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_15
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 126
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2de25c4f8c3dcdfa0800000000000000
+      internalID: -5774507762142335278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_16
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7b846304bb51c770800000000000000
+      internalID: 8629279189727742845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_17
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 126
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3a73cbb789731e50800000000000000
+      internalID: 6778895488000424506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_18
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e14307ae3df43af60800000000000000
+      internalID: 8044361131003753502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_19
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 135
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 562d373e13380ddd0800000000000000
+      internalID: -2463324745879006619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_20
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c662edc09699dda60800000000000000
+      internalID: 7700479614339917420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_21
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 135
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6bd2ad36948d6fb0800000000000000
+      internalID: -4652917059189810326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_22
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 144
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c8ae28c5ec068a0800000000000000
+      internalID: -6313819780844712896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_23
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 135
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b8fbdbfd7aec3810800000000000000
+      internalID: 1746528582330218677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 126
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b545eaac9ff672980800000000000000
+      internalID: -8563753047783746469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 117
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f798280ed3a641b60800000000000000
+      internalID: 7715908875584702847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_26
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 126
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75dcc027683ea76c0800000000000000
+      internalID: -4144750340462555817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_27
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 117
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73c008836f7cd8b80800000000000000
+      internalID: -8390830670397567945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_28
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 126
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 829717d86e3850110800000000000000
+      internalID: 1226531499767068968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_29
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 117
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5990384e0bd1ddad0800000000000000
+      internalID: -2675949958002964075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_30
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 117
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11cc5cd28c918f3c0800000000000000
+      internalID: -4325679094537270255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_31
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 117
+        width: 19
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaf2b4c686202c740800000000000000
+      internalID: 5170697969691471790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_32
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 118
+        width: 18
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60880c40e14a61bc0800000000000000
+      internalID: -3812679585686845434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_33
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 92
+        width: 44
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1a7471031d0ef7e0800000000000000
+      internalID: -1729930831583741412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_34
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 118
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e65e49dd31087a9a0800000000000000
+      internalID: -6221863537378794130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_35
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 118
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4f292fb9590d1ef0800000000000000
+      internalID: -135942132687360178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_36
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 126
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14f08a8467075aaa0800000000000000
+      internalID: -6150386062777118911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_37
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 117
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ef2a2fef74f695e0800000000000000
+      internalID: -1903064962206912536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_38
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 126
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8315b149891f4efb0800000000000000
+      internalID: -4619301680153145032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_39
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 117
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f53f670dde3fb5890800000000000000
+      internalID: -7468107354333580449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_40
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 126
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a091c72b31c97cc0800000000000000
+      internalID: -3712723957976035167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_41
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 117
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6934b998f77af1480800000000000000
+      internalID: -8926231770213694570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_42
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 105
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a626be9083c2d890800000000000000
+      internalID: -7434665077649299800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_43
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 96
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cef77a05df5338e0800000000000000
+      internalID: -1714921664489718080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_44
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 105
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ad2aa779848ebc50800000000000000
+      internalID: 6682924623017422246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_45
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 105
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 417b39cca352cfee0800000000000000
+      internalID: -1226064064081053932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_46
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 96
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e17d6edb8f6c70340800000000000000
+      internalID: 4830047897018357534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_47
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 105
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aeef20590e17a82f0800000000000000
+      internalID: -969837560358306070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_48
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 96
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03366c2514331ee60800000000000000
+      internalID: 7989723569586594608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_49
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 105
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c03a260df34580da0800000000000000
+      internalID: -5978435872278535412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_50
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 105
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0724944fbba42db10800000000000000
+      internalID: 2004746955251073648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_51
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 96
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 819ed00287c785b60800000000000000
+      internalID: 7735069215384529176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_52
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 89
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1774e8e9c0dd44f10800000000000000
+      internalID: 2253168759861561201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_53
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 90
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29fd7418494995ec0800000000000000
+      internalID: -3577665063424106606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_54
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 89
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bab2069aaefad4a80800000000000000
+      internalID: -8480929100869915733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_55
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 90
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 638b17154fbfabc80800000000000000
+      internalID: -8306049535974459338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_56
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 90
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb17f4153cdf1eef0800000000000000
+      internalID: -80504302991347266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_57
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 90
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1be3e290486ff060800000000000000
+      internalID: 6989419773253905180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_58
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 81
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9d7caf2ca4c6bce0800000000000000
+      internalID: -1389707191183966819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_59
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 81
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e01e76603d1b2acc0800000000000000
+      internalID: -3701200423841439474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_60
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 81
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e7a60d2ab97e5750800000000000000
+      internalID: 6295603169636820963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_61
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 81
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bad02cfadd0c62c60800000000000000
+      internalID: 7793128263580257707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_62
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 81
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d67e53f8c47c0900800000000000000
+      internalID: 652024452487214807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_63
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 81
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 171adc21b94a3a190800000000000000
+      internalID: -7952331531063811727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_64
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb0da1f7d0edd29d0800000000000000
+      internalID: -2797335643978805057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_65
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 69
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3812f085986c995b0800000000000000
+      internalID: -5361035588217659005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_66
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85ea7ae56c2c5e8c0800000000000000
+      internalID: -3970553339209863592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_67
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51aad60d9768999a0800000000000000
+      internalID: -6225797152116987371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_68
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27d02b26f805697e0800000000000000
+      internalID: -1759130027675218574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_69
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 69
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6589af14796779320800000000000000
+      internalID: 2564648904829868118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_70
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b667b47b1e7752ac0800000000000000
+      internalID: -3880563692583291285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_71
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 69
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e3aa5ca3b3a02c40800000000000000
+      internalID: 5485564338223358948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_72
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1df5accfd172e94f0800000000000000
+      internalID: -820175072386195503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_73
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 69
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc29afac6d45ed1c0800000000000000
+      internalID: -4477047698054540596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_74
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62d1b22a01c2b40c0800000000000000
+      internalID: -4590526945222255322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_75
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 69
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad729fcc158aec060800000000000000
+      internalID: 6975697942128175066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_76
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 78
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50f15b9539bda3350800000000000000
+      internalID: 5997347279708954373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_77
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 69
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a24256dd76582110800000000000000
+      internalID: 1236333196179817121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_78
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 73
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cef5de88d76ea1b0800000000000000
+      internalID: -5643459103241666876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_79
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 73
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9db2fb2c4df824960800000000000000
+      internalID: 7584782866408483801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_80
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 72
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b713f45a3fc8820800000000000000
+      internalID: 2921978149580405654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_81
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 72
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6626babff175c380800000000000000
+      internalID: -8951623341165894037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_82
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 72
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b937b215e860fd110800000000000000
+      internalID: 1287755226768176027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_83
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 72
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba387ffe193e6bbd0800000000000000
+      internalID: -2614652317706255445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_84
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 60
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8f7145dfdfa30600800000000000000
+      internalID: 433383365048106890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_85
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 60
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9df98a53acb8814e0800000000000000
+      internalID: -2010703533021028391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_86
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 60
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: add737827f53d63d0800000000000000
+      internalID: -3211851623593443878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_87
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 60
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6985678d31d2d6de0800000000000000
+      internalID: -1338363950999906154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_88
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 60
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcafc0c3c02997fe0800000000000000
+      internalID: -1190760045218039093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_89
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 60
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8670ee41f19c48330800000000000000
+      internalID: 3712313128192444264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_90
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 63
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64c0433391d09d580800000000000000
+      internalID: -8801989594834531258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_91
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 55
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f36d02f1224ccd2d0800000000000000
+      internalID: -3252509180038162881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_92
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 63
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cdb86dd83577a780800000000000000
+      internalID: -8671833670385353272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_93
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 55
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e3c60ab08e24be0800000000000000
+      internalID: -1494376989699850708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_94
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 63
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 697df6d1d8b811800800000000000000
+      internalID: 581399265108023190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_95
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 54
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bacc041c5286b750800000000000000
+      internalID: 6320382459046054576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_96
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 46
+        width: 28
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed20dea5896489140800000000000000
+      internalID: 4726605429099791070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_97
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 63
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eec167f050ed05b10800000000000000
+      internalID: 1968317150476508398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_98
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 63
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93872aa4712b5e250800000000000000
+      internalID: 5973376293882984505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_99
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 54
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14757d0aba01a0960800000000000000
+      internalID: 7568880453073459009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_100
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 63
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 174c1e9aae877ec30800000000000000
+      internalID: 4388609311163663473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_101
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 54
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff7613aa87349fc10800000000000000
+      internalID: 2087774087793436671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_102
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 52
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8a817134e381f210800000000000000
+      internalID: 1365017178175277710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_103
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 52
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbc81a4518e0a6080800000000000000
+      internalID: -9193519740690002753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_104
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 52
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c15391f4308622d30800000000000000
+      internalID: 4405197748943009052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_105
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 52
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8b0345814b611c30800000000000000
+      internalID: 4328358646032567178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_106
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 51
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 460d9588f076bf7f0800000000000000
+      internalID: -577754810777218972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_107
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 51
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df7da68d9b81696b0800000000000000
+      internalID: -5290013525821171715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_108
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 51
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acf0d65f061c091c0800000000000000
+      internalID: -4498883405564538934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_109
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 51
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df3795202e2866080800000000000000
+      internalID: -9194517682016652291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_110
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 37
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56d727bcea1eaeec0800000000000000
+      internalID: -3536766416492266139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_111
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 45
+        width: 26
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57fb88824fcb3ea70800000000000000
+      internalID: 8855129049178619765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_112
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 37
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4de6899fb0922b3d0800000000000000
+      internalID: -3192444054443364652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_113
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 41
+        width: 19
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99a22e30481fd56e0800000000000000
+      internalID: -1847054722848904551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_114
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 41
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3ef1e101185eb2d0800000000000000
+      internalID: -3261072250100384195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_115
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 44
+        width: 19
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63554df07d7447020800000000000000
+      internalID: 2338573095521244470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_116
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 44
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 151c1382c6b709a20800000000000000
+      internalID: 3067087050700341585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_117
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 37
+        width: 26
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba421be8e72d6c940800000000000000
+      internalID: 5316167851159135403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_118
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 33
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c858031ff37951d0800000000000000
+      internalID: -3361528107482195767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_119
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 33
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e53a5277ae02457e0800000000000000
+      internalID: -1777759761511111842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_120
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 33
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c4ea79c5b0522090800000000000000
+      internalID: -8060791641340189495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_121
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 25
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ffd5ddc2166e6390800000000000000
+      internalID: -7823203271747182600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_122
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 24
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74c70c7801242df50800000000000000
+      internalID: 6904653817476840519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_123
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 24
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 767c4e8c4084e3320800000000000000
+      internalID: 2539546425271043943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_124
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 24
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd1a13f70387341e0800000000000000
+      internalID: -2214794442048429605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_125
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 24
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e4713d59c2ed1bf0800000000000000
+      internalID: -351875841385204510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_126
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 24
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c04a31588e49b8750800000000000000
+      internalID: 6308299429448492044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_127
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 24
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cf755a197ff7ae10800000000000000
+      internalID: 2209015037846454217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_128
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 29
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81c9ca2ed0a2a010800000000000000
+      internalID: 1198697326895022476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_129
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 24
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd5bc45201cabe100800000000000000
+      internalID: 138393398910170588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_130
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 29
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dda68704eb161f810800000000000000
+      internalID: 1797325196050852573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_131
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 24
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c6bf5bd8cfce9c30800000000000000
+      internalID: 4368157150176851652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_132
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 24
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0eb7bd35ddffda2c0800000000000000
+      internalID: -4418594333320840224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_133
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 24
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f164522c97143cb00800000000000000
+      internalID: 847593146079856159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_134
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 25
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebf76b041823b7070800000000000000
+      internalID: 8105127485101211582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_135
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 19
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3c9bc805d05442c0800000000000000
+      internalID: -4448341656029389762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_136
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 9
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10879e95cd5a43840800000000000000
+      internalID: 5202965835339626497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_137
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 098901407a17b22d0800000000000000
+      internalID: -3302420939604453232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_138
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 9
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 182344bb399ff1cb0800000000000000
+      internalID: -4890916257403751807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_139
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63047c9d5c612aa60800000000000000
+      internalID: 7683728953265569846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_140
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 9
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ad49957396a6e7f0800000000000000
+      internalID: -583595949434516055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_141
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4937d86b118d2990800000000000000
+      internalID: -7409123857231562417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_142
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 9
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c72d09480f0b8b530800000000000000
+      internalID: 3871038426787664508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_143
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c41807f07738df0800000000000000
+      internalID: -179168651968951153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_144
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 9
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c9d428b081416c40800000000000000
+      internalID: 5503752240724498882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_145
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7b618e0c72c5fa60800000000000000
+      internalID: 7707280175389567866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_146
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 9
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e121d709acb2ce50800000000000000
+      internalID: 6828227419213734373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_147
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e786e5a82763da20800000000000000
+      internalID: 3085923593958623204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_148
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 9
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8efac88a86992af0800000000000000
+      internalID: -420639568437772658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_149
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 19
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5c6d073dc6656b30800000000000000
+      internalID: 4279940052463479899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_150
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 15
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30dce0b25efc9d190800000000000000
+      internalID: -7937084285086937853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_151
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 15
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c267bc90230e00f40800000000000000
+      internalID: 5692796434513622572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_152
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 15
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 351d4d4acbe848d10800000000000000
+      internalID: 2126981864896123219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_153
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 16
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 053bc7778b1f49ad0800000000000000
+      internalID: -2696264502307146928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_154
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc3fb0a761689dd20800000000000000
+      internalID: 3303819232747975628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_155
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 0
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32696d1514b33cc10800000000000000
+      internalID: 2072565405252490787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_156
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 0
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4b9cddd8d03c6110800000000000000
+      internalID: 1255432104122817356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_157
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 0
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e08028f889c0ffb0800000000000000
+      internalID: -4615968027939143456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_158
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 0
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62da7cb84e0732ba0800000000000000
+      internalID: -6114919742139028186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_159
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 0
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e17908f6940b2190800000000000000
+      internalID: -7986284467758468634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_160
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 0
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d16ae1d7a2a9bf600800000000000000
+      internalID: 503165290660406813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_161
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 10
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffce7e2f903329840800000000000000
+      internalID: 5229298235153575167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_162
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 0
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f888dd7c8f357c970800000000000000
+      internalID: 8775074726924880015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_163
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 6
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbce7ab488baa14d0800000000000000
+      internalID: -3163027186401153857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_164
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 6
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d115633bdc7b2380800000000000000
+      internalID: -8994958549840490032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cryo_gui_165
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 6
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4af5d4e9e97480be0800000000000000
+      internalID: -1510878928396525660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cryo_gui_0: -5721945172623357691
+      cryo_gui_1: -8681218041585654933
+      cryo_gui_10: -2659334899045647650
+      cryo_gui_100: 4388609311163663473
+      cryo_gui_101: 2087774087793436671
+      cryo_gui_102: 1365017178175277710
+      cryo_gui_103: -9193519740690002753
+      cryo_gui_104: 4405197748943009052
+      cryo_gui_105: 4328358646032567178
+      cryo_gui_106: -577754810777218972
+      cryo_gui_107: -5290013525821171715
+      cryo_gui_108: -4498883405564538934
+      cryo_gui_109: -9194517682016652291
+      cryo_gui_11: -7807354198195783396
+      cryo_gui_110: -3536766416492266139
+      cryo_gui_111: 8855129049178619765
+      cryo_gui_112: -3192444054443364652
+      cryo_gui_113: -1847054722848904551
+      cryo_gui_114: -3261072250100384195
+      cryo_gui_115: 2338573095521244470
+      cryo_gui_116: 3067087050700341585
+      cryo_gui_117: 5316167851159135403
+      cryo_gui_118: -3361528107482195767
+      cryo_gui_119: -1777759761511111842
+      cryo_gui_12: -4283029527711464837
+      cryo_gui_120: -8060791641340189495
+      cryo_gui_121: -7823203271747182600
+      cryo_gui_122: 6904653817476840519
+      cryo_gui_123: 2539546425271043943
+      cryo_gui_124: -2214794442048429605
+      cryo_gui_125: -351875841385204510
+      cryo_gui_126: 6308299429448492044
+      cryo_gui_127: 2209015037846454217
+      cryo_gui_128: 1198697326895022476
+      cryo_gui_129: 138393398910170588
+      cryo_gui_13: 1155028864108594397
+      cryo_gui_130: 1797325196050852573
+      cryo_gui_131: 4368157150176851652
+      cryo_gui_132: -4418594333320840224
+      cryo_gui_133: 847593146079856159
+      cryo_gui_134: 8105127485101211582
+      cryo_gui_135: -4448341656029389762
+      cryo_gui_136: 5202965835339626497
+      cryo_gui_137: -3302420939604453232
+      cryo_gui_138: -4890916257403751807
+      cryo_gui_139: 7683728953265569846
+      cryo_gui_14: -3923597666110514657
+      cryo_gui_140: -583595949434516055
+      cryo_gui_141: -7409123857231562417
+      cryo_gui_142: 3871038426787664508
+      cryo_gui_143: -179168651968951153
+      cryo_gui_144: 5503752240724498882
+      cryo_gui_145: 7707280175389567866
+      cryo_gui_146: 6828227419213734373
+      cryo_gui_147: 3085923593958623204
+      cryo_gui_148: -420639568437772658
+      cryo_gui_149: 4279940052463479899
+      cryo_gui_15: -5774507762142335278
+      cryo_gui_150: -7937084285086937853
+      cryo_gui_151: 5692796434513622572
+      cryo_gui_152: 2126981864896123219
+      cryo_gui_153: -2696264502307146928
+      cryo_gui_154: 3303819232747975628
+      cryo_gui_155: 2072565405252490787
+      cryo_gui_156: 1255432104122817356
+      cryo_gui_157: -4615968027939143456
+      cryo_gui_158: -6114919742139028186
+      cryo_gui_159: -7986284467758468634
+      cryo_gui_16: 8629279189727742845
+      cryo_gui_160: 503165290660406813
+      cryo_gui_161: 5229298235153575167
+      cryo_gui_162: 8775074726924880015
+      cryo_gui_163: -3163027186401153857
+      cryo_gui_164: -8994958549840490032
+      cryo_gui_165: -1510878928396525660
+      cryo_gui_17: 6778895488000424506
+      cryo_gui_18: 8044361131003753502
+      cryo_gui_19: -2463324745879006619
+      cryo_gui_2: 6678946637985542229
+      cryo_gui_20: 7700479614339917420
+      cryo_gui_21: -4652917059189810326
+      cryo_gui_22: -6313819780844712896
+      cryo_gui_23: 1746528582330218677
+      cryo_gui_24: -8563753047783746469
+      cryo_gui_25: 7715908875584702847
+      cryo_gui_26: -4144750340462555817
+      cryo_gui_27: -8390830670397567945
+      cryo_gui_28: 1226531499767068968
+      cryo_gui_29: -2675949958002964075
+      cryo_gui_3: 2668009143147028554
+      cryo_gui_30: -4325679094537270255
+      cryo_gui_31: 5170697969691471790
+      cryo_gui_32: -3812679585686845434
+      cryo_gui_33: -1729930831583741412
+      cryo_gui_34: -6221863537378794130
+      cryo_gui_35: -135942132687360178
+      cryo_gui_36: -6150386062777118911
+      cryo_gui_37: -1903064962206912536
+      cryo_gui_38: -4619301680153145032
+      cryo_gui_39: -7468107354333580449
+      cryo_gui_4: 6050596895280487716
+      cryo_gui_40: -3712723957976035167
+      cryo_gui_41: -8926231770213694570
+      cryo_gui_42: -7434665077649299800
+      cryo_gui_43: -1714921664489718080
+      cryo_gui_44: 6682924623017422246
+      cryo_gui_45: -1226064064081053932
+      cryo_gui_46: 4830047897018357534
+      cryo_gui_47: -969837560358306070
+      cryo_gui_48: 7989723569586594608
+      cryo_gui_49: -5978435872278535412
+      cryo_gui_5: -7002109247371078546
+      cryo_gui_50: 2004746955251073648
+      cryo_gui_51: 7735069215384529176
+      cryo_gui_52: 2253168759861561201
+      cryo_gui_53: -3577665063424106606
+      cryo_gui_54: -8480929100869915733
+      cryo_gui_55: -8306049535974459338
+      cryo_gui_56: -80504302991347266
+      cryo_gui_57: 6989419773253905180
+      cryo_gui_58: -1389707191183966819
+      cryo_gui_59: -3701200423841439474
+      cryo_gui_6: 8303808198531140130
+      cryo_gui_60: 6295603169636820963
+      cryo_gui_61: 7793128263580257707
+      cryo_gui_62: 652024452487214807
+      cryo_gui_63: -7952331531063811727
+      cryo_gui_64: -2797335643978805057
+      cryo_gui_65: -5361035588217659005
+      cryo_gui_66: -3970553339209863592
+      cryo_gui_67: -6225797152116987371
+      cryo_gui_68: -1759130027675218574
+      cryo_gui_69: 2564648904829868118
+      cryo_gui_7: 7567298509151454441
+      cryo_gui_70: -3880563692583291285
+      cryo_gui_71: 5485564338223358948
+      cryo_gui_72: -820175072386195503
+      cryo_gui_73: -4477047698054540596
+      cryo_gui_74: -4590526945222255322
+      cryo_gui_75: 6975697942128175066
+      cryo_gui_76: 5997347279708954373
+      cryo_gui_77: 1236333196179817121
+      cryo_gui_78: -5643459103241666876
+      cryo_gui_79: 7584782866408483801
+      cryo_gui_8: -8054728081633186199
+      cryo_gui_80: 2921978149580405654
+      cryo_gui_81: -8951623341165894037
+      cryo_gui_82: 1287755226768176027
+      cryo_gui_83: -2614652317706255445
+      cryo_gui_84: 433383365048106890
+      cryo_gui_85: -2010703533021028391
+      cryo_gui_86: -3211851623593443878
+      cryo_gui_87: -1338363950999906154
+      cryo_gui_88: -1190760045218039093
+      cryo_gui_89: 3712313128192444264
+      cryo_gui_9: 4999002225310270237
+      cryo_gui_90: -8801989594834531258
+      cryo_gui_91: -3252509180038162881
+      cryo_gui_92: -8671833670385353272
+      cryo_gui_93: -1494376989699850708
+      cryo_gui_94: 581399265108023190
+      cryo_gui_95: 6320382459046054576
+      cryo_gui_96: 4726605429099791070
+      cryo_gui_97: 1968317150476508398
+      cryo_gui_98: 5973376293882984505
+      cryo_gui_99: 7568880453073459009
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

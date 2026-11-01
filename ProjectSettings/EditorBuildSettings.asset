@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TitleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/MainScene.unity
+    guid: d29fd3f2429cd9b4fa0963fd9738ae55
+  - enabled: 1
+    path: Assets/Scenes/WorldMapScene.unity
+    guid: 86b20887de8d0fc40bdb0b98768f5ec5
+  - enabled: 1
+    path: Assets/Scenes/LobbyScene.unity
+    guid: 20dd5cf1e38a36e45baeaa95eb496a7d
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: a25e6aa7d7897404d868371382564b81
+  - enabled: 1
+    path: Assets/Scenes/Stage1.unity
+    guid: 68cee6bbede2efb4dadd807ac014a09e
+  - enabled: 1
+    path: Assets/Scenes/Stage2.unity
+    guid: 37202202a057c294daba54e5f1be7078
+  - enabled: 1
+    path: Assets/Scenes/Stage3.unity
+    guid: fb06d18dc7cd4ad4aa91c883e549040c
+  - enabled: 1
+    path: Assets/Scenes/Stage4.unity
+    guid: a6ebea62f92393a439c245bee5a3e45e
+  - enabled: 1
+    path: Assets/Scenes/Stage5.unity
+    guid: 685672ba6d98d1747b550f1cf4da6cbe
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 2f885afd5ef30494e9e2627b8de9037e
+  - enabled: 0
+    path: Assets/Scenes/GameScene.unity
+    guid: b42fea98df048a6499371fac0c2946f3
+  - enabled: 0
+    path: Assets/Scenes/OptionsScene.unity
+    guid: 87122471ac8dedf4f8c7791bb1e9490b
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

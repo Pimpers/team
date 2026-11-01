@@ -1,0 +1,32 @@
+# Unity-generated (rebuilt from Assets/ and Packages/)
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]serSettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.booproj
+*.unityproj
+.vs/
+.vscode/
+.idea/
+crashlytics-buildsettings.json
+
+# A built player (team.exe and its data) - not source
+/새 폴더/
+
+# Local tool settings (may hold access tokens) - never commit
+.kiro/
+.env
+*.env
+
+# Old manual backups: git history replaces them
+/_art_backup/

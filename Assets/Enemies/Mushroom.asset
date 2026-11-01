@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d414bbd92a256b64dbefb9041ae4df21, type: 3}
+  m_Name: Mushroom
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDefinition
+  displayName: "\uBC84\uC12F \uCE5C\uAD6C"
+  isBoss: 0
+  combatRole: 3
+  idleFrames:
+  - {fileID: 21300000, guid: 65e24ced44c708d429fbe207566cc485, type: 3}
+  - {fileID: 21300000, guid: 3999e96ec69d922419452d3f6b2afa05, type: 3}
+  - {fileID: 21300000, guid: 110118138ed59ba4b8c2e3d7565c6519, type: 3}
+  - {fileID: 21300000, guid: 1772f6ff1e9b97247817e71718bd9478, type: 3}
+  - {fileID: 21300000, guid: c18a400cb4abfbc47947e2caa95b821f, type: 3}
+  - {fileID: 21300000, guid: 71ad72f4c2749894096db7aee27dda57, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 68c1d394968c44a498d15ed335815643, type: 3}
+  - {fileID: 21300000, guid: efa507d7c8884b34080fc6ad4736ba58, type: 3}
+  - {fileID: 21300000, guid: bbab03a4177f1084fa3e613ce81887ff, type: 3}
+  - {fileID: 21300000, guid: 31d13a63be85c42428c7bb7bfc56848b, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 7857f3c8e5c8eff498cedee8c687f369, type: 3}
+  - {fileID: 21300000, guid: dd6a90b93f59bfe4eb841851c3da663b, type: 3}
+  - {fileID: 21300000, guid: 8c601d5c4b342fa42ad6321b80b83a44, type: 3}
+  - {fileID: 21300000, guid: b68aa2c3b7d091d4391c28a017bdad4b, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 979ef42232af7ba44a044c92d5e8a778, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 140fb2206b401e145a844cbaa60f1d64, type: 3}
+  - {fileID: 21300000, guid: 8b64d28112e75bb4cb90e5622448c859, type: 3}
+  - {fileID: 21300000, guid: a3b9cd0f3e30c0540a6a844a30e83c73, type: 3}
+  idleFps: 4
+  moveFps: 8
+  attackFps: 8
+  deathFps: 4
+  walkStridePixels: 3.5
+  attackHitFrame: 2
+  hp: 12
+  goldReward: 1
+  damage: 0.5
+  moveSpeed: 2.2
+  scale: 0.6933333
+  hitRadius: 0.6933333
+  bodyHalfWidth: 0.4266667
+  aggroRange: 7
+  attackRange: 1.0666667
+  attackCooldown: 1.2
+  knockback: 0.8
+  patrolRange: 3
+  lungeDistance: 0.32000002
+  alertTime: 2.5
+  superArmor: 0
+  ranged: 0
+  keepAway: 0
+  attackSound: swing
+  deathSound: enemy_death
+  deathEffect: smoke_big
+  deathEffectScale: 0.55
+  attackEffect: 
+  attackEffectScale: 1
+  fallingRock: {fileID: 0}
+  bossTitle: 

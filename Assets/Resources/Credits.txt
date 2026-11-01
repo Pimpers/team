@@ -1,0 +1,51 @@
+# The in-game credits (settings window > 크레딧), read by CS/CreditsPanel.cs. This file is the one list to keep
+# up to date when an asset is added: "## " starts a section, "|||" moves on to the right-hand column,
+# "> " is a quieter line, lines starting "# " (like these) are notes and not shown.
+## 캐릭터 · 타일
+Meow Knight, Meowolas - "Cute Legends: Cat Heroes" / 9E0
+Free Cute Tileset (숲 타일, 나무, 덤불)
+Forest Background / Ansimuz (OpenGameArt, CC0)
+Treasure Hunters 상자 / Pixel Frog (CC0)
+SunnyLand 표지·효과 / Ansimuz (CC0)
+봉인 덩굴 - Free Pixel Climbing plants pack / Danaida
+함정 - Pixel Trap Pack / Foozle, Chroma Dave (CC0)
+쥐, 거미, 슬라임, 버섯, 통나무, 낙엽, 거미줄 - 직접 제작 (pxl)
+
+## 이펙트
+Pixel Platformer VFX General Pack 1 / DryRainEnt
+750 Effect and FX Pixel (무료판) / BDragon1727
+Battle VFX: Slashes and Thrusts, Thunder · Wind · Acid Spell Effect / pimen
+일부 효과: Retro Diffusion, Sprite Fusion 으로 생성
+
+## UI
+Complete UI Book Styles Pack / Crusenho Agus Hennihuno
+UI User Interface (무료판) / ToffeeCraft
+UI Pack - Pixel Adventure / Kenney
+UI Pack (RPG Expansion) / Kenney (CC0)
+Free UI Nature Pack / Qiuro
+Cryo's Mini GUI / PaperHatLizard (CC BY 4.0)
+Cat User Interface / ToffeeCraft
+Gamepad UI / greatdocbrown (CC0)
+Raven Fantasy Icons / Clockwork Raven
+Health Heart System (하트 HUD)
+|||
+## 음악
+Fantasy Adventure Quest / Alex Morgan (Pixabay)
+The Jolly Tankard / Kaazoom (Pixabay)
+GrassLands Theme / DST (OpenGameArt, CC0)
+Dark Shrine Loop / qubodup, remix of yd (OpenGameArt, CC0)
+Determined Pursuit / Emma_MA (OpenGameArt, CC0)
+A Sailor's Chant / Thimras (OpenGameArt, CC0)
+
+## 효과음
+RPG Audio, Impact Sounds, Interface Sounds / Kenney (CC0)
+
+## 글꼴
+Galmuri11 / Lee Minseo (SIL OFL 1.1)
+Departure Mono / Helena Zhang (OFL)
+DreamHeumulKR
+
+## 엔진
+Unity
+
+> 고마워요, 냥!

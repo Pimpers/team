@@ -1,0 +1,7 @@
+Book-style UI pieces (Assets/Resources/UIBook):
+  "Complete UI Book Styles Pack" (free version, Travel Book Lite) by Crusenho Agus Hennihuno
+  https://crusenho.itch.io/complete-ui-book-styles-pack
+  Licence: see License.txt in this folder (credit required; no resale; no NFT use).
+Changes made: the mouse cursor (Cursor01c) is redrawn at 3x size (Cursor01c_x3.png); the other pieces are used as they are.
+Where they are used: the pause menu book (cover + pages), the skill / passive slots, the card hover brackets,
+the menu button icons and the mouse cursor (Assets/CS/BookUI.cs).

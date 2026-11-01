@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d414bbd92a256b64dbefb9041ae4df21, type: 3}
+  m_Name: Spider
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDefinition
+  displayName: "\uB9C8\uC871\uAC70\uBBF8"
+  isBoss: 0
+  combatRole: 1
+  idleFrames:
+  - {fileID: 21300000, guid: a69eb085a0ee57542b12c39543c298b8, type: 3}
+  - {fileID: 21300000, guid: 1908916937f128c409edcb7481ff980e, type: 3}
+  - {fileID: 21300000, guid: f713778bb234a5a47af3e9bc74e5441f, type: 3}
+  - {fileID: 21300000, guid: 416cb7d40f2f8b445bd8fc3ea50fcb75, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 50e79108de5b28e459779516f061a161, type: 3}
+  - {fileID: 21300000, guid: b44eee7fb13bc2d41a2859c1616eb5cb, type: 3}
+  - {fileID: 21300000, guid: 4dc507d66b5004b4d90b2b12a523ff3d, type: 3}
+  - {fileID: 21300000, guid: 4679fb1c7d5b5754ebc1728df8b086a8, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 99c9bdfcce6833946a5560376f1d2471, type: 3}
+  - {fileID: 21300000, guid: 4e10db6dca1a636408e993e5e4a74d05, type: 3}
+  - {fileID: 21300000, guid: 50b4dfe1690d0794ea2930b6b43a5807, type: 3}
+  - {fileID: 21300000, guid: bdf117bacab58004e99cee571a87c4da, type: 3}
+  - {fileID: 21300000, guid: 22eb937bf8d306a4b83aa62ca874086f, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: fd6bf759ed245f84b953c949138c8094, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: fe4b6c75aa6cd7e42be697a59476983a, type: 3}
+  - {fileID: 21300000, guid: 5ca59a2aacd153c40aa59776e3757eb7, type: 3}
+  idleFps: 4
+  moveFps: 8
+  attackFps: 7
+  deathFps: 4
+  walkStridePixels: 2.5
+  attackHitFrame: 2
+  hp: 16
+  goldReward: 2
+  damage: 0.5
+  moveSpeed: 1.6
+  scale: 0.96000004
+  hitRadius: 0.90666676
+  bodyHalfWidth: 0.64000005
+  aggroRange: 8
+  attackRange: 6
+  attackCooldown: 2.2
+  knockback: 1
+  patrolRange: 3
+  lungeDistance: 0
+  alertTime: 2.5
+  superArmor: 0
+  ranged: 1
+  keepAway: 3
+  attackSound: 
+  deathSound: enemy_death
+  deathEffect: smoke_big
+  deathEffectScale: 0.65
+  attackEffect: 
+  attackEffectScale: 1
+  fallingRock: {fileID: 0}
+  bossTitle: 

@@ -1,0 +1,1365 @@
+fileFormatVersion: 2
+guid: 972daacb3bef9124abb9d8df9b731591
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8136994919760363715
+    second: toffee_fantasy_0
+  - first:
+      213: -3106017738375506076
+    second: toffee_fantasy_1
+  - first:
+      213: -328451454598028247
+    second: toffee_fantasy_2
+  - first:
+      213: 1671783432765839408
+    second: toffee_fantasy_3
+  - first:
+      213: 8392903875475014532
+    second: toffee_fantasy_4
+  - first:
+      213: 3630920925056250928
+    second: toffee_fantasy_5
+  - first:
+      213: -7983736939398493436
+    second: toffee_fantasy_6
+  - first:
+      213: -5298418114365883353
+    second: toffee_fantasy_7
+  - first:
+      213: -3416563256421458054
+    second: toffee_fantasy_8
+  - first:
+      213: -6570545222875026734
+    second: toffee_fantasy_9
+  - first:
+      213: -5254268386112821499
+    second: toffee_fantasy_10
+  - first:
+      213: 3712664687231812794
+    second: toffee_fantasy_11
+  - first:
+      213: 4460968048254719146
+    second: toffee_fantasy_12
+  - first:
+      213: 2629613329121988186
+    second: toffee_fantasy_13
+  - first:
+      213: 6045917271835350482
+    second: toffee_fantasy_14
+  - first:
+      213: -6909210243707298623
+    second: toffee_fantasy_15
+  - first:
+      213: 4852360041137365792
+    second: toffee_fantasy_16
+  - first:
+      213: 5428932642748463830
+    second: toffee_fantasy_17
+  - first:
+      213: 219508546988164798
+    second: toffee_fantasy_18
+  - first:
+      213: 480371985650824889
+    second: toffee_fantasy_19
+  - first:
+      213: 6134891464363662292
+    second: toffee_fantasy_20
+  - first:
+      213: 1731510229222692092
+    second: toffee_fantasy_21
+  - first:
+      213: -6849987033754966108
+    second: toffee_fantasy_22
+  - first:
+      213: -6528495079343530875
+    second: toffee_fantasy_23
+  - first:
+      213: 1821367343433444125
+    second: toffee_fantasy_24
+  - first:
+      213: -9163912088082372417
+    second: toffee_fantasy_25
+  - first:
+      213: -4930474542040992488
+    second: toffee_fantasy_26
+  - first:
+      213: -4991909637250435
+    second: toffee_fantasy_27
+  - first:
+      213: 8060756719987520066
+    second: toffee_fantasy_28
+  - first:
+      213: -1877579518303583992
+    second: toffee_fantasy_29
+  - first:
+      213: 755056454871051313
+    second: toffee_fantasy_30
+  - first:
+      213: -3958934810379042785
+    second: toffee_fantasy_31
+  - first:
+      213: -2959773811372023508
+    second: toffee_fantasy_32
+  - first:
+      213: -4773951765965987423
+    second: toffee_fantasy_33
+  - first:
+      213: -6619923873018913619
+    second: toffee_fantasy_34
+  - first:
+      213: 668330038579103463
+    second: toffee_fantasy_35
+  - first:
+      213: 2902758407599198808
+    second: toffee_fantasy_36
+  - first:
+      213: -2254566363675666407
+    second: toffee_fantasy_37
+  - first:
+      213: 6489038955538724259
+    second: toffee_fantasy_38
+  - first:
+      213: 5338382748904447814
+    second: toffee_fantasy_39
+  - first:
+      213: 5134599057378744848
+    second: toffee_fantasy_40
+  - first:
+      213: 8112681703646391075
+    second: toffee_fantasy_41
+  - first:
+      213: 3092225335581181560
+    second: toffee_fantasy_42
+  - first:
+      213: 4041778109737595350
+    second: toffee_fantasy_43
+  - first:
+      213: -4461294080535936994
+    second: toffee_fantasy_44
+  - first:
+      213: -8901444558734508206
+    second: toffee_fantasy_45
+  - first:
+      213: 2203931209424596614
+    second: toffee_fantasy_46
+  - first:
+      213: 2713146678767369890
+    second: toffee_fantasy_47
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: toffee_fantasy_0
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 231
+        width: 70
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3f768c6b36931f80800000000000000
+      internalID: -8136994919760363715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_1
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 224
+        width: 34
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 467d016c25535e4d0800000000000000
+      internalID: -3106017738375506076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_2
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 224
+        width: 47
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92469ba642b117bf0800000000000000
+      internalID: -328451454598028247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_3
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 225
+        width: 31
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0381463bc2e533710800000000000000
+      internalID: 1671783432765839408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_4
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 225
+        width: 31
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48300b37b95997470800000000000000
+      internalID: 8392903875475014532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_5
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 95
+        width: 73
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 034b289085f936230800000000000000
+      internalID: 3630920925056250928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_6
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 95
+        width: 73
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40b0df2ad81143190800000000000000
+      internalID: -7983736939398493436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_7
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 116
+        width: 79
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72cf9b51ccc3876b0800000000000000
+      internalID: -5298418114365883353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7fd85ce1dde590d0800000000000000
+      internalID: -3416563256421458054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2dae4e99eebb0d4a0800000000000000
+      internalID: -6570545222875026734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_10
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5072e2bbdb61517b0800000000000000
+      internalID: -5254268386112821499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_11
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab4c69cccd8068330800000000000000
+      internalID: 3712664687231812794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_12
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa4179efdca88ed30800000000000000
+      internalID: 4460968048254719146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_13
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 64
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5ec2faf3634e7420800000000000000
+      internalID: 2629613329121988186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_14
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d51521e9b967e350800000000000000
+      internalID: 6045917271835350482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_15
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cc1651d3ed8d10a0800000000000000
+      internalID: -6909210243707298623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_16
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 64
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 023ea4e9fbb075340800000000000000
+      internalID: 4852360041137365792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_17
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6da7b809971775b40800000000000000
+      internalID: 5428932642748463830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_18
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb644684cd9db0300800000000000000
+      internalID: 219508546988164798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_19
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 64
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b634cc96cf9aa600800000000000000
+      internalID: 480371985650824889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_20
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 36
+        width: 19
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dbd8f46843832550800000000000000
+      internalID: 6134891464363662292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_21
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 36
+        width: 19
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf416c9216f870810800000000000000
+      internalID: 1731510229222692092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_22
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 36
+        width: 19
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a7e009e515ffe0a0800000000000000
+      internalID: -6849987033754966108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_23
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 36
+        width: 19
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58cd7d590502665a0800000000000000
+      internalID: -6528495079343530875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1be8d6e2fbc64910800000000000000
+      internalID: 1821367343433444125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_25
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb821f4228e33d080800000000000000
+      internalID: -9163912088082372417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_26
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8153a8bd68f639bb0800000000000000
+      internalID: -4930474542040992488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_27
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d72225772e34eeff0800000000000000
+      internalID: -4991909637250435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_28
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 242f2b3778f8ddf60800000000000000
+      internalID: 8060756719987520066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_29
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 48
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80147fd306f71f5e0800000000000000
+      internalID: -1877579518303583992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_30
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13c64f168df7a7a00800000000000000
+      internalID: 755056454871051313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_31
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 48
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f10cd6ae3c90f09c0800000000000000
+      internalID: -3958934810379042785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_32
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c21aaad6665cce6d0800000000000000
+      internalID: -2959773811372023508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_33
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 32
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a1afbe89248fbdb0800000000000000
+      internalID: -4773951765965987423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_34
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dac5494bf4e4124a0800000000000000
+      internalID: -6619923873018913619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_35
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 32
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e60b3e01a2664900800000000000000
+      internalID: 668330038579103463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_36
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8529ab9646ba84820800000000000000
+      internalID: 2902758407599198808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_37
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 32
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 918519266db26b0e0800000000000000
+      internalID: -2254566363675666407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_38
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a5be86bc82bd0a50800000000000000
+      internalID: 6489038955538724259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_39
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 32
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64fd58f73deb51a40800000000000000
+      internalID: 5338382748904447814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_40
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01a9d1f63a2c14740800000000000000
+      internalID: 5134599057378744848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_41
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 16
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32b67a1d609069070800000000000000
+      internalID: 8112681703646391075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_42
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 16
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87687c43f8ac9ea20800000000000000
+      internalID: 3092225335581181560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_43
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 16
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d1fbdbc6c7471830800000000000000
+      internalID: 4041778109737595350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_44
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 3
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e104a13bbac4612c0800000000000000
+      internalID: -4461294080535936994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_45
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 3
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25fbbc0f557b77480800000000000000
+      internalID: -8901444558734508206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_46
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 3
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68e662f02cfe59e10800000000000000
+      internalID: 2203931209424596614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toffee_fantasy_47
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 3
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2aeb57b878807a520800000000000000
+      internalID: 2713146678767369890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      toffee_fantasy_0: -8136994919760363715
+      toffee_fantasy_1: -3106017738375506076
+      toffee_fantasy_10: -5254268386112821499
+      toffee_fantasy_11: 3712664687231812794
+      toffee_fantasy_12: 4460968048254719146
+      toffee_fantasy_13: 2629613329121988186
+      toffee_fantasy_14: 6045917271835350482
+      toffee_fantasy_15: -6909210243707298623
+      toffee_fantasy_16: 4852360041137365792
+      toffee_fantasy_17: 5428932642748463830
+      toffee_fantasy_18: 219508546988164798
+      toffee_fantasy_19: 480371985650824889
+      toffee_fantasy_2: -328451454598028247
+      toffee_fantasy_20: 6134891464363662292
+      toffee_fantasy_21: 1731510229222692092
+      toffee_fantasy_22: -6849987033754966108
+      toffee_fantasy_23: -6528495079343530875
+      toffee_fantasy_24: 1821367343433444125
+      toffee_fantasy_25: -9163912088082372417
+      toffee_fantasy_26: -4930474542040992488
+      toffee_fantasy_27: -4991909637250435
+      toffee_fantasy_28: 8060756719987520066
+      toffee_fantasy_29: -1877579518303583992
+      toffee_fantasy_3: 1671783432765839408
+      toffee_fantasy_30: 755056454871051313
+      toffee_fantasy_31: -3958934810379042785
+      toffee_fantasy_32: -2959773811372023508
+      toffee_fantasy_33: -4773951765965987423
+      toffee_fantasy_34: -6619923873018913619
+      toffee_fantasy_35: 668330038579103463
+      toffee_fantasy_36: 2902758407599198808
+      toffee_fantasy_37: -2254566363675666407
+      toffee_fantasy_38: 6489038955538724259
+      toffee_fantasy_39: 5338382748904447814
+      toffee_fantasy_4: 8392903875475014532
+      toffee_fantasy_40: 5134599057378744848
+      toffee_fantasy_41: 8112681703646391075
+      toffee_fantasy_42: 3092225335581181560
+      toffee_fantasy_43: 4041778109737595350
+      toffee_fantasy_44: -4461294080535936994
+      toffee_fantasy_45: -8901444558734508206
+      toffee_fantasy_46: 2203931209424596614
+      toffee_fantasy_47: 2713146678767369890
+      toffee_fantasy_5: 3630920925056250928
+      toffee_fantasy_6: -7983736939398493436
+      toffee_fantasy_7: -5298418114365883353
+      toffee_fantasy_8: -3416563256421458054
+      toffee_fantasy_9: -6570545222875026734
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

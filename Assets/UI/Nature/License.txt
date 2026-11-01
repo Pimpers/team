@@ -1,0 +1,3 @@
+﻿License: Free to use in personal and commercial projects; credit not required; do not resell or redistribute the assets as-is.
+Source: 'Free UI Nature Pack' by Qiuro - https://qiuro.itch.io/free-uinature-pack
+The pieces here are cropped / recoloured (button_grey, button_cream) from that pack by UISkin setup.

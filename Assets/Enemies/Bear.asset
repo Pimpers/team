@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d414bbd92a256b64dbefb9041ae4df21, type: 3}
+  m_Name: Bear
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDefinition
+  displayName: "\uBFD4\uACF0"
+  isBoss: 1
+  combatRole: 0
+  idleFrames:
+  - {fileID: 21300000, guid: ca2f88924adb0f643abc7645a3d6afad, type: 3}
+  - {fileID: 21300000, guid: 2b4562ded8555ef43a291ec5c79ef5c1, type: 3}
+  - {fileID: 21300000, guid: dd13472de4ed1754d8f700b5b09c25f6, type: 3}
+  - {fileID: 21300000, guid: 20760bb4e4a31c14c9891d8e0a3f5930, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 927937d2474bef14495b21cd50769006, type: 3}
+  - {fileID: 21300000, guid: 17997b53846e3c0459b8035b1e18028b, type: 3}
+  - {fileID: 21300000, guid: 48ef2c0e1151087419a823bd3858ad49, type: 3}
+  - {fileID: 21300000, guid: 0c22d16f8367cab458c1fe38c05f9814, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: a577a4aa65f81bb4fa92fcd6c7f94d95, type: 3}
+  - {fileID: 21300000, guid: 2c03a2f14cfb69944992f74354d5b9d6, type: 3}
+  - {fileID: 21300000, guid: ccf18c46d1f103a46ac366e916573eb6, type: 3}
+  - {fileID: 21300000, guid: 39cc056fc344c0443ae329d613b31fed, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: f3e4150206233fe4f9c134560e4ed8ff, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 6c682ef372f2caf4899a30297d7d290a, type: 3}
+  - {fileID: 21300000, guid: 5e9ffb61043dc4c4d957a3c19358cbe1, type: 3}
+  - {fileID: 21300000, guid: f2d667f9bc65d8144bd8263e4532fb1e, type: 3}
+  - {fileID: 21300000, guid: d09037118ee053d4e97dd56694062099, type: 3}
+  idleFps: 4
+  moveFps: 4.5
+  attackFps: 6
+  deathFps: 4
+  walkStridePixels: 5
+  attackHitFrame: 2
+  hp: 330
+  goldReward: 15
+  damage: 1
+  moveSpeed: 1.9
+  scale: 1.3866667
+  hitRadius: 1.7066668
+  bodyHalfWidth: 1.3866667
+  aggroRange: 20
+  attackRange: 2.0266666
+  attackCooldown: 1.3
+  knockback: 1.8
+  patrolRange: 3
+  lungeDistance: 0.53333336
+  alertTime: 99
+  superArmor: 1
+  ranged: 0
+  keepAway: 0
+  attackSound: hit_strong
+  deathSound: golem_death
+  deathEffect: explosion|blast_big
+  deathEffectScale: 1.4
+  attackEffect: dust_mid
+  attackEffectScale: 1.2
+  fallingRock: {fileID: 21300000, guid: 77637482ed8b2984f9fa2d5a038c2061, type: 3}
+  bossTitle: "\uD0C0\uB77D\uD55C \uC232\uC758 \uC9C0\uBC30\uC790"

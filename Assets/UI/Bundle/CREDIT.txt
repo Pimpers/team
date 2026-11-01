@@ -1,0 +1,7 @@
+UI pieces in Assets/Resources/UIBundle are cut from ToffeeCraft's free "UI User Interface" bundle (UIBundleFree.zip,
+Medieval sheet): https://toffeecraft.itch.io/ui-user-interface-mega-pack
+Free licence (as listed on the page): for personal use; can be used and edited freely; can be used for game development
+and other productions; do not redistribute or resell the assets. Commercial use needs the paid licence.
+Changes made: the health bar's red fill was taken out of its frame (MedievalBarFrame = the empty frame,
+MedievalBarFill = a 1 px column of the red) so the boss bar can drain; MedievalBoard is the notice board without its chain.
+Where they are used: the boss health bar (BossBrain.cs) and the result screen board (ResultUI.cs).

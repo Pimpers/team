@@ -1,0 +1,133 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+// Title screen extras: 설정 and 크레딧 above 게임 종료, so a first-time player can set the volume or read the credits
+// before starting (both used to live only in the village). Built at runtime from the quit button, so the title scene
+// itself is unchanged and the buttons share its look and click sound.
+public static class TitleMenu
+{
+    const string TitleScene = "TitleScene";
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Init()
+    {
+        SceneManager.sceneLoaded -= OnLoaded;
+        SceneManager.sceneLoaded += OnLoaded;
+        OnLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+    }
+
+    static void OnLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != TitleScene) return;
+        var quit = Object.FindAnyObjectByType<QuitButton>();
+        if (quit == null || quit.transform.parent.Find("CreditsButton") != null) return;
+        var rt = (RectTransform)quit.transform;
+        var canvas = quit.GetComponentInParent<Canvas>().rootCanvas;
+        var label = quit.GetComponentInChildren<TMP_Text>(true);
+        var font = label != null ? label.font : null;
+        Clone(rt, "CreditsButton", Loc.T("credits.title"), 1).onClick.AddListener(() => CreditsPanel.Show(canvas, font));
+        Clone(rt, "SettingsButton", Loc.T("harbor.settings"), 2).onClick.AddListener(() => TitleSettings.Show(canvas, font));
+    }
+
+    static Button Clone(RectTransform quit, string name, string text, int slot)
+    {
+        var go = Object.Instantiate(quit.gameObject, quit.parent);
+        go.name = name;
+        Object.Destroy(go.GetComponent<QuitButton>());
+        var btn = go.GetComponent<Button>();
+        btn.onClick = new Button.ButtonClickedEvent(); // drop the copied quit
+        foreach (var t in go.GetComponentsInChildren<TMP_Text>(true))
+        {
+            var loc = t.GetComponent<LocText>();
+            if (loc != null) Object.Destroy(loc);
+            t.text = text;
+        }
+        var rt = (RectTransform)go.transform;
+        rt.anchoredPosition = quit.anchoredPosition + Vector2.up * (quit.rect.height + 16f) * slot;
+        return btn;
+    }
+}
+
+// The title's settings: the volumes, screen shake and full screen (the village's OptionsUI is tied to its own scene
+// panel). A plain panel built on demand; the values are GameSettings', so they match the village's settings.
+public static class TitleSettings
+{
+    public static void Show(Canvas canvas, TMP_FontAsset font)
+    {
+        var shade = new GameObject("TitleSettings", typeof(RectTransform), typeof(Image), typeof(Button));
+        var srt = (RectTransform)shade.transform;
+        srt.SetParent(canvas.transform, false);
+        srt.anchorMin = Vector2.zero; srt.anchorMax = Vector2.one; srt.offsetMin = srt.offsetMax = Vector2.zero;
+        shade.GetComponent<Image>().color = UISkin.ModalShade;
+        shade.GetComponent<Button>().onClick.AddListener(() => Object.Destroy(shade)); // click outside closes
+
+        var panel = new GameObject("Panel", typeof(RectTransform), typeof(Image));
+        var prt = (RectTransform)panel.transform;
+        prt.SetParent(srt, false);
+        prt.sizeDelta = new Vector2(680f, 560f);
+        var pimg = panel.GetComponent<Image>();
+        var skin = UISkin.Instance;
+        if (skin != null && skin.buttonCream != null) UISkin.Apply(pimg, skin.buttonCream, 3f);
+        else pimg.color = new Color(1f, 0.95f, 0.82f);
+        panel.AddComponent<Button>().transition = Selectable.Transition.None; // clicks on the panel don't reach the shade
+
+        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 220f), new Vector2(600f, 64f), font, UISkin.InkTitle);
+        Row(prt, Loc.T("options.music"), GameSettings.MusicVolume, v => GameSettings.MusicVolume = v, 120f, font);
+        Row(prt, Loc.T("options.sfx"), GameSettings.SfxVolume, v => GameSettings.SfxVolume = v, 20f, font);
+        Row(prt, Loc.T("options.shake"), GameSettings.ShakeStrength, v => GameSettings.ShakeStrength = v, -80f, font);
+
+        var screen = MakeButton(prt, "", new Vector2(-150f, -200f), new Vector2(280f, 72f), skin != null ? skin.buttonWood : null, font);
+        System.Action refresh = () => screen.GetComponentInChildren<TMP_Text>().text = Loc.T(GameSettings.Fullscreen ? "options.fullscreen.on" : "options.fullscreen.off");
+        refresh();
+        screen.onClick.AddListener(() => { GameSettings.Fullscreen = !GameSettings.Fullscreen; refresh(); });
+        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(170f, -200f), new Vector2(220f, 72f), skin != null ? skin.buttonWood : null, font);
+        close.onClick.AddListener(() => Object.Destroy(shade));
+    }
+
+    static void Row(RectTransform panel, string label, float value, System.Action<float> set, float y, TMP_FontAsset font)
+    {
+        Text(panel, label, UiTheme.TextSmall, new Vector2(-150f, y + 26f), new Vector2(300f, 40f), font, UISkin.Ink).alignment = TextAlignmentOptions.Left;
+        var go = DefaultControls.CreateSlider(new DefaultControls.Resources());
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(panel, false);
+        rt.anchoredPosition = new Vector2(0f, y - 14f);
+        rt.sizeDelta = new Vector2(560f, 24f);
+        foreach (var img in go.GetComponentsInChildren<Image>(true))
+            img.color = img.name == "Fill" ? new Color(0.45f, 0.7f, 0.3f) : img.name == "Handle" ? new Color(0.3f, 0.2f, 0.12f) : new Color(0.55f, 0.45f, 0.35f);
+        var slider = go.GetComponent<Slider>();
+        slider.value = value;
+        slider.onValueChanged.AddListener(v => set(v));
+    }
+
+    static TextMeshProUGUI Text(RectTransform parent, string text, float size, Vector2 pos, Vector2 box, TMP_FontAsset font, Color color)
+    {
+        var t = new GameObject("Text", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+        t.rectTransform.SetParent(parent, false);
+        t.rectTransform.anchoredPosition = pos;
+        t.rectTransform.sizeDelta = box;
+        if (font != null) t.font = font;
+        t.text = text;
+        t.fontSize = size;
+        t.color = color;
+        t.alignment = TextAlignmentOptions.Center;
+        t.textWrappingMode = TextWrappingModes.NoWrap;
+        t.raycastTarget = false;
+        return t;
+    }
+
+    static Button MakeButton(RectTransform parent, string label, Vector2 pos, Vector2 size, Sprite sprite, TMP_FontAsset font)
+    {
+        var go = new GameObject("Button", typeof(RectTransform), typeof(Image), typeof(Button));
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(parent, false);
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = size;
+        var img = go.GetComponent<Image>();
+        if (sprite != null) UISkin.Apply(img, sprite, UISkin.SmallScale);
+        var t = Text(rt, label, UiTheme.TextSmall, Vector2.zero, size, font, Color.white);
+        t.rectTransform.anchorMin = Vector2.zero; t.rectTransform.anchorMax = Vector2.one; t.rectTransform.offsetMin = t.rectTransform.offsetMax = Vector2.zero;
+        return go.GetComponent<Button>();
+    }
+}

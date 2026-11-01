@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d414bbd92a256b64dbefb9041ae4df21, type: 3}
+  m_Name: Dummy
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDefinition
+  displayName: "\uD5C8\uC218\uC544\uBE44"
+  isBoss: 0
+  combatRole: 0
+  idleFrames:
+  - {fileID: 21300000, guid: 1d9a49bcdc301024781089870f68e255, type: 3}
+  - {fileID: 21300000, guid: 5900bf7963dcdca41b45d319d777537d, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 61a76b9de6a639f47aad5fb446fa48ab, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: fe1af6b16ce348a49b8131a1d7228556, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: e4ab9520731dc334ba74bf557dd15e79, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: ed285db0e024c264a834fede5a102fb2, type: 3}
+  - {fileID: 21300000, guid: e3ea4cba98d97e64f8606e3627ec1253, type: 3}
+  idleFps: 1.5
+  moveFps: 1
+  attackFps: 1
+  deathFps: 4
+  walkStridePixels: 0
+  attackHitFrame: 1
+  hp: 12
+  goldReward: 0
+  damage: 0
+  moveSpeed: 0
+  scale: 0.74666667
+  hitRadius: 0.74666667
+  bodyHalfWidth: 0.4266667
+  aggroRange: 0
+  attackRange: 0
+  attackCooldown: 99
+  knockback: 0
+  patrolRange: 0
+  lungeDistance: 0
+  alertTime: 0
+  superArmor: 1
+  ranged: 0
+  keepAway: 0
+  attackSound: 
+  deathSound: enemy_death
+  deathEffect: smoke_big
+  deathEffectScale: 0.6
+  attackEffect: 
+  attackEffectScale: 1
+  fallingRock: {fileID: 0}
+  bossTitle: 
