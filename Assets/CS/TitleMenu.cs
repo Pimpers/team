@@ -27,8 +27,13 @@ public static class TitleMenu
         var canvas = quit.GetComponentInParent<Canvas>().rootCanvas;
         var label = quit.GetComponentInChildren<TMP_Text>(true);
         var font = label != null ? label.font : null;
+        // The menu reads as a menu next to the big logo: body-size (36) labels rather than 24.
+        if (label != null) { label.enableAutoSizing = false; label.fontSize = UiTheme.TextLarge; }
         Clone(rt, "CreditsButton", Loc.T("credits.title"), 1).onClick.AddListener(() => CreditsPanel.Show(canvas, font));
         Clone(rt, "SettingsButton", Loc.T("harbor.settings"), 2).onClick.AddListener(() => TitleSettings.Show(canvas, font));
+        // Gamepad: the full-screen "click anywhere" button starts selected, so A starts the game.
+        var start = GameObject.Find("ClickCatcher");
+        if (start != null) GameInput.SelectForPad(start.GetComponent<Button>());
     }
 
     static Button Clone(RectTransform quit, string name, string text, int slot)
@@ -66,23 +71,29 @@ public static class TitleSettings
         var panel = new GameObject("Panel", typeof(RectTransform), typeof(Image));
         var prt = (RectTransform)panel.transform;
         prt.SetParent(srt, false);
-        prt.sizeDelta = new Vector2(680f, 560f);
+        prt.sizeDelta = new Vector2(700f, 700f);
         var pimg = panel.GetComponent<Image>();
         var skin = UISkin.Instance;
         if (skin != null && skin.buttonCream != null) UISkin.Apply(pimg, skin.buttonCream, 3f);
         else pimg.color = new Color(1f, 0.95f, 0.82f);
         panel.AddComponent<Button>().transition = Selectable.Transition.None; // clicks on the panel don't reach the shade
 
-        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 220f), new Vector2(600f, 64f), font, UISkin.InkTitle);
-        Row(prt, Loc.T("options.music"), GameSettings.MusicVolume, v => GameSettings.MusicVolume = v, 120f, font);
-        Row(prt, Loc.T("options.sfx"), GameSettings.SfxVolume, v => GameSettings.SfxVolume = v, 20f, font);
-        Row(prt, Loc.T("options.shake"), GameSettings.ShakeStrength, v => GameSettings.ShakeStrength = v, -80f, font);
-
-        var screen = MakeButton(prt, "", new Vector2(-150f, -200f), new Vector2(280f, 72f), skin != null ? skin.buttonWood : null, font);
-        System.Action refresh = () => screen.GetComponentInChildren<TMP_Text>().text = Loc.T(GameSettings.Fullscreen ? "options.fullscreen.on" : "options.fullscreen.off");
-        refresh();
-        screen.onClick.AddListener(() => { GameSettings.Fullscreen = !GameSettings.Fullscreen; refresh(); });
-        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(170f, -200f), new Vector2(220f, 72f), skin != null ? skin.buttonWood : null, font);
+        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 290f), new Vector2(600f, 64f), font, UISkin.InkTitle);
+        // The same rows as the village's settings (GameSettings.Sliders / Toggles).
+        for (int i = 0; i < GameSettings.Sliders.Length; i++)
+        {
+            var s = GameSettings.Sliders[i];
+            Row(prt, Loc.T(s.labelKey), s.get(), s.set, 200f - 100f * i, font);
+        }
+        for (int i = 0; i < GameSettings.Toggles.Length; i++)
+        {
+            var toggle = GameSettings.Toggles[i];
+            var b = MakeButton(prt, "", new Vector2(-165f + 330f * i, -210f), new Vector2(310f, 72f), skin != null ? skin.buttonWood : null, font);
+            var label = b.GetComponentInChildren<TMP_Text>();
+            label.text = GameSettings.ToggleText(toggle);
+            b.onClick.AddListener(() => { toggle.set(!toggle.get()); label.text = GameSettings.ToggleText(toggle); });
+        }
+        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(0f, -295f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
         close.onClick.AddListener(() => Object.Destroy(shade));
     }
 

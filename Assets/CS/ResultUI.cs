@@ -78,6 +78,7 @@ public class ResultUI : MonoBehaviour
         BookUI.ButtonIcon(village.GetComponent<Button>(), "IconHome01a");
         BookUI.ButtonIcon(btn, "IconRestart01a");
         ShareLabelSize(village, copy.transform);
+        GameInput.SelectForPad(btn); // pad: A retries, d-pad left for the village
     }
 
     // One size for both button labels: the largest pixel-grid size (PixelText.Dot) at which every label still fits.

@@ -37,6 +37,35 @@ public class CardDraftUI : MonoBehaviour
         fastDeal = RunStats.CardDrafts > 0;
         rerolls = 0;
         Deal();
+        ShowSetTip();
+        if (card1Label != null) GameInput.SelectForPad(card1Label.GetComponentInParent<Button>()); // pad: A picks, d-pad moves
+    }
+
+    // The very first draft says what the # tags are for: the set system isn't taught in the tutorial.
+    void ShowSetTip()
+    {
+        if (panel == null || card1Label == null) return;
+        var tip = panel.transform.Find("SetTip");
+        if (tip == null)
+        {
+            var t = new GameObject("SetTip", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+            t.rectTransform.SetParent(panel.transform, false);
+            t.rectTransform.anchoredPosition = new Vector2(0f, -CardH * 0.5f - 140f); // under the reroll button
+            t.rectTransform.sizeDelta = new Vector2(1200f, 48f);
+            t.font = card1Label.font;
+            t.fontSize = UiTheme.TextSmall;
+            t.color = UiTheme.Gold;
+            t.alignment = TextAlignmentOptions.Center;
+            t.textWrappingMode = TextWrappingModes.NoWrap;
+            t.outlineWidth = 0.2f;
+            t.outlineColor = new Color32(24, 14, 10, 255);
+            t.raycastTarget = false;
+            t.text = Loc.T("draft.set_tip");
+            tip = t.transform;
+        }
+        bool first = !GameSave.Data.seenSetTip;
+        tip.gameObject.SetActive(first);
+        if (first) { GameSave.Data.seenSetTip = true; GameSave.Save(); }
     }
 
     // ---- Reroll
@@ -252,7 +281,7 @@ public class CardDraftUI : MonoBehaviour
             : lv == 0 ? ""
             : $"Lv.{lv} → {lv + 1}" + (lv + 1 == card.maxLevel ? Loc.T("draft.max") : "");
         string kind = card.kind == CardPool.Kind.Active ? Loc.F("draft.kind.active", ActiveKey(card.id))
-            : card.kind == CardPool.Kind.Passive ? Loc.T("draft.kind.passive")
+            // (passives get no kind line: one line less to read, and having no key or cooldown already says it)
             : card.kind == CardPool.Kind.Enhance ? Loc.F("draft.kind.enhance", card.tag) : "";
         // A new active's "대기 n초" line moves up into the kind line: with it as its own line the text ran
         // past the cream box onto the frame.

@@ -180,6 +180,52 @@ public class DataTests
     }
 
     [Test]
+    public void CardTexts_FitTheCardBox()
+    {
+        // The pixel font has only 12 / 24 / 36: a description that doesn't fit the card's text box at 24 drops to an
+        // unreadable 12. Two lines of at most 14 characters fit (a {number} counts as two).
+        var tooLong = new List<string>();
+        foreach (var pair in Loc.All)
+        {
+            if (!Regex.IsMatch(pair.Key, "^card\\.\\w+\\.text2?$")) continue;
+            var lines = pair.Value.Split('\n');
+            if (lines.Length > 2) tooLong.Add($"{pair.Key}: {lines.Length} lines");
+            foreach (var line in lines)
+                if (Regex.Replace(line, "\\{\\w+\\}", "00").Length > 14) tooLong.Add($"{pair.Key}: \"{line}\"");
+        }
+        Assert.That(tooLong, Is.Empty, "shorten these in Resources/Strings/ko.txt:\n" + string.Join("\n", tooLong));
+    }
+
+    [Test]
+    public void SettingsRows_HaveTheirText()
+    {
+        foreach (var s in GameSettings.Sliders) Assert.That(Loc.Has(s.labelKey), Is.True, s.labelKey);
+        foreach (var t in GameSettings.Toggles) Assert.That(Loc.Has(t.onKey) && Loc.Has(t.offKey), Is.True, t.onKey);
+    }
+
+    [Test]
+    public void EveryUpgrade_HasARowTextAndARisingPrice()
+    {
+        foreach (MetaProgress.Upgrade u in System.Enum.GetValues(typeof(MetaProgress.Upgrade)))
+        {
+            Assert.That(MetaProgress.MaxLevel(u), Is.GreaterThan(0), u.ToString());
+            Assert.That(MetaProgress.Cost(u), Is.GreaterThan(0), u.ToString());
+            string key = "smith." + (u == MetaProgress.Upgrade.Reroll ? "reroll" : u.ToString().ToLowerInvariant());
+            Assert.That(Loc.Has(key) && Loc.Has(key + ".effect"), Is.True, key);
+        }
+    }
+
+    [Test]
+    public void EveryCard_HasItsOwnArt()
+    {
+        // Resources/SkillIcons/<id>.png: hand-drawn for the skills, pixelfx stills for the stat cards. A missing or
+        // mis-imported file (not a Sprite) falls back to an effect frame and looks out of place.
+        var missing = new List<string>();
+        foreach (var c in CardPool.All) if (c.Art == null) missing.Add(c.id);
+        Assert.That(missing, Is.Empty, "no Sprite at Resources/SkillIcons/<id>: " + string.Join(", ", missing));
+    }
+
+    [Test]
     public void EveryTag_HasNameColourAndBothSetTexts()
     {
         for (int t = 0; t < CardPool.TagNames.Length; t++)

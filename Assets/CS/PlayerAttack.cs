@@ -75,8 +75,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (animator != null && animator.IsDead) { step = -1; return; }
 
-        var mouse = Mouse.current;
-        bool click = mouse != null && mouse.leftButton.wasPressedThisFrame && !PointerOverUi();
+        bool click = (GameInput.AttackClicked && !PointerOverUi()) || GameInput.AttackPadPressed;
 
         if (UseCombo)
         {
@@ -307,9 +306,9 @@ public class PlayerAttack : MonoBehaviour
     Vector2 AimDirection()
     {
         if (cam == null) cam = Camera.main;
-        if (cam == null || Mouse.current == null) return new Vector2(animator.FacingSign, 0f);
-        Vector3 mouseWorld = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector2 dir = (Vector2)mouseWorld - (Vector2)transform.position;
+        // The mouse, or the gamepad's right stick / facing (GameInput).
+        Vector2 aim = GameInput.AimPoint(cam, transform.position, animator.FacingSign, 4f);
+        Vector2 dir = aim - (Vector2)transform.position;
         return dir.sqrMagnitude > 0.0001f ? dir.normalized : new Vector2(animator.FacingSign, 0f);
     }
 
@@ -327,9 +326,8 @@ public class PlayerAttack : MonoBehaviour
         // different sizes, so transform.position alone drifts from where the character is.
         Vector2 myCenter = sr != null ? (Vector2)sr.bounds.center : (Vector2)transform.position;
 
-        Vector3 mouseWorld = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        mouseWorld.z = transform.position.z;
-        Vector2 aimDir = ((Vector2)mouseWorld - myCenter).normalized;
+        Vector2 aimPoint = GameInput.AimPoint(cam, myCenter, animator != null ? animator.FacingSign : 1f, 4f);
+        Vector2 aimDir = (aimPoint - myCenter).normalized;
         if (animator != null) animator.FaceTowards(aimDir.x);
 
         if (ranged)

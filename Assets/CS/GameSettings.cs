@@ -50,6 +50,27 @@ public static class GameSettings
         }
     }
 
+    // ---- What the settings screens show, in one place: the village's OptionsUI and the title's TitleSettings both
+    // build their rows from these lists, so a setting is added (or relabelled) once, here.
+    public struct SliderSetting { public string labelKey; public System.Func<float> get; public System.Action<float> set; public System.Action preview; }
+    public struct ToggleSetting { public string onKey, offKey; public System.Func<bool> get; public System.Action<bool> set; }
+
+    public static readonly SliderSetting[] Sliders =
+    {
+        new SliderSetting { labelKey = "options.volume", get = () => MasterVolume, set = v => MasterVolume = v },
+        new SliderSetting { labelKey = "options.music", get = () => MusicVolume, set = v => MusicVolume = v },
+        new SliderSetting { labelKey = "options.sfx", get = () => SfxVolume, set = v => SfxVolume = v },
+        new SliderSetting { labelKey = "options.shake", get = () => ShakeStrength, set = v => ShakeStrength = v,
+                            preview = () => CameraFollow.Shake(0.25f, 0.25f) }, // a taste of the new strength
+    };
+    public static readonly ToggleSetting[] Toggles =
+    {
+        new ToggleSetting { onKey = "options.fullscreen.on", offKey = "options.fullscreen.off", get = () => Fullscreen, set = v => Fullscreen = v },
+        new ToggleSetting { onKey = "options.hitstop.on", offKey = "options.hitstop.off", get = () => HitStopEnabled, set = v => HitStopEnabled = v },
+    };
+
+    public static string ToggleText(ToggleSetting t) => Loc.T(t.get() ? t.onKey : t.offKey);
+
     public static void Quit()
     {
 #if UNITY_EDITOR

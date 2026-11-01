@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 // - Stage scenes (a StageMap exists): side-scrolling platformer. A/D move, Space/W jump
 //   (gravity, lands on solid ground and one-way platforms), S drops through a platform.
 // - Legacy GameScene (no StageMap): free top-down WASD movement as before.
-// Uses the new Input System (Keyboard.current) directly since this project's
+// Input comes through GameInput (keyboard + mouse or a gamepad, Input System devices) since this project's
 // Active Input Handler is set to "Input System Package (New)" only -
 // the legacy Input.GetAxis()/GetKey() calls would throw at runtime here.
 //
@@ -389,15 +389,8 @@ public class PlayerController2D : MonoBehaviour
             return;
         }
 
-        var kb = Keyboard.current;
-        float x = 0f, y = 0f;
-        if (kb != null)
-        {
-            if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) x -= 1f;
-            if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) x += 1f;
-            if (kb.sKey.isPressed || kb.downArrowKey.isPressed) y -= 1f;
-            if (kb.wKey.isPressed || kb.upArrowKey.isPressed) y += 1f;
-        }
+        Vector2 move = GameInput.Move; // keyboard or gamepad (GameInput)
+        float x = move.x, y = move.y;
 
         if (jumpCooldownTimer > 0f) jumpCooldownTimer -= Time.deltaTime;
         float speed = PlayerStats.Instance != null ? PlayerStats.Instance.MoveSpeed : 3f;
@@ -411,8 +404,7 @@ public class PlayerController2D : MonoBehaviour
             // Dash (right mouse button): also cancels an attack in progress. Uses one charge (ground or air).
             if (dashCooldownTimer > 0f) dashCooldownTimer -= Time.deltaTime;
             UpdateDashCharges(Time.deltaTime);
-            var mouse = Mouse.current;
-            bool dashPressed = mouse != null && mouse.rightButton.wasPressedThisFrame;
+            bool dashPressed = GameInput.DashPressed;
             if (dashPressed && CanDash && !skillLock)
                 StartDash(moveInput.x != 0f ? Mathf.Sign(moveInput.x) : FacingSign);
 
@@ -430,7 +422,7 @@ public class PlayerController2D : MonoBehaviour
             else stepTimer = 0.05f;
 
             // Jump from the ground, or a double jump in the air; either cancels an attack.
-            bool jumpPressed = kb != null && (kb.spaceKey.wasPressedThisFrame || kb.wKey.wasPressedThisFrame || kb.upArrowKey.wasPressedThisFrame);
+            bool jumpPressed = GameInput.JumpPressed;
             if (grounded) coyoteTimer = CoyoteTime;
             else coyoteTimer -= Time.deltaTime;
             if (jumpPressed) jumpBufferTimer = JumpBufferTime;
@@ -460,7 +452,7 @@ public class PlayerController2D : MonoBehaviour
                 }
             }
 
-            bool dropPressed = kb != null && (kb.sKey.wasPressedThisFrame || kb.downArrowKey.wasPressedThisFrame);
+            bool dropPressed = GameInput.DropPressed;
             if (dropPressed && grounded && StandingOnPlatformOnly())
                 dropThroughTimer = 0.25f;
             if (dropThroughTimer > 0f) dropThroughTimer -= Time.deltaTime;
@@ -512,7 +504,7 @@ public class PlayerController2D : MonoBehaviour
             moveInput = new Vector2(x, y).normalized;
             if (moveInput.x != 0f && !isAttacking) sr.flipX = moveInput.x < 0f;
 
-            if (kb != null && kb.spaceKey.wasPressedThisFrame && !isJumping && !isHit && jumpCooldownTimer <= 0f)
+            if (GameInput.JumpButtonPressed && !isJumping && !isHit && jumpCooldownTimer <= 0f)
                 StartJump();
 
             // Jump keeps moving (it's a quick hop, not a full stop); only attack/hit freeze movement.

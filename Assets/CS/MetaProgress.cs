@@ -23,7 +23,7 @@ public static class MetaProgress
     public static int MaxLevel(Upgrade upgrade) =>
         upgrade == Upgrade.Attack ? 3 : upgrade == Upgrade.Speed ? 3 : upgrade == Upgrade.Reroll ? 2 : 5;
     static int BaseCost(Upgrade upgrade) =>
-        upgrade == Upgrade.Attack ? 25 : upgrade == Upgrade.Speed ? 20 : upgrade == Upgrade.Reroll ? 30 : 12;
+        upgrade == Upgrade.Attack ? 15 : upgrade == Upgrade.Speed ? 12 : upgrade == Upgrade.Reroll ? 20 : 8; // a lost run brings ~10-20 gold: the first upgrades come within a run or two
 
     public static int Level(Upgrade upgrade)
     {

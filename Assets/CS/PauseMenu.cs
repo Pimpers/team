@@ -63,7 +63,7 @@ public class PauseMenu : MonoBehaviour
         BuildControls(prt, font);
         BuildCards(prt, font);
 
-        var resume = MakeButton(prt, "ResumeButton", Loc.T("pause.resume"), new Vector2(-450f, -480f), skin != null ? skin.buttonRed : null, font, out _);
+        var resume = resumeButton = MakeButton(prt, "ResumeButton", Loc.T("pause.resume"), new Vector2(-450f, -480f), skin != null ? skin.buttonRed : null, font, out _);
         resume.onClick.AddListener(Close);
         BookUI.ButtonIcon(resume, "IconPlay01a");
         var giveUp = MakeButton(prt, "GiveUpButton", Loc.T("pause.give_up"), new Vector2(0f, -480f), skin != null ? skin.buttonWood : null, font, out giveUpLabel);
@@ -96,6 +96,7 @@ public class PauseMenu : MonoBehaviour
         { "ESC", Loc.T("pause.title") },
     };
 
+    Button resumeButton;
     const float BookScale = 5f, PageX = 260f; // page centres at -260 / +260: they meet at the spine
 
     void BuildControls(RectTransform panel, TMP_FontAsset font)
@@ -225,8 +226,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        var kb = Keyboard.current;
-        if (kb == null || !kb.escapeKey.wasPressedThisFrame) return;
+        if (!GameInput.PausePressed) return; // ESC or the gamepad's Start
         if (IsOpen) Close();
         else if (CanOpen()) Open();
     }
@@ -255,6 +255,7 @@ public class PauseMenu : MonoBehaviour
         quitLabel.text = Loc.T("ui.quit");
         transform.SetAsLastSibling(); // the skill bar / monster tracker are created after this menu: stay above them
         RefreshInfo();
+        GameInput.SelectForPad(resumeButton); // pad: A resumes, d-pad reaches the other two
         root.SetActive(true);
         GameClock.Pause("pause");
         Sfx.Play("ui_open");

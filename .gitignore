@@ -30,3 +30,6 @@ crashlytics-buildsettings.json
 
 # Old manual backups: git history replaces them
 /_art_backup/
+
+# Cats Smash > Capture Screens output
+/Screenshots/

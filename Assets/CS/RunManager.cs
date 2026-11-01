@@ -102,9 +102,6 @@ public class RunManager : MonoBehaviour
         Vector2 topLeft = rt.anchoredPosition + new Vector2(-rt.pivot.x * rt.rect.width, (1f - rt.pivot.y) * rt.rect.height);
         hudBacking.anchoredPosition = topLeft + new Vector2(-HudPadX, HudPadY);
         hudBacking.sizeDelta = new Vector2(size.x + HudPadX * 2f, size.y + HudPadY * 2f);
-        // The set chips hang just under the plate.
-        if (setHud != null)
-            ((RectTransform)setHud.transform).anchoredPosition = hudBacking.anchoredPosition + new Vector2(0f, -hudBacking.sizeDelta.y - 8f);
     }
 
     SetHUD setHud;
@@ -135,7 +132,7 @@ public class RunManager : MonoBehaviour
             PauseMenu.Create(hudText.canvas.rootCanvas, hudText.font);
             if (!tutorial && hudBacking != null)
             {
-                setHud = SetHUD.Create((RectTransform)hudBacking.parent, hudText.font); // the build's sets, under the plate
+                setHud = SetHUD.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font); // the build's sets, bottom-left
                 setHud.transform.SetAsFirstSibling(); // under the popups (card draft, result board)
             }
             if (!tutorial && StageMap.Instance != null) StageExit.Create(stageNumber); // the log out (and in) - see StageExit
@@ -381,6 +378,13 @@ public class RunManager : MonoBehaviour
         // This run's gold goes into the saved wallet, spent at the village blacksmith.
         MetaProgress.AddGold(PlayerStats.Instance.Gold);
         int unlocked = win ? Corruption.RegisterClear(Corruption.Level) : -1;
+        if (win)
+        {
+            // Records for the world map (a reason to go again besides the next 타락도 tier).
+            GameSave.Data.wins++;
+            GameSave.Data.bestClear = Mathf.Max(GameSave.Data.bestClear, Corruption.Level);
+            GameSave.Save();
+        }
         StartCoroutine(ShowResult(win, PlayerStats.Instance.Gold, unlocked));
     }
 

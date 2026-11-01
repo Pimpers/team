@@ -50,9 +50,12 @@ public static class WorldMapLabels
             text.fontStyle = FontStyles.Bold;
             text.alignment = TextAlignmentOptions.Center;
             text.textWrappingMode = TextWrappingModes.NoWrap;
-            text.color = l.key == OpenRegion || l.big ? Open : Locked;
+            bool locked = l.key != OpenRegion && !l.big && l.key != "realm";
+            text.color = locked ? Locked : Open;
             text.sortingOrder = 16;
-            text.text = Loc.T("worldmap.region." + l.key);
+            // Closed regions say so: eleven names and one open forest otherwise read as content that isn't there.
+            text.text = Loc.T("worldmap.region." + l.key) + (locked ? "\n<size=70%>" + Loc.T("worldmap.region.locked") + "</size>" : "");
+            text.lineSpacing = -20f;
             Vector2 need = text.GetPreferredValues(text.text);
             Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.4f), Mathf.Max(l.h * mapSize.y, need.y + 0.12f));
             text.rectTransform.sizeDelta = size;
@@ -61,7 +64,7 @@ public static class WorldMapLabels
             sr.sprite = plate.sprite;
             sr.drawMode = SpriteDrawMode.Sliced;
             sr.size = size;
-            sr.color = plate.color;
+            sr.color = locked ? plate.color * new Color(0.7f, 0.7f, 0.7f, 1f) : plate.color; // closed: a duller plate
             sr.sortingOrder = 15; // over the map, under the forest's tag (19 / 20)
         }
     }

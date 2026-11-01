@@ -52,6 +52,8 @@ public class WorldMapController : MonoBehaviour
         var tagPlate = marker != null ? marker.GetComponentInChildren<SpriteRenderer>(true) : null;
         var tagText = marker != null ? marker.GetComponentInChildren<TMP_Text>(true) : null;
         WorldMapLabels.Build(mapSize, tagPlate, tagText != null ? tagText.font : null);
+        var recordCanvas = backButton != null ? backButton.GetComponentInParent<Canvas>() : null;
+        if (recordCanvas != null) ShowRecords(recordCanvas.rootCanvas, messageText != null ? messageText.font : null);
         // After the first clear: pick the 타락도 (difficulty) of the next run.
         var uiCanvas = backButton != null ? backButton.GetComponentInParent<Canvas>() : null; // messageText is hidden by now
         if (uiCanvas != null) CorruptionSelector.Create(uiCanvas.rootCanvas, messageText != null ? messageText.font : null);
@@ -82,6 +84,13 @@ public class WorldMapController : MonoBehaviour
             if (messageTimer <= 0f && messageText != null) messageText.gameObject.SetActive(false);
         }
 
+        // Gamepad: A sets sail for the one open region (there is nothing else on the map to pick).
+        if (!leaving && GameInput.UsingGamepad && GameInput.JumpButtonPressed)
+        {
+            leaving = true;
+            SceneLoader.Load(TutorialProgress.Done ? stageSceneName : TutorialProgress.SceneName);
+            return;
+        }
         if (leaving || mouse == null || !mouse.leftButton.wasPressedThisFrame || overUI) return;
         if (InsideForest(world))
         {
@@ -97,6 +106,25 @@ public class WorldMapController : MonoBehaviour
         Vector2 d = p - forestCenter;
         float nx = d.x / forestRadius.x, ny = d.y / forestRadius.y;
         return nx * nx + ny * ny <= 1f;
+    }
+
+    // Top-right: this save's records (runs won, the highest 타락도 beaten), once there is something to show.
+    static void ShowRecords(Canvas canvas, TMP_FontAsset font)
+    {
+        if (GameSave.Data.wins <= 0) return;
+        var t = new GameObject("Records", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+        var rt = t.rectTransform;
+        rt.SetParent(canvas.transform, false);
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 1f);
+        rt.anchoredPosition = new Vector2(-40f, -40f);
+        rt.sizeDelta = new Vector2(700f, 48f);
+        if (font != null) t.font = font;
+        t.fontSize = UiTheme.TextSmall;
+        t.color = UiTheme.Cream;
+        t.alignment = TextAlignmentOptions.Right;
+        t.textWrappingMode = TextWrappingModes.NoWrap;
+        t.raycastTarget = false;
+        t.text = Loc.F("worldmap.records", GameSave.Data.wins, Mathf.Max(0, GameSave.Data.bestClear));
     }
 
     // Bottom-left "튜토리얼" button to replay it (only after it has been done once - before

@@ -130,14 +130,10 @@ public partial class SkillSystem : MonoBehaviour
 
         UpdatePassives(dt);
 
-        var kb = Keyboard.current;
-        if (kb == null || PauseMenu.IsOpen || (RunManager.Instance != null && RunManager.Instance.RunEnded)) return;
+        if (PauseMenu.IsOpen || (RunManager.Instance != null && RunManager.Instance.RunEnded)) return;
         var actives = stats.ActiveSkills;
         for (int i = 0; i < actives.Count && i < MaxActiveSlots; i++)
-        {
-            var key = i == 0 ? kb.qKey : i == 1 ? kb.eKey : kb.rKey;
-            if (key.wasPressedThisFrame) TryCast(actives[i]);
-        }
+            if (GameInput.SkillPressed(i)) TryCast(actives[i]); // Q / E / R or LB / RB / Y
     }
 
     void TryCast(string id)
@@ -223,9 +219,7 @@ public partial class SkillSystem : MonoBehaviour
 
     Vector2 MouseWorld()
     {
-        var cam = Camera.main;
-        if (cam == null || Mouse.current == null) return (Vector2)Me + new Vector2(Facing * 4f, 0f);
-        return cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        return GameInput.AimPoint(Camera.main, Me, Facing, 4f); // the mouse, or the right stick / facing on a gamepad
     }
 
     Vector2 Aim()
@@ -238,13 +232,8 @@ public partial class SkillSystem : MonoBehaviour
     // so a slash never comes out backwards while running away from the cursor.
     float MoveDir()
     {
-        var kb = Keyboard.current;
-        if (kb != null)
-        {
-            bool left = kb.aKey.isPressed || kb.leftArrowKey.isPressed, right = kb.dKey.isPressed || kb.rightArrowKey.isPressed;
-            if (left != right) return left ? -1f : 1f;
-        }
-        return Facing;
+        float x = GameInput.Move.x;
+        return x != 0f ? Mathf.Sign(x) : Facing;
     }
 
     static Vector2 Rotate(Vector2 v, float degrees)

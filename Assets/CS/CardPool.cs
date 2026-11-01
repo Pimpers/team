@@ -211,7 +211,7 @@ public static class CardPool
         WeightedShuffle(candidates, stats); // 희귀 / 전설 cards come up less often; a tag you already collect shows up a bit more
 
         // Pull one skill to the front, then one offensive card next to it (every draft offers one while any
-        // is left, so a run can't reach the boss (330 HP, Enemies/Bear.asset) with no way to hit harder); the rest are random.
+        // is left, so a run can't reach the boss (270 HP, Enemies/Bear.asset) with no way to hit harder); the rest are random.
         // While a Q / E / R slot is empty that skill is a new active when one is left (a run has only four
         // drafts - a play test reached Stage 3 with a single skill key because none was offered).
         int skill = slotsFull ? -1 : candidates.FindIndex(c => c.kind == Kind.Active && stats.CardLevel(c.id) == 0);

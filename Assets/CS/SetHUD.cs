@@ -27,8 +27,11 @@ public class SetHUD : MonoBehaviour
         var go = new GameObject("SetHUD", typeof(RectTransform));
         var rt = (RectTransform)go.transform;
         rt.SetParent(parent, false);
-        rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-        rt.pivot = new Vector2(0f, 1f);
+        // Bottom-left corner: the top-left already holds hearts, dash and the enemy / gold plate, and the chips
+        // crowded it as soon as two sets were open.
+        rt.anchorMin = rt.anchorMax = new Vector2(0f, 0f);
+        rt.pivot = new Vector2(0f, 0f);
+        rt.anchoredPosition = new Vector2(24f, 24f);
         rt.sizeDelta = new Vector2(700f, ChipH);
         var hud = go.AddComponent<SetHUD>();
         hud.font = font;

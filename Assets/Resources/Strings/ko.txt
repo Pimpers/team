@@ -34,7 +34,6 @@ draft.reroll = 다시 뽑기  {0}{1}  <size=75%><color=$label>(보유 {2})</colo
 draft.instant = 즉시
 draft.max =   최대
 draft.kind.active = <color=$active>액티브 · {0}키</color>
-draft.kind.passive = <color=$passive>패시브</color>
 draft.kind.enhance = <color=$enhance>{0} 강화</color>
 draft.set_complete = <b>{0} 완성!</b>
 
@@ -334,7 +333,7 @@ card.k_night.text2 = 치명타 확률 +25%
 card.k_tail.name = 꼬리 휘두르기 방어
 card.k_tail.text = 주변을 한 바퀴 베고\n보스 충격파를 되돌린다
 card.k_whisker.name = 수염 센서 반격
-card.k_whisker.text = 공격을 피하고 적 뒤로\n순간이동 반격 (10초마다)
+card.k_whisker.text = 공격을 피하고 적 뒤로\n순간이동 반격 (10초)
 card.k_whisker.text2 = 7초마다 반격
 card.a_jelly.name = 기폭 젤리 화살
 card.a_jelly.text = 3발마다 화살이\n터지며 주변 피해
@@ -427,3 +426,6 @@ smith.reroll = 행운의 방울
 smith.reroll.effect = 판마다 다시 뽑기 1회 무료
 route.treasure.title = 사냥 길 보물!
 route.treasure.reward = 골드 +{0}  ·  하트 반 칸 회복
+worldmap.region.locked = 준비 중
+worldmap.records = <color=$dimlabel>기록</color>  의뢰 완수 {0}회  ·  최고 타락도 {1}
+draft.set_tip = 같은 #태그 카드를 2장 모으면 세트 보너스, 3장이면 완성!

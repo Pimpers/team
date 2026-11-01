@@ -13,9 +13,13 @@ public class OptionsUI : MonoBehaviour
     public TMP_Text volumeValue;
     public Button closeButton;
 
-    Slider musicSlider, sfxSlider, shakeSlider;
-    TMP_Text musicValue, sfxValue, shakeValue, fullscreenLabel, hitStopLabel, quitLabel;
-    Button fullscreenButton, hitStopButton, quitButton, creditsButton;
+    // One slider / value per GameSettings.Sliders entry (the scene's own slider is the first, 전체 볼륨) and one
+    // button per GameSettings.Toggles entry: the rows come from that shared list, as on the title's settings panel.
+    Slider[] sliders;
+    TMP_Text[] values;
+    TMP_Text[] toggleLabels;
+    TMP_Text quitLabel;
+    Button quitButton, creditsButton;
     bool confirmQuit;
 
     public bool IsOpen => panel != null && panel.activeSelf;
@@ -24,21 +28,31 @@ public class OptionsUI : MonoBehaviour
     {
         volumeSlider.minValue = 0f;
         volumeSlider.maxValue = 1f;
-        volumeSlider.onValueChanged.AddListener(v => { GameSettings.MasterVolume = v; Show(volumeValue, v); });
+        sliders = new[] { volumeSlider };
+        values = new[] { volumeValue };
+        Hook(0);
         closeButton.onClick.AddListener(Close);
         BuildExtras();
         panel.SetActive(false);
+    }
+
+    void Hook(int i)
+    {
+        var s = GameSettings.Sliders[i];
+        sliders[i].onValueChanged.AddListener(v => { s.set(v); Show(values[i], v); if (v > 0f) s.preview?.Invoke(); });
     }
 
     public void Open()
     {
         confirmQuit = false;
         panel.SetActive(true);
-        volumeSlider.SetValueWithoutNotify(GameSettings.MasterVolume);
-        Show(volumeValue, GameSettings.MasterVolume);
-        if (musicSlider != null) { musicSlider.SetValueWithoutNotify(GameSettings.MusicVolume); Show(musicValue, GameSettings.MusicVolume); }
-        if (sfxSlider != null) { sfxSlider.SetValueWithoutNotify(GameSettings.SfxVolume); Show(sfxValue, GameSettings.SfxVolume); }
-        if (shakeSlider != null) { shakeSlider.SetValueWithoutNotify(GameSettings.ShakeStrength); Show(shakeValue, GameSettings.ShakeStrength); }
+        for (int i = 0; i < sliders.Length; i++)
+        {
+            if (sliders[i] == null) continue;
+            float v = GameSettings.Sliders[i].get();
+            sliders[i].SetValueWithoutNotify(v);
+            Show(values[i], v);
+        }
         RefreshButtons();
     }
 
@@ -64,19 +78,24 @@ public class OptionsUI : MonoBehaviour
         // Master row (existing), then music, effects and screen shake cloned from it.
         // Rows 128 apart, each slider 58 under its label: the label of the next row no longer sits on the slider above.
         PlaceRow(labelT, valueT, volumeSlider.transform as RectTransform, 266f);
-        musicSlider = CloneRow(inner, labelT, valueT, volumeSlider, "Music", Loc.T("options.music"), 138f, out musicValue);
-        sfxSlider = CloneRow(inner, labelT, valueT, volumeSlider, "Sfx", Loc.T("options.sfx"), 10f, out sfxValue);
-        shakeSlider = CloneRow(inner, labelT, valueT, volumeSlider, "Shake", Loc.T("options.shake"), -118f, out shakeValue);
-        musicSlider.onValueChanged.AddListener(v => { GameSettings.MusicVolume = v; Show(musicValue, v); });
-        sfxSlider.onValueChanged.AddListener(v => { GameSettings.SfxVolume = v; Show(sfxValue, v); });
-        shakeSlider.onValueChanged.AddListener(v => { GameSettings.ShakeStrength = v; Show(shakeValue, v); if (v > 0f) CameraFollow.Shake(0.25f, 0.25f); }); // a taste of the new strength
+        int n = GameSettings.Sliders.Length;
+        System.Array.Resize(ref sliders, n);
+        System.Array.Resize(ref values, n);
+        for (int i = 1; i < n; i++)
+        {
+            sliders[i] = CloneRow(inner, labelT, valueT, volumeSlider, "Setting" + i, Loc.T(GameSettings.Sliders[i].labelKey), 266f - 128f * i, out values[i]);
+            Hook(i);
+        }
 
         // Buttons are clones of "닫기" so they carry its look and click sound.
         var wood = UISkin.Instance != null ? UISkin.Instance.buttonWood : null;
-        fullscreenButton = CloneButton("FullscreenButton", new Vector2(-190f, -272f), new Vector2(360f, 80f), wood, out fullscreenLabel);
-        fullscreenButton.onClick.AddListener(() => { GameSettings.Fullscreen = !GameSettings.Fullscreen; RefreshButtons(); });
-        hitStopButton = CloneButton("HitStopButton", new Vector2(190f, -272f), new Vector2(360f, 80f), wood, out hitStopLabel);
-        hitStopButton.onClick.AddListener(() => { GameSettings.HitStopEnabled = !GameSettings.HitStopEnabled; RefreshButtons(); });
+        toggleLabels = new TMP_Text[GameSettings.Toggles.Length];
+        for (int i = 0; i < GameSettings.Toggles.Length; i++)
+        {
+            var toggle = GameSettings.Toggles[i];
+            var b = CloneButton("Toggle" + i, new Vector2(-190f + 380f * i, -272f), new Vector2(360f, 80f), wood, out toggleLabels[i]);
+            b.onClick.AddListener(() => { toggle.set(!toggle.get()); RefreshButtons(); });
+        }
         quitButton = CloneButton("QuitButton", new Vector2(-250f, -372f), new Vector2(230f, 80f), wood, out quitLabel); // wood, not the green "go" button
         quitButton.onClick.AddListener(OnQuit);
         creditsButton = CloneButton("CreditsButton", new Vector2(0f, -372f), new Vector2(230f, 80f), wood, out var creditsLabel);
@@ -146,8 +165,9 @@ public class OptionsUI : MonoBehaviour
 
     void RefreshButtons()
     {
-        if (fullscreenLabel != null) fullscreenLabel.text = GameSettings.Fullscreen ? Loc.T("options.fullscreen.on") : Loc.T("options.fullscreen.off");
-        if (hitStopLabel != null) hitStopLabel.text = GameSettings.HitStopEnabled ? Loc.T("options.hitstop.on") : Loc.T("options.hitstop.off");
+        if (toggleLabels != null)
+            for (int i = 0; i < toggleLabels.Length; i++)
+                if (toggleLabels[i] != null) toggleLabels[i].text = GameSettings.ToggleText(GameSettings.Toggles[i]);
         if (quitLabel != null) quitLabel.text = confirmQuit ? Loc.T("ui.quit_confirm") : Loc.T("ui.quit");
     }
 
