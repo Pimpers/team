@@ -503,3 +503,20 @@ card.execute.name = 사냥 본능
 card.execute.text = 체력 15% 이하로\n남은 적은 바로 처치
 card.execute.text2 = 체력 25% 이하로\n남은 적은 바로 처치
 skill.execute = 처치!
+card.air_reset.name = 공중 재도약
+card.air_reset.text = 공중 공격 명중 시\n공중 점프 1회 회복
+card.dodge_strike.name = 회피 반격
+card.dodge_strike.text = 대시 후 1.5초 안\n첫 공격 피해 x1.5
+card.dodge_strike.text2 = 대시 후 1.5초 안\n첫 공격 피해 x2
+card.bounty.name = 현상금
+card.bounty.text = 정예를 처치하면\n하트 반 칸 회복
+card.bounty.text2 = 정예를 처치하면\n하트 한 칸 회복
+goals.title = <color=$gold>다음 목표</color>\n
+goals.smith_locked = · 대장간 {0}번째 방문: <color=$gold>행운의 방울</color> 해금\n
+goals.smith_ready = · 대장간: <color=$gold>지금 강화할 수 있어요!</color>\n
+goals.smith_need = · 대장간: 다음 강화까지 생선뼈 {0}개\n
+goals.smith_done = · 대장간: 모든 강화 완료\n
+goals.corruption_first = · 보스를 이기면 <color=$gold>타락도 1</color> 해금\n
+goals.corruption_next = · 타락도 {1}로 이기면 <color=$gold>타락도 {0}</color> 해금\n
+goals.corruption_done = · 모든 타락도 해금 완료\n
+goals.cards = · 이 고양이가 뽑을 수 있는 카드 {0}장

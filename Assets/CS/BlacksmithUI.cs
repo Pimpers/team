@@ -273,9 +273,11 @@ public class BlacksmithUI : MonoBehaviour
     }
 
     // The 행운의 방울 is kept behind the counter until the second visit (unless it was already bought).
-    const int RerollUnlockVisit = 2, RegularVisit = 10;
+    public const int RerollUnlockVisit = 2;
+    const int RegularVisit = 10;
     static bool Locked(MetaProgress.Upgrade u) =>
         u == MetaProgress.Upgrade.Reroll && GameSave.Data.smithVisits < RerollUnlockVisit && MetaProgress.Level(u) == 0;
+    public static bool RerollLocked => Locked(MetaProgress.Upgrade.Reroll); // (the village goals board says so)
 
     void Buy(int i)
     {

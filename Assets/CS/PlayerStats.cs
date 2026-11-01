@@ -114,7 +114,7 @@ public class PlayerStats : MonoBehaviour
     // moves), then a crit roll that doubles it.
     public int RollDamage(float moveMultiplier, out bool crit)
     {
-        float mult = moveMultiplier;
+        float mult = moveMultiplier * SkillSystem.ConsumeDodgeBonus(this); // 회피 반격 card: the first hit after a dash
         if (moveMultiplier > 1f) mult *= 1f + 0.5f * CardLevel("finisher");
         crit = RunRng.Value < CritChance;
         float dmg = AttackPower * mult * ClawDamage * (crit ? 2f : 1f);

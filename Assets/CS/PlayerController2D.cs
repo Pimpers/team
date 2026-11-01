@@ -153,6 +153,8 @@ public class PlayerController2D : MonoBehaviour
     [System.NonSerialized] public bool skillLock;
     [System.NonSerialized] public bool skillHover;
     public bool IsGrounded => !SideScroll || grounded;
+    // 공중 재도약 card: one more air jump, up to what a fresh take-off gives.
+    public void RefundAirJump() => airJumpsLeft = Mathf.Min(airJumpsLeft + 1, airJumps + (PlayerStats.Instance != null ? PlayerStats.Instance.ExtraAirJumps : 0));
     public Vector3 Feet => FeetPoint;
     public event System.Action<float> DashStarted;
     public event System.Action DashEnded;

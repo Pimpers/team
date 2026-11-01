@@ -102,6 +102,7 @@ public partial class SkillSystem
     public void OnMeleeHit(Enemy e)
     {
         if (Has("k_paw") && e.Renderer != null) Vfx.Play("spark_mid2", e.Renderer.bounds.center, 0.8f, tint: Gold);
+        OnPlaystyleMeleeHit();
     }
 
     // PlayerAttack: the jump attack landed (캣타워 점프 찍기).
@@ -130,6 +131,7 @@ public partial class SkillSystem
 
     void OnDashEnded()
     {
+        OnPlaystyleDashEnded();
         int lv = Lv("k_leap");
         if (lv <= 0) return;
         Vfx.Play("k_leap_fx", Me, 1f);

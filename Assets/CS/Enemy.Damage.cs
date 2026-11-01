@@ -84,6 +84,7 @@ public partial class Enemy
                 PlayEffects(definition.deathEffect, b.center, isBoss ? 0.5f : definition.deathEffectScale); // 0.5: the pixel-art explosion only draws at x0.5 / x1
             RunStats.Kills++;
             if (IsElite) RunStats.EliteKills++; // elites already pay x4 gold; cards come only from the clear chest
+            if (IsElite) SkillSystem.OnEliteKilled(); // 현상금 card
             if (isBoss)
                 RunManager.Instance.OnBossDefeated(goldReward);
             else

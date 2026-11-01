@@ -66,3 +66,21 @@ Then run Unity on the copy (same arguments as `run_tests.ps1`, other `-projectPa
 `Editor/DynamicFontGuard.cs` keeps that out of git - saves of it are skipped while playing, and back in edit mode
 (or when the editor quits) its dynamic data is cleared, which is the committed state. A build clears it anyway
 (`ClearDynamicDataOnBuild`). Menu: `Cats Smash > Clear Dynamic Font Data`.
+
+## Working with several Claude sessions
+
+One folder, one writer. Two sessions editing this checkout at once mixed their changes into each other's commits
+(a commit that said it was one session's work also carried the other's). So:
+
+- A second session that writes code works in its own git worktree (`git worktree add ../team-<task> -b <task>`)
+  and its work comes back by a merge; read-only sessions (reviews, questions) may share this folder.
+- Before committing, `git status` should list only files you changed; stage those by name (`git add <files>`),
+  never `git add -A` while another session may have work in the tree.
+- The Unity editor holds the project open: batch runs go to the verification copy (`Tools/sync_verify.ps1`, above),
+  or, with the editor connected through Unity-MCP, the tests run in the open editor.
+
+## Art
+
+Card icons (`Assets/Resources/SkillIcons/<id>.png`, 64 px, clear ground) are pixelfx stills: soft glow, several
+shades, no black outline. Hand-drawn ones (pxl) keep that look: outlines in a darker shade of the colour they
+touch (`selout`), not black, and at least three tones per colour.

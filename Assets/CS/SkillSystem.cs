@@ -135,6 +135,7 @@ public partial class SkillSystem : MonoBehaviour
 
         UpdatePassives(dt);
         UpdateDashCut();
+        UpdatePlaystyleTimers(dt);
 
         if (PauseMenu.IsOpen || (RunManager.Instance != null && RunManager.Instance.RunEnded)) return;
         var actives = stats.ActiveSkills;
