@@ -12,32 +12,33 @@ public class VillageGoals : MonoBehaviour
     CardPool.Job job;
     int shownGold = -1, shownVisits = -1;
 
-    public static VillageGoals Create(Canvas canvas, TMP_FontAsset font, Sprite plate, bool ranged)
+    public static VillageGoals Create(Canvas canvas, TMP_FontAsset font, bool ranged)
     {
         var go = new GameObject("VillageGoals", typeof(RectTransform), typeof(Image));
         var rt = (RectTransform)go.transform;
         rt.SetParent(canvas.transform, false);
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 1f);
         rt.anchoredPosition = new Vector2(-24f, -270f);
-        rt.sizeDelta = new Vector2(470f, 160f); // four lines at 24
+        rt.sizeDelta = new Vector2(500f, 196f); // the ribbon over the top, three lines in the slot
         var bg = go.GetComponent<Image>();
-        if (plate != null) { bg.sprite = plate; bg.type = Image.Type.Sliced; }
-        else bg.color = new Color(0.07f, 0.05f, 0.08f, 0.85f);
+        UiPanels.Board(bg); // the riveted wooden board, the title on the red ribbon across its top
         bg.raycastTarget = false;
+        UiPanels.Ribbon(rt, Loc.T("goals.title"), font, 280f, 56f);
+        var slot = (RectTransform)UiPanels.Inset(rt, "Slot", new Vector2(18f, -40f), new Vector2(464f, 138f)).transform;
 
         var goals = go.AddComponent<VillageGoals>();
         goals.job = ranged ? CardPool.Job.Archer : CardPool.Job.Knight;
         goals.text = new GameObject("Text", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
         var trt = goals.text.rectTransform;
-        trt.SetParent(rt, false);
+        trt.SetParent(slot, false);
         trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
-        trt.offsetMin = new Vector2(24f, 16f); trt.offsetMax = new Vector2(-20f, -14f);
+        trt.offsetMin = new Vector2(18f, 10f); trt.offsetMax = new Vector2(-14f, -14f);
         if (font != null) goals.text.font = font;
         goals.text.fontSize = UiTheme.TextSmall;
         goals.text.color = UISkin.OverlayText;
         goals.text.alignment = TextAlignmentOptions.TopLeft;
         goals.text.textWrappingMode = TextWrappingModes.NoWrap;
-        goals.text.lineSpacing = 10f;
+        goals.text.lineSpacing = 6f;
         goals.text.raycastTarget = false;
         goals.Refresh();
         return goals;
@@ -52,7 +53,7 @@ public class VillageGoals : MonoBehaviour
     {
         shownGold = MetaProgress.Gold;
         shownVisits = GameSave.Data.smithVisits;
-        var sb = new System.Text.StringBuilder(Loc.T("goals.title"));
+        var sb = new System.Text.StringBuilder();
         sb.Append(SmithLine());
         sb.Append(CorruptionLine());
         sb.Append(Loc.F("goals.cards", CardsFor(job)));

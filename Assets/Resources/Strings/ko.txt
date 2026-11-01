@@ -478,7 +478,6 @@ result.all_clear = 모든 타락도를 정복했어요. 최고 기록에 도전!
 
 # BuildSheet (held Tab)
 sheet.title = 지금 내 고양이
-sheet.stats_head = 능력치
 sheet.cards_head = 고른 카드
 sheet.stats = 공격력  <color=$gold>{0}</color>\n하트  <color=$gold>{1} / {2}</color>\n이동 속도  <color=$gold>{3}%</color>\n공격 속도  <color=$gold>{4}%</color>\n치명타  <color=$gold>{5}%</color>\n사거리  <color=$gold>{6}%</color>\n대시  <color=$gold>{7}회</color>\n공중 점프  <color=$gold>{8}회</color>
 sheet.card = {0}  <color=$gold>Lv.{1}/{2}</color>
@@ -511,7 +510,7 @@ card.dodge_strike.text2 = 대시 후 1.5초 안\n첫 공격 피해 x2
 card.bounty.name = 현상금
 card.bounty.text = 정예를 처치하면\n하트 반 칸 회복
 card.bounty.text2 = 정예를 처치하면\n하트 한 칸 회복
-goals.title = <color=$gold>다음 목표</color>\n
+goals.title = 다음 목표
 goals.smith_locked = · 대장간 {0}번째 방문: <color=$gold>행운의 방울</color> 해금\n
 goals.smith_ready = · 대장간: <color=$gold>지금 강화할 수 있어요!</color>\n
 goals.smith_need = · 대장간: 다음 강화까지 생선뼈 {0}개\n

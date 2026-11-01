@@ -286,7 +286,9 @@ public class ResultUI : MonoBehaviour
         rt.anchoredPosition = topCentre;
         rt.sizeDelta = new Vector2(520f, 380f);
         var img = sheet.GetComponent<Image>();
-        img.color = new Color(0.09f, 0.06f, 0.07f, 0.9f);
+        // A dark inset slot sunk into the board (UiPanels), not a flat dark rectangle laid on it.
+        if (BookUI.Get("Slot01a") != null) BookUI.Slice(img, "Slot01a", UiPanels.InsetScale, new Color(1f, 1f, 1f, 0.96f));
+        else img.color = new Color(0.09f, 0.06f, 0.07f, 0.9f);
         img.raycastTarget = false;
         var t = new GameObject("Text", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
         t.rectTransform.SetParent(rt, false);

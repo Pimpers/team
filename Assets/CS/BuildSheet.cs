@@ -9,14 +9,18 @@ using TMPro;
 // Created by RunManager in the stage scenes (not the tutorial); hidden under the pause / draft / result popups.
 public class BuildSheet : MonoBehaviour
 {
-    const float Width = 1120f, Height = 640f, Row = 52f, IconSize = 44f;
+    const float Width = 1120f, Height = 640f, Row = 48f, IconSize = 44f;
     const int RowsPerColumn = 8;
 
     public static bool ForceShow; // ScreenCaptureTool: the sheet without a key held
 
     TMP_FontAsset font;
     CanvasGroup group;
-    TextMeshProUGUI statsText, setsText, emptyText;
+    TextMeshProUGUI setsText, emptyText;
+    // A card's art beside each number (attack, hearts, speed, attack speed, crit, reach, dashes, air jumps).
+    static readonly string[] StatIcons = { "attack", "heart", "speed", "haste", "crit", "reach", "dash_more", "jump" };
+    readonly TextMeshProUGUI[] statRows = new TextMeshProUGUI[StatIcons.Length];
+    const float StatRow = 60f;
     RectTransform cardArea;
     string shownKey;
     int shownLevels = -1;
@@ -29,8 +33,7 @@ public class BuildSheet : MonoBehaviour
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
         rt.sizeDelta = new Vector2(Width, Height);
         var img = go.GetComponent<Image>();
-        img.color = UiTheme.Plate;
-        if (UISkin.Instance != null) UISkin.Apply(img, UISkin.Instance.slate, 4f, Color.white);
+        UiPanels.Board(img); // the riveted wooden board, like the credits and the result board
         img.raycastTarget = false;
         var sheet = go.AddComponent<BuildSheet>();
         sheet.font = font;
@@ -61,32 +64,37 @@ public class BuildSheet : MonoBehaviour
         return t;
     }
 
+    // Board layout: the red ribbon with the title over the top edge; a dark slot on the left with a row per number
+    // (its card's icon, the label and the value); a dark slot on the right with the cards taken; a slot for the sets.
     void Build(RectTransform root)
     {
-        var title = Text(root, "Title", UiTheme.TextLarge, TextAlignmentOptions.Center, new Vector2(0f, -22f), new Vector2(Width, 48f));
-        title.text = Loc.T("sheet.title");
-        title.color = UiTheme.Gold;
+        UiPanels.Ribbon(root, Loc.T("sheet.title"), font, 440f);
 
-        var statsHead = Text(root, "StatsHead", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(48f, -92f), new Vector2(340f, 32f));
-        statsHead.text = Loc.T("sheet.stats_head");
-        statsHead.color = UiTheme.Gold;
-        statsText = Text(root, "Stats", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(48f, -134f), new Vector2(340f, 440f));
-        statsText.lineSpacing = 18f;
+        var statsSlot = (RectTransform)UiPanels.Inset(root, "StatsSlot", new Vector2(36f, -64f), new Vector2(360f, 540f)).transform;
+        for (int i = 0; i < StatIcons.Length; i++)
+        {
+            float y = -24f - i * StatRow - StatRow * 0.5f;
+            var card = CardPool.Get(StatIcons[i]);
+            UiPanels.Icon(statsSlot, card != null ? card.Art : null, new Vector2(42f, y), 44f);
+            statRows[i] = Text(statsSlot, "Stat" + i, UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(78f, y + StatRow * 0.5f), new Vector2(270f, StatRow));
+        }
 
-        var cardsHead = Text(root, "CardsHead", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(420f, -92f), new Vector2(640f, 32f));
+        var cardsSlot = (RectTransform)UiPanels.Inset(root, "CardsSlot", new Vector2(412f, -64f), new Vector2(672f, 456f)).transform;
+        var cardsHead = Text(cardsSlot, "CardsHead", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(24f, -16f), new Vector2(620f, 32f));
         cardsHead.text = Loc.T("sheet.cards_head");
         cardsHead.color = UiTheme.Gold;
         var area = new GameObject("Cards", typeof(RectTransform));
         cardArea = (RectTransform)area.transform;
-        cardArea.SetParent(root, false);
+        cardArea.SetParent(cardsSlot, false);
         cardArea.anchorMin = cardArea.anchorMax = cardArea.pivot = new Vector2(0f, 1f);
-        cardArea.anchoredPosition = new Vector2(420f, -132f);
-        cardArea.sizeDelta = new Vector2(660f, RowsPerColumn * Row);
-        emptyText = Text(cardArea, "Empty", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, Vector2.zero, new Vector2(640f, 32f));
+        cardArea.anchoredPosition = new Vector2(24f, -54f);
+        cardArea.sizeDelta = new Vector2(630f, RowsPerColumn * Row);
+        emptyText = Text(cardArea, "Empty", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, Vector2.zero, new Vector2(620f, 32f));
         emptyText.text = Loc.T("sheet.no_cards");
         emptyText.color = UiTheme.DisabledText;
 
-        setsText = Text(root, "Sets", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(48f, -Height + 84f), new Vector2(Width - 96f, 32f));
+        var setsSlot = (RectTransform)UiPanels.Inset(root, "SetsSlot", new Vector2(412f, -532f), new Vector2(672f, 72f)).transform;
+        setsText = Text(setsSlot, "Sets", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, 0f), new Vector2(630f, 72f));
     }
 
     void Update()
@@ -111,7 +119,7 @@ public class BuildSheet : MonoBehaviour
         if (hash != shownStatsHash)
         {
             shownStatsHash = hash;
-            statsText.text = Loc.F("sheet.stats",
+            string all = Loc.F("sheet.stats",
                 s.AttackPower,
                 s.CurrentHP.ToString("0.#"), s.MaxHP.ToString("0.#"),
                 (s.MoveSpeed / s.baseMoveSpeed * 100f).ToString("0"),
@@ -120,6 +128,8 @@ public class BuildSheet : MonoBehaviour
                 (s.ReachMultiplier * 100f).ToString("0"),
                 dashes,
                 1 + s.ExtraAirJumps);
+            var lines = all.Split('\n'); // one line of sheet.stats per row, beside its icon
+            for (int i = 0; i < statRows.Length; i++) statRows[i].text = i < lines.Length ? lines[i] : "";
         }
 
         // The card rows and the set line only change with a pick: rebuilt when the levels do (checked by a count of
@@ -143,7 +153,7 @@ public class BuildSheet : MonoBehaviour
         for (int i = 0; i < Mathf.Min(cards.Count, max); i++)
         {
             var c = cards[i];
-            Vector2 pos = new Vector2(i / RowsPerColumn * 330f, -(i % RowsPerColumn) * Row);
+            Vector2 pos = new Vector2(i / RowsPerColumn * 315f, -(i % RowsPerColumn) * Row);
             var icon = new GameObject("Icon", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
             icon.rectTransform.SetParent(cardArea, false);
             icon.rectTransform.anchorMin = icon.rectTransform.anchorMax = icon.rectTransform.pivot = new Vector2(0f, 1f);
@@ -154,7 +164,7 @@ public class BuildSheet : MonoBehaviour
             icon.enabled = icon.sprite != null;
             icon.raycastTarget = false;
             int lv = s.CardLevel(c.id);
-            var label = Text(cardArea, "Name", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, pos + new Vector2(IconSize + 10f, 0f), new Vector2(cards.Count > RowsPerColumn ? 270f : 590f, IconSize)); // one column: the whole width
+            var label = Text(cardArea, "Name", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, pos + new Vector2(IconSize + 10f, 0f), new Vector2(cards.Count > RowsPerColumn ? 250f : 560f, IconSize)); // one column: the whole width
             label.text = c.maxLevel > 0 ? Loc.F("sheet.card", c.name, lv, c.maxLevel) : c.name;
             label.overflowMode = TextOverflowModes.Ellipsis;
         }

@@ -59,10 +59,7 @@ public class MainSceneController : MonoBehaviour
         if (settingsButton != null && options != null) settingsButton.onClick.AddListener(() => options.Open());
         CreateGoldDisplay();
         if (profileName != null && profileName.canvas != null)
-        {
-            var pill = profileName.transform.parent.GetComponent<Image>();
-            VillageGoals.Create(profileName.canvas.rootCanvas, profileName.font, pill != null ? pill.sprite : null, def.ranged); // what the next runs open
-        }
+            VillageGoals.Create(profileName.canvas.rootCanvas, profileName.font, def.ranged); // what the next runs open
         SetUpPadNavigation();
     }
 
