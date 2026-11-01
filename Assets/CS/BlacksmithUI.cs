@@ -133,12 +133,17 @@ public class BlacksmithUI : MonoBehaviour
     const float CharsPerSecond = 32f;
 
     bool Talking => talkBox != null && talkBox.activeSelf;
+    public bool IsTalking => Talking;
+    Mood[] lineMoods;
 
     // First visit: who he is. Later: what he sees (gold for something, not enough, nothing left to do).
     string[] TalkLines()
     {
         if (GameSave.Data.smithVisits == 0)
+        {
+            lineMoods = new[] { Mood.Happy, Mood.Neutral, Mood.Happy };
             return new[] { Loc.T("smith.talk.first1"), Loc.T("smith.talk.first2"), Loc.T("smith.talk.prompt") };
+        }
         bool anyLeft = false, canBuy = false;
         foreach (var u in Order)
         {
@@ -146,13 +151,15 @@ public class BlacksmithUI : MonoBehaviour
             anyLeft = true;
             if (MetaProgress.Gold >= MetaProgress.Cost(u)) canBuy = true;
         }
-        if (!anyLeft) return new[] { Loc.T("smith.talk.maxed") };
+        if (!anyLeft) { lineMoods = new[] { Mood.Happy }; return new[] { Loc.T("smith.talk.maxed") }; }
+        lineMoods = new[] { canBuy ? Mood.Happy : Mood.Sad, Mood.Neutral };
         return new[] { Loc.T(canBuy ? "smith.talk.rich" : "smith.talk.poor"), Loc.T("smith.talk.prompt") };
     }
 
     void StartLine()
     {
         talkText.text = lines[line];
+        Speak(lines[line], lineMoods != null && line < lineMoods.Length ? lineMoods[line] : Mood.Neutral);
         talkText.maxVisibleCharacters = 0;
         shownChars = 0f;
         nextMark.gameObject.SetActive(false);
@@ -167,9 +174,10 @@ public class BlacksmithUI : MonoBehaviour
             shownChars += Time.unscaledDeltaTime * CharsPerSecond;
             talkText.maxVisibleCharacters = Mathf.Min(total, (int)shownChars);
         }
+        else talkUntil = 0f; // the whole line is out: mouth shut
         nextMark.gameObject.SetActive(done && Mathf.Repeat(Time.unscaledTime, 0.8f) < 0.5f);
         if (Time.frameCount == openedFrame || !GameInput.SubmitPressed) return;
-        if (!done) { shownChars = total; talkText.maxVisibleCharacters = total; return; } // first press: the whole line
+        if (!done) { shownChars = total; talkText.maxVisibleCharacters = total; talkUntil = 0f; return; } // first press: the whole line
         if (++line < lines.Length) { StartLine(); return; }
         talkBox.SetActive(false); // last line read: the shop
         panel.SetActive(true);
@@ -190,14 +198,15 @@ public class BlacksmithUI : MonoBehaviour
         prt.SetParent(canvas.transform, false);
         prt.anchorMin = prt.anchorMax = prt.pivot = new Vector2(0f, 0f);
         prt.anchoredPosition = new Vector2(70f, 250f);
-        prt.sizeDelta = new Vector2(48f * 7f, 34f * 7f); // the 48 x 34 drawing at x7
-        portrait.sprite = Resources.Load<Sprite>("Village/blacksmith");
+        prt.sizeDelta = new Vector2(120f * 2.25f, 126f * 2.25f); // the 120 x 126 frames (smith_0..7)
+        for (int i = 0; i < faces.Length; i++) faces[i] = Resources.Load<Sprite>("Village/smith_" + i);
+        portrait.sprite = faces[0];
+        portrait.gameObject.AddComponent<TalkDriver>().owner = this; // ticks the dialogue and the mouth (this script sits on the panel, hidden meanwhile)
         portrait.preserveAspect = true;
         portrait.raycastTarget = false;
 
         // Dialogue box along the bottom, with his name on a wood plate.
         talkBox = new GameObject("SmithTalk", typeof(RectTransform), typeof(Image));
-        talkBox.AddComponent<TalkDriver>().owner = this; // runs the dialogue: this script sits on the panel, hidden meanwhile
         var brt = (RectTransform)talkBox.transform;
         brt.SetParent(canvas.transform, false);
         brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 0f);
@@ -258,12 +267,12 @@ public class BlacksmithUI : MonoBehaviour
             Sfx.Play("coin");
             Say(MetaProgress.IsMaxed(u)
                 ? Loc.F("smith.maxed_now", Names[i], MetaProgress.Level(u))
-                : Loc.F("smith.upgraded", Names[i], MetaProgress.Level(u)));
+                : Loc.F("smith.upgraded", Names[i], MetaProgress.Level(u)), Mood.Happy);
         }
         else
         {
             Sfx.Play("ui_error");
-            Say(Loc.F("smith.no_gold", Currency.Icon));
+            Say(Loc.F("smith.no_gold", Currency.Icon), Mood.Sad);
         }
         Refresh();
     }
@@ -276,11 +285,37 @@ public class BlacksmithUI : MonoBehaviour
         return hasFinal ? Loc.T("grammar.topic_after_final") : Loc.T("grammar.topic");
     }
 
-    void Say(string text)
+    void Say(string text, Mood m = Mood.Neutral)
     {
+        Speak(text, m);
         if (messageText == null) return;
         messageText.text = text;
         messageTimer = 3f;
+    }
+
+    // ---- His face (Resources/Village/smith_0..7): 0 / 4 plain, 1 / 2 mouth open, 3 / 7 beaming, 5 smiling, 6 surprised.
+    // While a line is being said the mouth flaps through the mood's frames; then he holds the mood's resting face.
+    public enum Mood { Neutral, Happy, Sad }
+    readonly Sprite[] faces = new Sprite[8];
+    static readonly int[][] TalkFrames = { new[] { 0, 1, 2, 1 }, new[] { 5, 3, 7, 3 }, new[] { 4, 1, 4, 6 } };
+    static readonly int[] RestFrame = { 5, 5, 4 };
+    Mood mood;
+    float talkUntil;
+    const float MouthFps = 9f;
+
+    void Speak(string text, Mood m)
+    {
+        mood = m;
+        talkUntil = Time.unscaledTime + Mathf.Max(0.6f, text.Length / CharsPerSecond);
+    }
+
+    public void UpdatePortrait()
+    {
+        if (portrait == null) return;
+        bool talking = Time.unscaledTime < talkUntil;
+        int frame = talking ? TalkFrames[(int)mood][(int)(Time.unscaledTime * MouthFps) % 4] : RestFrame[(int)mood];
+        var face = faces[frame];
+        if (face != null) portrait.sprite = face;
     }
 
     void Update()
@@ -320,5 +355,10 @@ public class BlacksmithUI : MonoBehaviour
 public class TalkDriver : MonoBehaviour
 {
     public BlacksmithUI owner;
-    void Update() { if (owner != null) owner.UpdateTalk(); }
+    void Update()
+    {
+        if (owner == null) return;
+        if (owner.IsTalking) owner.UpdateTalk();
+        owner.UpdatePortrait();
+    }
 }

@@ -7,4 +7,4 @@ pixelfx checkout's `tools/` folder and run with node:
 - `role-icons.mjs <out>` - enemy role icons (drawn from pixel maps) -> `Assets/Resources/EnemyFx/role_*.png`
 - `ambient.mjs <out>` - looping ambience frames -> `Assets/Resources/Ambient/<name>/` (played by `CS/AmbientFx.cs`)
 
-The blacksmith portrait is pxl, not pixelfx: `Tools/pxl/pxl_blacksmith.px.js` -> `Assets/Resources/Village/blacksmith.png`.
+The blacksmith's faces are `Assets/Resources/Village/smith_0..7.png` (cut from the supplied sheet).
