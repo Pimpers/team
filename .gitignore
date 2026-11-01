@@ -34,3 +34,5 @@ crashlytics-buildsettings.json
 # Cats Smash > Capture Screens output
 /Screenshots/
 /TestResults/
+
+.claude/settings.local.json
