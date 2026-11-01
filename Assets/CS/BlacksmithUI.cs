@@ -66,7 +66,7 @@ public class BlacksmithUI : MonoBehaviour
 
     float messageTimer;
 
-    public bool IsOpen => panel != null && panel.activeSelf;
+    public bool IsOpen => (panel != null && panel.activeSelf) || Talking; // talking counts: the village ignores clicks meanwhile
 
     void Awake()
     {
@@ -89,8 +89,29 @@ public class BlacksmithUI : MonoBehaviour
         panel.SetActive(false);
     }
 
+    // The blacksmith talks first: his portrait (Resources/Village/blacksmith, drawn with pxl) and a dialogue box at
+    // the bottom of the screen, a line at a time (click / Space / Enter / pad A: finish the line, then the next).
+    // After the last line the upgrade panel opens, his portrait staying beside it.
     public void Open()
     {
+        BuildTalk();
+        lines = TalkLines();
+        line = 0;
+        GameSave.Data.smithVisits++;
+        GameSave.Save();
+        panel.SetActive(false);
+        portrait.gameObject.SetActive(true);
+        talkBox.SetActive(true);
+        openedFrame = Time.frameCount; // the click that opened it is not a "next"
+        StartLine();
+    }
+
+    // Straight to the shop (screen captures, tests): the portrait beside it, no dialogue.
+    public void OpenShop()
+    {
+        BuildTalk();
+        portrait.gameObject.SetActive(true);
+        talkBox.SetActive(false);
         panel.SetActive(true);
         Say(Loc.T("smith.greeting"));
         Refresh();
@@ -99,6 +120,131 @@ public class BlacksmithUI : MonoBehaviour
     public void Close()
     {
         panel.SetActive(false);
+        if (talkBox != null) talkBox.SetActive(false);
+        if (portrait != null) portrait.gameObject.SetActive(false);
+    }
+
+    GameObject talkBox;
+    Image portrait;
+    TMP_Text talkText, nextMark;
+    string[] lines;
+    int line, openedFrame = -1;
+    float shownChars;
+    const float CharsPerSecond = 32f;
+
+    bool Talking => talkBox != null && talkBox.activeSelf;
+
+    // First visit: who he is. Later: what he sees (gold for something, not enough, nothing left to do).
+    string[] TalkLines()
+    {
+        if (GameSave.Data.smithVisits == 0)
+            return new[] { Loc.T("smith.talk.first1"), Loc.T("smith.talk.first2"), Loc.T("smith.talk.prompt") };
+        bool anyLeft = false, canBuy = false;
+        foreach (var u in Order)
+        {
+            if (MetaProgress.IsMaxed(u)) continue;
+            anyLeft = true;
+            if (MetaProgress.Gold >= MetaProgress.Cost(u)) canBuy = true;
+        }
+        if (!anyLeft) return new[] { Loc.T("smith.talk.maxed") };
+        return new[] { Loc.T(canBuy ? "smith.talk.rich" : "smith.talk.poor"), Loc.T("smith.talk.prompt") };
+    }
+
+    void StartLine()
+    {
+        talkText.text = lines[line];
+        talkText.maxVisibleCharacters = 0;
+        shownChars = 0f;
+        nextMark.gameObject.SetActive(false);
+    }
+
+    public void UpdateTalk()
+    {
+        int total = talkText.text.Length;
+        bool done = shownChars >= total;
+        if (!done)
+        {
+            shownChars += Time.unscaledDeltaTime * CharsPerSecond;
+            talkText.maxVisibleCharacters = Mathf.Min(total, (int)shownChars);
+        }
+        nextMark.gameObject.SetActive(done && Mathf.Repeat(Time.unscaledTime, 0.8f) < 0.5f);
+        if (Time.frameCount == openedFrame || !GameInput.SubmitPressed) return;
+        if (!done) { shownChars = total; talkText.maxVisibleCharacters = total; return; } // first press: the whole line
+        if (++line < lines.Length) { StartLine(); return; }
+        talkBox.SetActive(false); // last line read: the shop
+        panel.SetActive(true);
+        Say(Loc.T("smith.greeting"));
+        Refresh();
+    }
+
+    void BuildTalk()
+    {
+        if (talkBox != null) return;
+        var canvas = panel.GetComponentInParent<Canvas>(true).rootCanvas;
+        var font = messageText != null ? messageText.font : null;
+        var skin = UISkin.Instance;
+
+        // Portrait, bottom-left, standing on the dialogue box (and beside the panel while shopping).
+        portrait = new GameObject("SmithPortrait", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        var prt = portrait.rectTransform;
+        prt.SetParent(canvas.transform, false);
+        prt.anchorMin = prt.anchorMax = prt.pivot = new Vector2(0f, 0f);
+        prt.anchoredPosition = new Vector2(70f, 250f);
+        prt.sizeDelta = new Vector2(48f * 7f, 34f * 7f); // the 48 x 34 drawing at x7
+        portrait.sprite = Resources.Load<Sprite>("Village/blacksmith");
+        portrait.preserveAspect = true;
+        portrait.raycastTarget = false;
+
+        // Dialogue box along the bottom, with his name on a wood plate.
+        talkBox = new GameObject("SmithTalk", typeof(RectTransform), typeof(Image));
+        talkBox.AddComponent<TalkDriver>().owner = this; // runs the dialogue: this script sits on the panel, hidden meanwhile
+        var brt = (RectTransform)talkBox.transform;
+        brt.SetParent(canvas.transform, false);
+        brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 0f);
+        brt.anchoredPosition = new Vector2(0f, 30f);
+        brt.sizeDelta = new Vector2(1560f, 230f);
+        var box = talkBox.GetComponent<Image>();
+        if (skin != null && skin.buttonCream != null) UISkin.Apply(box, skin.buttonCream, 3f);
+        else box.color = new Color(1f, 0.95f, 0.82f);
+
+        var plate = new GameObject("NamePlate", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        plate.rectTransform.SetParent(brt, false);
+        plate.rectTransform.anchorMin = plate.rectTransform.anchorMax = new Vector2(0f, 1f);
+        plate.rectTransform.anchoredPosition = new Vector2(560f, 6f);
+        plate.rectTransform.sizeDelta = new Vector2(380f, 64f);
+        if (skin != null) UISkin.Apply(plate, skin.buttonWood, UISkin.SmallScale);
+        var name = TalkText(plate.rectTransform, Loc.T("smith.name"), UiTheme.TextSmall, Color.white, font);
+        name.alignment = TextAlignmentOptions.Center;
+
+        talkText = TalkText(brt, "", UiTheme.TextLarge, UISkin.Ink, font);
+        talkText.rectTransform.offsetMin = new Vector2(400f, 30f);   // right of the portrait
+        talkText.rectTransform.offsetMax = new Vector2(-60f, -50f);
+        talkText.alignment = TextAlignmentOptions.TopLeft;
+        talkText.textWrappingMode = TextWrappingModes.Normal;
+
+        nextMark = TalkText(brt, Loc.T("smith.talk.next"), UiTheme.TextSmall, UISkin.Ink, font);
+        nextMark.rectTransform.offsetMin = new Vector2(0f, 18f);
+        nextMark.rectTransform.offsetMax = new Vector2(-40f, -180f);
+        nextMark.alignment = TextAlignmentOptions.BottomRight;
+
+        portrait.transform.SetAsLastSibling(); // in front of the box
+        talkBox.SetActive(false);
+        portrait.gameObject.SetActive(false);
+    }
+
+    static TMP_Text TalkText(RectTransform parent, string text, float size, Color color, TMP_FontAsset font)
+    {
+        var t = new GameObject("Text", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+        t.rectTransform.SetParent(parent, false);
+        t.rectTransform.anchorMin = Vector2.zero; t.rectTransform.anchorMax = Vector2.one;
+        t.rectTransform.offsetMin = t.rectTransform.offsetMax = Vector2.zero;
+        if (font != null) t.font = font;
+        t.text = text;
+        t.fontSize = size;
+        t.color = color;
+        t.textWrappingMode = TextWrappingModes.NoWrap;
+        t.raycastTarget = false;
+        return t;
     }
 
     void Buy(int i)
@@ -168,4 +314,11 @@ public class BlacksmithUI : MonoBehaviour
             else img.color = maxed ? MaxedColor : available ? BuyColor : DisabledColor;
         }
     }
+}
+
+// Ticks the blacksmith's dialogue from the dialogue box itself (active exactly while he talks).
+public class TalkDriver : MonoBehaviour
+{
+    public BlacksmithUI owner;
+    void Update() { if (owner != null) owner.UpdateTalk(); }
 }

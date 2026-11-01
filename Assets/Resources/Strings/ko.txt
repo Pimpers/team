@@ -429,3 +429,13 @@ route.treasure.reward = 골드 +{0}  ·  하트 반 칸 회복
 worldmap.region.locked = 준비 중
 worldmap.records = <color=$dimlabel>기록</color>  의뢰 완수 {0}회  ·  최고 타락도 {1}
 draft.set_tip = 같은 #태그 카드를 2장 모으면 세트 보너스, 3장이면 완성!
+
+# The blacksmith's dialogue (CS/BlacksmithUI.cs): the first visit introduces him, later visits say what he sees
+smith.name = 대장장이 냥철이
+smith.talk.first1 = 어서 오게, 용병. 난 이 항구의 대장장이 냥철이라네.
+smith.talk.first2 = 의뢰에서 생선뼈를 모아 오면, 발톱이든 다리든 단단하게 손봐 주지.
+smith.talk.rich = 오, 생선뼈 냄새가 나는군. 손볼 거리가 있겠어.
+smith.talk.poor = 생선뼈가 모자라 보이는군. 의뢰를 몇 번 더 다녀오게.
+smith.talk.maxed = 자네 장비는 더 손볼 데가 없네. 아주 훌륭해!
+smith.talk.prompt = 자, 무엇을 강화하겠나?
+smith.talk.next = ▼

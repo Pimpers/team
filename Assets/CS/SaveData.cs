@@ -12,6 +12,7 @@ public class SaveData
     public int hpLevel;
     public int rerollLevel; // 행운의 방울: free card rerolls per run (MetaProgress.Upgrade.Reroll)
     public bool seenSetTip; // the first card draft's line on what # tags and sets are
+    public int smithVisits;  // the blacksmith introduces himself on the first visit only
     public int wins;         // runs won (boss beaten) - shown on the world map
     public int bestClear = -1; // highest 타락도 level a run was won at (-1 = never won)
     public int selectedCharacter;

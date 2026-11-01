@@ -40,7 +40,8 @@ public static class ScreenCaptureTool
         string[] cards = { "attack", "k_combo", "k_paw", "crit" };
         Add("TitleScene", "title");
         Add("MainScene", "village");
-        Add("MainScene", "blacksmith", () => Find<BlacksmithUI>().Open());
+        Add("MainScene", "blacksmith_talk", () => Find<BlacksmithUI>().Open());
+        Add("MainScene", "blacksmith", () => Find<BlacksmithUI>().OpenShop());
         Add("MainScene", "options", () => Find<OptionsUI>().Open());
         Add("WorldMapScene", "worldmap");
         Add("LobbyScene", "lobby");

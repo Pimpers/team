@@ -115,6 +115,17 @@ public static class GameInput
         return key || button;
     }
 
+    // Moving a dialogue on: a click, Space, Enter, or the pad's A.
+    public static bool SubmitPressed
+    {
+        get
+        {
+            var kb = Keyboard.current; var m = Mouse.current; var pad = Pad;
+            return (kb != null && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame))
+                || (m != null && m.leftButton.wasPressedThisFrame) || (pad != null && pad.buttonSouth.wasPressedThisFrame);
+        }
+    }
+
     public static bool PausePressed
     {
         get { var kb = Keyboard.current; var pad = Pad; return (kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame); }
