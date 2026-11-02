@@ -11,7 +11,7 @@ public class SkillHUD : MonoBehaviour
 {
     // Big enough to read mid-fight. The pixel font only has 12 / 24 / 36 (PixelText.Dot), so a name that had to
     // shrink to fit an 84 px slot dropped straight to an unreadable 12: names stay 24 and wrap onto a second line.
-    const float SlotSize = 104f, SlotGap = 44f, ChipSize = 56f, ChipGap = 8f, Bottom = 40f; // low: the bar covers less of the floor
+    const float SlotSize = 104f, SlotGap = 44f, ChipSize = 56f, ChipGap = 8f, Bottom = 52f; // low (the bar covers less of the floor), but a two-line name plate clear of the screen edge
     const float SlotY = 30f;
     const float NameSize = 24f, PlateOneLine = 36f, PlateTwoLines = 54f; // two lines of 24 with -14 spacing need no more
 

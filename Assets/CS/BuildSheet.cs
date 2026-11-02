@@ -23,6 +23,7 @@ public class BuildSheet : MonoBehaviour
     const float StatRow = 60f;
     RectTransform cardArea;
     string shownKey;
+    TextMeshProUGUI moreHint; // "more cards come from clearing stages" under a short list
     int shownLevels = -1;
 
     public static BuildSheet Create(Canvas canvas, TMP_FontAsset font)
@@ -149,6 +150,14 @@ public class BuildSheet : MonoBehaviour
         for (int i = cardArea.childCount - 1; i >= 0; i--)
             if (cardArea.GetChild(i) != emptyText.transform) Destroy(cardArea.GetChild(i).gameObject);
         emptyText.gameObject.SetActive(cards.Count == 0);
+        if (moreHint == null)
+        {
+            moreHint = Text(cardArea, "MoreHint", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, Vector2.zero, new Vector2(560f, 32f));
+            moreHint.text = Loc.T("sheet.more_hint");
+            moreHint.color = UiTheme.DisabledText;
+        }
+        moreHint.gameObject.SetActive(cards.Count > 0 && cards.Count <= 4);
+        moreHint.rectTransform.anchoredPosition = new Vector2(0f, -Mathf.Min(cards.Count, RowsPerColumn) * Row - 12f);
         int max = RowsPerColumn * 2;
         for (int i = 0; i < Mathf.Min(cards.Count, max); i++)
         {

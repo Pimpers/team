@@ -19,6 +19,25 @@ public class BackgroundFullRunTest : MonoBehaviour
         public bool chestAppeared;
         public bool cardsAppeared;
         public bool routeAppeared;
+        // The numbers balance is judged by: how long the stage took, what it cost, what it paid.
+        public float seconds;
+        public float damageTaken;
+        public float heartsLeft;
+        public int goldAfter;
+        public int kills;
+    }
+
+    float stageBegan, damageAtStart;
+    int killsAtStart;
+
+    StageResult Close(StageResult r)
+    {
+        r.seconds = Time.realtimeSinceStartup - stageBegan;
+        r.damageTaken = RunStats.DamageTaken - damageAtStart;
+        r.kills = RunStats.Kills - killsAtStart;
+        var p = PlayerStats.Instance;
+        if (p != null) { r.heartsLeft = p.CurrentHP; r.goldAfter = p.Gold; }
+        return r;
     }
 
     [System.Serializable]
@@ -75,6 +94,7 @@ public class BackgroundFullRunTest : MonoBehaviour
             yield return Save($"stage{stage}_start");
 
             var result = new StageResult { stage = stage };
+            stageBegan = Time.realtimeSinceStartup; damageAtStart = RunStats.DamageTaken; killsAtStart = RunStats.Kills;
             var map = StageMap.Instance;
             bool vertical = map != null && map.verticalLayout;
             bool horizontalRooms = !vertical && (stage == 1 || stage == 3);
@@ -138,7 +158,7 @@ public class BackgroundFullRunTest : MonoBehaviour
                 result.cardsAppeared = false;
                 report.victoryScreen = run.resultUI != null && run.resultUI.panel != null && run.resultUI.panel.activeSelf;
                 yield return Save("victory");
-                report.stages.Add(result);
+                report.stages.Add(Close(result));
                 break;
             }
 
@@ -148,7 +168,7 @@ public class BackgroundFullRunTest : MonoBehaviour
             if (!result.chestAppeared)
             {
                 report.error = $"Stage{stage}: clear chest missing";
-                report.stages.Add(result);
+                report.stages.Add(Close(result));
                 break;
             }
             yield return Save($"stage{stage}_chest");
@@ -169,7 +189,7 @@ public class BackgroundFullRunTest : MonoBehaviour
             if (!result.cardsAppeared)
             {
                 report.error = $"Stage{stage}: card draft missing";
-                report.stages.Add(result);
+                report.stages.Add(Close(result));
                 break;
             }
             yield return new WaitForSecondsRealtime(1.5f);
@@ -185,7 +205,7 @@ public class BackgroundFullRunTest : MonoBehaviour
                 if (route == null)
                 {
                     report.error = $"Stage{stage}: route choice missing";
-                    report.stages.Add(result);
+                    report.stages.Add(Close(result));
                     break;
                 }
                 yield return new WaitForSecondsRealtime(0.4f);
@@ -196,13 +216,13 @@ public class BackgroundFullRunTest : MonoBehaviour
                 if (button == null)
                 {
                     report.error = $"Stage{stage}: {choice} button missing";
-                    report.stages.Add(result);
+                    report.stages.Add(Close(result));
                     break;
                 }
                 button.onClick.Invoke();
             }
 
-            report.stages.Add(result);
+            report.stages.Add(Close(result));
             yield return new WaitForSecondsRealtime(0.5f);
             yield return Save($"stage{stage}_exit");
             var next = SceneManager.LoadSceneAsync($"Stage{stage + 1}");
@@ -217,13 +237,45 @@ public class BackgroundFullRunTest : MonoBehaviour
 
     IEnumerator Save(string name)
     {
-        // Batch mode (no window): WaitForEndOfFrame never fires and nothing can be captured - carry on without.
-        if (Application.isBatchMode) { yield return null; yield break; }
-        yield return new WaitForEndOfFrame();
-        string path = Path.Combine(output, name + ".png");
-        ScreenCapture.CaptureScreenshot(path, 1);
-        float until = Time.realtimeSinceStartup + 5f;
-        while (!File.Exists(path) && Time.realtimeSinceStartup < until) yield return null;
+        // A 1920 x 1080 shot of each step, in batch mode too (no window there): the main camera draws into a texture
+        // that size, the overlay canvases drawn through it (above every world sprite, as in the game) for two frames
+        // so they lay out for it, then everything goes back.
+        var cam = Camera.main;
+        if (cam == null) { yield return null; yield break; }
+        var rt = new RenderTexture(1920, 1080, 24);
+        var canvases = Object.FindObjectsByType<Canvas>();
+        var modes = new RenderMode[canvases.Length];
+        var orders = new int[canvases.Length];
+        for (int i = 0; i < canvases.Length; i++)
+        {
+            var c = canvases[i];
+            modes[i] = c.renderMode; orders[i] = c.sortingOrder;
+            if (!c.isRootCanvas || c.renderMode != RenderMode.ScreenSpaceOverlay) continue;
+            c.renderMode = RenderMode.ScreenSpaceCamera;
+            c.worldCamera = cam;
+            c.planeDistance = 1f + (32000 - c.sortingOrder) * 0.0001f;
+            c.sortingOrder = Mathf.Min(32767, 30000 + c.sortingOrder);
+        }
+        cam.targetTexture = rt;
+        yield return null;
+        yield return null;
+        if (cam != null)
+        {
+            Canvas.ForceUpdateCanvases();
+            cam.Render();
+            RenderTexture.active = rt;
+            var tex = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, 1920, 1080), 0, 0);
+            tex.Apply();
+            RenderTexture.active = null;
+            File.WriteAllBytes(Path.Combine(output, name + ".png"), tex.EncodeToPNG());
+            Destroy(tex);
+            cam.targetTexture = null;
+        }
+        for (int i = 0; i < canvases.Length; i++)
+            if (canvases[i] != null && modes[i] == RenderMode.ScreenSpaceOverlay)
+            { canvases[i].renderMode = modes[i]; canvases[i].sortingOrder = orders[i]; canvases[i].worldCamera = null; }
+        Destroy(rt);
     }
 }
 #endif

@@ -84,9 +84,12 @@ public static class ScreenCaptureTool
             foreach (var id in cards) PlayerStats.Instance.ApplyCard(id);
             // (The set banners the cards just raised would still be up: in a real run the result comes long after.)
             foreach (var t in UnityEngine.Object.FindObjectsByType<RectTransform>()) if (t != null && t.name == "StageBanner") UnityEngine.Object.Destroy(t.gameObject);
-            Find<ResultUI>().Show(false, 12, 1);
+            Find<ResultUI>().Show(false, 12, -1); // a lost run: no tier unlocked (a loss never unlocks one)
         });
         // 큰 글씨 + 색약 모드 (last: the settings stay on): the stage reloaded with both, the Tab sheet held open.
+        Add("Stage2", "result_win", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<ResultUI>().Show(true, 48, 1); });
+        Add("WorldMapScene", "worldmap_corruption", () => { GameSave.Data.corruptionUnlocked = 2; Corruption.Level = 1; Find<CorruptionSelector>().Refresh(); });
+        Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
         Add("Stage1", "a11y", () =>
         {
             GameSave.Data.largeText = true; GameSave.Data.colorblind = true; Loc.Reload();
@@ -141,6 +144,7 @@ public static class ScreenCaptureTool
 
     static void Finish()
     {
+        GameSave.Data.largeText = false; GameSave.Data.colorblind = false; // (the a11y shots switched them on in the copy)
         EditorApplication.update -= Tick;
         EditorApplication.playModeStateChanged += Restore;
         EditorApplication.isPlaying = false;
@@ -181,7 +185,7 @@ public static class ScreenCaptureTool
             c.worldCamera = targetCam;
             c.planeDistance = 1f + (32000 - c.sortingOrder) * 0.0001f;
             // Over every world sprite, as an overlay is in the game (a camera canvas sorts with the sprites).
-            c.sortingOrder = Mathf.Min(32000, 20000 + c.sortingOrder);
+            c.sortingOrder = Mathf.Min(32767, 30000 + c.sortingOrder); // over world sprites and world-space text alike
         }
     }
 

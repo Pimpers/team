@@ -119,7 +119,7 @@ public class DashBar : MonoBehaviour
             var lrt = label.rectTransform;
             lrt.anchorMin = lrt.anchorMax = new Vector2(0f, 1f);
             lrt.pivot = new Vector2(0f, 1f);
-            lrt.sizeDelta = new Vector2(200f, BarH);
+            lrt.sizeDelta = new Vector2(420f, BarH); // "대시 · 우클릭   Tab 능력치" (also the Tab sheet's pointer)
         }
         label.rectTransform.anchoredPosition = new Vector2(count * (BarW + Gap) + 10f, 0f); // room for both Korean glyphs
         lastLeft = -1;

@@ -61,7 +61,7 @@ ui.close = 닫기
 # DamagePopup
 
 # DashBar
-hud.dash = 대시 <color=$dimlabel>· 우클릭</color>
+hud.dash = 대시 · 우클릭   <color=$gold>Tab</color> 능력치
 
 # Enemy.Behaviour
 enemy.leap_up = 도약 ↑
@@ -448,7 +448,7 @@ draft.badge.to_unlock = {0} 세트까지 {1}장
 draft.badge.to_complete = {0} 완성까지 {1}장
 draft.badge.unlock = ★ {0} 세트 해금
 draft.badge.complete = ★ {0} 세트 완성
-draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음)</color></size>
+draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음 · 이후 5부터)</color></size>
 
 # Blacksmith: the fourth upgrade (MetaProgress.Upgrade.Reroll)
 smith.reroll = 행운의 방울
@@ -521,3 +521,6 @@ options.colorblind.on = 색약 모드: 켜짐
 options.colorblind.off = 색약 모드: 꺼짐
 options.largetext.on = 큰 글씨: 켜짐
 options.largetext.off = 큰 글씨: 꺼짐
+pause.run_info = 스테이지 {0} / {1}   ·   {2}\n처치 {3}   ·   골드 {4}
+sheet.more_hint = 스테이지를 클리어하면 카드를 더 고를 수 있어요
+tutorial.tip.village = <color=$key>대장간</color>에서 강화하고 <color=$key>출항하기</color>로 의뢰를 떠나요

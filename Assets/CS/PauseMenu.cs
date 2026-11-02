@@ -128,7 +128,11 @@ public class PauseMenu : MonoBehaviour
         open.onClick.AddListener(() => TitleSettings.Show(panel.GetComponentInParent<Canvas>().rootCanvas, font));
         var hint = MakeText(panel, "TabHint", Loc.T("pause.tab_hint"), 24f, UISkin.Ink, font, new Vector2(PageX, -10f), new Vector2(440f, 150f));
         hint.textWrappingMode = TextWrappingModes.Normal;
+        runInfo = MakeText(panel, "RunInfo", "", 24f, UISkin.InkGold, font, new Vector2(PageX, -190f), new Vector2(440f, 140f));
+        runInfo.textWrappingMode = TextWrappingModes.Normal;
     }
+
+    TMP_Text runInfo; // this run so far (stage, time, kills, gold) - a glance, the numbers stay on the Tab sheet
 
     void Update()
     {
@@ -160,6 +164,12 @@ public class PauseMenu : MonoBehaviour
         confirmQuit = false;
         quitLabel.text = Loc.T("ui.quit");
         transform.SetAsLastSibling(); // the skill bar / monster tracker are created after this menu: stay above them
+        if (runInfo != null)
+        {
+            var run = RunManager.Instance;
+            runInfo.text = Loc.F("pause.run_info", run != null ? run.stageNumber : 1, run != null ? run.totalStages : 5,
+                                 RunStats.TimeText, RunStats.Kills, PlayerStats.Instance != null ? PlayerStats.Instance.Gold : 0);
+        }
         GameInput.SelectForPad(resumeButton); // pad: A resumes, d-pad reaches the other two
         root.SetActive(true);
         GameClock.Pause("pause");

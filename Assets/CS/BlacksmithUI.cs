@@ -175,7 +175,7 @@ public class BlacksmithUI : MonoBehaviour
 
     // The bubble: bottom-left corner up and right of the portrait's mouth; padding round the text (room for the
     // name plate on top and the "click" hint under it); never wider than BubbleMaxWidth - longer lines wrap.
-    static readonly Vector2 BubbleCorner = new Vector2(330f, 420f);
+    static readonly Vector2 BubbleCorner = new Vector2(310f, 430f);
     const float BubbleScale = 3f; // canvas units per art pixel of the board and the tail
     const float BubbleMaxWidth = 820f, BubbleMinWidth = 420f, BubblePadX = 34f, BubblePadTop = 46f, BubblePadBottom = 58f;
     const float PopTime = 0.09f;
@@ -284,14 +284,14 @@ public class BlacksmithUI : MonoBehaviour
         if (skin != null && skin.buttonCream != null) UISkin.Apply(bubble, skin.buttonCream, BubbleScale);
         else bubble.color = new Color(1f, 0.95f, 0.82f);
 
-        // 10 x 9 art pixels at the bubble's 3 units per pixel, down-left from near its bottom-left corner; drawn over
+        // 15 x 14 art pixels at the bubble's 3 units per pixel, down-left from near its bottom-left corner; drawn over
         // the bubble so its top (fill) row hides one pixel of rim and the two read as one shape.
         var tail = new GameObject("Tail", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
         tail.rectTransform.SetParent(brt, false);
         tail.rectTransform.anchorMin = tail.rectTransform.anchorMax = Vector2.zero; // at the bubble's bottom-left corner
         tail.rectTransform.pivot = new Vector2(0f, 1f);
-        tail.rectTransform.anchoredPosition = new Vector2(36f, BubbleScale);
-        tail.rectTransform.sizeDelta = new Vector2(10f * BubbleScale, 9f * BubbleScale);
+        tail.rectTransform.anchoredPosition = new Vector2(6f, BubbleScale); // at the left end: its point lands by his mouth
+        tail.rectTransform.sizeDelta = new Vector2(15f * BubbleScale, 14f * BubbleScale);
         tail.sprite = BookUI.Get("BubbleTail");
         tail.enabled = tail.sprite != null;
         tail.raycastTarget = false;

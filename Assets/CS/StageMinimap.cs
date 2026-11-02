@@ -264,7 +264,7 @@ public class StageMinimap : MonoBehaviour
 
         if (legend != null)
         {
-            bool showLegend = !GameClock.Paused && legendTimer > 0f;
+            bool showLegend = !GameClock.Paused && (legendTimer > 0f || GameInput.BuildSheetHeld); // and again while Tab is held
             legend.gameObject.SetActive(showLegend);
             // The dark plate goes with its text (hiding only the text left an empty bar under the map).
             var plate = legend.transform.parent;

@@ -22,7 +22,7 @@ public class StageRandomizer : MonoBehaviour
     public float spacing = 4f;
     // Share of the stage's rats kept as rats (the rest become other monsters), by stage: the first stays gentle
     // (the spiders already shoot), the mix thickens as the forest gets deeper.
-    static readonly float[] KeepRats = { 1f, 0.65f, 0.4f, 0.2f, 0.1f };
+    static readonly float[] KeepRats = { 1f, 0.65f, 0.4f, 0.2f, 0.25f }; // (by stage number) stage 4 at 0.1 took 107 hits for 14 monsters in the full run: eased
 
     readonly List<Enemy> monsters = new List<Enemy>();
 

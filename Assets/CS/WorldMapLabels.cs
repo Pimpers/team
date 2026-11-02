@@ -54,7 +54,7 @@ public static class WorldMapLabels
             text.color = locked ? Locked : Open;
             text.sortingOrder = 16;
             // Closed regions say so: eleven names and one open forest otherwise read as content that isn't there.
-            text.text = Loc.T("worldmap.region." + l.key) + (locked ? "\n<size=85%>" + Loc.T("worldmap.region.locked") + "</size>" : ""); // (70% was too small to read)
+            text.text = Loc.T("worldmap.region." + l.key) + (locked ? "\n" + Loc.T("worldmap.region.locked") : ""); // as big as the name (70 / 85% was too small on the map)
             text.lineSpacing = -12f;
             Vector2 need = text.GetPreferredValues(text.text);
             Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.4f), Mathf.Max(l.h * mapSize.y, need.y + 0.12f));

@@ -59,7 +59,10 @@ public class MainSceneController : MonoBehaviour
         if (settingsButton != null && options != null) settingsButton.onClick.AddListener(() => options.Open());
         CreateGoldDisplay();
         if (profileName != null && profileName.canvas != null)
+        {
             VillageGoals.Create(profileName.canvas.rootCanvas, profileName.font, def.ranged); // what the next runs open
+            OneTimeTip.Show("village", profileName.canvas, profileName.font); // first time here: what the harbour is for
+        }
         SetUpPadNavigation();
     }
 
