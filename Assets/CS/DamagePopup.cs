@@ -49,7 +49,27 @@ public class DamagePopup : MonoBehaviour
         int chars = string.IsNullOrEmpty(label) ? 0 : label.Replace("\n", "").Length;
         float size = label != null && label.Contains("\n") ? 3.4f : chars >= 4 ? 3.7f : 6.2f;
         size *= Mathf.Clamp(sizeMultiplier, 0.5f, 1.5f);
-        Create(StackLabel(position + new Vector3(0f, 0.45f, 0f)), label, color, size);
+        var popup = Create(StackLabel(position + new Vector3(0f, 0.45f, 0f)), label, color, size);
+        if (chars >= 4) popup.AddBacking(); // words ("구역 완료!") sit on a dark strip: an outline alone was lost over fire and the red trees
+    }
+
+    SpriteRenderer backing;
+    static Sprite backingSprite;
+
+    void AddBacking()
+    {
+        if (backingSprite == null)
+            backingSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f);
+        text.ForceMeshUpdate();
+        Vector2 size = text.GetRenderedValues(false);
+        var go = new GameObject("Backing");
+        go.transform.SetParent(transform, false);
+        go.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+        go.transform.localScale = new Vector3(size.x + 0.35f, size.y + 0.18f, 1f);
+        backing = go.AddComponent<SpriteRenderer>();
+        backing.sprite = backingSprite;
+        backing.color = new Color(0.08f, 0.05f, 0.08f, 0.8f);
+        backing.sortingOrder = 58; // under the shadow (59) and the text (60)
     }
 
     // Numbers were sized for the old 2.5-unit cat; the characters are ~0.55x now.
@@ -181,6 +201,7 @@ public class DamagePopup : MonoBehaviour
         float alpha = k < 0.6f ? 1f : 1f - (k - 0.6f) / 0.4f;
         SetAlpha(text, alpha);
         SetAlpha(shadow, alpha);
+        if (backing != null) backing.color = new Color(0.08f, 0.05f, 0.08f, 0.8f * alpha);
         if (k >= 1f) Destroy(gameObject);
     }
 
