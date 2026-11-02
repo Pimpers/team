@@ -17,14 +17,15 @@ using UnityEngine.SceneManagement;
 // sprite's sorting order for the shot, as an overlay is in the game.)
 public static class ScreenCaptureTool
 {
-    struct Step { public string scene, shot; public Action act; }
+    struct Step { public string scene, shot; public Action act; public int w, h; } // w/h 0: the default 16:9
     static readonly List<Step> steps = new List<Step>();
     static int index;
     static double at;
     static bool loaded, batch, savedOptionsEnabled;
     static EnterPlayModeOptions savedOptions;
     static string outDir;
-    const int Width = 1920, Height = 1080;
+    const int DefaultWidth = 1920, DefaultHeight = 1080;
+    static int Width = DefaultWidth, Height = DefaultHeight; // this shot's size (a step may ask for 4:3 or 16:10)
     static bool prepared;
     static RenderTexture target;
     static Camera targetCam;
@@ -93,6 +94,8 @@ public static class ScreenCaptureTool
             SceneManager.LoadScene("Stage1");
         });
         Add("MainScene", "a11y_smith", () => Find<BlacksmithUI>().Open()); // the blacksmith's bubble with 큰 글씨 still on
+        Add("MainScene", "a11y_smith_16x10", () => Find<BlacksmithUI>().Open(), 1680, 1050); // narrower screens: the bubble wraps sooner
+        Add("MainScene", "a11y_smith_4x3", () => Find<BlacksmithUI>().Open(), 1440, 1080);
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;
@@ -104,7 +107,7 @@ public static class ScreenCaptureTool
         EditorApplication.isPlaying = true;
     }
 
-    static void Add(string scene, string shot, Action act = null) => steps.Add(new Step { scene = scene, shot = shot, act = act });
+    static void Add(string scene, string shot, Action act = null, int w = 0, int h = 0) => steps.Add(new Step { scene = scene, shot = shot, act = act, w = w, h = h });
 
     static void Tick()
     {
@@ -116,7 +119,7 @@ public static class ScreenCaptureTool
             if (index >= 0 && loaded)
             {
                 var s = steps[index];
-                if (!prepared) { Prepare(); prepared = true; at = now + 0.6; return; }
+                if (!prepared) { Width = s.w > 0 ? s.w : DefaultWidth; Height = s.h > 0 ? s.h : DefaultHeight; Prepare(); prepared = true; at = now + 0.6; return; }
                 if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 3.0; return; } // past a set banner (fade in, 1.45 s, fade out) the cards may raise
                 // An action that loaded another scene took the camera with it: set up on the new one first.
                 if (targetCam == null) { Release(); Prepare(); at = now + 0.6; return; }

@@ -134,6 +134,10 @@ public class BlacksmithUI : MonoBehaviour
 
     bool Talking => talkBox != null && talkBox.activeSelf;
     public bool IsTalking => Talking;
+    // For tests: which line is up and whether it has finished typing.
+    public int LineIndex => line;
+    public bool LineTyped => shownChars >= lineChars;
+    public RectTransform BubbleRect => bubble != null ? bubble.rectTransform : null;
     Mood[] lineMoods;
 
     // First visit: who he is. Later: what he sees (gold for something, not enough, nothing left to do).
@@ -172,18 +176,31 @@ public class BlacksmithUI : MonoBehaviour
     // The bubble: bottom-left corner up and right of the portrait's mouth; padding round the text (room for the
     // name plate on top and the "click" hint under it); never wider than BubbleMaxWidth - longer lines wrap.
     static readonly Vector2 BubbleCorner = new Vector2(330f, 420f);
+    const float BubbleScale = 3f; // canvas units per art pixel of the board and the tail
     const float BubbleMaxWidth = 820f, BubbleMinWidth = 420f, BubblePadX = 34f, BubblePadTop = 46f, BubblePadBottom = 58f;
     const float PopTime = 0.09f;
     Image bubble;
     float popUntil;
     int lineChars;
 
+    // The widest the bubble may be on this screen: up to BubbleMaxWidth, but on a narrower canvas (16:10, 4:3) only
+    // what is left between its corner and the village's right-hand column (the goals board and the buttons, about
+    // RightColumn wide) - so with 큰 글씨 on a 4:3 screen it wraps sooner instead of running under them.
+    const float RightColumn = 560f;
+    float MaxBubbleWidth()
+    {
+        var canvas = (RectTransform)talkBox.transform.parent;
+        float room = canvas.rect.width - BubbleCorner.x - RightColumn;
+        return Mathf.Clamp(room, 360f, BubbleMaxWidth);
+    }
+
     // Fits the bubble to the whole line (measured at its full length, so it doesn't grow while the letters type).
     void SizeBubble(string text)
     {
-        float maxInner = BubbleMaxWidth - BubblePadX * 2f;
+        float maxWidth = MaxBubbleWidth();
+        float maxInner = maxWidth - BubblePadX * 2f;
         Vector2 need = talkText.GetPreferredValues(text, maxInner, 0f);
-        float w = Mathf.Clamp(need.x + BubblePadX * 2f + 8f, BubbleMinWidth, BubbleMaxWidth);
+        float w = Mathf.Clamp(need.x + BubblePadX * 2f + 8f, Mathf.Min(BubbleMinWidth, maxWidth), maxWidth);
         float h = need.y + BubblePadTop + BubblePadBottom;
         bubble.rectTransform.sizeDelta = new Vector2(Mathf.Ceil(w / 4f) * 4f, Mathf.Ceil(h / 4f) * 4f); // whole art pixels (3 units) round up to 4
     }
@@ -250,32 +267,34 @@ public class BlacksmithUI : MonoBehaviour
         portrait.raycastTarget = false;
 
         // A speech bubble up and to the right of the portrait, its tail down at his mouth: the cream board
-        // (buttonCream, 9-sliced), sized to each line (SizeBubble) up to BubbleMaxWidth, growing up and right from its
-        // bottom-left corner. The tail is the same board turned 45 degrees and half tucked under the bubble, so only
-        // its two lower rimmed edges show. His name on a small wood plate on the bubble's top edge.
+        // (buttonCream, 9-sliced), sized to each line (SizeBubble) up to MaxBubbleWidth, growing up and right from its
+        // bottom-left corner. The tail is its own pixel sprite (UIBook/BubbleTail, Tools/pxl/pxl_bubble_tail.px.js:
+        // the board's rim and fill colours, whole art pixels, never rotated), its top row laid over the bubble's
+        // bottom rim. His name on a small wood plate on the bubble's top edge.
         talkBox = new GameObject("SmithBubble", typeof(RectTransform));
         var brt = (RectTransform)talkBox.transform;
         brt.SetParent(canvas.transform, false);
         brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0f, 0f);
         brt.anchoredPosition = BubbleCorner;
 
-        var tail = new GameObject("Tail", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
-        tail.rectTransform.SetParent(brt, false);
-        tail.rectTransform.anchorMin = tail.rectTransform.anchorMax = new Vector2(0f, 0f);
-        tail.rectTransform.anchoredPosition = new Vector2(44f, 2f);
-        tail.rectTransform.sizeDelta = new Vector2(44f, 44f);
-        tail.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
-        tail.raycastTarget = false;
-
         bubble = new GameObject("Bubble", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
         bubble.rectTransform.SetParent(brt, false);
         bubble.rectTransform.anchorMin = bubble.rectTransform.anchorMax = bubble.rectTransform.pivot = new Vector2(0f, 0f);
         bubble.raycastTarget = false;
-        foreach (var img in new[] { tail, bubble })
-        {
-            if (skin != null && skin.buttonCream != null) UISkin.Apply(img, skin.buttonCream, 3f);
-            else img.color = new Color(1f, 0.95f, 0.82f);
-        }
+        if (skin != null && skin.buttonCream != null) UISkin.Apply(bubble, skin.buttonCream, BubbleScale);
+        else bubble.color = new Color(1f, 0.95f, 0.82f);
+
+        // 10 x 9 art pixels at the bubble's 3 units per pixel, down-left from near its bottom-left corner; drawn over
+        // the bubble so its top (fill) row hides one pixel of rim and the two read as one shape.
+        var tail = new GameObject("Tail", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        tail.rectTransform.SetParent(brt, false);
+        tail.rectTransform.anchorMin = tail.rectTransform.anchorMax = Vector2.zero; // at the bubble's bottom-left corner
+        tail.rectTransform.pivot = new Vector2(0f, 1f);
+        tail.rectTransform.anchoredPosition = new Vector2(36f, BubbleScale);
+        tail.rectTransform.sizeDelta = new Vector2(10f * BubbleScale, 9f * BubbleScale);
+        tail.sprite = BookUI.Get("BubbleTail");
+        tail.enabled = tail.sprite != null;
+        tail.raycastTarget = false;
 
         var plate = new GameObject("NamePlate", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
         plate.rectTransform.SetParent(bubble.rectTransform, false);
