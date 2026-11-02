@@ -94,6 +94,7 @@ public class BlacksmithUI : MonoBehaviour
     // After the last line the upgrade panel opens, his portrait staying beside it.
     public void Open()
     {
+        SharpTitle();
         BuildTalk();
         remark = false;
         lines = TalkLines();
@@ -110,12 +111,28 @@ public class BlacksmithUI : MonoBehaviour
     // Straight to the shop (screen captures, tests): the portrait beside it, no dialogue.
     public void OpenShop()
     {
+        SharpTitle();
         BuildTalk();
         portrait.gameObject.SetActive(true);
         talkBox.SetActive(false);
         panel.SetActive(true);
         Say(Loc.T("smith.greeting"));
         Refresh();
+    }
+
+    // The board's title (the scene's "대장간") is bold at 64: the pixel font is sharp only at 12 / 24 / 36 / 48 and
+    // a faked bold smears it. Plain at 48, the font's own weight.
+    void SharpTitle()
+    {
+        if (panel == null) return;
+        string title = Loc.T("harbor.blacksmith");
+        foreach (var t in panel.GetComponentsInChildren<TMP_Text>(true))
+        {
+            if (t.text != title) continue;
+            t.fontStyle = FontStyles.Normal;
+            t.enableAutoSizing = false;
+            t.fontSize = 48f;
+        }
     }
 
     public void Close()
