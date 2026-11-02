@@ -10,10 +10,23 @@ public static class StageBanner
     // sets at once). The last one is gone with its scene, so a new scene never waits on the old one.
     static GameObject last;
     static float lastEnds; // unscaled time when `last` has faded out
+    static readonly System.Collections.Generic.List<GameObject> live = new System.Collections.Generic.List<GameObject>();
+    static UnityEngine.SceneManagement.Scene closedScene;
+
+    // Takes every banner down, the queued ones too, and lets no more up in this scene: the result board must not
+    // get a boss's name over it (a boss killed before its roar ended still raised its banner after the board).
+    public static void ClearAll()
+    {
+        foreach (var g in live) if (g != null) Object.Destroy(g);
+        live.Clear();
+        last = null;
+        closedScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+    }
 
     public static void Show(Canvas canvas, TMP_FontAsset font, string title, string subtitle, float hold, bool compact = false)
     {
         if (canvas == null) return;
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene() == closedScene) return;
         var go = new GameObject("StageBanner", typeof(RectTransform), typeof(CanvasGroup));
         var rt = (RectTransform)go.transform;
         rt.SetParent(canvas.transform, false);
@@ -50,6 +63,8 @@ public static class StageBanner
         fade.sfx = "ui_open"; // a soft whoosh as the ribbon drops in (StageBanner waits its turn, so on show, not now)
         fade.sfxVolume = compact ? 0.2f : 0.3f;
         last = go;
+        live.RemoveAll(g => g == null);
+        live.Add(go);
         lastEnds = Time.unscaledTime + fade.delay + fade.fadeIn + hold + fade.fadeOut;
         Object.Destroy(go, fade.delay + fade.fadeIn + hold + fade.fadeOut + 0.1f);
     }

@@ -105,6 +105,7 @@ public class ResultUI : MonoBehaviour
     // unlockedCorruption: the 타락도 tier this win just opened (-1 = none).
     public void Show(bool win, int goldEarned, int unlockedCorruption = -1)
     {
+        StageBanner.ClearAll();
         if (panel != null) panel.SetActive(true);
         OutlineOnBoard();
         BuildSummary(win);

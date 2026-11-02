@@ -116,7 +116,7 @@ public abstract class StageEncounterController : MonoBehaviour
             Vfx.Play("blink", enemy.transform.position + Vector3.up * 0.6f, 0.5f);
         }
         if (player != null && rooms[room].Count > 0)
-            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.new_area"), GateEffectColor);
+            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.new_area"), UiTheme.Gold); // gold, not the gate tint: the tint is red in the red stages and vanished into the trees
     }
 
     void Open(Gate gate)
@@ -132,7 +132,7 @@ public abstract class StageEncounterController : MonoBehaviour
     protected virtual void OnRoomOpened()
     {
         if (player != null)
-            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.area_clear"), GateEffectColor);
+            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.area_clear"), UiTheme.Gold);
     }
 
     // A seal drawn as a wall of real climbing plants (Danaida, Resources/WorldProps/Vines):
