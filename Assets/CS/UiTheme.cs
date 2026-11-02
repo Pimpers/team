@@ -37,6 +37,7 @@ public static class UiTheme
         { "active", "#b0302a" },    // card kinds in the draft
         { "passive", "#1f6b5c" },
         { "enhance", "#6a3fa0" },
+        { "map_player", "#ffd94d" }, // minimap legend (the player marker's gold)
         { "map_enemy", "#ff5555" }, // minimap legend
         { "map_chest", "#ffc21f" },
         { "map_exit", "#5aff73" },
@@ -50,6 +51,7 @@ public static class UiTheme
     // enemies orange, the cat sky blue, the exit yellow.
     static readonly Dictionary<string, string> SafeHex = new Dictionary<string, string>
     {
+        { "map_player", "#56b4e9" },
         { "map_enemy", "#e69f00" },
         { "map_exit", "#f0e442" },
     };

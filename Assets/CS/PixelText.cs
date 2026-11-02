@@ -34,6 +34,25 @@ public class PixelText : MonoBehaviour
     static readonly Dictionary<TMP_Text, Auto> autoOf = new Dictionary<TMP_Text, Auto>();
     static bool fitting; // our own size changes raise the event too: ignore those
 
+    // 큰 글씨 (GameSettings.LargeText): reading text one grid step up, 24 -> 36, wherever it still fits its box -
+    // the HUD, the Tab sheet, menus and dialogue alike, decided here once instead of screen by screen. A text
+    // raised to 36 is checked again whenever its words change and goes back to 24 if the new words don't fit.
+    const float Small = 24f, Large = 36f;
+    static readonly HashSet<TMP_Text> raised = new HashSet<TMP_Text>();
+
+    static void TryRaise(TMP_Text t)
+    {
+        if (!GameSettings.LargeText) return;
+        if (!Mathf.Approximately(t.fontSize, Small) && !(raised.Contains(t) && Mathf.Approximately(t.fontSize, Large))) return;
+        var rect = t.rectTransform.rect;
+        if (rect.width < 1f || rect.height < 1f) return; // a box that grows with its text: nothing to check against
+        t.fontSize = Large;
+        Vector2 need = t.GetPreferredValues(t.text, t.textWrappingMode == TextWrappingModes.NoWrap ? 0f : rect.width, 0f);
+        bool fits = need.x <= rect.width + 2f && need.y <= rect.height + 2f;
+        t.fontSize = fits ? Large : Small;
+        if (fits) raised.Add(t); else raised.Remove(t);
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Init()
     {
@@ -47,7 +66,7 @@ public class PixelText : MonoBehaviour
         Scan(true);
     }
 
-    static void OnLoaded(Scene scene, LoadSceneMode mode) { seen.Clear(); autos.Clear(); autoOf.Clear(); dirty.Clear(); Scan(true); }
+    static void OnLoaded(Scene scene, LoadSceneMode mode) { seen.Clear(); autos.Clear(); autoOf.Clear(); dirty.Clear(); raised.Clear(); Scan(true); }
 
     static void OnTextChanged(Object obj)
     {
@@ -64,6 +83,7 @@ public class PixelText : MonoBehaviour
             if (t == null) continue;
             if (seen.Add(t)) Consider((TextMeshProUGUI)t);
             else if (autoOf.TryGetValue(t, out var a) && t.isActiveAndEnabled && t.text != a.last) Fit(a);
+            else if (raised.Contains(t)) { fitting = true; t.fontSize = Small; TryRaise(t); fitting = false; } // new words: fit again
         }
         for (int i = autos.Count - 1; i >= 0; i--) if (autos[i].text == null) { autoOf.Remove(autos[i].text); autos.RemoveAt(i); }
     }
@@ -87,7 +107,7 @@ public class PixelText : MonoBehaviour
             if (t.isActiveAndEnabled) Fit(a);
             else { t.enableAutoSizing = false; t.fontSize = Mathf.Max(Dot, Mathf.Floor(a.max / Dot + 0.001f) * Dot); }
         }
-        else t.fontSize = Mathf.Max(Dot, Mathf.Round(t.fontSize / Dot) * Dot);
+        else { t.fontSize = Mathf.Max(Dot, Mathf.Round(t.fontSize / Dot) * Dot); TryRaise(t); }
         fitting = false;
     }
 
@@ -105,7 +125,7 @@ public class PixelText : MonoBehaviour
         a.last = t.text;
         t.enableAutoSizing = true;
         t.fontSizeMin = a.min;
-        t.fontSizeMax = a.max;
+        t.fontSizeMax = GameSettings.LargeText && a.max <= Small + 4f ? Large : a.max; // 큰 글씨: room to grow to 36
         t.ForceMeshUpdate();
         float fitted = t.fontSize;
         t.enableAutoSizing = false;

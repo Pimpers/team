@@ -85,6 +85,13 @@ public static class ScreenCaptureTool
             foreach (var t in UnityEngine.Object.FindObjectsByType<RectTransform>()) if (t != null && t.name == "StageBanner") UnityEngine.Object.Destroy(t.gameObject);
             Find<ResultUI>().Show(false, 12, 1);
         });
+        // 큰 글씨 + 색약 모드 (last: the settings stay on): the stage reloaded with both, the Tab sheet held open.
+        Add("Stage1", "a11y", () =>
+        {
+            GameSave.Data.largeText = true; GameSave.Data.colorblind = true; Loc.Reload();
+            BuildSheet.ForceShow = true;
+            SceneManager.LoadScene("Stage1");
+        });
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;
@@ -110,6 +117,8 @@ public static class ScreenCaptureTool
                 var s = steps[index];
                 if (!prepared) { Prepare(); prepared = true; at = now + 0.6; return; }
                 if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 3.0; return; } // past a set banner (fade in, 1.45 s, fade out) the cards may raise
+                // An action that loaded another scene took the camera with it: set up on the new one first.
+                if (targetCam == null) { Release(); Prepare(); at = now + 0.6; return; }
                 Shot(s.shot);
                 Release();
                 BuildSheet.ForceShow = false;

@@ -70,16 +70,16 @@ public class BuildSheet : MonoBehaviour
     {
         UiPanels.Ribbon(root, Loc.T("sheet.title"), font, 440f);
 
-        var statsSlot = (RectTransform)UiPanels.Inset(root, "StatsSlot", new Vector2(36f, -64f), new Vector2(360f, 540f)).transform;
+        var statsSlot = (RectTransform)UiPanels.Inset(root, "StatsSlot", new Vector2(36f, -64f), new Vector2(400f, 540f)).transform;
         for (int i = 0; i < StatIcons.Length; i++)
         {
             float y = -24f - i * StatRow - StatRow * 0.5f;
             var card = CardPool.Get(StatIcons[i]);
             UiPanels.Icon(statsSlot, card != null ? card.Art : null, new Vector2(42f, y), 44f);
-            statRows[i] = Text(statsSlot, "Stat" + i, UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(78f, y + StatRow * 0.5f), new Vector2(270f, StatRow));
+            statRows[i] = Text(statsSlot, "Stat" + i, UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(78f, y + StatRow * 0.5f), new Vector2(312f, StatRow));
         }
 
-        var cardsSlot = (RectTransform)UiPanels.Inset(root, "CardsSlot", new Vector2(412f, -64f), new Vector2(672f, 456f)).transform;
+        var cardsSlot = (RectTransform)UiPanels.Inset(root, "CardsSlot", new Vector2(452f, -64f), new Vector2(632f, 456f)).transform;
         var cardsHead = Text(cardsSlot, "CardsHead", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(24f, -16f), new Vector2(620f, 32f));
         cardsHead.text = Loc.T("sheet.cards_head");
         cardsHead.color = UiTheme.Gold;
@@ -88,13 +88,13 @@ public class BuildSheet : MonoBehaviour
         cardArea.SetParent(cardsSlot, false);
         cardArea.anchorMin = cardArea.anchorMax = cardArea.pivot = new Vector2(0f, 1f);
         cardArea.anchoredPosition = new Vector2(24f, -54f);
-        cardArea.sizeDelta = new Vector2(630f, RowsPerColumn * Row);
+        cardArea.sizeDelta = new Vector2(590f, RowsPerColumn * Row);
         emptyText = Text(cardArea, "Empty", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, Vector2.zero, new Vector2(620f, 32f));
         emptyText.text = Loc.T("sheet.no_cards");
         emptyText.color = UiTheme.DisabledText;
 
-        var setsSlot = (RectTransform)UiPanels.Inset(root, "SetsSlot", new Vector2(412f, -532f), new Vector2(672f, 72f)).transform;
-        setsText = Text(setsSlot, "Sets", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, 0f), new Vector2(630f, 72f));
+        var setsSlot = (RectTransform)UiPanels.Inset(root, "SetsSlot", new Vector2(452f, -532f), new Vector2(632f, 72f)).transform;
+        setsText = Text(setsSlot, "Sets", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, 0f), new Vector2(590f, 72f));
     }
 
     void Update()
@@ -153,7 +153,7 @@ public class BuildSheet : MonoBehaviour
         for (int i = 0; i < Mathf.Min(cards.Count, max); i++)
         {
             var c = cards[i];
-            Vector2 pos = new Vector2(i / RowsPerColumn * 315f, -(i % RowsPerColumn) * Row);
+            Vector2 pos = new Vector2(i / RowsPerColumn * 295f, -(i % RowsPerColumn) * Row);
             var icon = new GameObject("Icon", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
             icon.rectTransform.SetParent(cardArea, false);
             icon.rectTransform.anchorMin = icon.rectTransform.anchorMax = icon.rectTransform.pivot = new Vector2(0f, 1f);
@@ -164,7 +164,7 @@ public class BuildSheet : MonoBehaviour
             icon.enabled = icon.sprite != null;
             icon.raycastTarget = false;
             int lv = s.CardLevel(c.id);
-            var label = Text(cardArea, "Name", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, pos + new Vector2(IconSize + 10f, 0f), new Vector2(cards.Count > RowsPerColumn ? 250f : 560f, IconSize)); // one column: the whole width
+            var label = Text(cardArea, "Name", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, pos + new Vector2(IconSize + 10f, 0f), new Vector2(cards.Count > RowsPerColumn ? 235f : 530f, IconSize)); // one column: the whole width
             label.text = c.maxLevel > 0 ? Loc.F("sheet.card", c.name, lv, c.maxLevel) : c.name;
             label.overflowMode = TextOverflowModes.Ellipsis;
         }

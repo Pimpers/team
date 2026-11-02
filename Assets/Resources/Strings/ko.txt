@@ -194,7 +194,7 @@ encounter.new_area = 새 구역!
 encounter.area_clear = 구역 완료!
 
 # StageMinimap
-minimap.legend = <color=$gold>● 나</color>  <color=$map_enemy>● 적</color>  <color=$map_chest>■ 상자</color>  <color=$map_exit>◆ 출구</color>
+minimap.legend = <color=$map_player>● 나</color>  <color=$map_enemy>● 적</color>  <color=$map_chest>■ 상자</color>  <color=$map_exit>◆ 출구</color>
 
 # StageRouteChoiceUI
 route.choice.title = 다음 길을 고르세요
