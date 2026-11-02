@@ -92,6 +92,7 @@ public static class ScreenCaptureTool
             BuildSheet.ForceShow = true;
             SceneManager.LoadScene("Stage1");
         });
+        Add("MainScene", "a11y_smith", () => Find<BlacksmithUI>().Open()); // the blacksmith's bubble with 큰 글씨 still on
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;

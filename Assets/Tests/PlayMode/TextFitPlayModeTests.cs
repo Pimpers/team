@@ -27,6 +27,12 @@ public class TextFitPlayModeTests
         options.Open();
         yield return new WaitForSecondsRealtime(0.3f);
         AssertFits("village settings");
+        options.Close();
+        var smith = Object.FindAnyObjectByType<BlacksmithUI>(FindObjectsInactive.Include);
+        Assert.That(smith, Is.Not.Null);
+        smith.Open();
+        yield return new WaitForSecondsRealtime(2f); // the line typed out in its bubble
+        AssertFits("blacksmith bubble");
     }
 
     [UnityTest]

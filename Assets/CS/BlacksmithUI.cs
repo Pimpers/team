@@ -169,9 +169,36 @@ public class BlacksmithUI : MonoBehaviour
         return new[] { Loc.T(canBuy ? "smith.talk.rich" : "smith.talk.poor") };
     }
 
+    // The bubble: bottom-left corner up and right of the portrait's mouth; padding round the text (room for the
+    // name plate on top and the "click" hint under it); never wider than BubbleMaxWidth - longer lines wrap.
+    static readonly Vector2 BubbleCorner = new Vector2(330f, 420f);
+    const float BubbleMaxWidth = 820f, BubbleMinWidth = 420f, BubblePadX = 34f, BubblePadTop = 46f, BubblePadBottom = 58f;
+    const float PopTime = 0.09f;
+    Image bubble;
+    float popUntil;
+    int lineChars;
+
+    // Fits the bubble to the whole line (measured at its full length, so it doesn't grow while the letters type).
+    void SizeBubble(string text)
+    {
+        float maxInner = BubbleMaxWidth - BubblePadX * 2f;
+        Vector2 need = talkText.GetPreferredValues(text, maxInner, 0f);
+        float w = Mathf.Clamp(need.x + BubblePadX * 2f + 8f, BubbleMinWidth, BubbleMaxWidth);
+        float h = need.y + BubblePadTop + BubblePadBottom;
+        bubble.rectTransform.sizeDelta = new Vector2(Mathf.Ceil(w / 4f) * 4f, Mathf.Ceil(h / 4f) * 4f); // whole art pixels (3 units) round up to 4
+    }
+
     void StartLine()
     {
-        talkText.text = lines[line];
+        // Each word kept whole (<nobr>): a long line wraps between words, never inside one ("있겠 / 다냥").
+        string words = "<nobr>" + lines[line].Replace(" ", "</nobr> <nobr>") + "</nobr>";
+        talkText.text = words;
+        SizeBubble(words);
+        talkText.ForceMeshUpdate();
+        lineChars = talkText.textInfo.characterCount; // the letters to type (the <nobr> tags aren't any)
+        // Pop in: half size for a moment, then full (only 0.5 and 1: in-between scales smear the pixel art).
+        popUntil = Time.unscaledTime + PopTime;
+        talkBox.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         Speak(lines[line], lineMoods != null && line < lineMoods.Length ? lineMoods[line] : Mood.Neutral);
         talkText.maxVisibleCharacters = 0;
         shownChars = 0f;
@@ -180,7 +207,8 @@ public class BlacksmithUI : MonoBehaviour
 
     public void UpdateTalk()
     {
-        int total = talkText.text.Length;
+        if (talkBox.transform.localScale.x < 1f && Time.unscaledTime >= popUntil) talkBox.transform.localScale = Vector3.one;
+        int total = lineChars;
         bool done = shownChars >= total;
         if (!done)
         {
@@ -221,38 +249,58 @@ public class BlacksmithUI : MonoBehaviour
         portrait.preserveAspect = true;
         portrait.raycastTarget = false;
 
-        // Dialogue box along the bottom, with his name on a wood plate.
-        talkBox = new GameObject("SmithTalk", typeof(RectTransform), typeof(Image));
+        // A speech bubble up and to the right of the portrait, its tail down at his mouth: the cream board
+        // (buttonCream, 9-sliced), sized to each line (SizeBubble) up to BubbleMaxWidth, growing up and right from its
+        // bottom-left corner. The tail is the same board turned 45 degrees and half tucked under the bubble, so only
+        // its two lower rimmed edges show. His name on a small wood plate on the bubble's top edge.
+        talkBox = new GameObject("SmithBubble", typeof(RectTransform));
         var brt = (RectTransform)talkBox.transform;
         brt.SetParent(canvas.transform, false);
-        brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 0f);
-        brt.anchoredPosition = new Vector2(0f, 30f);
-        brt.sizeDelta = new Vector2(1560f, 170f); // one or two lines: 230 left the bottom half empty
-        var box = talkBox.GetComponent<Image>();
-        if (skin != null && skin.buttonCream != null) UISkin.Apply(box, skin.buttonCream, 3f);
-        else box.color = new Color(1f, 0.95f, 0.82f);
+        brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0f, 0f);
+        brt.anchoredPosition = BubbleCorner;
+
+        var tail = new GameObject("Tail", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        tail.rectTransform.SetParent(brt, false);
+        tail.rectTransform.anchorMin = tail.rectTransform.anchorMax = new Vector2(0f, 0f);
+        tail.rectTransform.anchoredPosition = new Vector2(44f, 2f);
+        tail.rectTransform.sizeDelta = new Vector2(44f, 44f);
+        tail.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+        tail.raycastTarget = false;
+
+        bubble = new GameObject("Bubble", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        bubble.rectTransform.SetParent(brt, false);
+        bubble.rectTransform.anchorMin = bubble.rectTransform.anchorMax = bubble.rectTransform.pivot = new Vector2(0f, 0f);
+        bubble.raycastTarget = false;
+        foreach (var img in new[] { tail, bubble })
+        {
+            if (skin != null && skin.buttonCream != null) UISkin.Apply(img, skin.buttonCream, 3f);
+            else img.color = new Color(1f, 0.95f, 0.82f);
+        }
 
         var plate = new GameObject("NamePlate", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
-        plate.rectTransform.SetParent(brt, false);
+        plate.rectTransform.SetParent(bubble.rectTransform, false);
         plate.rectTransform.anchorMin = plate.rectTransform.anchorMax = new Vector2(0f, 1f);
-        plate.rectTransform.anchoredPosition = new Vector2(560f, 6f);
-        plate.rectTransform.sizeDelta = new Vector2(380f, 64f);
+        plate.rectTransform.pivot = new Vector2(0f, 0.5f);
+        plate.rectTransform.anchoredPosition = new Vector2(24f, 4f);
+        plate.rectTransform.sizeDelta = new Vector2(300f, 56f);
         if (skin != null) UISkin.Apply(plate, skin.buttonWood, UISkin.SmallScale);
-        var name = TalkText(plate.rectTransform, Loc.T("smith.name"), UiTheme.TextLarge, Color.white, font);
+        var name = TalkText(plate.rectTransform, Loc.T("smith.name"), UiTheme.TextSmall, Color.white, font);
         name.alignment = TextAlignmentOptions.Center;
 
-        talkText = TalkText(brt, "", UiTheme.TextLarge, UISkin.Ink, font);
-        talkText.rectTransform.offsetMin = new Vector2(400f, 30f);   // right of the portrait
-        talkText.rectTransform.offsetMax = new Vector2(-60f, -50f);
+        talkText = TalkText(bubble.rectTransform, "", UiTheme.TextLarge, UISkin.Ink, font);
+        talkText.rectTransform.offsetMin = new Vector2(BubblePadX, BubblePadBottom);
+        talkText.rectTransform.offsetMax = new Vector2(-BubblePadX, -BubblePadTop);
         talkText.alignment = TextAlignmentOptions.TopLeft;
         talkText.textWrappingMode = TextWrappingModes.Normal;
 
-        nextMark = TalkText(brt, Loc.T("smith.talk.next"), UiTheme.TextSmall, UISkin.Ink, font);
-        nextMark.rectTransform.offsetMin = new Vector2(0f, 18f);
-        nextMark.rectTransform.offsetMax = new Vector2(-40f, -120f);
+        nextMark = TalkText(bubble.rectTransform, Loc.T("smith.talk.next"), UiTheme.TextSmall, UISkin.Ink, font);
+        nextMark.rectTransform.anchorMin = new Vector2(0f, 0f); nextMark.rectTransform.anchorMax = new Vector2(1f, 0f);
+        nextMark.rectTransform.pivot = new Vector2(1f, 0f);
+        nextMark.rectTransform.offsetMin = new Vector2(0f, 12f);
+        nextMark.rectTransform.offsetMax = new Vector2(-BubblePadX, 46f);
         nextMark.alignment = TextAlignmentOptions.BottomRight;
 
-        portrait.transform.SetAsLastSibling(); // in front of the box
+        portrait.transform.SetAsLastSibling(); // in front of the bubble's tail
         talkBox.SetActive(false);
         portrait.gameObject.SetActive(false);
     }
