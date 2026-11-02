@@ -95,6 +95,7 @@ public class BlacksmithUI : MonoBehaviour
     public void Open()
     {
         BuildTalk();
+        remark = false;
         lines = TalkLines();
         line = 0;
         GameSave.Data.smithVisits++;
@@ -133,7 +134,8 @@ public class BlacksmithUI : MonoBehaviour
     const float CharsPerSecond = 32f;
 
     bool Talking => talkBox != null && talkBox.activeSelf;
-    public bool IsTalking => Talking;
+    public bool IsTalking => Talking && !remark; // (a shop remark in the bubble is not a conversation)
+    public bool BubbleUp => Talking;
     // For tests: which line is up and whether it has finished typing.
     public int LineIndex => line;
     public bool LineTyped => shownChars >= lineChars;
@@ -176,6 +178,17 @@ public class BlacksmithUI : MonoBehaviour
     // The bubble: bottom-left corner up and right of the portrait's mouth; padding round the text (room for the
     // name plate on top and the "click" hint under it); never wider than BubbleMaxWidth - longer lines wrap.
     static readonly Vector2 BubbleCorner = new Vector2(310f, 430f);
+    // With the shop open the bubble sits over his head instead, in the strip left of the shop board (it covered the
+    // upgrade rows), narrower and wrapping sooner.
+    static readonly Vector2 RemarkCorner = new Vector2(24f, 480f);
+
+    // The shop board's left edge in the canvas's units, from its bottom-left.
+    float ShopLeft(RectTransform canvas)
+    {
+        var corners = new Vector3[4];
+        ((RectTransform)panel.transform).GetWorldCorners(corners);
+        return canvas.InverseTransformPoint(corners[0]).x - canvas.rect.xMin;
+    }
     const float BubbleScale = 3f; // canvas units per art pixel of the board and the tail
     const float BubbleMaxWidth = 820f, BubbleMinWidth = 420f, BubblePadX = 34f, BubblePadTop = 46f, BubblePadBottom = 58f;
     const float PopTime = 0.09f;
@@ -190,6 +203,7 @@ public class BlacksmithUI : MonoBehaviour
     float MaxBubbleWidth()
     {
         var canvas = (RectTransform)talkBox.transform.parent;
+        if (remark) return Mathf.Max(300f, ShopLeft(canvas) - RemarkCorner.x - 16f);
         float room = canvas.rect.width - BubbleCorner.x - RightColumn;
         return Mathf.Clamp(room, 360f, BubbleMaxWidth);
     }
@@ -208,6 +222,7 @@ public class BlacksmithUI : MonoBehaviour
     void StartLine()
     {
         // Each word kept whole (<nobr>): a long line wraps between words, never inside one ("있겠 / 다냥").
+        ((RectTransform)talkBox.transform).anchoredPosition = remark ? RemarkCorner : BubbleCorner;
         string words = "<nobr>" + lines[line].Replace(" ", "</nobr> <nobr>") + "</nobr>";
         talkText.text = words;
         SizeBubble(words);
@@ -236,7 +251,8 @@ public class BlacksmithUI : MonoBehaviour
             if ((int)shownChars / 3 > before / 3) Sfx.Play("voice_blip", 1f, Random.Range(0.92f, 1.1f)); // his own chatter (SynthSfx), not a card flip
         }
         else talkUntil = 0f; // the whole line is out: mouth shut
-        nextMark.gameObject.SetActive(done && Mathf.Repeat(Time.unscaledTime, 0.8f) < 0.5f);
+        nextMark.gameObject.SetActive(!remark && done && Mathf.Repeat(Time.unscaledTime, 0.8f) < 0.5f);
+        if (remark) return; // a shop remark: no "next", it just stays up
         if (Time.frameCount == openedFrame || !GameInput.SubmitPressed) return;
         if (!done) { shownChars = total; talkText.maxVisibleCharacters = total; talkUntil = 0f; return; } // first press: the whole line
         if (++line < lines.Length) { StartLine(); return; }
@@ -376,13 +392,20 @@ public class BlacksmithUI : MonoBehaviour
         return hasFinal ? Loc.T("grammar.topic_after_final") : Loc.T("grammar.topic");
     }
 
+    // In the shop he still talks in his bubble (an upgrade, not enough gold, ...): the line types out and stays until
+    // the next one; nothing to click through, the clicks are for the shop. The old text line on the panel is hidden.
     void Say(string text, Mood m = Mood.Neutral)
     {
-        Speak(text, m);
-        if (messageText == null) return;
-        messageText.text = text;
-        messageTimer = 3f;
+        if (messageText != null) messageText.gameObject.SetActive(false);
+        if (talkBox == null) { Speak(text, m); return; }
+        remark = true;
+        lines = new[] { text };
+        lineMoods = new[] { m };
+        line = 0;
+        talkBox.SetActive(true);
+        StartLine();
     }
+    bool remark;
 
     // ---- His face (Resources/Village/smith_0..7): 0 / 4 plain, 1 / 2 mouth open, 3 / 7 beaming, 5 smiling, 6 surprised.
     // While a line is being said the mouth flaps through the mood's frames; then he holds the mood's resting face.
@@ -458,7 +481,7 @@ public class TalkDriver : MonoBehaviour
     void Update()
     {
         if (owner == null) return;
-        if (owner.IsTalking) owner.UpdateTalk();
+        if (owner.BubbleUp) owner.UpdateTalk(); // a conversation or a shop remark typing out
         owner.UpdatePortrait();
     }
 }
