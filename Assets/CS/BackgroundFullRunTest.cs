@@ -25,6 +25,7 @@ public class BackgroundFullRunTest : MonoBehaviour
         public float heartsLeft;
         public int goldAfter;
         public int kills;
+        public int dodges; // dodge mode: boss wind-ups backed away from
     }
 
     float stageBegan, damageAtStart;
@@ -43,6 +44,7 @@ public class BackgroundFullRunTest : MonoBehaviour
     [System.Serializable]
     class Report
     {
+        public string mode = "plain"; // "plain": stands and hits; "dodge" (-playtestDodge): steps off the boss's wind-ups
         public List<StageResult> stages = new List<StageResult>();
         public bool victoryScreen;
         public float seconds;
@@ -50,22 +52,26 @@ public class BackgroundFullRunTest : MonoBehaviour
     }
 
     string output;
+    bool dodge;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void StartIfRequested()
     {
         var args = System.Environment.GetCommandLineArgs();
-        bool requested = false;
+        bool requested = false, dodgeMode = false;
         string folder = null;
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i] == "-fullRunPlaytest") requested = true;
             if (args[i] == "-playtestOut" && i + 1 < args.Length) folder = args[++i];
+            if (args[i] == "-playtestDodge") dodgeMode = true;
         }
         if (!requested) return;
         var go = new GameObject("BackgroundFullRunTest");
         DontDestroyOnLoad(go);
-        go.AddComponent<BackgroundFullRunTest>().output = folder;
+        var test = go.AddComponent<BackgroundFullRunTest>();
+        test.output = folder;
+        test.dodge = dodgeMode;
     }
 
     IEnumerator Start()
@@ -73,7 +79,7 @@ public class BackgroundFullRunTest : MonoBehaviour
         Application.runInBackground = true;
         if (string.IsNullOrEmpty(output)) output = Path.Combine(Application.persistentDataPath, "FullRunPlaytest");
         Directory.CreateDirectory(output);
-        var report = new Report();
+        var report = new Report { mode = dodge ? "dodge" : "plain" };
         float began = Time.realtimeSinceStartup;
 
         var first = SceneManager.LoadSceneAsync("Stage1");
@@ -117,11 +123,29 @@ public class BackgroundFullRunTest : MonoBehaviour
                     body.transform.position = enemy.transform.position + Vector3.left * (enemy.BodyHalfWidth + 0.8f) + Vector3.up * body.feetOffset;
                     body.FaceTowards(1f);
                     yield return null;
+                    var brain = dodge ? enemy.GetComponent<BossBrain>() : null;
                     while (enemy != null && !enemy.IsDead)
                     {
+                        if (brain != null && brain.Threatening)
+                        {
+                            // Dodge mode: on a wind-up, back well off (the cat's side of the boss) and wait it out;
+                            // come back in and hit only in the openings.
+                            result.dodges++;
+                            float away = Mathf.Sign(body.transform.position.x - enemy.transform.position.x);
+                            if (away == 0f) away = -1f;
+                            body.transform.position = new Vector3(enemy.transform.position.x + away * (enemy.BodyHalfWidth + 7f),
+                                                                  body.transform.position.y, body.transform.position.z);
+                            while (enemy != null && !enemy.IsDead && brain.Threatening) yield return null;
+                            if (enemy == null || enemy.IsDead) break;
+                            body.transform.position = enemy.transform.position + Vector3.left * (enemy.BodyHalfWidth + 0.8f) + Vector3.up * body.feetOffset;
+                            body.FaceTowards(1f);
+                        }
                         enemy.ReceiveDamage(stats.AttackPower, 1f);
                         result.attackHits++;
-                        yield return new WaitForSecondsRealtime(0.08f);
+                        // Dodge mode swings at the player's real rate (PlayerAttack's cooldown over attack speed), so the
+                        // boss time is a player's, not the plain run's 12 hits a second.
+                        var swing = dodge ? stats.GetComponent<PlayerAttack>() : null;
+                        yield return new WaitForSecondsRealtime(swing != null ? swing.attackCooldown / Mathf.Max(0.1f, stats.AttackSpeedMultiplier) : 0.08f);
                     }
                 }
 

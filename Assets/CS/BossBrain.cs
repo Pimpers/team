@@ -91,6 +91,11 @@ public class BossBrain : MonoBehaviour
     }
 
     // Returns true while a special move is controlling the boss this frame.
+    // A special move on its way or under way (wind-ups, the charge, the leap): what a player dodges. Recoveries,
+    // the roar and a stagger are openings. (The full-run playtest's dodge mode reads it.)
+    public bool Threatening => move == Move.ChargeWindup || move == Move.Charge || move == Move.PoundWindup ||
+                               move == Move.LeapWindup || move == Move.Leap || move == Move.ThrowWindup;
+
     public bool Tick()
     {
         if (enemy == null) return false;
