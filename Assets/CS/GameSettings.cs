@@ -45,7 +45,7 @@ public static class GameSettings
     public static bool LargeText
     {
         get => GameSave.Data.largeText;
-        set { GameSave.Data.largeText = value; GameSave.Save(); }
+        set { GameSave.Data.largeText = value; GameSave.Save(); PixelText.ApplyLargeText(); } // the open screen follows at once
     }
     public static float ReadingSize => LargeText ? UiTheme.TextLarge : UiTheme.TextSmall;
 

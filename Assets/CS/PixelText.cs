@@ -35,22 +35,58 @@ public class PixelText : MonoBehaviour
     static bool fitting; // our own size changes raise the event too: ignore those
 
     // 큰 글씨 (GameSettings.LargeText): reading text one grid step up, 24 -> 36, wherever it still fits its box -
-    // the HUD, the Tab sheet, menus and dialogue alike, decided here once instead of screen by screen. A text
-    // raised to 36 is checked again whenever its words change and goes back to 24 if the new words don't fit.
+    // the HUD, the Tab sheet, menus and dialogue alike, decided here once instead of screen by screen.
+    // Checked only when something can have changed - the words (TMP's text event), the box (RectWatch below,
+    // OnRectTransformDimensionsChange) or the setting (ApplyLargeText) - never per frame, and the measurement is
+    // skipped while the words and width are the ones last measured. Hysteresis: a text that had to go back to 24
+    // stays there until its words change (a box that wobbles a pixel must not flick it 36 / 24 / 36).
     const float Small = 24f, Large = 36f;
-    static readonly HashSet<TMP_Text> raised = new HashSet<TMP_Text>();
+    class LargeState { public bool up, lockedSmall, measured; public string words; public float width; }
+    static readonly Dictionary<TMP_Text, LargeState> large = new Dictionary<TMP_Text, LargeState>();
 
     static void TryRaise(TMP_Text t)
     {
         if (!GameSettings.LargeText) return;
-        if (!Mathf.Approximately(t.fontSize, Small) && !(raised.Contains(t) && Mathf.Approximately(t.fontSize, Large))) return;
+        if (!large.TryGetValue(t, out var st))
+        {
+            if (!Mathf.Approximately(t.fontSize, Small)) return; // only the 24 px reading text
+            st = new LargeState();
+            large[t] = st;
+        }
         var rect = t.rectTransform.rect;
         if (rect.width < 1f || rect.height < 1f) return; // a box that grows with its text: nothing to check against
+        string words = t.text;
+        bool wordsChanged = !ReferenceEquals(words, st.words) && words != st.words;
+        if (st.lockedSmall && !wordsChanged) return;                                          // hysteresis
+        if (st.measured && !wordsChanged && Mathf.Approximately(rect.width, st.width)) return; // cached
+        bool was = fitting;
+        fitting = true;
         t.fontSize = Large;
-        Vector2 need = t.GetPreferredValues(t.text, t.textWrappingMode == TextWrappingModes.NoWrap ? 0f : rect.width, 0f);
+        Vector2 need = t.GetPreferredValues(words, t.textWrappingMode == TextWrappingModes.NoWrap ? 0f : rect.width, 0f);
         bool fits = need.x <= rect.width + 2f && need.y <= rect.height + 2f;
         t.fontSize = fits ? Large : Small;
-        if (fits) raised.Add(t); else raised.Remove(t);
+        fitting = was;
+        st.words = words; st.width = rect.width; st.measured = true;
+        st.up = fits; st.lockedSmall = !fits;
+        if (fits && t.GetComponent<RectWatch>() == null) t.gameObject.AddComponent<RectWatch>().text = t;
+    }
+
+    // The setting was switched: every text seen so far goes up where it fits, or back to 24.
+    public static void ApplyLargeText()
+    {
+        bool was = fitting;
+        fitting = true;
+        foreach (var kv in large) if (kv.Key != null && kv.Value.up) kv.Key.fontSize = Small;
+        large.Clear();
+        if (GameSettings.LargeText) foreach (var t in seen) if (t != null && autoOf.ContainsKey(t) == false) TryRaise(t);
+        fitting = was;
+    }
+
+    // On a raised text: its box changed size, so it is measured again (and lowered if it no longer fits).
+    class RectWatch : MonoBehaviour
+    {
+        public TMP_Text text;
+        void OnRectTransformDimensionsChange() { if (text != null && large.TryGetValue(text, out var st) && st.up) TryRaise(text); }
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -66,24 +102,27 @@ public class PixelText : MonoBehaviour
         Scan(true);
     }
 
-    static void OnLoaded(Scene scene, LoadSceneMode mode) { seen.Clear(); autos.Clear(); autoOf.Clear(); dirty.Clear(); raised.Clear(); Scan(true); }
+    static void OnLoaded(Scene scene, LoadSceneMode mode) { seen.Clear(); autos.Clear(); autoOf.Clear(); dirty.Clear(); large.Clear(); Scan(true); }
 
     static void OnTextChanged(Object obj)
     {
         if (!fitting && obj is TextMeshProUGUI t) dirty.Add(t);
     }
 
+    static readonly List<TMP_Text> batch = new List<TMP_Text>();
+
     void LateUpdate()
     {
         if (dirty.Count == 0) return;
-        var batch = new List<TMP_Text>(dirty);
+        batch.Clear();
+        batch.AddRange(dirty); // (one list for every frame: nothing allocated here)
         dirty.Clear();
         foreach (var t in batch)
         {
             if (t == null) continue;
             if (seen.Add(t)) Consider((TextMeshProUGUI)t);
             else if (autoOf.TryGetValue(t, out var a) && t.isActiveAndEnabled && t.text != a.last) Fit(a);
-            else if (raised.Contains(t)) { fitting = true; t.fontSize = Small; TryRaise(t); fitting = false; } // new words: fit again
+            else if (large.ContainsKey(t)) TryRaise(t); // new words: measured again (and freed from a hysteresis 24)
         }
         for (int i = autos.Count - 1; i >= 0; i--) if (autos[i].text == null) { autoOf.Remove(autos[i].text); autos.RemoveAt(i); }
     }
