@@ -184,7 +184,8 @@ public class PauseMenu : MonoBehaviour
             if (n <= 0) continue;
             sets++;
             int lvl = CardPool.SetLevel(n);
-            string now = lvl == 0 ? "" : CardPool.SetText[t][0] + (lvl == 2 ? ", " + CardPool.SetText[t][1] : "");
+            // Each bonus kept whole (<nobr>): the line breaks between them, never inside one ("치명 / 타").
+            string now = lvl == 0 ? "" : "<nobr>" + CardPool.SetText[t][0] + "</nobr>" + (lvl == 2 ? ", <nobr>" + CardPool.SetText[t][1] + "</nobr>" : "");
             sb.Append($"<color={CardPool.TagColors[t]}>{CardPool.TagNames[t]} {n}</color>");
             sb.Append(lvl == 0 ? Loc.F("pause.set_next", CardPool.SetStep1, CardPool.SetText[t][0]) : $"<color={UiTheme.Html("ink")}>  {now}</color>\n");
         }

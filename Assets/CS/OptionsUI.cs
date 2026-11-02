@@ -150,6 +150,16 @@ public class OptionsUI : MonoBehaviour
         return clone;
     }
 
+    // 36 when the text fits the button, else 24 - the pixel font is sharp only at 12 / 24 / 36 (auto-size would pick
+    // a blurry size in between). "히트스톱: 켜짐" at 36 ran out of the 240-wide button.
+    static void FitLabel(TMP_Text label)
+    {
+        label.enableAutoSizing = false;
+        label.fontSize = UiTheme.TextLarge;
+        float room = ((RectTransform)label.transform.parent).rect.width - 24f;
+        if (label.GetPreferredValues(label.text).x > room) label.fontSize = UiTheme.TextSmall;
+    }
+
     Button CloneButton(string name, Vector2 pos, Vector2 size, Sprite sprite, out TMP_Text label)
     {
         var go = Instantiate(closeButton.gameObject, closeButton.transform.parent, false);
@@ -175,7 +185,7 @@ public class OptionsUI : MonoBehaviour
     {
         if (toggleLabels != null)
             for (int i = 0; i < toggleLabels.Length; i++)
-                if (toggleLabels[i] != null) toggleLabels[i].text = GameSettings.ToggleText(GameSettings.Toggles[i]);
+                if (toggleLabels[i] != null) { toggleLabels[i].text = GameSettings.ToggleText(GameSettings.Toggles[i]); FitLabel(toggleLabels[i]); }
         if (quitLabel != null) quitLabel.text = confirmQuit ? Loc.T("ui.quit_confirm") : Loc.T("ui.quit");
     }
 
