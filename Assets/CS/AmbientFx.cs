@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 // Living backgrounds: pixelfx loops (Resources/Ambient/<name>/<name>_NN.png, rendered from the pixelfx library) laid
 // over the world map and the harbor village - fireflies on the open forest, a smoking volcano, a storm over the
-// fortress, snow on the frost peaks, a whirlpool, drifting clouds; the village's campfire, chimney smoke, birds
+// fortress, snow on the frost peaks, a whirlpool, a school of fish, drifting clouds; the village's campfire, chimney smoke, birds, a butterfly
 // and ripples. Placed at fractions of the background picture (u from the left, v from the top), so they stay on
 // their spot of the art at any screen size.
 public class AmbientFx : MonoBehaviour
@@ -40,6 +40,7 @@ public class AmbientFx : MonoBehaviour
         // open forest already has its pulsing gold ring.)
         Place(bg, "volcano", 0.79f, 0.27f, 0.03f, 11, 1f);       // a flame on the volcano's crater
         Place(bg, "whirlpool", 0.52f, 0.78f, 0.05f, 11, 0.9f);  // a whirlpool out at sea
+        Place(bg, "fish", 0.7f, 0.88f, 0.05f, 11, 0.85f, 10f);   // a school of fish in the southern sea
     }
 
     static void Village()
@@ -47,6 +48,7 @@ public class AmbientFx : MonoBehaviour
         var bg = Background("HarborBackground");
         if (bg == null) return;
         Place(bg, "campfire", 0.633f, 0.5f, 0.035f, 4, 1f);     // the campfire in the square
+        Place(bg, "butterfly", 0.71f, 0.56f, 0.03f, 6, 1f, 10f); // a butterfly over the square
         Place(bg, "chimney", 0.51f, 0.19f, 0.09f, 4, 0.75f);    // smoke off the roofs
         Place(bg, "birds", 0.3f, 0.12f, 0.03f, 6, 1f);          // gulls over the harbor
         Place(bg, "ripples", 0.08f, 0.45f, 0.06f, 4, 0.8f);     // open water: clear of the blacksmith's portrait and dialogue box (bottom-left)

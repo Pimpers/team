@@ -66,7 +66,7 @@ public class RunManager : MonoBehaviour
     void StyleHud()
     {
         if (hudText == null) return;
-        hudText.fontSize = UISkin.FontBody;
+        hudText.fontSize = GameSettings.ReadingSize; // 큰 글씨 option: 36
         hudText.outlineWidth = 0.18f; // a dark edge: the cream letters stay crisp on the wood grain
         hudText.outlineColor = new Color32(24, 14, 10, 255);
         hudText.raycastTarget = false; // the HUD must never swallow a click meant for the game

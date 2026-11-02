@@ -110,11 +110,6 @@ controls.skills = 카드 스킬
 controls.air_click = 공중에서 클릭
 controls.slam = 내려찍기
 pause.controls = 조작키
-pause.cards = 보유 카드
-pause.stats = 공격력 {0}   ·   하트 {1:0.#} / {2:0.#}
-pause.set_next = <color=$muted>  ({0}장: {1})</color>\n
-pause.more_cards = <color=$muted>외 {0}장</color>
-pause.no_cards = <color=$muted>아직 고른 카드가 없어요\n스테이지를 클리어하면 카드를 고를 수 있어요</color>
 pause.give_up_confirm = 정말 포기하기
 
 # PlayerStats
@@ -519,3 +514,10 @@ goals.corruption_first = · 보스를 이기면 <color=$gold>타락도 1</color>
 goals.corruption_next = · 타락도 {1}로 이기면 <color=$gold>타락도 {0}</color> 해금\n
 goals.corruption_done = · 모든 타락도 해금 완료\n
 goals.cards = · 이 고양이가 뽑을 수 있는 카드 {0}장
+pause.settings = 설정
+pause.open_settings = 설정 열기
+pause.tab_hint = 능력치와 고른 카드는\n전투 중 <color=$key>Tab</color>(패드 View)을\n누르고 있으면 볼 수 있어요
+options.colorblind.on = 색약 모드: 켜짐
+options.colorblind.off = 색약 모드: 꺼짐
+options.largetext.on = 큰 글씨: 켜짐
+options.largetext.off = 큰 글씨: 꺼짐

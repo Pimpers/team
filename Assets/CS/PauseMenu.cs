@@ -12,7 +12,7 @@ using TMPro;
 public class PauseMenu : MonoBehaviour
 {
     GameObject root;
-    TMP_Text giveUpLabel, quitLabel, statsText, cardsText;
+    TMP_Text giveUpLabel, quitLabel;
     bool confirmGiveUp, confirmQuit;
 
     public static bool IsOpen { get; private set; }
@@ -118,111 +118,16 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    // Right page: this run's stats and the skill cards taken so far (refreshed on open).
+    // Right page: settings, not the run's numbers and cards - those are the Tab sheet's (BuildSheet), a glance held
+    // mid-fight; the pause book is for stopping: the controls (left), the settings window and the way out.
     void BuildCards(RectTransform panel, TMP_FontAsset font)
     {
-        MakeText(panel, "CardsHeader", Loc.T("pause.cards"), UISkin.FontHeading, UISkin.InkTitle, font, new Vector2(PageX, 285f), new Vector2(440f, 56f));
-        statsText = MakeText(panel, "Stats", "", 24f, UISkin.InkGold, font, new Vector2(PageX, 232f), new Vector2(440f, 40f));
-        statsText.enableAutoSizing = true;
-        statsText.fontSizeMax = 24f;
-        statsText.fontSizeMin = UiTheme.TextMin;
-        // Set bonuses at a fixed 24 (one auto-sized box for sets and cards dropped everything to an unreadable 12 as
-        // soon as a bonus line was long); the cards below it are rows of icon, name and level (CardRow).
-        cardsText = MakeText(panel, "Sets", "", 24f, UISkin.Ink, font, new Vector2(PageX, SetsTop), new Vector2(430f, 10f));
-        cardsText.alignment = TextAlignmentOptions.TopLeft;
-        cardsText.rectTransform.pivot = new Vector2(0.5f, 1f);
-        cardsText.rectTransform.anchoredPosition = new Vector2(PageX, SetsTop);
-        cardsText.textWrappingMode = TextWrappingModes.Normal;
-        cardsPage = panel;
-        cardsFont = font;
-    }
-
-    const float SetsTop = 205f, PageBottom = -320f, RowH = 54f;
-    RectTransform cardsPage;
-    TMP_FontAsset cardsFont;
-    readonly System.Collections.Generic.List<CardRow> cardRows = new System.Collections.Generic.List<CardRow>();
-
-    class CardRow { public RectTransform root; public Image icon; public TMP_Text name, level; }
-
-    CardRow Row(int i)
-    {
-        while (cardRows.Count <= i)
-        {
-            var r = new CardRow();
-            var go = new GameObject("CardRow" + cardRows.Count, typeof(RectTransform));
-            r.root = (RectTransform)go.transform;
-            r.root.SetParent(cardsPage, false);
-            r.root.sizeDelta = new Vector2(430f, RowH);
-            var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
-            iconGo.transform.SetParent(r.root, false);
-            r.icon = iconGo.GetComponent<Image>();
-            r.icon.preserveAspect = true;
-            r.icon.raycastTarget = false;
-            r.icon.rectTransform.anchoredPosition = new Vector2(-190f, 0f);
-            r.icon.rectTransform.sizeDelta = new Vector2(46f, 46f);
-            r.name = MakeText(r.root, "Name", "", 24f, UISkin.Ink, cardsFont, new Vector2(-20f, 0f), new Vector2(290f, RowH));
-            r.name.alignment = TextAlignmentOptions.Left;
-            r.level = MakeText(r.root, "Level", "", 24f, UISkin.InkGold, cardsFont, new Vector2(165f, 0f), new Vector2(100f, RowH));
-            r.level.alignment = TextAlignmentOptions.Right;
-            cardRows.Add(r);
-        }
-        return cardRows[i];
-    }
-
-    void RefreshInfo()
-    {
-        var s = PlayerStats.Instance;
-        if (s == null) { statsText.text = ""; cardsText.text = ""; return; }
-        statsText.text = Loc.F("pause.stats", s.AttackPower, s.CurrentHP, s.MaxHP);
-
-        var sb = new System.Text.StringBuilder();
-        // Set bonuses first: the tags collected so far and what each one gives right now.
-        int sets = 0;
-        for (int t = 0; t < CardPool.TagNames.Length; t++)
-        {
-            int n = s.SetCount((CardPool.Tag)t);
-            if (n <= 0) continue;
-            sets++;
-            int lvl = CardPool.SetLevel(n);
-            // Each bonus kept whole (<nobr>): the line breaks between them, never inside one ("치명 / 타").
-            string now = lvl == 0 ? "" : "<nobr>" + CardPool.SetText[t][0] + "</nobr>" + (lvl == 2 ? ", <nobr>" + CardPool.SetText[t][1] + "</nobr>" : "");
-            sb.Append($"<color={CardPool.TagColors[t]}>{CardPool.TagNames[t]} {n}</color>");
-            sb.Append(lvl == 0 ? Loc.F("pause.set_next", CardPool.SetStep1, CardPool.SetText[t][0]) : $"<color={UiTheme.Html("ink")}>  {now}</color>\n");
-        }
-        int owned = 0;
-        foreach (var c in CardPool.All) if (s.CardLevel(c.id) > 0) owned++;
-        if (owned == 0) sb.Append(Loc.T("pause.no_cards"));
-        cardsText.text = sb.ToString().TrimEnd('\n');
-
-        // Card rows under the set lines, as many as the page holds; the rest are counted on the last row.
-        float y = SetsTop - (cardsText.text.Length > 0 ? cardsText.preferredHeight + 18f : 0f) - RowH * 0.5f;
-        int room = Mathf.Max(0, Mathf.FloorToInt((y - PageBottom) / RowH) + 1);
-        int shown = 0;
-        foreach (var c in CardPool.All)
-        {
-            int lv = s.CardLevel(c.id);
-            if (lv <= 0) continue;
-            if (shown >= room || (shown == room - 1 && owned > room)) break;
-            var r = Row(shown);
-            r.root.gameObject.SetActive(true);
-            r.root.anchoredPosition = new Vector2(PageX, y - shown * RowH);
-            r.icon.sprite = SkillHUD.Icon(c);
-            r.icon.enabled = r.icon.sprite != null;
-            r.name.text = c.name;
-            r.level.text = c.maxLevel > 0 ? $"Lv.{lv}/{c.maxLevel}" : "";
-            shown++;
-        }
-        if (owned > shown && room > 0)
-        {
-            var r = Row(shown);
-            r.root.gameObject.SetActive(true);
-            r.root.anchoredPosition = new Vector2(PageX, y - shown * RowH);
-            r.icon.enabled = false;
-            r.name.text = Loc.F("pause.more_cards", owned - shown);
-            r.level.text = "";
-            shown++;
-        }
-        for (int i = shown; i < cardRows.Count; i++) cardRows[i].root.gameObject.SetActive(false);
+        MakeText(panel, "MenuHeader", Loc.T("pause.settings"), UISkin.FontHeading, UISkin.InkTitle, font, new Vector2(PageX, 285f), new Vector2(440f, 56f));
+        var skin = UISkin.Instance;
+        var open = MakeButton(panel, "SettingsButton", Loc.T("pause.open_settings"), new Vector2(PageX, 150f), skin != null ? skin.buttonWood : null, font, out _);
+        open.onClick.AddListener(() => TitleSettings.Show(panel.GetComponentInParent<Canvas>().rootCanvas, font));
+        var hint = MakeText(panel, "TabHint", Loc.T("pause.tab_hint"), 24f, UISkin.Ink, font, new Vector2(PageX, -10f), new Vector2(440f, 150f));
+        hint.textWrappingMode = TextWrappingModes.Normal;
     }
 
     void Update()
@@ -255,7 +160,6 @@ public class PauseMenu : MonoBehaviour
         confirmQuit = false;
         quitLabel.text = Loc.T("ui.quit");
         transform.SetAsLastSibling(); // the skill bar / monster tracker are created after this menu: stay above them
-        RefreshInfo();
         GameInput.SelectForPad(resumeButton); // pad: A resumes, d-pad reaches the other two
         root.SetActive(true);
         GameClock.Pause("pause");

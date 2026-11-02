@@ -21,8 +21,8 @@ public class StageMinimap : MonoBehaviour
     static readonly Color32 GroundTop = new Color32(0x7c, 0xb3, 0x4f, 0xff);
     static readonly Color32 Platform = new Color32(0xd8, 0xb8, 0x7a, 0xff);
     static readonly Color32 Sky = new Color32(0x1c, 0x2a, 0x3a, 0xff);
-    static readonly Color PlayerColor = new Color(1f, 0.85f, 0.3f);
-    static readonly Color EnemyColor = new Color(0.95f, 0.25f, 0.25f);
+    static Color PlayerColor => UiTheme.PlayerMark; // (색약 모드 swaps these: UiTheme)
+    static Color EnemyColor => UiTheme.EnemyMark;
     static readonly Color BossColor = new Color(0.75f, 0.05f, 0.2f);
     static readonly Color ChestColor = new Color(1f, 0.75f, 0.12f);
     static readonly Color ViewColor = new Color(1f, 1f, 1f, 0.55f);
@@ -34,7 +34,7 @@ public class StageMinimap : MonoBehaviour
     RectTransform playerMarker;
     RectTransform exitMarker;
     Image exitImage;
-    static readonly Color ExitColor = new Color(0.35f, 1f, 0.45f);
+    static Color ExitColor => UiTheme.ExitMark;
     RectTransform[] viewEdges;
     RawImage mapImage;
     Texture2D mapTexture;

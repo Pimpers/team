@@ -71,31 +71,32 @@ public static class TitleSettings
         var panel = new GameObject("Panel", typeof(RectTransform), typeof(Image));
         var prt = (RectTransform)panel.transform;
         prt.SetParent(srt, false);
-        prt.sizeDelta = new Vector2(700f, 700f);
+        prt.sizeDelta = new Vector2(700f, 800f);
         var pimg = panel.GetComponent<Image>();
         var skin = UISkin.Instance;
         if (skin != null && skin.buttonCream != null) UISkin.Apply(pimg, skin.buttonCream, 3f);
         else pimg.color = new Color(1f, 0.95f, 0.82f);
         panel.AddComponent<Button>().transition = Selectable.Transition.None; // clicks on the panel don't reach the shade
 
-        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 290f), new Vector2(600f, 64f), font, UISkin.InkTitle);
+        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 340f), new Vector2(600f, 64f), font, UISkin.InkTitle);
         // The same rows as the village's settings (GameSettings.Sliders / Toggles).
         for (int i = 0; i < GameSettings.Sliders.Length; i++)
         {
             var s = GameSettings.Sliders[i];
-            Row(prt, Loc.T(s.labelKey), s.get(), s.set, 200f - 100f * i, font);
+            Row(prt, Loc.T(s.labelKey), s.get(), s.set, 250f - 100f * i, font);
         }
         for (int i = 0; i < GameSettings.Toggles.Length; i++)
         {
             var toggle = GameSettings.Toggles[i];
-            var b = MakeButton(prt, "", new Vector2(-165f + 330f * i, -210f), new Vector2(310f, 72f), skin != null ? skin.buttonWood : null, font);
+            // Two per row (the toggles grew to four: 색약 모드, 큰 글씨).
+            var b = MakeButton(prt, "", new Vector2(-165f + 330f * (i % 2), -150f - 85f * (i / 2)), new Vector2(310f, 72f), skin != null ? skin.buttonWood : null, font);
             var label = b.GetComponentInChildren<TMP_Text>();
             label.text = GameSettings.ToggleText(toggle);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); label.text = GameSettings.ToggleText(toggle); });
         }
-        var keys = MakeButton(prt, Loc.T("keys.title"), new Vector2(-130f, -295f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
+        var keys = MakeButton(prt, Loc.T("keys.title"), new Vector2(-130f, -330f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
         keys.onClick.AddListener(() => KeyBindPanel.Show(canvas, font));
-        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(130f, -295f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
+        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(130f, -330f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
         close.onClick.AddListener(() => Object.Destroy(shade));
         GameInput.SelectForPad(close);
     }

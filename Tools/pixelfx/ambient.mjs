@@ -20,6 +20,8 @@ const list = [
   ["chimney", "nature/poison-cloud", { palette: PAL.smoke }],
   ["birds", "critters/bird", {}],
   ["ripples", "water/ripples", {}],
+  ["butterfly", "critters/butterfly", {}],
+  ["fish", "critters/fish-school", {}],
 ];
 
 for (const [name, id, options] of list) {
@@ -35,7 +37,7 @@ for (const [name, id, options] of list) {
   r.frames.forEach((f, i) => {
     const px = new Uint8ClampedArray(w * h * 4);
     for (let y = 0; y < h; y++) px.set(f.clear.subarray(((y0 + y) * r.w + x0) * 4, ((y0 + y) * r.w + x0 + w) * 4), y * w * 4);
-    if (name === "fireflies") for (let i = 3; i < px.length; i += 4) if (px[i] < 90) px[i] = 0; // no glow haze box
+    if (["fireflies", "butterfly", "fish"].includes(name)) for (let i = 3; i < px.length; i += 4) if (px[i] < 90) px[i] = 0; // no glow haze box
     writeFileSync(join(out, name, `${name}_${String(i).padStart(2, "0")}.png`), encodePNG(w, h, px));
   });
   console.log(name, id, `${r.n} frames`, `${w}x${h}`, `loop=${fx.meta.loop}`);

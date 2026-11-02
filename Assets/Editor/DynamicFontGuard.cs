@@ -14,7 +14,14 @@ using TMPro;
 [InitializeOnLoad]
 public static class DynamicFontGuard
 {
-    public static readonly string[] Paths = { "Assets/font/Galmuri/Galmuri11 Dynamic SDF.asset" };
+    // Every dynamic font asset in the project: Galmuri11 (the UI), DreamHeumulKR (TMP Settings' fallback for the
+    // glyphs Galmuri lacks - it collected them the same way) and Departure Mono (not used, but dynamic too).
+    public static readonly string[] Paths =
+    {
+        "Assets/font/Galmuri/Galmuri11 Dynamic SDF.asset",
+        "Assets/font/DreamHeumulKR Dynamic SDF.asset",
+        "Assets/font/DepartureMono Dynamic SDF.asset",
+    };
 
     static DynamicFontGuard()
     {

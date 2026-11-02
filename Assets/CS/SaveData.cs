@@ -25,6 +25,8 @@ public class SaveData
     public float sfxVolume = 1f;
     public float shakeStrength = 1f;
     public bool hitStopEnabled = true;
+    public bool colorblind;   // 색약 모드: enemy / own markers in a red-green safe pair (UiTheme)
+    public bool largeText;    // 큰 글씨: the HUD plate and banner lines at 36 instead of 24
     public bool fullscreen = true;
     public bool tutorialDone;
     // Keyboard / mouse bindings for GameInput.Action (attack, dash, jump, skill 1-3): a Key enum value, or

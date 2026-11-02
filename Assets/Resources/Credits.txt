@@ -44,7 +44,7 @@ RPG Audio, Impact Sounds, Interface Sounds / Kenney (CC0)
 ## 글꼴
 Galmuri11 / Lee Minseo (SIL OFL 1.1)
 Departure Mono / Helena Zhang (OFL)
-DreamHeumulKR
+DreamHeumulKR (보조 한글 글꼴, 출처·라이선스 확인 필요)
 
 ## 도구
 pixelfx / Patch, Hugo Duprez (MIT) - 스탯 카드 그림, 배경 이펙트

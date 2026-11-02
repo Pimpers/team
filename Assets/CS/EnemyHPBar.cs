@@ -104,7 +104,7 @@ public class EnemyHPBar : MonoBehaviour
         Set(empty, 0f, width, Height);
         Set(trail, 0f, PixelWidth(trailValue), Height);
         Set(fill, 0f, PixelWidth(shown), Height);
-        fill.color = enemy.IsElite ? Gold : Red;
+        fill.color = enemy.IsElite ? Gold : GameSettings.Colorblind ? (Color)UiTheme.EnemyMark : Red;
     }
 
     void SetRenderers(bool enabled)

@@ -70,20 +70,20 @@ public class OptionsUI : MonoBehaviour
         var valueT = volumeValue != null ? volumeValue.rectTransform : null;
         if (frame == null || labelT == null || valueT == null) return; // an older layout: leave it alone
 
-        frame.sizeDelta = new Vector2(780f, 900f);
-        inner.sizeDelta = new Vector2(768f, 888f);
-        Move(inner.Find("Title"), 0f, 382f);
-        Move(inner.Find("Divider"), 0f, 320f);
+        frame.sizeDelta = new Vector2(780f, 940f);
+        inner.sizeDelta = new Vector2(768f, 928f);
+        Move(inner.Find("Title"), 0f, 402f);
+        Move(inner.Find("Divider"), 0f, 340f);
 
         // Master row (existing), then music, effects and screen shake cloned from it.
         // Rows 128 apart, each slider 58 under its label: the label of the next row no longer sits on the slider above.
-        PlaceRow(labelT, valueT, volumeSlider.transform as RectTransform, 266f);
+        PlaceRow(labelT, valueT, volumeSlider.transform as RectTransform, 286f);
         int n = GameSettings.Sliders.Length;
         System.Array.Resize(ref sliders, n);
         System.Array.Resize(ref values, n);
         for (int i = 1; i < n; i++)
         {
-            sliders[i] = CloneRow(inner, labelT, valueT, volumeSlider, "Setting" + i, Loc.T(GameSettings.Sliders[i].labelKey), 266f - 128f * i, out values[i]);
+            sliders[i] = CloneRow(inner, labelT, valueT, volumeSlider, "Setting" + i, Loc.T(GameSettings.Sliders[i].labelKey), 286f - 128f * i, out values[i]);
             Hook(i);
         }
 
@@ -93,20 +93,20 @@ public class OptionsUI : MonoBehaviour
         for (int i = 0; i < GameSettings.Toggles.Length; i++)
         {
             var toggle = GameSettings.Toggles[i];
-            var b = CloneButton("Toggle" + i, new Vector2(-250f + 250f * i, -272f), new Vector2(240f, 80f), wood, out toggleLabels[i]);
+            var b = CloneButton("Toggle" + i, GridSlot(i), new Vector2(240f, 80f), wood, out toggleLabels[i]);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); RefreshButtons(); });
         }
-        // 키 설정 (KeyBindPanel), third in the toggles' row.
-        var keys = CloneButton("KeysButton", new Vector2(250f, -272f), new Vector2(240f, 80f), wood, out var keysLabel);
+        // 키 설정 (KeyBindPanel), after the toggles in their grid.
+        var keys = CloneButton("KeysButton", GridSlot(GameSettings.Toggles.Length), new Vector2(240f, 80f), wood, out var keysLabel);
         if (keysLabel != null) keysLabel.text = Loc.T("keys.title");
         keys.onClick.AddListener(() =>
         {
             var canvas = panel != null ? panel.GetComponentInParent<Canvas>() : null;
             KeyBindPanel.Show(canvas, keysLabel != null ? keysLabel.font : null);
         });
-        quitButton = CloneButton("QuitButton", new Vector2(-250f, -372f), new Vector2(230f, 80f), wood, out quitLabel); // wood, not the green "go" button
+        quitButton = CloneButton("QuitButton", new Vector2(-250f, BottomRow), new Vector2(230f, 80f), wood, out quitLabel); // wood, not the green "go" button
         quitButton.onClick.AddListener(OnQuit);
-        creditsButton = CloneButton("CreditsButton", new Vector2(0f, -372f), new Vector2(230f, 80f), wood, out var creditsLabel);
+        creditsButton = CloneButton("CreditsButton", new Vector2(0f, BottomRow), new Vector2(230f, 80f), wood, out var creditsLabel);
         if (creditsLabel != null) creditsLabel.text = Loc.T("credits.title");
         creditsButton.onClick.AddListener(() =>
         {
@@ -115,10 +115,14 @@ public class OptionsUI : MonoBehaviour
             CreditsPanel.Show(canvas, creditsLabel != null ? creditsLabel.font : null);
         });
         var close = (RectTransform)closeButton.transform;
-        close.anchoredPosition = new Vector2(250f, -372f);
+        close.anchoredPosition = new Vector2(250f, BottomRow);
         close.sizeDelta = new Vector2(230f, 80f);
         RefreshButtons();
     }
+
+    // The toggles and 키 설정 fill a grid of three per row under the sliders; quit / credits / close below it.
+    const float GridTop = -230f, GridRow = 90f, BottomRow = -410f;
+    static Vector2 GridSlot(int i) => new Vector2(-250f + 250f * (i % 3), GridTop - GridRow * (i / 3));
 
     static void Move(Transform t, float x, float y)
     {

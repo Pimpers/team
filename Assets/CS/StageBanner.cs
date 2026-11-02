@@ -36,9 +36,10 @@ public static class StageBanner
 
         if (!string.IsNullOrEmpty(subtitle))
         {
-            var sub = MakeText(rt, "Subtitle", subtitle, compact ? 24f : 36f, UiTheme.Subtitle, font);
-            sub.rectTransform.anchoredPosition = compact ? new Vector2(0f, -34f) : new Vector2(0f, -55f);
-            sub.rectTransform.sizeDelta = compact ? new Vector2(520f, 38f) : new Vector2(700f, 60f);
+            bool big = GameSettings.LargeText; // 큰 글씨 option: the compact line goes 24 -> 36
+            var sub = MakeText(rt, "Subtitle", subtitle, compact && !big ? 24f : 36f, UiTheme.Subtitle, font);
+            sub.rectTransform.anchoredPosition = compact ? new Vector2(0f, big ? -40f : -34f) : new Vector2(0f, -55f);
+            sub.rectTransform.sizeDelta = compact ? new Vector2(big ? 900f : 520f, big ? 50f : 38f) : new Vector2(900f, 60f);
             sub.outlineWidth = 0.2f;
             sub.outlineColor = new Color32(40, 20, 10, 255);
         }

@@ -15,6 +15,7 @@ public static class OneTimeTip
         if (canvas == null || Seen(id)) return;
         GameSave.Data.seenTips = string.IsNullOrEmpty(GameSave.Data.seenTips) ? id : GameSave.Data.seenTips + "," + id;
         GameSave.Save();
+        Sfx.Play("tip_chime");
         StageBanner.Show(canvas.rootCanvas, font, Loc.T("tip.title"), Loc.T("tutorial.tip." + id), 3.5f, compact: true);
     }
 

@@ -43,6 +43,7 @@ public static class Sfx
             byId.Clear();
             if (library != null)
                 foreach (var e in library.entries) if (e != null && !string.IsNullOrEmpty(e.id)) byId[e.id] = e;
+            SynthSfx.Register(byId); // the few sounds made in code (voice blip, preview tick, tip chime)
         }
         var go = new GameObject("Sfx");
         Object.DontDestroyOnLoad(go);

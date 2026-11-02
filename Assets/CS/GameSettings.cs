@@ -33,6 +33,22 @@ public static class GameSettings
         set { GameSave.Data.shakeStrength = Mathf.Clamp01(value); GameSave.Save(); }
     }
 
+    // 색약 모드: the minimap's own / enemy / exit marks and enemy health bars switch to a red-green safe set
+    // (UiTheme.EnemyMark ...); the text table is reloaded so the legend's colours follow.
+    public static bool Colorblind
+    {
+        get => GameSave.Data.colorblind;
+        set { GameSave.Data.colorblind = value; GameSave.Save(); Loc.Reload(); }
+    }
+
+    // 큰 글씨: the reading text in a fight (the HUD plate, banner lines) one pixel-font step up, 24 -> 36.
+    public static bool LargeText
+    {
+        get => GameSave.Data.largeText;
+        set { GameSave.Data.largeText = value; GameSave.Save(); }
+    }
+    public static float ReadingSize => LargeText ? UiTheme.TextLarge : UiTheme.TextSmall;
+
     public static bool HitStopEnabled
     {
         get => GameSave.Data.hitStopEnabled;
@@ -67,6 +83,8 @@ public static class GameSettings
     {
         new ToggleSetting { onKey = "options.fullscreen.on", offKey = "options.fullscreen.off", get = () => Fullscreen, set = v => Fullscreen = v },
         new ToggleSetting { onKey = "options.hitstop.on", offKey = "options.hitstop.off", get = () => HitStopEnabled, set = v => HitStopEnabled = v },
+        new ToggleSetting { onKey = "options.colorblind.on", offKey = "options.colorblind.off", get = () => Colorblind, set = v => Colorblind = v },
+        new ToggleSetting { onKey = "options.largetext.on", offKey = "options.largetext.off", get = () => LargeText, set = v => LargeText = v },
     };
 
     // The rebindable keys (KeyBindPanel, opened from both settings screens' "키 설정" button).

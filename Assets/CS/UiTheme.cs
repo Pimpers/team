@@ -43,7 +43,19 @@ public static class UiTheme
     };
 
     // "#rrggbb" for a palette name (for code that builds rich text itself).
-    public static string Html(string name) => Hex.TryGetValue(name, out var h) ? h : "#ff00ff";
+    public static string Html(string name) =>
+        GameSettings.Colorblind && SafeHex.TryGetValue(name, out var s) ? s : Hex.TryGetValue(name, out var h) ? h : "#ff00ff";
+
+    // 색약 모드 (GameSettings.Colorblind): Okabe-Ito colours that stay apart for red-green colour blindness -
+    // enemies orange, the cat sky blue, the exit yellow.
+    static readonly Dictionary<string, string> SafeHex = new Dictionary<string, string>
+    {
+        { "map_enemy", "#e69f00" },
+        { "map_exit", "#f0e442" },
+    };
+    public static Color EnemyMark => GameSettings.Colorblind ? new Color(0.9f, 0.62f, 0f) : new Color(0.95f, 0.25f, 0.25f);
+    public static Color PlayerMark => GameSettings.Colorblind ? new Color(0.34f, 0.71f, 0.91f) : new Color(1f, 0.85f, 0.3f);
+    public static Color ExitMark => GameSettings.Colorblind ? new Color(0.94f, 0.89f, 0.26f) : new Color(0.35f, 1f, 0.45f);
 
     // Replaces $name (letters, digits, _) with its hex; an unknown name is left as it is.
     public static string ExpandColours(string s)
@@ -56,7 +68,8 @@ public static class UiTheme
             {
                 int j = i + 1;
                 while (j < s.Length && (char.IsLetterOrDigit(s[j]) || s[j] == '_')) j++;
-                if (j > i + 1 && Hex.TryGetValue(s.Substring(i + 1, j - i - 1), out var hex)) { sb.Append(hex); i = j - 1; continue; }
+                string colour = j > i + 1 ? s.Substring(i + 1, j - i - 1) : null;
+                if (colour != null && ((GameSettings.Colorblind && SafeHex.TryGetValue(colour, out var hex)) || Hex.TryGetValue(colour, out hex))) { sb.Append(hex); i = j - 1; continue; }
             }
             sb.Append(s[i]);
         }

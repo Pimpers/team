@@ -33,8 +33,8 @@ public class KeyBindPanel : MonoBehaviour
         var board = new GameObject("Board", typeof(RectTransform), typeof(Image));
         var brt = (RectTransform)board.transform;
         brt.SetParent(rt, false);
-        // As big as the settings window it opens over (780 x 900), so none of that window shows round its edges.
-        brt.sizeDelta = new Vector2(780f, Mathf.Max(900f, 260f + rowH * n));
+        // As big as the settings window it opens over (780 x 940), so none of that window shows round its edges.
+        brt.sizeDelta = new Vector2(780f, Mathf.Max(940f, 260f + rowH * n));
         var img = board.GetComponent<Image>();
         var skin = UISkin.Instance;
         if (skin != null && skin.buttonCream != null) UISkin.Apply(img, skin.buttonCream, 3f);

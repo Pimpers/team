@@ -69,6 +69,8 @@ Then run Unity on the copy (same arguments as `run_tests.ps1`, other `-projectPa
 
 ## Working with several Claude sessions
 
+One folder, one writer. In this project the writer is the main Claude session; the second session (cats-smash-2) only reads here.
+
 One folder, one writer. Two sessions editing this checkout at once mixed their changes into each other's commits
 (a commit that said it was one session's work also carried the other's). So:
 

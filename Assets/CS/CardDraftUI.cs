@@ -641,7 +641,7 @@ public class CardHover : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHa
     {
         bool on = over || selected;
         // A light tick when the preview line comes up (not on the way down, nor while the card is being dealt).
-        if (on && preview != null && !preview.activeSelf && isActiveAndEnabled) Sfx.Play("ui_click", 0.2f, 1.35f);
+        if (on && preview != null && !preview.activeSelf && isActiveAndEnabled) Sfx.Play("preview_tick");
         if (corners != null) corners.enabled = on;
         if (preview != null) preview.SetActive(on);
     }
