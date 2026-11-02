@@ -235,7 +235,7 @@ public class LobbyController : MonoBehaviour
         if (selected < 0) return;
         displays[selected].SetSelected(false);
         selected = -1;
-        foreach (var d in displays) d.ShowNameTag(true);
+        // (the floating name tags stay off: the cats are told apart by clicking them, not by plates over their heads)
         namingPanel.SetActive(false);
         if (overviewGroup != null) overviewGroup.SetActive(true);
     }

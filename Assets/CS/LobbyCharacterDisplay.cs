@@ -40,6 +40,7 @@ public class LobbyCharacterDisplay : MonoBehaviour
         pauseTimer = Random.Range(0.2f, pauseRange.y);
         Play(character.idleFrames, character.framesPerSecond, false);
         RefreshNameTag();
+        ShowNameTag(false); // no plates floating over the cats before one is clicked (they ran together when two met)
     }
 
     // Plate above the head with the cat's tag and job (하양이 · 검사 / 치즈 · 궁수). The player-given name isn't shown here - it's given when
