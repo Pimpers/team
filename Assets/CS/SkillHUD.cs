@@ -11,7 +11,7 @@ public class SkillHUD : MonoBehaviour
 {
     // Big enough to read mid-fight. The pixel font only has 12 / 24 / 36 (PixelText.Dot), so a name that had to
     // shrink to fit an 84 px slot dropped straight to an unreadable 12: names stay 24 and wrap onto a second line.
-    const float SlotSize = 104f, SlotGap = 44f, ChipSize = 56f, ChipGap = 8f, Bottom = 52f; // low (the bar covers less of the floor), but a two-line name plate clear of the screen edge
+    const float SlotSize = 104f, SlotGap = 96f, ChipSize = 56f, ChipGap = 8f, Bottom = 52f; // low (the bar covers less of the floor); the gap leaves room for a one-line name (냥냥 연속 베기)
     const float SlotY = 30f;
     const float NameSize = 24f, PlateOneLine = 36f, PlateTwoLines = 54f; // two lines of 24 with -14 spacing need no more
 
@@ -115,14 +115,12 @@ public class SkillHUD : MonoBehaviour
         rt.offsetMax = new Vector2(-padX, -padY);
     }
 
-    // One-line names get a short plate, two-line names a tall one.
+    // The plate hugs its one-line name: no wider than the name needs, no wider than the slot pitch.
     static void FitPlate(Slot s)
     {
         var rt = s.plate.rectTransform;
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, PlateTwoLines);
-        s.label.ForceMeshUpdate();
-        int lines = s.label.textInfo != null ? s.label.textInfo.lineCount : 1;
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, lines <= 1 ? PlateOneLine : PlateTwoLines);
+        float need = s.label.GetPreferredValues(s.label.text).x + 16f;
+        rt.sizeDelta = new Vector2(Mathf.Clamp(need, SlotSize, SlotSize + SlotGap - 6f), PlateOneLine);
     }
 
     void Build(RectTransform root)
@@ -162,7 +160,7 @@ public class SkillHUD : MonoBehaviour
             s.plate = MakePlate("NamePlate", s.root, new Vector2(0f, -SlotSize * 0.5f - 3f), new Vector2(SlotSize + SlotGap - 6f, PlateTwoLines));
             s.label = MakeText("Name", s.plate.rectTransform, "", NameSize, UISkin.BannerText, Vector2.zero, Vector2.zero, TextAlignmentOptions.Center);
             Stretch(s.label.rectTransform, 4f, 2f);
-            s.label.textWrappingMode = TextWrappingModes.Normal; // a long name (냥냥 연속 베기) takes a second line at full size
+            s.label.textWrappingMode = TextWrappingModes.NoWrap; // one line: the slots are spaced for the longest name (냥냥 연속 베기); two lines read as two names
             s.label.overflowMode = TextOverflowModes.Overflow;
             s.label.lineSpacing = -14f;
             s.label.enableAutoSizing = false;

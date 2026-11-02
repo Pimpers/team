@@ -29,6 +29,7 @@ public class DamagePopup : MonoBehaviour
             merged.MergeDamage(amount, strong, crit);
             return;
         }
+        position = StackNumber(position);
         if (crit)
         {
             // Colour and the exclamation mark carry the critical message without another label.
@@ -92,6 +93,19 @@ public class DamagePopup : MonoBehaviour
         popup.text = MakeText(go.transform, label, size, color, 60, Vector3.zero);
         live.Add(popup);
         return popup;
+    }
+
+    // A number too old to merge into but still on screen nearby: the new one goes a line above it, so two hits in a
+    // row never print "10" over "10".
+    static Vector3 StackNumber(Vector3 position)
+    {
+        int lane = 0;
+        foreach (var popup in live)
+            if (popup != null && popup.numeric && popup.t < 0.6f &&
+                Mathf.Abs(popup.start.x - position.x) < 1.2f && Mathf.Abs(popup.start.y - position.y) < 0.5f + lane * 0.5f)
+                lane++;
+        position.y += Mathf.Min(3, lane) * 0.5f;
+        return position;
     }
 
     static DamagePopup FindMerge(Vector3 position)
