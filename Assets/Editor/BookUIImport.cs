@@ -20,6 +20,7 @@ public class BookUIImport : AssetPostprocessor
         { "Select01a", new Vector4(6, 6, 6, 6) },
         { "MedievalBoard", new Vector4(12, 12, 12, 12) },
         { "MedievalBarFrame", new Vector4(8, 4, 7, 4) },
+        { "SpeechBoard", new Vector4(2, 2, 2, 2) },
     };
 
     void OnPreprocessTexture()

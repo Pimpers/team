@@ -206,7 +206,7 @@ public class BlacksmithUI : MonoBehaviour
         ((RectTransform)panel.transform).GetWorldCorners(corners);
         return canvas.InverseTransformPoint(corners[0]).x - canvas.rect.xMin;
     }
-    const float BubbleScale = 3f; // canvas units per art pixel of the board and the tail
+    const float BubbleScale = 4f; // canvas units per art pixel of the board and the tail (whole numbers only: pixel snap)
     const float BubbleMaxWidth = 820f, BubbleMinWidth = 420f, BubblePadX = 34f, BubblePadTop = 46f, BubblePadBottom = 58f;
     const float PopTime = 0.09f;
     Image bubble;
@@ -299,11 +299,11 @@ public class BlacksmithUI : MonoBehaviour
         portrait.preserveAspect = true;
         portrait.raycastTarget = false;
 
-        // A speech bubble up and to the right of the portrait, its tail down at his mouth: the cream board
-        // (buttonCream, 9-sliced), sized to each line (SizeBubble) up to MaxBubbleWidth, growing up and right from its
-        // bottom-left corner. The tail is its own pixel sprite (UIBook/BubbleTail, Tools/pxl/pxl_bubble_tail.px.js:
-        // the board's rim and fill colours, whole art pixels, never rotated), its top row laid over the bubble's
-        // bottom rim. His name on a small wood plate on the bubble's top edge.
+        // A speech bubble up and to the right of the portrait, its tail down at his mouth: icelivin's pixel speech
+        // bubble (UIBook/SpeechBoard, 9-sliced; cut by Tools/bubble_from_icelivin.ps1), sized to each line (SizeBubble)
+        // up to MaxBubbleWidth, growing up and right from its bottom-left corner. The tail is the sheet's left tail
+        // (UIBook/SpeechTail, 5 x 5 art pixels, never rotated), its top row laid over the bubble's bottom rim. His
+        // name on a small wood plate on the bubble's top edge.
         talkBox = new GameObject("SmithBubble", typeof(RectTransform));
         var brt = (RectTransform)talkBox.transform;
         brt.SetParent(canvas.transform, false);
@@ -314,18 +314,18 @@ public class BlacksmithUI : MonoBehaviour
         bubble.rectTransform.SetParent(brt, false);
         bubble.rectTransform.anchorMin = bubble.rectTransform.anchorMax = bubble.rectTransform.pivot = new Vector2(0f, 0f);
         bubble.raycastTarget = false;
-        if (skin != null && skin.buttonCream != null) UISkin.Apply(bubble, skin.buttonCream, BubbleScale);
-        else bubble.color = new Color(1f, 0.95f, 0.82f);
+        BookUI.Slice(bubble, "SpeechBoard", BubbleScale);
+        if (bubble.sprite == null) bubble.color = new Color(0.91f, 0.84f, 0.68f);
 
-        // 15 x 14 art pixels at the bubble's 3 units per pixel, down-left from near its bottom-left corner; drawn over
-        // the bubble so its top (fill) row hides one pixel of rim and the two read as one shape.
+        // 5 x 5 art pixels at the bubble's units per pixel, where the sheet has it (6 px in from the board's left);
+        // drawn over the bubble so its top (fill) row hides the rim there and the two read as one shape.
         var tail = new GameObject("Tail", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
         tail.rectTransform.SetParent(brt, false);
         tail.rectTransform.anchorMin = tail.rectTransform.anchorMax = Vector2.zero; // at the bubble's bottom-left corner
         tail.rectTransform.pivot = new Vector2(0f, 1f);
-        tail.rectTransform.anchoredPosition = new Vector2(6f, BubbleScale); // at the left end: its point lands by his mouth
-        tail.rectTransform.sizeDelta = new Vector2(15f * BubbleScale, 14f * BubbleScale);
-        tail.sprite = BookUI.Get("BubbleTail");
+        tail.rectTransform.anchoredPosition = new Vector2(6f * BubbleScale, BubbleScale); // at the left end: its point lands by his mouth
+        tail.rectTransform.sizeDelta = new Vector2(5f * BubbleScale, 5f * BubbleScale);
+        tail.sprite = BookUI.Get("SpeechTail");
         tail.enabled = tail.sprite != null;
         tail.raycastTarget = false;
 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 69ff45616663f0d02a75acf220e8514a
+guid: 8bccb16ab99573f4c91d1ef8ac6ffe1e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4624191499668283256
-    second: Slot01a_0
+      213: 890621035205128310
+    second: SpeechTail_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Slot01a_0
+      name: SpeechTail_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 30
-        height: 30
+        width: 5
+        height: 5
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87fdb1f3bad6c2040800000000000000
-      internalID: 4624191499668283256
+      spriteID: 67074e0ec1f1c5c00800000000000000
+      internalID: 890621035205128310
       vertices: []
       indices: 
       edges: []
