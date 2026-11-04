@@ -29,8 +29,8 @@ public class HorizontalEncounterController : StageEncounterController
     {
         if (PlayerStats.Instance != null) PlayerStats.Instance.Heal(0.5f);
         if (player != null)
-            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 2.1f,
-                                   Loc.T("encounter.area_clear_heal"), GateEffectColor, 0.65f);
+            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f,
+                                   Loc.T("encounter.area_clear_heal"), UiTheme.Gold); // as the base's "구역 완료!": the small gate-tinted one was lost under the route banner
     }
 
     protected override Gate BuildGate(float edge)
