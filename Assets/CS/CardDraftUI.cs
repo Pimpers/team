@@ -319,7 +319,9 @@ public class CardDraftUI : MonoBehaviour
     const float CardW = 320f, CardH = 480f;
     public const float CardWidth = CardW, CardHeight = CardH;
     static readonly Vector2 MedallionPos = new Vector2(0f, 214f), MedallionSize = new Vector2(70f, 34f);
-    static readonly Vector2 PicturePos = new Vector2(0f, 106f), PictureSize = new Vector2(160f, 160f);
+    // The middle of the frame's picture window (card art rows 44-287 of 480: centre 74 above the card's middle).
+    static readonly Vector2 PicturePos = new Vector2(0f, 74f), PictureSize = new Vector2(160f, 160f);
+    const float IconSize = 128f; // the 64 px skill icons at exactly x2 (0.78 x 160 = 125 drew uneven pixels)
     // The text box is kept inside the cream area: the frame's corner ornaments cut into its sides and bottom,
     // and a box as wide as the frame let a long line or a fourth line run onto them.
     static readonly Vector2[] TextPos = { new Vector2(0f, -136f), new Vector2(0f, -136f), new Vector2(0f, -136f) };
@@ -373,7 +375,9 @@ public class CardDraftUI : MonoBehaviour
         picture.preserveAspect = true;
         picture.raycastTarget = false;
         // The little 16 px props (trap, can...) are a quarter of an effect frame: draw them smaller.
-        picture.rectTransform.sizeDelta = card.Art == null && frames != null && frames.Length == 1 ? PictureSize * 0.6f : card.Art != null ? PictureSize * 0.78f : PictureSize;
+        // Every card's picture in the same 128 box at the window's middle: the 64 px icons x2, a 32 px effect frame x4,
+        // a 16 px prop x8 (they were 125 / 160 / 96 - three sizes, uneven pixels on the icons).
+        picture.rectTransform.sizeDelta = Vector2.one * IconSize;
 
         var tier = Child<TextMeshProUGUI>(button, "CardTier", MedallionPos, MedallionSize);
         tier.font = label.font;
