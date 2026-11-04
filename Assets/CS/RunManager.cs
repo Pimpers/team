@@ -377,7 +377,10 @@ public class RunManager : MonoBehaviour
     {
         runEnded = true;
         // This run's gold goes into the saved wallet, spent at the village blacksmith.
-        MetaProgress.AddGold(PlayerStats.Instance.Gold);
+        // A lost run still pays for the stages it cleared (10 a stage): it took ~12 from a loss to buy even the first
+        // upgrade, so an early death felt like nothing. Shown on the result board as part of what it earned.
+        int earned = PlayerStats.Instance.Gold + (win ? 0 : LossPay * Mathf.Max(0, stageNumber - 1));
+        MetaProgress.AddGold(earned);
         int unlocked = win ? Corruption.RegisterClear(Corruption.Level) : -1;
         if (win)
         {
@@ -387,8 +390,9 @@ public class RunManager : MonoBehaviour
             GameSave.Data.bestClear = Mathf.Max(GameSave.Data.bestClear, Corruption.Level);
             GameSave.Save();
         }
-        StartCoroutine(ShowResult(win, PlayerStats.Instance.Gold, unlocked));
+        StartCoroutine(ShowResult(win, earned, unlocked));
     }
+    const int LossPay = 10;
 
     // Let the death animation / boss collapse play first, then freeze the level behind the
     // result screen (its buttons run on unscaled time; SceneLoader unpauses on leaving).
