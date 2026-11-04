@@ -33,11 +33,11 @@ public static class VfxAssets
     }
 
     // Bump when the effect set changes, so an open project rebuilds the library by itself.
-    const int LibraryVersion = 15;
+    const int LibraryVersion = 17;
     const float CatPixelsPerUnit = 12.5f; // the cats: 100 px/unit drawn at x8
 
-    static Def BD(string id, float fps, Pivot pivot = Pivot.Center, float scale = 0.5f, int order = 7, bool turns = false,
-                  string folder = "BDragon", int cell = 64, string file = null) =>
+    static Def BD(string id, float fps, Pivot pivot = Pivot.Center, float scale = 1f, int order = 7, bool turns = false,
+                  string folder = "BDragon", int cell = 32, string file = null) => // BDragon sheets are 32 px cells (Tools/fx_to_32.ps1), drawn at x1: the cats' pixel
         new Def { id = id, file = $"{Dir}/{folder}/{file ?? id}.png", cell = cell, cols = 0, frames = 0, fps = fps, pivot = pivot, scale = scale,
                   order = order, ppu = CatPixelsPerUnit, pixelSnap = true, freeRotation = turns };
 
@@ -76,8 +76,8 @@ public static class VfxAssets
         BD("combo_slash1", 16f, scale: 1f, folder: "Combo", cell: 32), BD("combo_slash2", 16f, scale: 1f, folder: "Combo", cell: 32), BD("combo_slash3", 16f, scale: 1f, folder: "Combo", cell: 32),
         // Archer skills (Assets/Effects/Archer: one drawn effect each, flash then fade; the fish / yarn / churu / can
         // cells are also the projectile sprites, the trap cell the trap on the floor).
-        BD("a_jelly_fx", 16f, scale: 1f, folder: "Archer"), BD("a_smile_fx", 12f, scale: 1f, folder: "Archer"),
-        BD("a_catnip_fx", 16f, scale: 1f, folder: "Archer", cell: 32), BD("a_meteor_fx", 12f, scale: 1f, folder: "Archer"),
+        BD("a_jelly_fx", 16f, scale: 1f, folder: "Archer", cell: 64), BD("a_smile_fx", 12f, scale: 1f, folder: "Archer", cell: 64),
+        BD("a_catnip_fx", 16f, scale: 1f, folder: "Archer", cell: 32), BD("a_meteor_fx", 12f, scale: 1f, folder: "Archer", cell: 64),
         BD("a_rapid_fx", 22f, scale: 1f, folder: "Archer", cell: 32), BD("a_backstep_fx", 22f, scale: 1f, folder: "Archer", cell: 32),
         BD("a_wire_fx", 14f, scale: 1f, folder: "Archer", cell: 32), BD("a_fish_fx", 16f, scale: 1f, folder: "Archer", cell: 32),
         // Sprite Fusion (generated on the owner's account): the fishbone arrow, 16 px at the cats' pixel size.
@@ -85,15 +85,15 @@ public static class VfxAssets
         BD("a_trap_fx", 16f, Pivot.Ground, scale: 1f, folder: "Archer", cell: 32), BD("a_churu_fx", 16f, scale: 1f, folder: "Archer", cell: 32),
         BD("a_curve_fx", 16f, scale: 1f, folder: "Archer", cell: 32), BD("a_watch_fx", 12f, Pivot.Ground, scale: 1f, folder: "Archer", cell: 32),
         BD("a_wind_fx", 16f, scale: 1f, turns: true, folder: "Archer", cell: 32), BD("a_homing_fx", 16f, scale: 1f, folder: "Archer", cell: 32),
-        BD("a_can_fx", 16f, scale: 1f, folder: "Archer"),
+        BD("a_can_fx", 16f, scale: 1f, folder: "Archer", cell: 64),
         // Knight skills (Assets/Effects/Knight: one drawn effect each, flash then fade; the wheel ring spins).
         BD("k_highcut_fx", 24f, scale: 1f, folder: "Knight", cell: 32), BD("k_knead_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_tower_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight"), BD("k_loaf_fx", 14f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_tower_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 64), BD("k_loaf_fx", 14f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_groom_fx", 14f, scale: 1f, folder: "Knight", cell: 32), BD("k_ilseom_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_rush_fx", 16f, scale: 1f, folder: "Knight", cell: 32), BD("k_leap_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_wheel_fx", 20f, scale: 1f, folder: "Knight"), BD("k_paw_fx", 22f, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_hiss_fx", 12f, scale: 1f, folder: "Knight"), BD("k_night_fx", 12f, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_tail_fx", 16f, scale: 1f, folder: "Knight"), BD("k_whisker_fx", 20f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_wheel_fx", 20f, scale: 1f, folder: "Knight", cell: 64), BD("k_paw_fx", 22f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_hiss_fx", 12f, scale: 1f, folder: "Knight", cell: 64), BD("k_night_fx", 12f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_tail_fx", 16f, scale: 1f, folder: "Knight", cell: 64), BD("k_whisker_fx", 20f, scale: 1f, folder: "Knight", cell: 32),
         BD("slash", 30f),
         BD("slash_gold", 30f),
         BD("xcut", 24f),
