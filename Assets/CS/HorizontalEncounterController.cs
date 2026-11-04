@@ -25,13 +25,8 @@ public class HorizontalEncounterController : StageEncounterController
     protected override Vector3 GateEffectPosition(float edge)
         => new Vector3(edge, player != null ? player.Feet.y + 1f : map.playerStart.y + 1f, 0f);
 
-    protected override void OnRoomOpened()
-    {
-        if (PlayerStats.Instance != null) PlayerStats.Instance.Heal(0.5f);
-        if (player != null)
-            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f,
-                                   Loc.T("encounter.area_clear_heal"), UiTheme.Gold); // as the base's "구역 완료!": the small gate-tinted one was lost under the route banner
-    }
+    // (No heal per room any more: with half a heart every room on top of the stage-clear heart, hearts never ran low
+    // before the boss - the full-run dodge mode took 5.5 in four stages and then 4.5 from the boss alone.)
 
     protected override Gate BuildGate(float edge)
     {

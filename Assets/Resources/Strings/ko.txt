@@ -76,7 +76,6 @@ damage.enemy_contact = 적 접촉
 enemy.web = 거미줄!
 
 # HorizontalEncounterController
-encounter.area_clear_heal = 구역 완료 · 하트 +0.5
 
 # LobbyController
 lobby.name_prompt = 이름을 알려주세요!
