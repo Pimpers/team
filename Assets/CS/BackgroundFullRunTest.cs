@@ -26,6 +26,8 @@ public class BackgroundFullRunTest : MonoBehaviour
         public int goldAfter;
         public int kills;
         public int dodges; // dodge mode: boss wind-ups backed away from
+        public int bossSpecials, bossStaggers; // what the boss got to do, and how often it was dazed
+        public float bossFight, bossNeutral;   // seconds after its intro, and of those with no move running
     }
 
     float stageBegan, damageAtStart;
@@ -140,6 +142,8 @@ public class BackgroundFullRunTest : MonoBehaviour
                             body.transform.position = enemy.transform.position + Vector3.left * (enemy.BodyHalfWidth + 0.8f) + Vector3.up * body.feetOffset;
                             body.FaceTowards(1f);
                         }
+                        var boss = enemy.GetComponent<BossBrain>();
+                        if (boss != null) { result.bossSpecials = boss.Specials; result.bossStaggers = boss.Staggers; result.bossFight = boss.FightTime; result.bossNeutral = boss.NeutralTime; }
                         enemy.ReceiveDamage(stats.AttackPower, 1f);
                         result.attackHits++;
                         // Dodge mode swings at the player's real rate (PlayerAttack's cooldown over attack speed), so the

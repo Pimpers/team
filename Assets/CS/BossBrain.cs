@@ -93,6 +93,10 @@ public class BossBrain : MonoBehaviour
     // Returns true while a special move is controlling the boss this frame.
     // A special move on its way or under way (wind-ups, the charge, the leap): what a player dodges. Recoveries,
     // the roar and a stagger are openings. (The full-run playtest's dodge mode reads it.)
+    public int Specials { get; private set; }  // (playtest report: special moves started)
+    public int Staggers { get; private set; }  // (playtest report: times dazed)
+    public float NeutralTime { get; private set; } // (playtest report: seconds with no move running, the special clock's time)
+    public float FightTime { get; private set; }   // (playtest report: seconds since the intro roar)
     public bool Threatening => move == Move.ChargeWindup || move == Move.Charge || move == Move.PoundWindup ||
                                move == Move.LeapWindup || move == Move.Leap || move == Move.ThrowWindup;
 
@@ -107,6 +111,7 @@ public class BossBrain : MonoBehaviour
             PlayIntro();
         }
 
+        FightTime += Time.deltaTime;
         // Phase changes (checked even mid-move so a big hit can't skip the roar).
         float hpFrac = enemy.MaxHP > 0 ? (float)enemy.HP / enemy.MaxHP : 1f;
         // (Not in mid-air: the roar waits for the leap to land.)
@@ -130,17 +135,21 @@ public class BossBrain : MonoBehaviour
         poise = Mathf.Max(0f, poise - enemy.MaxHP * 0.03f * Time.deltaTime);
         bool interruptible = move == Move.None || move == Move.ChargeRecover || move == Move.PoundRecover ||
                              move == Move.LeapRecover || move == Move.ThrowRecover;
-        if (poise >= enemy.MaxHP * StaggerAfter && interruptible && !enemy.IsDead) { poise = 0f; StartStagger(StaggerTime); }
+        if (poise >= enemy.MaxHP * StaggerAfter && interruptible && !enemy.IsDead && FightTime >= staggerFreeUntil) { poise = 0f; StartStagger(StaggerTime); }
 
+        // The special clock runs all fight - through claws, roars and staggers. It used to run only with no move
+        // going, and a cat that hits steadily keeps the bear in roars and staggers: in the full-run dodge mode it
+        // had 0.7 s of neutral in an 8.5 s fight and never made one special. A special still only starts from a
+        // neutral state with a living player (the first such moment once the clock is out).
+        specialTimer -= Time.deltaTime;
         if (move != Move.None)
         {
             UpdateMove(Time.deltaTime);
             return true;
         }
 
-        // Specials only start from a neutral state (not mid-claw) with a living player.
+        NeutralTime += Time.deltaTime;
         if (enemy.IsAttacking || PlayerStats.Instance == null || PlayerStats.Instance.CurrentHP <= 0f) return false;
-        specialTimer -= Time.deltaTime;
         if (specialTimer > 0f) return false;
 
         var pick = PickSpecial();
@@ -152,6 +161,7 @@ public class BossBrain : MonoBehaviour
             default: StartCharge(); break;
         }
         lastSpecial = pick;
+        Specials++;
         specialTimer = phase == 1 ? RunRng.Range(4.5f, 6.5f) : phase == 2 ? RunRng.Range(3.2f, 4.6f) : RunRng.Range(2.2f, 3.4f);
         return true;
     }
@@ -452,6 +462,7 @@ public class BossBrain : MonoBehaviour
     // ------------------------------------------------------------------ stagger
     void StartStagger(float seconds)
     {
+        Staggers++;
         var dazed = enemy.definition.hurtFrames;
         enemy.AnimHold(dazed != null && dazed.Length > 0 ? dazed[0] : Pose(3));
         Begin(Move.Stagger, seconds);
@@ -469,7 +480,13 @@ public class BossBrain : MonoBehaviour
         enemy.damageTakenMultiplier = 1f;
         if (stars != null) Destroy(stars);
         stars = null;
+        // It shakes the daze off angry: a special right away, and no new daze for a while. Without this a cat hitting
+        // at full rate chained daze into roar into daze and the bear never acted (full-run dodge mode: 0 specials).
+        specialTimer = Mathf.Min(specialTimer, 0.3f);
+        staggerFreeUntil = FightTime + StaggerImmune;
     }
+    const float StaggerImmune = 6f;
+    float staggerFreeUntil;
 
     // A frame of the swipe, held as a pose: 0 head down, 1 reared up with a paw raised, 2 paw thrown forward, 3 recover.
     Sprite Pose(int i)
