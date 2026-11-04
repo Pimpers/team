@@ -46,7 +46,17 @@ foreach ($f in $folders) {
 }
 # Other .meta files (new folders / assets elsewhere in Assets), copied when missing or changed - nothing deleted.
 Invoke-Robo @($srcAssets, $dstAssets, '*.meta', '/S')
-Copy-Item -LiteralPath (Join-Path $project 'Packages\manifest.json') -Destination (Join-Path $Dest 'Packages\manifest.json') -Force
+# The manifest without the Unity-MCP package: the copy has no use for it, and it updates itself in the project
+# (1.6.0 -> 1.6.1), which made every batch run here re-resolve packages, reload scripts mid-run and hang on its
+# server connection. The lock file goes with it (Unity rewrites it from the manifest).
+$manifest = [IO.File]::ReadAllText((Join-Path $project 'Packages\manifest.json'))
+$manifest = [regex]::Replace($manifest, '(?m)^\s*"com\.ivanmurzak\.unity\.mcp"\s*:\s*"[^"]*",?\r?\n', '')
+$manifest = [regex]::Replace($manifest, ',(\s*\r?\n\s*\})', '$1') # a trailing comma left when it was the last entry
+$dstManifest = Join-Path $Dest 'Packages\manifest.json'
+if (-not (Test-Path -LiteralPath $dstManifest) -or [IO.File]::ReadAllText($dstManifest) -ne $manifest) {
+  [IO.File]::WriteAllText($dstManifest, $manifest)
+  Remove-Item -LiteralPath (Join-Path $Dest 'Packages\packages-lock.json') -ErrorAction SilentlyContinue
+}
 
 # ---- Verify: same relative paths, same SHA-256.
 function Get-Tree([string]$root) {
