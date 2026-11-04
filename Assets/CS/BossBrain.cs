@@ -263,7 +263,7 @@ public class BossBrain : MonoBehaviour
                 // Body-check: running through the player hurts once (dodge by jump/dash).
                 Vector2 to = enemy.ToPlayerFeet();
                 if (!chargeHit && Mathf.Abs(to.x) < enemy.definition.bodyHalfWidth + 0.7f && Mathf.Abs(to.y) < 2.2f)
-                    chargeHit = enemy.HitPlayer(1f, 2f, chargeDir) || chargeHit;
+                    chargeHit = enemy.HitPlayer(phase == 1 ? 0.5f : 1f, 2f, chargeDir) || chargeHit; // phase 1 teaches the charge at half a heart
                 if (!moved || moveTimer <= 0f)
                 {
                     // Hit the wall / ran out: dazed for a moment - the opening to punish it.
