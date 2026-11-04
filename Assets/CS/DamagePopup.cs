@@ -49,6 +49,9 @@ public class DamagePopup : MonoBehaviour
         int chars = string.IsNullOrEmpty(label) ? 0 : label.Replace("\n", "").Length;
         float size = label != null && label.Contains("\n") ? 3.4f : chars >= 4 ? 3.7f : 6.2f;
         size *= Mathf.Clamp(sizeMultiplier, 0.5f, 1.5f);
+        // With a banner up (the route choice, a set bonus) a word over the cat's head lands right on the banner's
+        // subtitle in mid-screen: it goes under the cat's feet instead.
+        if (StageBanner.Up && chars >= 4) position += Vector3.down * 3.4f;
         var popup = Create(StackLabel(position + new Vector3(0f, 0.45f, 0f)), label, color, size);
         if (chars >= 4) popup.AddBacking(); // words ("구역 완료!") sit on a dark strip: an outline alone was lost over fire and the red trees
     }

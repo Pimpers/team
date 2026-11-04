@@ -15,6 +15,9 @@ public static class StageBanner
 
     // Takes every banner down, the queued ones too, and lets no more up in this scene: the result board must not
     // get a boss's name over it (a boss killed before its roar ended still raised its banner after the board).
+    // A banner on screen now (labels over the cat's head make way for it: DamagePopup.SpawnLabel).
+    public static bool Up => live.Exists(g => g != null);
+
     public static void ClearAll()
     {
         foreach (var g in live) if (g != null) Object.Destroy(g);
