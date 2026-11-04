@@ -42,12 +42,13 @@ public class BalanceTests
     }
 
     [Test]
-    public void StageHp_GrowsTwelvePercentAStage_BossUnchanged()
+    public void StageHp_GrowsTwelvePercentAStage_ToStageThree_BossUnchanged()
     {
         Assert.That(StageScaling.HpMultiplier(1, false), Is.EqualTo(1f).Within(1e-5f));
         Assert.That(StageScaling.HpMultiplier(2, false), Is.EqualTo(1.12f).Within(1e-5f));
-        Assert.That(StageScaling.HpMultiplier(4, false), Is.EqualTo(1.36f).Within(1e-5f));
-        Assert.That(StageScaling.HpMultiplier(9, false), Is.EqualTo(1.48f).Within(1e-5f)); // capped at stage 5
+        Assert.That(StageScaling.HpMultiplier(3, false), Is.EqualTo(1.24f).Within(1e-5f));
+        Assert.That(StageScaling.HpMultiplier(4, false), Is.EqualTo(1.24f).Within(1e-5f)); // no more after stage 3
+        Assert.That(StageScaling.HpMultiplier(9, false), Is.EqualTo(1.24f).Within(1e-5f));
         Assert.That(StageScaling.HpMultiplier(4, true), Is.EqualTo(1f));
         Assert.That(StageScaling.HpMultiplier(0, false), Is.EqualTo(1f)); // outside the stages
     }

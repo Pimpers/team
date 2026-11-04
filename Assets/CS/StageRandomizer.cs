@@ -231,7 +231,9 @@ public class StageRandomizer : MonoBehaviour
         var run = FindAnyObjectByType<RunManager>();
         bool gentleFirstStage = run != null && run.stageNumber == 1 && Corruption.Level <= 0;
         if (gentleFirstStage && stageOneFinale != null) stageOneFinale.MakeElite();
-        int elites = (gentleFirstStage ? 0 : eliteCount) + Corruption.ExtraElites(Corruption.Level);
+        // Stages 3 and 4 bring one more elite: the middle of the run must threaten (it took 0.5-2 hearts a stage).
+        int deep = run != null && run.stageNumber >= 3 ? 1 : 0;
+        int elites = (gentleFirstStage ? 0 : eliteCount + deep) + Corruption.ExtraElites(Corruption.Level);
         // Fixed difficulty bands whatever the shuffle did: the elites are the monsters furthest from the start, so a
         // run never opens on one by luck and the hardest fight is always the last stretch before the exit.
         var map = GetComponent<StageMap>();
