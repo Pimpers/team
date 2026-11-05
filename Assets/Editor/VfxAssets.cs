@@ -33,7 +33,7 @@ public static class VfxAssets
     }
 
     // Bump when the effect set changes, so an open project rebuilds the library by itself.
-    const int LibraryVersion = 17;
+    const int LibraryVersion = 18;
     const float CatPixelsPerUnit = 12.5f; // the cats: 100 px/unit drawn at x8
 
     static Def BD(string id, float fps, Pivot pivot = Pivot.Center, float scale = 1f, int order = 7, bool turns = false,

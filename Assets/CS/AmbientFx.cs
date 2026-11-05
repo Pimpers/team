@@ -47,9 +47,9 @@ public class AmbientFx : MonoBehaviour
     {
         var bg = Background("HarborBackground");
         if (bg == null) return;
-        Place(bg, "campfire", 0.633f, 0.5f, 0.035f, 4, 1f);     // the campfire in the square
+        Place(bg, "campfire", 0.633f, 0.5f, 0.031f, 4, 1f);     // the campfire in the square (68 x 96 frames: as tall as the old 77 x 96)
         Place(bg, "butterfly", 0.71f, 0.56f, 0.03f, 6, 1f, 10f); // a butterfly over the square
-        Place(bg, "chimney", 0.51f, 0.19f, 0.09f, 4, 0.75f);    // smoke off the roofs
+        Place(bg, "chimney", 0.51f, 0.19f, 0.016f, 4, 0.75f);   // smoke off the roofs (a 42 x 48 column now, as tall as the old 211 x 42 drift)
         Place(bg, "birds", 0.3f, 0.12f, 0.03f, 6, 1f);          // gulls over the harbor
         Place(bg, "ripples", 0.08f, 0.45f, 0.06f, 4, 0.8f);     // open water: clear of the blacksmith's portrait and dialogue box (bottom-left)
         Place(bg, "ripples", 0.2f, 0.12f, 0.06f, 4, 0.8f);
