@@ -318,15 +318,15 @@ public class CardDraftUI : MonoBehaviour
     // 512 x 768 art scaled by 0.625): medallion at the top, picture window, text box below it.
     const float CardW = 320f, CardH = 480f;
     public const float CardWidth = CardW, CardHeight = CardH;
-    static readonly Vector2 MedallionPos = new Vector2(0f, 214f), MedallionSize = new Vector2(70f, 34f);
-    // The middle of the frame's picture window (card art rows 44-287 of 480: centre 74 above the card's middle).
-    static readonly Vector2 PicturePos = new Vector2(0f, 74f), PictureSize = new Vector2(160f, 160f);
+    static readonly Vector2 MedallionPos = new Vector2(0f, 186f), MedallionSize = new Vector2(70f, 34f); // the Aether fronts' circle (art rows 44-130 of 768)
+    // In the picture window (art rows ~130-440 of 768: +159 to -35), under the set badge at its top (+140).
+    static readonly Vector2 PicturePos = new Vector2(0f, 56f), PictureSize = new Vector2(160f, 160f);
     const float IconSize = 128f; // the 64 px skill icons at exactly x2 (0.78 x 160 = 125 drew uneven pixels)
     // The text box is kept inside the cream area: the frame's corner ornaments cut into its sides and bottom,
     // and a box as wide as the frame let a long line or a fourth line run onto them.
-    static readonly Vector2[] TextPos = { new Vector2(0f, -136f), new Vector2(0f, -136f), new Vector2(0f, -136f) };
-    static readonly Vector2[] TextSize = { new Vector2(224f, 92f), new Vector2(224f, 92f), new Vector2(224f, 92f) };
-    static readonly Vector2 NamePos = new Vector2(0f, -60f), NameSize = new Vector2(280f, 40f);
+    static readonly Vector2[] TextPos = { new Vector2(0f, -136f), new Vector2(0f, -136f), new Vector2(0f, -136f) }; // the text box: -65 to -172 on all three fronts (art rows 472-703)
+    static readonly Vector2[] TextSize = { new Vector2(224f, 70f), new Vector2(224f, 70f), new Vector2(224f, 70f) };
+    static readonly Vector2 NamePos = new Vector2(0f, -84f), NameSize = new Vector2(224f, 36f); // the box's top line (no name ribbon on these fronts)
 
     // Ink per grade, readable on that card's text box (cream / pale blue / lavender).
     static readonly (string name, string level, Color body, Color medallion)[] Inks =
@@ -434,8 +434,8 @@ public class CardDraftUI : MonoBehaviour
 
         // Set badge over the top of the picture when this card would open or finish a set.
         string badge = SetBadge(card);
-        var badgePlate = Child<Image>(button, "SetBadgePlate", new Vector2(0f, 172f), new Vector2(230f, 38f));
-        var badgeText = Child<TextMeshProUGUI>(button, "SetBadge", new Vector2(0f, 172f), new Vector2(230f, 38f));
+        var badgePlate = Child<Image>(button, "SetBadgePlate", new Vector2(0f, 140f), new Vector2(230f, 38f));
+        var badgeText = Child<TextMeshProUGUI>(button, "SetBadge", new Vector2(0f, 140f), new Vector2(230f, 38f));
         badgePlate.color = UiTheme.Plate;
         badgePlate.raycastTarget = false;
         badgeText.font = label.font;

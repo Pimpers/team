@@ -24,6 +24,7 @@ UI Pack - Pixel Adventure / Kenney
 UI Pack (RPG Expansion) / Kenney (CC0)
 Pixel Speech Bubbles – Free Dialog UI Pack / icelivin (itch.io, 무료·상업 사용 가능, 재배포 금지; 대장장이 말풍선, 색 바꿈)
 재배포 금지 에셋: SpeechBoard, SpeechTail (Resources/UIBook). 저장소 공개 전 제외할 것.
+HarborVillage 재가공, 카드 앞면 3장, 카드 뒷면 3장: Aether(aetherforgeai.com) 생성 후 가공
 Free UI Nature Pack / Qiuro
 Cryo's Mini GUI / PaperHatLizard (CC BY 4.0)
 Cat User Interface / ToffeeCraft
