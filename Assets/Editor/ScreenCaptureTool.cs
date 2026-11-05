@@ -54,6 +54,8 @@ public static class ScreenCaptureTool
         steps.Clear();
         string[] cards = { "attack", "k_combo", "k_paw", "crit" };
         Add("TitleScene", "title");
+        Add("TitleScene", "title_16x10", null, 1680, 1050); // the logo against the buttons and the prompt on narrower screens
+        Add("TitleScene", "title_4x3", null, 1440, 1080);
         Add("MainScene", "village");
         Add("MainScene", "blacksmith_talk", () => Find<BlacksmithUI>().Open());
         Add("MainScene", "blacksmith", () => Find<BlacksmithUI>().OpenShop());
