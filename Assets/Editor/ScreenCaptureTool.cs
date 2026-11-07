@@ -96,6 +96,8 @@ public static class ScreenCaptureTool
         Add("Stage2", "fx_aether1", () => FxRow("a_trap_fx", "a_wire_fx", "a_fish_fx", "k_loaf_fx", "lure", "k_night_fx", "k_hiss_fx", "a_catnip_fx"));
         Add("Stage2", "fx_aether2", () => FxRow("charm", "a_jelly_fx", "trap_snap", "a_watch_fx", "a_can_fx", "beam_end", "a_rapid_fx", "explosion"));
         Add("Stage2", "fx_compare", () => FxRow("k_tower_fx", "a_smile_fx", "a_meteor_fx", "a_backstep_fx", "a_churu_fx", "a_curve_fx", "k_hiss_fx", "a_catnip_fx"));
+        // The way out open, so the minimap's exit marker (cyan) shows.
+        Add("Stage2", "minimap_exit", () => { var e = StageExit.Instance != null ? StageExit.Instance : StageExit.Create(2); if (e != null) e.Open("Stage3"); });
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
         Add("Stage1", "a11y", () =>
         {
