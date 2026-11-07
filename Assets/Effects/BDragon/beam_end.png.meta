@@ -195,10 +195,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -215,12 +215,12 @@ TextureImporter:
       name: beam_end_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 24
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -237,12 +237,12 @@ TextureImporter:
       name: beam_end_2
       rect:
         serializedVersion: 2
-        x: 96
+        x: 48
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -259,12 +259,12 @@ TextureImporter:
       name: beam_end_3
       rect:
         serializedVersion: 2
-        x: 144
+        x: 72
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -281,12 +281,12 @@ TextureImporter:
       name: beam_end_4
       rect:
         serializedVersion: 2
-        x: 192
+        x: 96
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -303,12 +303,12 @@ TextureImporter:
       name: beam_end_5
       rect:
         serializedVersion: 2
-        x: 240
+        x: 120
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -325,12 +325,12 @@ TextureImporter:
       name: beam_end_6
       rect:
         serializedVersion: 2
-        x: 288
+        x: 144
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -347,12 +347,12 @@ TextureImporter:
       name: beam_end_7
       rect:
         serializedVersion: 2
-        x: 336
+        x: 168
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -369,12 +369,12 @@ TextureImporter:
       name: beam_end_8
       rect:
         serializedVersion: 2
-        x: 384
+        x: 192
         y: 0
-        width: 48
-        height: 48
+        width: 24
+        height: 24
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.5, y: 0.47916666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
