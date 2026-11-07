@@ -1,6 +1,6 @@
 {
   "name": "CatsSmash.PlayModeTests",
-  "references": ["CatsSmash.Runtime", "Unity.TextMeshPro", "Unity.InputSystem"],
+  "references": ["CatsSmash.Runtime", "Unity.TextMeshPro", "Unity.InputSystem", "Unity.RenderPipelines.Universal.2D.Runtime"],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

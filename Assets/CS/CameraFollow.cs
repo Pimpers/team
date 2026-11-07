@@ -115,6 +115,7 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
+        StagePixelPerfect.Apply(cam);
         if (target == null) return;
         player = target.GetComponent<PlayerController2D>();
         anchorY = prevPy = target.position.y;

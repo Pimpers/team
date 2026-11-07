@@ -99,6 +99,7 @@ public static class ScreenCaptureTool
         // The HUD, the draft and the village at the narrower screens too (16:10, 4:3): anchors, bands, plates.
         Add("Stage2", "hud_16x10", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 1680, 1050);
         Add("Stage2", "hud_4x3", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 1440, 1080);
+        Add("Stage2", "hud_21x9", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 2560, 1080);
         Add("Stage2", "draft_16x10", () => Find<CardDraftUI>().Show(() => { }), 1680, 1050);
         Add("Stage2", "draft_4x3", () => Find<CardDraftUI>().Show(() => { }), 1440, 1080);
         Add("MainScene", "village_16x10", null, 1680, 1050);
