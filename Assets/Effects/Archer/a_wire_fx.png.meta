@@ -114,10 +114,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.515625, y: 0.484375}
+      pivot: {x: 0.5, y: 0.5104167}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: a_wire_fx_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 48
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.515625, y: 0.484375}
+      pivot: {x: 0.5, y: 0.5104167}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -156,12 +156,12 @@ TextureImporter:
       name: a_wire_fx_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 96
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.515625, y: 0.484375}
+      pivot: {x: 0.5, y: 0.5104167}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -178,12 +178,12 @@ TextureImporter:
       name: a_wire_fx_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 144
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.515625, y: 0.484375}
+      pivot: {x: 0.5, y: 0.5104167}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -200,12 +200,12 @@ TextureImporter:
       name: a_wire_fx_4
       rect:
         serializedVersion: 2
-        x: 128
+        x: 192
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.515625, y: 0.484375}
+      pivot: {x: 0.5, y: 0.5104167}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -222,12 +222,12 @@ TextureImporter:
       name: a_wire_fx_5
       rect:
         serializedVersion: 2
-        x: 160
+        x: 240
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.515625, y: 0.484375}
+      pivot: {x: 0.5, y: 0.5104167}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -236,6 +236,72 @@ TextureImporter:
       bones: []
       spriteID: e13b9e11274e3e34887fe8f7ef7b0e90
       internalID: 1310247426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_wire_fx_6
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5104167}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96eca8000f4d88e4dabbdb588bfd320c
+      internalID: 546065892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_wire_fx_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5104167}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e8f1c2bd3bc5ee4aaa535ab2e26ddf7
+      internalID: 247598869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_wire_fx_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5104167}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 559f16424c9916d41b7af82bc957fedb
+      internalID: -1868114372
       vertices: []
       indices: 
       edges: []
@@ -260,6 +326,9 @@ TextureImporter:
       a_wire_fx_3: 7119517117185252735
       a_wire_fx_4: 1123698846
       a_wire_fx_5: 1310247426
+      a_wire_fx_6: 546065892
+      a_wire_fx_7: 247598869
+      a_wire_fx_8: -1868114372
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
