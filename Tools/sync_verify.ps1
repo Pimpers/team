@@ -3,7 +3,7 @@
 #   powershell -ExecutionPolicy Bypass -File Tools/sync_verify.ps1 [-Dest C:\path\to\copy] [-Extra font,UI]
 # Mirrors Assets/<CS, Editor, Tests, Resources, Scenes, Enemies> (+ -Extra folders) with their .meta files, deleting
 # files the project no longer has, then copies every other .meta under Assets that is missing or different, plus
-# Packages/manifest.json. Afterwards every mirrored file is SHA-256 compared with the original; exit code 1 when
+# Packages/manifest.json and packages-lock.json (never Library). Afterwards every mirrored file is SHA-256 compared with the original; exit code 1 when
 # anything differs or is missing, 0 when the copy is identical.
 # Why this script: an earlier copy step broke on the Korean folder names in the project path and the tests then
 # passed against old code. Everything here takes paths from $PSScriptRoot (no path text in the script itself),
@@ -48,14 +48,19 @@ foreach ($f in $folders) {
 Invoke-Robo @($srcAssets, $dstAssets, '*.meta', '/S')
 # The manifest without the Unity-MCP package: the copy has no use for it, and it updates itself in the project
 # (1.6.0 -> 1.6.1), which made every batch run here re-resolve packages, reload scripts mid-run and hang on its
-# server connection. The lock file goes with it (Unity rewrites it from the manifest).
+# server connection. The lock file is copied every time too, minus the same entry, so the copy's PackageCache is
+# checked (UnityBatch.ps1) against the project's pinned versions instead of whatever Unity re-resolved last.
+# Library is never copied: it is per-folder cache, and a copied one points at the project's paths.
 $manifest = [IO.File]::ReadAllText((Join-Path $project 'Packages\manifest.json'))
 $manifest = [regex]::Replace($manifest, '(?m)^\s*"com\.ivanmurzak\.unity\.mcp"\s*:\s*"[^"]*",?\r?\n', '')
 $manifest = [regex]::Replace($manifest, ',(\s*\r?\n\s*\})', '$1') # a trailing comma left when it was the last entry
-$dstManifest = Join-Path $Dest 'Packages\manifest.json'
-if (-not (Test-Path -LiteralPath $dstManifest) -or [IO.File]::ReadAllText($dstManifest) -ne $manifest) {
-  [IO.File]::WriteAllText($dstManifest, $manifest)
-  Remove-Item -LiteralPath (Join-Path $Dest 'Packages\packages-lock.json') -ErrorAction SilentlyContinue
+$lock = [IO.File]::ReadAllText((Join-Path $project 'Packages\packages-lock.json'))
+$lock = [regex]::Replace($lock, '(?s)\r?\n\s*"com\.ivanmurzak\.unity\.mcp"\s*:\s*\{.*?\r?\n    \},?', '')
+foreach ($pair in @(@('manifest.json', $manifest), @('packages-lock.json', $lock))) {
+  $dst = Join-Path $Dest "Packages\$($pair[0])"
+  if (-not (Test-Path -LiteralPath $dst) -or [IO.File]::ReadAllText($dst) -ne $pair[1]) {
+    [IO.File]::WriteAllText($dst, $pair[1]); Write-Host "copied Packages/$($pair[0])"
+  }
 }
 
 # ---- Verify: same relative paths, same SHA-256.
