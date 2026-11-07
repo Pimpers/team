@@ -4,7 +4,8 @@ using UnityEngine;
 public class PlayerOutline : MonoBehaviour
 {
     static readonly Vector2[] Dirs = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
-    static readonly Color Ink = new Color(0.18f, 0.15f, 0.28f, 0.9f);
+    static readonly Color Ink = new Color(0.12f, 0.09f, 0.14f, 1f);
+    const float ArtTexels = 1f; // texels per art pixel (the x8 is the transform scale)
     SpriteRenderer source;
     readonly SpriteRenderer[] copies = new SpriteRenderer[4];
 
@@ -27,7 +28,8 @@ public class PlayerOutline : MonoBehaviour
     {
         if (source == null) { Destroy(gameObject); return; }
         var sprite = source.sprite;
-        float pixel = sprite != null ? 1f / sprite.pixelsPerUnit : 0f;
+        // one whole art pixel: the copies sat half a pixel out before, a blur at the edge rather than an outline
+        float pixel = sprite != null ? ArtTexels / sprite.pixelsPerUnit : 0f;
         for (int i = 0; i < copies.Length; i++)
         {
             var copy = copies[i];
@@ -38,7 +40,7 @@ public class PlayerOutline : MonoBehaviour
             copy.sortingLayerID = source.sortingLayerID;
             copy.sortingOrder = source.sortingOrder - 1;
             copy.enabled = source.enabled;
-            copy.transform.localPosition = (Vector3)(Dirs[i] * pixel * 0.5f);
+            copy.transform.localPosition = (Vector3)(Dirs[i] * pixel);
         }
     }
 }

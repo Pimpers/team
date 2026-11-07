@@ -56,12 +56,18 @@ public class ParallaxBackground : MonoBehaviour
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = layer.sprite;
                 sr.sortingOrder = layer.sortingOrder;
-                sr.color = layer.tint;
+                sr.color = layer.tint * FarMute;
             }
             roots[i] = root;
         }
+        foreach (var t in FindObjectsByType<UnityEngine.Tilemaps.Tilemap>()) t.color *= TileMute;
         LateUpdate();
     }
+
+    // Fight readability, by tint only (the PNGs and materials stay): the far layers darker, with red cut most so the
+    // warm forest also loses colour; the tilemaps (ground, platforms) a touch darker and less purple / lime.
+    static readonly Color FarMute = new Color(0.58f, 0.66f, 0.74f, 1f);
+    static readonly Color TileMute = new Color(0.9f, 0.86f, 0.92f, 1f);
 
     void LateUpdate()
     {
