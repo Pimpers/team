@@ -150,10 +150,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.5, y: 0.515625}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -170,12 +170,12 @@ TextureImporter:
       name: a_catnip_fx_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 48
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.5, y: 0.515625}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,12 +192,12 @@ TextureImporter:
       name: a_catnip_fx_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 96
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.5, y: 0.515625}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -214,12 +214,12 @@ TextureImporter:
       name: a_catnip_fx_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 144
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.5, y: 0.515625}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -228,6 +228,116 @@ TextureImporter:
       bones: []
       spriteID: c255ef9ee9a591f60800000000000000
       internalID: 8005529451204859180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_catnip_fx_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c7a866a509632242936b6ac80156232
+      internalID: -239424789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_catnip_fx_5
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 212f1dd5ba54ace4095d377d770f9668
+      internalID: 817519950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_catnip_fx_6
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a6c4475d566d1d4e83d5c2127a8eacd
+      internalID: 1853282969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_catnip_fx_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4987486425d22c04a844b97f83ba08bb
+      internalID: 780910204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_catnip_fx_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 372fbac3a6fae3b4a8e57bcda6d982ef
+      internalID: -8195811
       vertices: []
       indices: 
       edges: []
@@ -250,6 +360,11 @@ TextureImporter:
       a_catnip_fx_1: -5550158423776631166
       a_catnip_fx_2: -5196132975971733738
       a_catnip_fx_3: 8005529451204859180
+      a_catnip_fx_4: -239424789
+      a_catnip_fx_5: 817519950
+      a_catnip_fx_6: 1853282969
+      a_catnip_fx_7: 780910204
+      a_catnip_fx_8: -8195811
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
