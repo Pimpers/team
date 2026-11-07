@@ -3,7 +3,8 @@
 # closes its 1 px dark outline: a clear pixel next to a solid one that is not dark already takes the darkest colour.
 # Originals go to _art_backup/monster_tones_20261107/<Name> first; -Restore puts them back. .meta files untouched.
 #   powershell -File Tools/monster_tones.ps1 -Names Slime,Mushroom,Bear [-Colours 12] [-Restore]
-param([string[]]$Names = @('Slime', 'Mushroom', 'Bear'), [int]$Colours = 12, [switch]$Restore)
+param([string[]]$Names = @('Slime', 'Mushroom', 'Bear'), [int]$Colours = 12, [switch]$Restore,
+  [switch]$NoOutline) # the mushroom: its spore puffs outlined turned to blots
 $Names = @($Names | ForEach-Object { $_ -split ',' } | Where-Object { $_ })
 $repo = Resolve-Path (Join-Path $PSScriptRoot '..')
 $backup = Join-Path $repo '_art_backup\monster_tones_20261107'
@@ -23,7 +24,7 @@ public static class MTones {
             var r = b.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             System.Runtime.InteropServices.Marshal.Copy(px, 0, r.Scan0, px.Length); b.UnlockBits(r); b.Save(p, ImageFormat.Png); }
     }
-    public static string Run(string[] files, int colours) {
+    public static string Run(string[] files, int colours, bool outline) {
         var frames = new List<int[]>(); var ws = new List<int>(); var hs = new List<int>();
         var all = new List<int>(); // opaque colours of every frame, one entry per pixel
         foreach (var f in files) { int w, h; var px = Read(f, out w, out h); frames.Add(px); ws.Add(w); hs.Add(h);
@@ -58,7 +59,7 @@ public static class MTones {
                     if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
                     int c = px[ny * w + nx]; if (A(c) != 0 && Luma(c) >= 70) { ring.Add(y * w + x); break; } }
             }
-            foreach (int i in ring) px[i] = darkest; added += ring.Count;
+            if (outline) { foreach (int i in ring) px[i] = darkest; added += ring.Count; }
             Save(files[fi], px, w, h);
         }
         return files.Length + " frames, " + boxes.Count + " colours, outline +" + added + " px";
@@ -71,5 +72,5 @@ foreach ($name in $Names) {
   New-Item -ItemType Directory -Force $bk | Out-Null
   $files = @(Get-ChildItem $dir -Filter *.png | Sort-Object Name)
   foreach ($f in $files) { $d = Join-Path $bk $f.Name; if (-not (Test-Path $d)) { Copy-Item $f.FullName $d } }
-  "$name : $([MTones]::Run([string[]]($files | ForEach-Object FullName), $Colours))"
+  "$name : $([MTones]::Run([string[]]($files | ForEach-Object FullName), $Colours, -not $NoOutline))"
 }

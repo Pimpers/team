@@ -6,7 +6,23 @@ One-off asset scripts moved out of the project root (2026-10-31). Nothing in the
   them are relative to the project root (two folders up), so run them from anywhere:
   `powershell -File Tools/sprite_scripts/generate_enemy_sprites.ps1`
 - `pxl/*.px.js` - pxl (Claude pixel-art DSL) sources: effects, the stage-exit log / leaves / fireflies, the spider
-  web, the bear. Build with `node <pxl>/bin/pxl.js build Tools/pxl/<file> --out <dir>` and copy the PNGs into Assets.
+  web, the bear, the village menu icons (`pxl_village_icons.px.js`, 16 px, blown up x7 into `Assets/UI/*Icon.png`).
+  Build with `node <pxl>/bin/pxl.js build Tools/pxl/<file> --out <dir>` and copy the PNGs into Assets.
+
+### Art passes (each backs up to `_art_backup/<name>_<date>` first; `-Restore` where noted puts the originals back)
+
+- `aether_import.ps1 -Src <dir>` - Aether card backs, lobby and world map into Assets (the map's English labels painted over).
+- `aether_fx.ps1` - Aether ambient effects (volcano, campfire, chimney smoke, explosion) to sheets.
+- `aether_skillfx.ps1 -Set 1..4` - Aether skill effects to sheets: background keyed out, cells cut and floored.
+- `fx_to_32.ps1` / `fx_wind.ps1` - older effect sheets down to 32 px cells / the wind effect redrawn.
+- `art_style_fix.ps1 -Csv <scan>` - the batch fixer for the art rules (alpha cut, 24 colours, outline).
+- `cards_flatten.ps1`, `icons_place.ps1`, `bubble_from_icelivin.ps1` - card fronts flattened, skill icons centred, the smith's bubble.
+- `monster_tones.ps1 -Names Slime,Bear [-Colours 12] [-NoOutline] [-Restore]` - one shared palette per monster, outline gaps closed.
+- `worldmap_refill.ps1` - the rim round each Korean plate on the world map re-filled with the map round it.
+- `icon_rescale.ps1 -Files <png,...> -Px 32 [-Restore]` - a too-fine picture shrunk to the game's pixel size and blown back up.
+- `palette.ps1 -Build` / `-Apply <png,...> [-Restore]` - `palette.png` (UI, cats, effects + a few added) and the recolour to it (files that would shift too far are kept).
+- `fx_half.ps1`, `fx_dechecker.ps1`, `fx_fadeshrink.ps1`, `fx_outline.ps1 -Cell <n>` - effect sheets halved, checker dither cleared, fade-out frames redrawn by shrinking, outlines on big pieces.
+- `icon_shade.ps1 [-Restore]` - card skill icons: outline where missing, one shadow tone.
 
 ## Who lays out which screen
 
