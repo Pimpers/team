@@ -35,6 +35,11 @@ public static class TitleMenu
         if (plank != null && BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(plank, "UIBundle/MedievalBoard", 3f);
         Clone(rt, "CreditsButton", Loc.T("credits.title"), 1).onClick.AddListener(() => CreditsPanel.Show(canvas, font));
         Clone(rt, "SettingsButton", Loc.T("harbor.settings"), 2).onClick.AddListener(() => TitleSettings.Show(canvas, font));
+        // Cream on the bright log board was low in contrast: the shared 1 px dark outline on all three labels
+        // (after the clones, so each label gets its own copies).
+        foreach (var b in rt.parent.GetComponentsInChildren<Button>())
+            if (plank != null && b.GetComponent<Image>() != null && b.GetComponent<Image>().sprite == plank.sprite)
+                foreach (var t in b.GetComponentsInChildren<TMP_Text>()) UiTheme.Outline(t);
         // Gamepad: the full-screen "click anywhere" button starts selected, so A starts the game.
         var start = GameObject.Find("ClickCatcher");
         if (start != null) GameInput.SelectForPad(start.GetComponent<Button>());

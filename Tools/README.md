@@ -9,6 +9,10 @@ One-off asset scripts moved out of the project root (2026-10-31). Nothing in the
   web, the bear, the village menu icons (`pxl_village_icons.px.js`, 16 px, blown up x7 into `Assets/UI/*Icon.png`).
   Build with `node <pxl>/bin/pxl.js build Tools/pxl/<file> --out <dir>` and copy the PNGs into Assets.
 
+- `precommit.ps1 [-Checks compile,test]` - unity-kit:precommit's compile and test checks, run on the verification
+  copy (`%TEMP%\cs_verify`): the skill's scripts stop at the space in this project's path ("2학년 2학기").
+- UI work follows `UI_STYLE.md` at the repo root (palette roles, type steps, text-over-picture styles, layout).
+
 ### Art passes (each backs up to `_art_backup/<name>_<date>` first; `-Restore` where noted puts the originals back)
 
 - `aether_import.ps1 -Src <dir>` - Aether card backs, lobby and world map into Assets (the map's English labels painted over).
