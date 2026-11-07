@@ -114,10 +114,10 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.484375, y: 0.1875}
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: a_watch_fx_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 48
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.484375, y: 0.1875}
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -156,12 +156,12 @@ TextureImporter:
       name: a_watch_fx_2
       rect:
         serializedVersion: 2
-        x: 64
+        x: 96
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.484375, y: 0.1875}
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -178,12 +178,12 @@ TextureImporter:
       name: a_watch_fx_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 144
         y: 0
-        width: 32
-        height: 32
+        width: 48
+        height: 48
       alignment: 9
-      pivot: {x: 0.484375, y: 0.1875}
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -192,6 +192,116 @@ TextureImporter:
       bones: []
       spriteID: 267d9a3c9aee5a570800000000000000
       internalID: 8477444286494398306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_watch_fx_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b3b0835dc837db45a9dcccb8c89d292
+      internalID: -1055741053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_watch_fx_5
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a813020dce515745be74492ab5f8ade
+      internalID: 1619022108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_watch_fx_6
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38c11f54f75c275419140f318645dbcc
+      internalID: -697420739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_watch_fx_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b63154cc62f10ce4ba16088cf780e6c6
+      internalID: -1144100359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: a_watch_fx_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 48
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f731a88340667443ae885fa4d7a4b39
+      internalID: 1115030977
       vertices: []
       indices: 
       edges: []
@@ -214,6 +324,11 @@ TextureImporter:
       a_watch_fx_1: -4496058248127704882
       a_watch_fx_2: -449225838937049426
       a_watch_fx_3: 8477444286494398306
+      a_watch_fx_4: -1055741053
+      a_watch_fx_5: 1619022108
+      a_watch_fx_6: -697420739
+      a_watch_fx_7: -1144100359
+      a_watch_fx_8: 1115030977
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
