@@ -53,7 +53,8 @@ public class MainSceneController : MonoBehaviour
         if (string.IsNullOrEmpty(name)) name = def.tagName;
         if (string.IsNullOrEmpty(name) && profileName != null && profileName.transform.parent != null)
             profileName.transform.parent.gameObject.SetActive(false);
-        if (nameTag != null) nameTag.text = name;
+        // No name over the cat's head (as in the lobby): the plate by the portrait carries it.
+        if (nameTag != null) nameTag.gameObject.SetActive(false);
         if (profileName != null) { profileName.text = name; FitNamePill(profileName); }
         if (portrait != null) portrait.sprite = def.idleFrames[0];
         ShowFrame(def.idleFrames[0]);
