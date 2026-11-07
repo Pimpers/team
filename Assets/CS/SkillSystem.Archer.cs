@@ -253,7 +253,7 @@ public partial class SkillSystem
         float tick = 0.8f * Power("a_wire");
         SkillWire.Spawn(new Vector3(x0, floor + 0.12f, 0f), new Vector3(x1, floor + 0.12f, 0f), seconds,
                         e => Damage(e, tick, Facing, false));
-        Sfx.Play("ui_click", 1f, 2f);
+        Sfx.Play("fx_bell");
         Vfx.Play("p_thunder_hit", new Vector3((x0 + x1) * 0.5f, floor + 0.3f, 0f), 1f);
         Vfx.Play("a_wire_fx", new Vector3((x0 + x1) * 0.5f, floor + 0.5f, 0f), 1f, flipX: Facing < 0f);
         yield return new WaitForSeconds(0.2f);
@@ -267,7 +267,7 @@ public partial class SkillSystem
         float floor = GroundY(new Vector2(x, Feet.y + 0.2f));
         float mult = 3f * Power("a_trap");
         SkillTrap.Spawn(new Vector3(x, floor, 0f), 20f, e => Damage(e, mult, 0f, true));
-        Sfx.Play("ui_click", 1f, 0.8f);
+        Sfx.Play("fx_trap", 0.7f);
         Vfx.Play("dust_small", new Vector3(x, floor, 0f), 0.8f);
         yield break;
     }
@@ -351,7 +351,7 @@ public partial class SkillSystem
                 Explode(p, 2.2f, 2.5f * Power("a_can"));
             };
         }
-        Sfx.Play("slam", 1f, 0.8f);
+        Sfx.Play("fx_can");
         CameraFollow.Shake(0.25f, 0.2f);
         body.TryMove(-Facing * 0.6f); // recoil
         body.skillHover = false;

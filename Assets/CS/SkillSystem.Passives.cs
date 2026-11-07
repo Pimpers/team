@@ -36,6 +36,7 @@ public partial class SkillSystem
                 {
                     stats.Heal(0.5f);
                     Vfx.Play("k_groom_fx", Head, 1f, parent: transform);
+                    Sfx.Play("fx_groom");
                     SkillFx.Burst(Vfx.Sprite("heart"), Head, 2, 1.5f, 0.7f, SkillFx.PropScale * 0.5f, -1f);
                     DamagePopup.SpawnLabel(Head, Loc.T("skill.groom"), new Color(1f, 0.7f, 0.85f));
                 }

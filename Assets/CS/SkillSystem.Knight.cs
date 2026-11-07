@@ -169,7 +169,7 @@ public partial class SkillSystem
     IEnumerator Hiss()
     {
         body.skillLock = true;
-        Sfx.Play("boss_roar", 0.6f, 1.9f);
+        Sfx.Play("fx_hiss");
         Vfx.Play("k_hiss_fx", Me + Vector3.up * 0.3f, 1f);
         Vfx.Play("ring_big", Me, 1f, tint: new Color(1f, 0.95f, 0.85f));
         Vfx.Play("dust_side", Feet, 1f); Vfx.Play("dust_side", Feet, 1f, flipX: true); // the pressure kicks dust out both ways

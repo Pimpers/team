@@ -71,7 +71,7 @@ public class SkillWire : MonoBehaviour
             e.Stun(0.25f, null);
             any = true;
         }
-        if (any) Sfx.Play("ui_click", 0.8f, 2.2f); // the bells jingle
+        if (any) Sfx.Play("fx_bell", 0.8f); // the bells jingle
     }
 }
 
@@ -129,7 +129,7 @@ public class SkillTrap : MonoBehaviour
             if (e.IsDead || Mathf.Abs(e.BodyX - p.x) > e.BodyHalfWidth + 0.35f || Mathf.Abs(e.transform.position.y - p.y) > 0.9f) continue;
             Vfx.Play("trap_snap", p + Vector2.up * 0.2f, 1f);
             SkillFx.Burst(Vfx.Sprite("spark_mid1", 2), p, 6, 3f, 0.5f, 0.4f, 6f, new Color(1f, 0.9f, 0.4f));
-            Sfx.Play("slam", 0.9f, 1.6f);
+            Sfx.Play("fx_trap");
             onSnap?.Invoke(e);
             e.Stun(2.5f);
             Destroy(gameObject);
@@ -160,7 +160,7 @@ public class SkillChuru : MonoBehaviour
         c.loopFx = Vfx.Loop("lure", floor + Vector3.up * 0.6f, seconds, 1f);
         Vfx.Play("charm", floor + Vector3.up * 0.6f, 1f); // the churu landing with a pop (32 px at x1: the cats' pixel, as big as the old 64 at x0.5)
         Vfx.Play("smoke", floor + Vector3.up * 0.3f, 0.5f);
-        Sfx.Play("card_pick", 0.8f, 1.8f);
+        Sfx.Play("fx_churu");
     }
 
     void Update()

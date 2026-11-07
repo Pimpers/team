@@ -46,6 +46,18 @@ public class AudioLevelTests
             clip.GetData(data, 0);
             float rms = SynthSfx.Rms(data), peak = SynthSfx.Peak(data), playedDb = Db(rms * volume);
             Debug.Log($"[AudioLevels] {id}: RMS {Db(rms):0.0} dBFS, peak {Db(peak):0.0} dBFS, volume {volume}, as played {playedDb:0.0} dBFS ({playedDb - meanPlayedDb:+0.0;-0.0} dB from the mean)");
+            // the shape over time: RMS of ten equal slices, as a bar per slice (0-9), e.g. a hit is "96421...."
+            var shape = new System.Text.StringBuilder();
+            int slice = Mathf.Max(1, data.Length / 10);
+            for (int s = 0; s < 10; s++)
+            {
+                var part = new float[Mathf.Min(slice, data.Length - s * slice)];
+                if (part.Length <= 0) { shape.Append('.'); continue; }
+                System.Array.Copy(data, s * slice, part, 0, part.Length);
+                int level = Mathf.Clamp(Mathf.RoundToInt(SynthSfx.Rms(part) / SynthSfx.PeakLimit * 30f), 0, 9);
+                shape.Append(level == 0 ? '.' : (char)('0' + level));
+            }
+            Debug.Log($"[AudioLevels] {id}: {data.Length / (float)clip.frequency:0.00} s, shape {shape}");
             if (Mathf.Abs(playedDb - meanPlayedDb) > 3f) off.Add($"{id}: {playedDb - meanPlayedDb:+0.0;-0.0} dB");
             if (peak > SynthSfx.PeakLimit + 1e-4f) off.Add($"{id}: peak {Db(peak):0.0} dBFS over -1");
             Object.DestroyImmediate(clip);
