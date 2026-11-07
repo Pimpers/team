@@ -94,7 +94,7 @@ public class SkillTrap : MonoBehaviour
         var sprite = Vfx.Sprite("a_trap_fx");
         var go = new GameObject("StickyTrap");
         go.transform.position = floor; // the trap sprite's pivot is the bottom of its drawing
-        go.transform.localScale = Vector3.one; // 32 px trap drawn at the cats' pixel size
+        go.transform.localScale = Vector3.one; // 48 px trap drawn at the cats' pixel size
         var t = go.AddComponent<SkillTrap>();
         t.life = seconds;
         t.onSnap = onSnap;
@@ -158,7 +158,7 @@ public class SkillChuru : MonoBehaviour
         var c = go.AddComponent<SkillChuru>();
         c.life = seconds;
         c.loopFx = Vfx.Loop("lure", floor + Vector3.up * 0.6f, seconds, 1f);
-        Vfx.Play("charm", floor + Vector3.up * 0.6f, 0.5f); // a pink burst so the bait is seen landing (1.4 drew at x1: twice the cat)
+        Vfx.Play("charm", floor + Vector3.up * 0.6f, 1f); // the churu landing with a pop (32 px at x1: the cats' pixel, as big as the old 64 at x0.5)
         Vfx.Play("smoke", floor + Vector3.up * 0.3f, 0.5f);
         Sfx.Play("card_pick", 0.8f, 1.8f);
     }

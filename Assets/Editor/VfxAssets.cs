@@ -33,7 +33,7 @@ public static class VfxAssets
     }
 
     // Bump when the effect set changes, so an open project rebuilds the library by itself.
-    const int LibraryVersion = 18;
+    const int LibraryVersion = 22;
     const float CatPixelsPerUnit = 12.5f; // the cats: 100 px/unit drawn at x8
 
     static Def BD(string id, float fps, Pivot pivot = Pivot.Center, float scale = 1f, int order = 7, bool turns = false,
@@ -76,30 +76,30 @@ public static class VfxAssets
         BD("combo_slash1", 16f, scale: 1f, folder: "Combo", cell: 32), BD("combo_slash2", 16f, scale: 1f, folder: "Combo", cell: 32), BD("combo_slash3", 16f, scale: 1f, folder: "Combo", cell: 32),
         // Archer skills (Assets/Effects/Archer: one drawn effect each, flash then fade; the fish / yarn / churu / can
         // cells are also the projectile sprites, the trap cell the trap on the floor).
-        BD("a_jelly_fx", 16f, scale: 1f, folder: "Archer", cell: 64), BD("a_smile_fx", 12f, scale: 1f, folder: "Archer", cell: 64),
-        BD("a_catnip_fx", 16f, scale: 1f, folder: "Archer", cell: 32), BD("a_meteor_fx", 12f, scale: 1f, folder: "Archer", cell: 64),
-        BD("a_rapid_fx", 22f, scale: 1f, folder: "Archer", cell: 32), BD("a_backstep_fx", 22f, scale: 1f, folder: "Archer", cell: 32),
-        BD("a_wire_fx", 14f, scale: 1f, folder: "Archer", cell: 32), BD("a_fish_fx", 16f, scale: 1f, folder: "Archer", cell: 32),
+        BD("a_jelly_fx", 16f, scale: 1f, folder: "Archer", cell: 64), BD("a_smile_fx", 12f, scale: 1f, folder: "Archer", cell: 64), // a_jelly_fx: Aether (기폭 젤리)
+        BD("a_catnip_fx", 16f, scale: 1f, folder: "Archer", cell: 48), BD("a_meteor_fx", 12f, scale: 1f, folder: "Archer", cell: 64), // a_catnip_fx: Aether (캣닙)
+        BD("a_rapid_fx", 22f, scale: 1f, folder: "Archer", cell: 64), BD("a_backstep_fx", 22f, scale: 1f, folder: "Archer", cell: 32), // a_rapid_fx: Aether (연속 사격)
+        BD("a_wire_fx", 14f, scale: 1f, folder: "Archer", cell: 48), BD("a_fish_fx", 16f, scale: 1f, folder: "Archer", cell: 48), // both Aether (방울 와이어, 생선가시), 9 frames (48: the long shapes needed it to read)
         // Sprite Fusion (generated on the owner's account): the fishbone arrow, 16 px at the cats' pixel size.
         BD("sf_fishbone", 8f, scale: 1f, folder: "SpriteFusion", cell: 16),
-        BD("a_trap_fx", 16f, Pivot.Ground, scale: 1f, folder: "Archer", cell: 32), BD("a_churu_fx", 16f, scale: 1f, folder: "Archer", cell: 32),
-        BD("a_curve_fx", 16f, scale: 1f, folder: "Archer", cell: 32), BD("a_watch_fx", 12f, Pivot.Ground, scale: 1f, folder: "Archer", cell: 32),
+        BD("a_trap_fx", 16f, Pivot.Ground, scale: 1f, folder: "Archer", cell: 48), BD("a_churu_fx", 16f, scale: 1f, folder: "Archer", cell: 32), // a_trap_fx: Aether (쥐덫 끈끈이)
+        BD("a_curve_fx", 16f, scale: 1f, folder: "Archer", cell: 32), BD("a_watch_fx", 12f, Pivot.Ground, scale: 1f, folder: "Archer", cell: 48), // a_watch_fx: Aether (캣타워 관측)
         BD("a_wind_fx", 16f, scale: 1f, turns: true, folder: "Archer", cell: 32), BD("a_homing_fx", 16f, scale: 1f, folder: "Archer", cell: 32),
-        BD("a_can_fx", 16f, scale: 1f, folder: "Archer", cell: 64),
+        BD("a_can_fx", 16f, scale: 1f, folder: "Archer", cell: 64), // Aether (캔따개), 3 frames
         // Knight skills (Assets/Effects/Knight: one drawn effect each, flash then fade; the wheel ring spins).
         BD("k_highcut_fx", 24f, scale: 1f, folder: "Knight", cell: 32), BD("k_knead_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_tower_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 64), BD("k_loaf_fx", 14f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_tower_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 64), BD("k_loaf_fx", 14f, scale: 1f, folder: "Knight", cell: 32), // k_loaf_fx: Aether (식빵 자세)
         BD("k_groom_fx", 14f, scale: 1f, folder: "Knight", cell: 32), BD("k_ilseom_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_rush_fx", 16f, scale: 1f, folder: "Knight", cell: 32), BD("k_leap_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_wheel_fx", 20f, scale: 1f, folder: "Knight", cell: 64), BD("k_paw_fx", 22f, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_hiss_fx", 12f, scale: 1f, folder: "Knight", cell: 64), BD("k_night_fx", 12f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_hiss_fx", 12f, scale: 1f, folder: "Knight", cell: 64), BD("k_night_fx", 12f, scale: 1f, folder: "Knight", cell: 32), // both Aether (하악질, 야간 시야)
         BD("k_tail_fx", 16f, scale: 1f, folder: "Knight", cell: 64), BD("k_whisker_fx", 20f, scale: 1f, folder: "Knight", cell: 32),
         BD("slash", 30f),
         BD("slash_gold", 30f),
         BD("xcut", 24f),
         BD("heal", 16f, Pivot.Ground, scale: 1f, folder: "RetroDiffusion", cell: 48, file: "rd_heal"),
         BD("rupture", 26f, Pivot.Ground),
-        BD("explosion", 20f, scale: 1f),
+        BD("explosion", 20f, scale: 1f), // Aether (폭발)
         BD("parry", 26f),
         BD("blink", 22f, scale: 1f, folder: "Custom", cell: 32, file: "fx_blink"),  // pxl: the whisker counter's teleport poof
         // pxl: hit flashes (replace the soft pulse_* glows), the cat's hurt flash and two widening rings
@@ -113,16 +113,16 @@ public static class VfxAssets
         BD("poison_hit", 22f),
         BD("poison_loop", 14f, scale: 1f, folder: "Custom", cell: 24, file: "status_poison"), // generate_status_fx.ps1
         BD("zap", 22f, scale: 1f, folder: "Custom", cell: 32, file: "fx_zap"),      // pxl: electric hit spark
-        BD("trap_snap", 24f),
-        BD("lure", 16f),
+        BD("trap_snap", 24f, Pivot.Ground, cell: 48), // Aether (쥐덫)
+        BD("lure", 16f, cell: 48), // Aether (츄르 유인)
         BD("wind", 22f, turns: true),
         BD("land_dust", 22f, Pivot.Ground),
         BD("tower_slam", 22f, Pivot.Ground, scale: 1f),
         BD("beam", 18f, scale: 1f, turns: true),
-        BD("beam_end", 22f),
+        BD("beam_end", 22f, cell: 48), // Aether (캔따개 명중)
         BD("stun", 12f, scale: 1f, order: 8, folder: "Custom", cell: 24, file: "status_stun"), // generate_status_fx.ps1
         BD("hiss_wave", 26f, scale: 1f),
-        BD("charm", 20f, scale: 1f),
+        BD("charm", 20f, scale: 1f, cell: 32), // Aether (츄르 착지)
         BD("aura_hit", 20f),
         BD("yarn_hit", 26f),
         BD("smoke", 22f),
