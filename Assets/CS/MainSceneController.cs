@@ -48,6 +48,11 @@ public class MainSceneController : MonoBehaviour
         int index = Mathf.Clamp(CharacterSelection.SelectedIndex, 0, characters.Length - 1);
         def = characters[index];
         string name = CharacterSelection.SelectedName;
+        // A cat never named in the lounge has no name of its own: its usual name (tagName, 하양이 / 치즈) fills the
+        // plate - an empty wooden plate beside the portrait read as unfinished UI. Nothing at all: no plate.
+        if (string.IsNullOrEmpty(name)) name = def.tagName;
+        if (string.IsNullOrEmpty(name) && profileName != null && profileName.transform.parent != null)
+            profileName.transform.parent.gameObject.SetActive(false);
         if (nameTag != null) nameTag.text = name;
         if (profileName != null) { profileName.text = name; FitNamePill(profileName); }
         if (portrait != null) portrait.sprite = def.idleFrames[0];

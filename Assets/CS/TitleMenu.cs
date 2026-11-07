@@ -29,6 +29,10 @@ public static class TitleMenu
         var font = label != null ? label.font : null;
         // The menu reads as a menu next to the big logo: body-size (36) labels rather than 24.
         if (label != null) { label.enableAutoSizing = false; label.fontSize = UiTheme.TextLarge; }
+        // The decorated board the result and credits panels use, in place of the plain wood plank (it read as a
+        // placeholder under the logo). Before the clones, so all three buttons carry it.
+        var plank = quit.GetComponent<Image>();
+        if (plank != null && BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(plank, "UIBundle/MedievalBoard", 3f);
         Clone(rt, "CreditsButton", Loc.T("credits.title"), 1).onClick.AddListener(() => CreditsPanel.Show(canvas, font));
         Clone(rt, "SettingsButton", Loc.T("harbor.settings"), 2).onClick.AddListener(() => TitleSettings.Show(canvas, font));
         // Gamepad: the full-screen "click anywhere" button starts selected, so A starts the game.

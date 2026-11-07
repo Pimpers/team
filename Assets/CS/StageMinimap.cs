@@ -34,7 +34,8 @@ public class StageMinimap : MonoBehaviour
     RectTransform playerMarker;
     RectTransform exitMarker;
     Image exitImage;
-    static Color ExitColor => UiTheme.ExitMark;
+    // Cyan, not the shared green: green read as the grass edge on this small map (색약 모드 keeps its own colour).
+    static Color ExitColor => GameSettings.Colorblind ? UiTheme.ExitMark : new Color(0.35f, 0.9f, 1f);
     RectTransform[] viewEdges;
     RawImage mapImage;
     Texture2D mapTexture;
@@ -181,7 +182,7 @@ public class StageMinimap : MonoBehaviour
             if (enemy == null || known.Contains(enemy)) continue;
             known.Add(enemy);
             bool boss = enemy.isBoss;
-            enemies.Add((enemy, Marker(boss ? "Boss" : "Monster", boss ? BossColor : EnemyColor, Vector2.one * (boss ? 11f : 8f))));
+            enemies.Add((enemy, Marker(boss ? "Boss" : "Monster", boss ? BossColor : EnemyColor, Vector2.one * (boss ? 11f : 6f))));
             added = true;
         }
         if (added && playerMarker != null) playerMarker.SetAsLastSibling(); // the player dot stays on top
@@ -198,7 +199,8 @@ public class StageMinimap : MonoBehaviour
         }
     }
 
-    // One texel per tile: ground (grass-coloured where open sky is above), platforms, sky.
+    // One texel per tile: ground (grass-coloured where open sky is above), platforms, sky. A platform also paints the
+    // empty tile under it: one texel thick it was a hairline at the small scales wide maps get.
     Texture2D DrawMap()
     {
         int w = map.mapSize.x, h = map.mapSize.y;
@@ -211,7 +213,7 @@ public class StageMinimap : MonoBehaviour
                 Color32 col = Sky;
                 if (map.IsSolid(c))
                     col = y + 1 < h && !map.IsSolid(c + Vector2.up) ? GroundTop : Ground;
-                else if (map.IsPlatform(c))
+                else if (map.IsPlatform(c) || (y + 1 < h && map.IsPlatform(c + Vector2.up) && !map.IsSolid(c)))
                     col = Platform;
                 px[y * w + x] = col;
             }

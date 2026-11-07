@@ -13,10 +13,12 @@ public class DashBar : MonoBehaviour
     // Bigger than the first version (40 x 20): a dash is the main dodge, its charges must read at a glance mid-fight.
     const float BarW = 72f, BarH = 36f, Gap = 8f, Pad = 8f; // inside the plate's wood rim (5 art pixels at 2 units each)
     static readonly Color Ready = new Color(1f, 0.8f, 0.22f), Shine = new Color(1f, 0.95f, 0.7f),
-                          Charging = new Color(0.45f, 0.78f, 1f), Slot = new Color(0.13f, 0.09f, 0.11f, 0.95f);
+                          Charging = new Color(0.45f, 0.78f, 1f), Slot = new Color(0.13f, 0.09f, 0.11f, 0.95f),
+                          ReadyShade = new Color(0.78f, 0.52f, 0.12f); // three tones on a ready bar: shine, gold, shade
 
     readonly List<Image> fills = new List<Image>();
     readonly List<Image> shines = new List<Image>();
+    readonly List<Image> shades = new List<Image>(); // the third tone: a darker gold strip along a ready bar's bottom
     readonly List<RectTransform> bars = new List<RectTransform>();
     PlayerController2D body;
     TMP_Text label;
@@ -77,6 +79,7 @@ public class DashBar : MonoBehaviour
         bars.Clear();
         fills.Clear();
         shines.Clear();
+        shades.Clear();
         for (int i = 0; i < count; i++)
         {
             // Wood frame (the HUD plates' sprite), a dark slot, the fill, and the shine stripe on top of it.
@@ -100,6 +103,9 @@ public class DashBar : MonoBehaviour
             bars.Add(rt);
             fills.Add(fill);
             shines.Add(shine);
+            var shade = MakeImage("Shade", rt, ReadyShade);
+            Inset(shade.rectTransform, Pad, Pad, Pad, BarH - Pad - 4f);
+            shades.Add(shade);
         }
 
         if (label == null)
@@ -120,6 +126,7 @@ public class DashBar : MonoBehaviour
             lrt.anchorMin = lrt.anchorMax = new Vector2(0f, 1f);
             lrt.pivot = new Vector2(0f, 1f);
             lrt.sizeDelta = new Vector2(420f, BarH); // "대시 · 우클릭   Tab 능력치" (also the Tab sheet's pointer)
+            UiTheme.Backdrop(label);
         }
         label.rectTransform.anchoredPosition = new Vector2(count * (BarW + Gap) + 10f, 0f); // room for both Korean glyphs
         lastLeft = -1;
@@ -144,6 +151,7 @@ public class DashBar : MonoBehaviour
             if (ready && i == flashIndex && flash > 0f) c = Color.Lerp(c, Color.white, flash / 0.25f);
             fills[i].color = c;
             shines[i].enabled = ready; // only a full, ready bar gets the shine
+            shades[i].enabled = ready;
         }
     }
 }
