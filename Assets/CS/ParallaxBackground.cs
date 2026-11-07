@@ -56,18 +56,38 @@ public class ParallaxBackground : MonoBehaviour
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = layer.sprite;
                 sr.sortingOrder = layer.sortingOrder;
+                // Tint, not the muting shader: with the shader (lit material swapped for an unlit one) these layers
+                // came out pale cream instead of the stage's red-brown haze - twice, cause not found yet.
                 sr.color = layer.tint * FarMute;
             }
             roots[i] = root;
         }
         foreach (var t in FindObjectsByType<UnityEngine.Tilemaps.Tilemap>()) t.color *= TileMute;
+        // The stage's trees and bushes (props named cute_tree, corrupt_bush...) sit back with the far layers.
+        var mat = Muted();
+        if (mat != null)
+            foreach (var r in FindObjectsByType<SpriteRenderer>())
+                if (r.name.EndsWith("_tree") || r.name.EndsWith("_bush")) r.sharedMaterial = mat;
         LateUpdate();
     }
 
-    // Fight readability, by tint only (the PNGs and materials stay): the far layers darker, with red cut most so the
-    // warm forest also loses colour; the tilemaps (ground, platforms) a touch darker and less purple / lime.
+    // Fight readability, the PNGs untouched: the trees / bushes 35% less saturated (lerped toward their grey by the
+    // CatsSmash/SpriteMuted shader) and a little darker; the far layers by a cool dark tint (red cut most); the
+    // tilemaps a touch darker by tint.
+    const float MuteSaturation = 0.65f, MuteBrightness = 0.85f;
     static readonly Color FarMute = new Color(0.58f, 0.66f, 0.74f, 1f);
     static readonly Color TileMute = new Color(0.9f, 0.86f, 0.92f, 1f);
+    static Material muted;
+    static Material Muted()
+    {
+        if (muted != null) return muted;
+        var shader = Shader.Find("CatsSmash/SpriteMuted");
+        if (shader == null) return null;
+        muted = new Material(shader) { name = "SpriteMuted" };
+        muted.SetFloat("_Saturation", MuteSaturation);
+        muted.SetFloat("_Brightness", MuteBrightness);
+        return muted;
+    }
 
     void LateUpdate()
     {
