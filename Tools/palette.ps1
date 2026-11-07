@@ -4,7 +4,9 @@
 # Build: up to 24 colours by median cut over the UI wood and cream (panels, name plates) and the two cats' idle frames,
 # plus 24 over the Aether skill effects - the UI and the cats have no greens, blues or pinks, and the effects
 # recoloured to brown only would lose what they are. Apply keeps alpha; originals go to _art_backup/palette_20261108.
-param([switch]$Build, [string[]]$Apply = @(), [switch]$Restore, [double]$MaxShift = 14)
+param([switch]$Build, [string[]]$Apply = @(), [switch]$Restore, [double]$MaxShift = 14,
+  # colours added by hand after the cut, where a picture's own key colours were too far from it (catnip, blast, bear)
+  [string[]]$AddColours = @("85d527", "4e8415", "fdeb7b", "ec6309", "ba6834"))
 $Apply = @($Apply | ForEach-Object { $_ -split ',' } | Where-Object { $_ })
 $repo = Resolve-Path (Join-Path $PSScriptRoot '..')
 $out = Join-Path $repo 'Tools\palette.png'
@@ -58,7 +60,7 @@ if ($Build) {
   $fxFiles = $fx | ForEach-Object { Get-ChildItem (Join-Path $repo 'Assets\Effects') -Recurse -Filter "$_.png" | Select-Object -First 1 -ExpandProperty FullName }
   $base = [Pal]::Cut([Pal]::Collect([string[]]$ui, 1), 24)
   $extra = [Pal]::Cut([Pal]::Collect([string[]]$fxFiles, 1), 24)
-  $pal = @($base) + @($extra) | Select-Object -Unique
+  $pal = @($base) + @($extra) + @($AddColours | ForEach-Object { [Convert]::ToInt32($_, 16) }) | Select-Object -Unique
   $img = [Drawing.Bitmap]::new(64, 8 * [Math]::Ceiling($pal.Count / 8)); $g = [Drawing.Graphics]::FromImage($img)
   for ($i = 0; $i -lt $pal.Count; $i++) { $g.FillRectangle([Drawing.SolidBrush]::new([Drawing.Color]::FromArgb(255, ($pal[$i] -shr 16) -band 255, ($pal[$i] -shr 8) -band 255, $pal[$i] -band 255)), ($i % 8) * 8, [Math]::Floor($i / 8) * 8, 8, 8) }
   $img.Save($out); "palette $($pal.Count) colours ($($base.Count) UI/cat + $($extra.Count) effects) from $($ui.Count) UI/cat files -> $out"
