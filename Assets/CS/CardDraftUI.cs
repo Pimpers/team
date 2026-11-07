@@ -335,6 +335,12 @@ public class CardDraftUI : MonoBehaviour
         ("#1d3557", "#2f5d8a", new Color32(0x1f, 0x2a, 0x3d, 0xff), new Color32(0x1d, 0x35, 0x57, 0xff)),
         ("#3d1f63", "#6a3fa0", new Color32(0x2b, 0x1d, 0x40, 0xff), new Color32(0x3d, 0x1f, 0x63, 0xff)),
     };
+    // Picture-window wash per set tag (CardPool.Tag order: Claw, Wind, Fur, Hunt, Treat).
+    static readonly Color[] TagWash =
+    {
+        new Color(0.85f, 0.3f, 0.25f, 0.18f), new Color(0.35f, 0.75f, 0.85f, 0.18f), new Color(0.95f, 0.8f, 0.45f, 0.2f),
+        new Color(0.4f, 0.7f, 0.3f, 0.18f), new Color(0.95f, 0.5f, 0.7f, 0.18f),
+    };
     static readonly string[] ArtNames = { "card_common", "card_rare", "card_epic" };
     static readonly string[] BackNames = { "back_common", "back_rare", "back_epic" };
     static Sprite[] arts, backs;
@@ -368,7 +374,14 @@ public class CardDraftUI : MonoBehaviour
             bg.color = Color.white;
         }
 
+        // The picture window's own tint by the card's first set tag, so two cards of one grade don't share one window
+        // (a light wash over the art; no tag, no wash).
+        var wash = Child<Image>(button, "CardTagWash", PicturePos, PictureSize * 0.9f);
+        var tags = CardPool.TagsOf(card.id);
+        wash.color = tags.Length > 0 ? TagWash[(int)tags[0]] : Color.clear;
+        wash.raycastTarget = false;
         var picture = Child<Image>(button, "CardPicture", PicturePos, PictureSize);
+        wash.transform.SetSiblingIndex(picture.transform.GetSiblingIndex()); // under the picture
         var frames = !string.IsNullOrEmpty(card.icon) ? Vfx.Frames(card.icon) : null;
         picture.sprite = card.Art != null ? card.Art : frames == null ? null : frames[frames.Length == 1 ? 0 : frames.Length * 2 / 5];
         picture.enabled = picture.sprite != null;
@@ -384,13 +397,13 @@ public class CardDraftUI : MonoBehaviour
         tier.text = CardPool.TierNames[t];
         tier.fontSize = UISkin.FontBody;
         tier.alignment = TextAlignmentOptions.Center;
-        tier.color = Inks[t].medallion;
+        // Cream on a dark 1 px outline: the grade's own ink sank into the medallion's engraving (and TMP's outline
+        // draws nothing with the pixel font).
+        tier.color = UiTheme.Cream;
         tier.raycastTarget = false;
         tier.textWrappingMode = TextWrappingModes.NoWrap;
-        // A light rim, so the grade reads over the medallion's own engraving instead of sinking into it.
-        tier.outlineWidth = 0.22f;
-        tier.outlineColor = new Color32(0xf6, 0xea, 0xc8, 0xff);
         tier.fontStyle = FontStyles.Bold;
+        UiTheme.Outline(tier);
 
         // (Tags used to be their own label between the picture and the text box: it ran over the frame and, on the
         // blue card, the name. They are a line of the card text now - see CardText.)
