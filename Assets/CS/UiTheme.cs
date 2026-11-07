@@ -16,6 +16,14 @@ public static class UiTheme
     public static readonly Color Wood = new Color(0.45f, 0.3f, 0.18f);        // fallback when a panel sprite is missing
     public static readonly Color Wine = new Color(0.62f, 0.16f, 0.22f, 1f);   // buy buttons, role badges
     public static readonly Color Plate = new Color(0.07f, 0.05f, 0.08f, 0.88f); // dark plate behind world labels
+    public static readonly Color TextBand = new Color(0.06f, 0.04f, 0.05f, 0.55f); // band under text on the picture
+
+    // The shared style for text that sits straight on the game picture: a translucent dark band behind it.
+    public static void Backdrop(TMPro.TMP_Text text) => TextBackdrop.Attach(text, TextBand, new Vector2(12f, 4f));
+
+    // A 1 px dark outline for a short label (the pixel font has no SDF outline): four dark copies a pixel out.
+    public static readonly Color OutlineInk = new Color(0.1f, 0.06f, 0.05f, 1f);
+    public static void Outline(TMPro.TMP_Text text, float pixel = 2f) => TextOutline.Attach(text, OutlineInk, pixel);
 
     // ---- Rich-text colours (<color=#...>), also reachable from the text table as $name (Loc expands them).
     static readonly Dictionary<string, string> Hex = new Dictionary<string, string>

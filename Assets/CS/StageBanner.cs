@@ -58,6 +58,7 @@ public static class StageBanner
             sub.rectTransform.sizeDelta = compact ? new Vector2(big ? 900f : 520f, big ? 50f : 38f) : new Vector2(900f, 60f);
             sub.outlineWidth = 0.2f;
             sub.outlineColor = new Color32(40, 20, 10, 255);
+            UiTheme.Backdrop(sub); // the effect line sits on the fight picture: the shared dark band under it
         }
 
         var fade = go.AddComponent<FadeBanner>();

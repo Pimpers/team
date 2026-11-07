@@ -18,6 +18,7 @@ public class BlinkingText : MonoBehaviour
         minAlpha = Mathf.Max(minAlpha, 0.6f);
         text.outlineWidth = 0.22f;
         text.outlineColor = new Color32(30, 22, 16, 255);
+        UiTheme.Backdrop(text); // (the outline does not draw with the pixel font: the band does the job)
     }
 
     void Update()
