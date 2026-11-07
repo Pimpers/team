@@ -91,6 +91,11 @@ public static class ScreenCaptureTool
         // 큰 글씨 + 색약 모드 (last: the settings stay on): the stage reloaded with both, the Tab sheet held open.
         Add("Stage2", "result_win", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<ResultUI>().Show(true, 48, 1); });
         Add("WorldMapScene", "worldmap_corruption", () => { GameSave.Data.corruptionUnlocked = 2; Corruption.Level = 1; Find<CorruptionSelector>().Refresh(); });
+        // Skill effects at their middle frame beside the cat, in their in-game size: the Aether sheets, then the
+        // older Knight / Pimen ones to judge their palette against.
+        Add("Stage2", "fx_aether1", () => FxRow("a_trap_fx", "a_wire_fx", "a_fish_fx", "k_loaf_fx", "lure", "k_night_fx", "k_hiss_fx", "a_catnip_fx"));
+        Add("Stage2", "fx_aether2", () => FxRow("charm", "a_jelly_fx", "trap_snap", "a_watch_fx", "a_can_fx", "beam_end", "a_rapid_fx", "explosion"));
+        Add("Stage2", "fx_compare", () => FxRow("k_tower_fx", "a_smile_fx", "a_meteor_fx", "a_backstep_fx", "a_churu_fx", "a_curve_fx", "k_hiss_fx", "a_catnip_fx"));
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
         Add("Stage1", "a11y", () =>
         {
@@ -110,6 +115,24 @@ public static class ScreenCaptureTool
         EditorSceneManager.OpenScene("Assets/Scenes/TitleScene.unity");
         EditorApplication.update += Tick;
         EditorApplication.isPlaying = true;
+    }
+
+    // Still sprites (not Vfx.Play: a one-shot is gone before the shot) in two rows of four around the player.
+    static void FxRow(params string[] ids)
+    {
+        var player = PlayerStats.Instance.transform;
+        var sr = player.GetComponentInChildren<SpriteRenderer>();
+        for (int i = 0; i < ids.Length; i++)
+        {
+            var frames = Vfx.Frames(ids[i]);
+            if (frames == null) { Debug.LogWarning($"[ScreenCapture] no effect '{ids[i]}'"); continue; }
+            var go = new GameObject("FxShot_" + ids[i]);
+            go.transform.position = player.position + new Vector3((i % 4 - 1.5f) * 2.2f, i < 4 ? 2.2f : 0f, 0f);
+            go.transform.localScale = Vector3.one * Vfx.Scale(ids[i]);
+            var r = go.AddComponent<SpriteRenderer>();
+            r.sprite = frames[frames.Length / 2];
+            if (sr != null) { r.sortingLayerID = sr.sortingLayerID; r.sortingOrder = 5000; } // over the foreground decor too
+        }
     }
 
     static void Add(string scene, string shot, Action act = null, int w = 0, int h = 0) => steps.Add(new Step { scene = scene, shot = shot, act = act, w = w, h = h });
