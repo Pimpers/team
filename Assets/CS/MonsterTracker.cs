@@ -8,7 +8,10 @@ using UnityEngine.UI;
 public class MonsterTracker : MonoBehaviour
 {
     public int showAtOrBelow = 3;
-    const float EdgeMargin = 70f;   // canvas units from the screen edge
+    const float EdgeMargin = 90f;   // canvas units from the screen edge (the whole arrow stays inside)
+    const float ArrowScale = 3f;    // whole art pixels: at x7 (77 units) it was as big as the cat's head
+    // The minimap's corner (top right, StageMinimap: at most 420 x 180 + rim and margin): arrows stay below it.
+    const float MapClearW = 470f, MapClearH = 230f;
     const int ArrowPx = 11;
 
     readonly List<RectTransform> arrows = new List<RectTransform>();
@@ -73,6 +76,7 @@ public class MonsterTracker : MonoBehaviour
                 // Push the point out to the screen-edge rectangle along its direction.
                 float k = Mathf.Min(Mathf.Abs(half.x / (dir.x == 0f ? 0.0001f : dir.x)), Mathf.Abs(half.y / (dir.y == 0f ? 0.0001f : dir.y)));
                 Vector2 pos = dir * k;
+                if (pos.x > half.x - MapClearW && pos.y > half.y - MapClearH) pos.y = half.y - MapClearH; // not over the minimap
 
                 var arrow = GetArrow(used++);
                 arrow.anchoredPosition = pos;
@@ -91,7 +95,7 @@ public class MonsterTracker : MonoBehaviour
             var rt = (RectTransform)go.transform;
             rt.SetParent(transform, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(ArrowPx * 7f, ArrowPx * 7f);
+            rt.sizeDelta = new Vector2(ArrowPx * ArrowScale, ArrowPx * ArrowScale);
             var img = go.GetComponent<Image>();
             img.sprite = arrowSprite;
             img.raycastTarget = false;
