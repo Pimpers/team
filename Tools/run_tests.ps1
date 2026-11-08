@@ -32,6 +32,9 @@ foreach ($x in 'editmode', 'playmode') {
   $xml = Join-Path $out "$x.xml"
   if (Test-Path $xml) { $r = ([xml](Get-Content $xml)).'test-run'; Write-Host "$x : $($r.result)  passed $($r.passed) / $($r.total)" }
 }
+# The result board as a real run left it (the full run's own capture at its end), beside the staged one.
+$victory = Join-Path $out 'fullrun\victory.png'
+if (Test-Path $victory) { New-Item -ItemType Directory -Force (Join-Path $project 'Screenshots') | Out-Null; Copy-Item $victory (Join-Path $project 'Screenshots\result_run.png') -Force }
 $report = Join-Path $out 'fullrun\report.json'
 if (Test-Path $report) { Write-Host "full run: $((Get-Content $report -Raw | ConvertFrom-Json).victoryScreen)" }
 Write-Host "screens: $project\Screenshots"
