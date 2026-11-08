@@ -38,6 +38,17 @@ public static class StageBanner
         rt.anchoredPosition = compact ? new Vector2(0f, 248f) : new Vector2(0f, 170f);
         rt.sizeDelta = compact ? new Vector2(540f, 112f) : new Vector2(760f, 200f);
 
+        // A dark band under the whole banner (first child, so drawn first): over a lit platform or a busy tree the
+        // ribbon's edge and the effect line lost their contrast. The banner itself stays at a fixed screen height.
+        var shade = new GameObject("Shade", typeof(RectTransform), typeof(Image));
+        var shadeRt = (RectTransform)shade.transform;
+        shadeRt.SetParent(rt, false);
+        shadeRt.anchorMin = Vector2.zero; shadeRt.anchorMax = Vector2.one;
+        shadeRt.offsetMin = new Vector2(-16f, -10f); shadeRt.offsetMax = new Vector2(16f, 6f);
+        var shadeImg = shade.GetComponent<Image>();
+        shadeImg.color = UiTheme.TextBand;
+        shadeImg.raycastTarget = false;
+
         var ribbonGo = new GameObject("Ribbon", typeof(RectTransform), typeof(Image));
         var ribbonRt = (RectTransform)ribbonGo.transform;
         ribbonRt.SetParent(rt, false);
