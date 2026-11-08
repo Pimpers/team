@@ -371,66 +371,6 @@ public class CardDraftUI : MonoBehaviour
         ("#1d3557", "#2f5d8a", new Color32(0x1f, 0x2a, 0x3d, 0xff), new Color32(0x1d, 0x35, 0x57, 0xff)),
         ("#3d1f63", "#6a3fa0", new Color32(0x2b, 0x1d, 0x40, 0xff), new Color32(0x3d, 0x1f, 0x63, 0xff)),
     };
-    // The grade's colour, dark -> light, for the icon's round plate and the window's wash (common, rare, epic).
-    static readonly Color[] TierDark = { new Color32(0x2e, 0x40, 0x1c, 0xff), new Color32(0x1c, 0x2e, 0x4e, 0xff), new Color32(0x34, 0x1e, 0x50, 0xff) };
-    static readonly Color[] TierMid = { new Color32(0x5a, 0x7a, 0x34, 0xff), new Color32(0x36, 0x5a, 0x8e, 0xff), new Color32(0x62, 0x3c, 0x92, 0xff) };
-    static readonly Color[] TierLight = { new Color32(0x86, 0xa8, 0x4e, 0xff), new Color32(0x5a, 0x86, 0xc0, 0xff), new Color32(0x8e, 0x62, 0xc0, 0xff) };
-    static Sprite[] discs;
-
-    // A pixel disc (24 px, drawn x5 in the 128 box): outline, dark lower-right rim, mid body, a light upper-left.
-    static Sprite Disc(int tier)
-    {
-        if (discs == null) discs = new Sprite[3];
-        if (discs[tier] != null) return discs[tier];
-        const int N = 26;
-        var tex = RuntimeGeneratedAssets.Texture(N, N);
-        var px = new Color[N * N];
-        var ink = new Color32(0x1a, 0x12, 0x10, 0xff);
-        float c = (N - 1) * 0.5f;
-        for (int y = 0; y < N; y++)
-            for (int x = 0; x < N; x++)
-            {
-                float dx = x - c, dy = y - c, d = Mathf.Sqrt(dx * dx + dy * dy);
-                Color col = Color.clear;
-                if (d <= c) col = ink;
-                if (d <= c - 1f) col = d > c - 3f && dx + (-dy) > 0f ? TierDark[tier] : TierMid[tier];
-                if (d <= c - 4f && dx < -2f && dy > 2f) col = TierLight[tier]; // light from the top left
-                px[y * N + x] = col;
-            }
-        tex.SetPixels(px);
-        tex.Apply();
-        return discs[tier] = RuntimeGeneratedAssets.Sprite(tex, new Vector2(0.5f, 0.5f), 100f);
-    }
-
-    // The card's set tags as small badges in the window's lower-right corner: the tag colour, a dark rim, its first
-    // letter at 24 (UI_STYLE.md minimum).
-    void Badges(RectTransform button, CardPool.Tag[] tags, TMP_FontAsset font)
-    {
-        const float S = 34f;
-        for (int i = 0; i < 2; i++)
-        {
-            var b = Child<Image>(button, "CardTagBadge" + i,
-                PicturePos + new Vector2(PictureSize.x * 0.45f - S * 0.5f - i * (S + 4f), -PictureSize.y * 0.45f + S * 0.5f), new Vector2(S, S));
-            b.raycastTarget = false;
-            bool has = i < tags.Length;
-            b.gameObject.SetActive(has);
-            if (!has) continue;
-            int tag = (int)tags[i];
-            b.color = new Color32(0x1a, 0x12, 0x10, 0xff);
-            var fill = Child<Image>((RectTransform)b.transform, "Fill", Vector2.zero, new Vector2(S - 6f, S - 6f));
-            fill.color = UiTheme.TagOnDark[tag];
-            fill.raycastTarget = false;
-            var letter = Child<TextMeshProUGUI>((RectTransform)b.transform, "Letter", Vector2.zero, new Vector2(S, S));
-            letter.font = font;
-            letter.fontSize = UiTheme.TextSmall;
-            letter.alignment = TextAlignmentOptions.Center;
-            letter.color = new Color32(0x1a, 0x12, 0x10, 0xff);
-            letter.text = CardPool.TagNames[tag].Substring(0, 1);
-            letter.raycastTarget = false;
-            b.transform.SetAsLastSibling();
-        }
-    }
-
     // Picture-window wash per set tag (CardPool.Tag order: Claw, Wind, Fur, Hunt, Treat).
     static readonly Color[] TagWash =
     {
@@ -474,27 +414,15 @@ public class CardDraftUI : MonoBehaviour
         // (a light wash over the art; no tag, no wash).
         var wash = Child<Image>(button, "CardTagWash", PicturePos, PictureSize * 0.9f);
         var tags = CardPool.TagsOf(card.id);
-        // Two styles fought in the window (the painted forest behind a pixel icon): the forest goes under an almost
-        // flat wash of the first tag's colour on the grade's dark, so the icon is the subject.
-        Color baseWash = Color.Lerp(TierDark[t], tags.Length > 0 ? (Color)UiTheme.TagOnDark[(int)tags[0]] : TierDark[t], 0.35f);
-        baseWash.a = 0.82f;
-        wash.color = baseWash;
+        wash.color = tags.Length > 0 ? TagWash[(int)tags[0]] : Color.clear;
         wash.raycastTarget = false;
-        // A round plate in the grade's colour behind the icon (3 tones, dark outline).
-        var disc = Child<Image>(button, "CardIconDisc", PicturePos, Vector2.one * IconSize * 1.06f);
-        disc.sprite = Disc(t);
-        disc.color = Color.white;
-        disc.raycastTarget = false;
-        // (the second tag's band read as a broken stripe: the tags are corner badges now)
-        var oldBand = button.Find("CardTagBand");
-        if (oldBand != null) oldBand.gameObject.SetActive(false);
+        // A second tag: its colour as a band along the window's foot (stronger than the wash, so it reads as a band).
+        var band = Child<Image>(button, "CardTagBand", PicturePos + new Vector2(0f, -PictureSize.y * 0.45f + 7f), new Vector2(PictureSize.x * 0.9f, 14f));
+        if (tags.Length > 1) { var c = TagWash[(int)tags[1]]; c.a = 0.5f; band.color = c; } else band.color = Color.clear;
+        band.raycastTarget = false;
         var picture = Child<Image>(button, "CardPicture", PicturePos, PictureSize);
-        // back to front: wash, plate, icon, then the badges (SetSiblingIndex to the picture's slot put the wash OVER it
-        // whenever the wash came first in the list, and the icon vanished)
-        wash.transform.SetAsLastSibling();
-        disc.transform.SetAsLastSibling();
-        picture.transform.SetAsLastSibling();
-        Badges(button, tags, label.font);
+        wash.transform.SetSiblingIndex(picture.transform.GetSiblingIndex()); // under the picture
+        band.transform.SetSiblingIndex(picture.transform.GetSiblingIndex());
         var frames = !string.IsNullOrEmpty(card.icon) ? Vfx.Frames(card.icon) : null;
         picture.sprite = card.Art != null ? card.Art : frames == null ? null : frames[frames.Length == 1 ? 0 : frames.Length * 2 / 5];
         picture.enabled = picture.sprite != null;
