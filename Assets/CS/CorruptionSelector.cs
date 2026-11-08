@@ -22,16 +22,16 @@ public class CorruptionSelector : MonoBehaviour
         // One strip in the top row, level with 항구: the 470 x 190 box covered the map's top-right corner once the
         // map filled the screen's width.
         rt.anchoredPosition = new Vector2(-24f, -10f);
-        rt.sizeDelta = new Vector2(660f, 86f);
+        rt.sizeDelta = new Vector2(720f, 86f); // room between the arrows and the words (they touched at 660)
         UISkin.Apply(panel.GetComponent<Image>(), skin != null ? skin.panel : null, UISkin.LargeScale);
 
         var sel = panel.AddComponent<CorruptionSelector>();
-        sel.levelText = Text(rt, "Level", "", 36f, UISkin.InkTitle, font, new Vector2(-150f, 0f), new Vector2(190f, 56f));
-        sel.descText = Text(rt, "Desc", "", 24f, UISkin.Ink, font, new Vector2(88f, 0f), new Vector2(290f, 76f));
+        sel.levelText = Text(rt, "Level", "", 36f, UISkin.InkTitle, font, new Vector2(-150f, 0f), new Vector2(180f, 56f));
+        sel.descText = Text(rt, "Desc", "", 24f, UISkin.Ink, font, new Vector2(96f, 0f), new Vector2(280f, 76f)); // UiTheme.TextSmall (24): the body size, not smaller
         sel.descText.textWrappingMode = TextWrappingModes.Normal;
         sel.descText.lineSpacing = 2f;
-        sel.prev = ArrowButton(rt, "Prev", "<", new Vector2(-288f, 0f), font, () => sel.Step(-1));
-        sel.next = ArrowButton(rt, "Next", ">", new Vector2(288f, 0f), font, () => sel.Step(1));
+        sel.prev = ArrowButton(rt, "Prev", "<", new Vector2(-318f, 0f), font, () => sel.Step(-1));
+        sel.next = ArrowButton(rt, "Next", ">", new Vector2(318f, 0f), font, () => sel.Step(1));
         sel.Refresh();
         return sel;
     }
@@ -76,7 +76,7 @@ public class CorruptionSelector : MonoBehaviour
         var rt = (RectTransform)go.transform;
         rt.SetParent(parent, false);
         rt.anchoredPosition = pos;
-        rt.sizeDelta = new Vector2(64f, 64f); // inside the vine frame
+        rt.sizeDelta = new Vector2(64f, 64f); // inside the vine frame; over the 44 px touch / pad minimum
         var skin = UISkin.Instance;
         UISkin.Apply(go.GetComponent<Image>(), skin != null ? skin.buttonWood : null, UISkin.SmallScale);
         var btn = go.AddComponent<Button>();
