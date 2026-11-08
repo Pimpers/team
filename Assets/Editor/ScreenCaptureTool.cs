@@ -139,6 +139,13 @@ public static class ScreenCaptureTool
             EditorApplication.update += near;
         }, wait: 7f);
         Add("Stage1", "fork_camera", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, wait: 0.7f); // mid-way: the camera framing both
+        // the signs against the HUD, the minimap and the banner at every shape of screen, and the fork on stages 2 and 3
+        Add("Stage1", "fork_camera_16x10", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1680, 1050, 0.7f);
+        Add("Stage1", "fork_camera_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1440, 1080, 0.7f);
+        Add("Stage1", "fork_open_16x10", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, 1680, 1050, 1f);
+        Add("Stage1", "fork_open_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, 1440, 1080, 1f);
+        Add("Stage2", "fork_stage2", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage3", _ => { }); }, wait: 1f);
+        Add("Stage3", "fork_stage3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage4", _ => { }); }, wait: 1f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier

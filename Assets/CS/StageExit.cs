@@ -250,7 +250,7 @@ public class StageExit : MonoBehaviour
             {
                 if (i == j || spots[j].x <= spots[i].x) continue;
                 float dx = spots[j].x - spots[i].x, dy = Mathf.Abs(spots[j].y - spots[i].y);
-                if (dx < 7f || dx > 10f || dy > 3f) continue;
+                if (dx < 7f || dx > 10f || dy > 3f || !Walkable(map, spots[i], spots[j])) continue;
                 float score = dy * 2f + Mathf.Abs(dx - 8f) - spots[j].x * 0.02f
                             + (PropsNear(spots[i]) ? 6f : 0f) + (PropsNear(spots[j]) ? 6f : 0f);
                 if (score < bestScore) { bestScore = score; a = spots[i]; b = spots[j]; }
@@ -261,6 +261,28 @@ public class StageExit : MonoBehaviour
         AddWay(b, -1f, "_hunt", closed); // the farther one: the harder way
         AddWay(a, -1f, "_safe", closed);
         return true;
+    }
+
+    // The cat can go from one portal to the other without a dash: walking the floor between them, any step up at most
+    // 2.5 (a single jump reaches 14.5^2 / (2 * 32) = 3.3, so with room to spare) and any gap at most 2 wide (one jump
+    // at the base speed 3 covers about 2.7). Read column by column, the highest floor near the two spots' heights.
+    static bool Walkable(StageMap map, Vector2 a, Vector2 b)
+    {
+        float lo = Mathf.Min(a.y, b.y) - 1.5f, hi = Mathf.Max(a.y, b.y) + 0.6f;
+        float last = a.y, gap = 0f;
+        for (float x = a.x; x <= b.x; x += 0.5f)
+        {
+            float floor = float.NaN;
+            for (float y = hi; y >= lo; y -= 0.25f)
+            {
+                var under = new Vector2(x, y - 0.15f);
+                if ((map.IsSolid(under) || map.IsPlatform(under)) && !map.IsSolid(new Vector2(x, y + 0.4f))) { floor = y; break; }
+            }
+            if (float.IsNaN(floor)) { gap += 0.5f; if (gap > 2f) return false; continue; }
+            if (Mathf.Abs(floor - last) > 2.5f) return false; // a step too high to jump back up (both ways)
+            last = floor; gap = 0f;
+        }
+        return Mathf.Abs(last - b.y) <= 2.5f;
     }
 
     // Big props (trees, bushes: the scene's Props) within a portal's width of the spot - a green portal in front of a
@@ -573,9 +595,9 @@ public class StageExit : MonoBehaviour
     {
         var cam = Camera.main;
         if (cam == null) return;
-        // batch captures render at 1920x1080 while the batch "screen" is tiny: the Pixel Perfect camera's size read here
-        // is not the one drawn, so the screen-edge rules only run in a real window
-        bool clamp = !Application.isBatchMode;
+        // Measured on what the camera really draws into (its pixel rect: the window, or a capture's render texture),
+        // never Screen.* - in a batch capture the "screen" is tiny while the picture is 1920x1080.
+        float W = cam.pixelWidth, H = cam.pixelHeight;
         float halfH = cam.orthographicSize, halfW = halfH * cam.aspect;
         Vector3 c = cam.transform.position;
         foreach (var w in ways)
@@ -583,8 +605,8 @@ public class StageExit : MonoBehaviour
             if (w.rim != null && w.rim.enabled && w.rims != null) w.rim.sprite = w.rims[(int)(Time.time / 0.25f) % 2]; // a slow two-colour blink
             if (w.sign == null) continue;
             var p = w.signHome;
-            if (!clamp) { w.sign.position = p; continue; }
-            p.x = Mathf.Clamp(p.x, c.x - halfW + 3.4f, c.x + halfW - 3.4f);
+            // (no sideways clamp: a portal off screen takes its sign with it - the edge arrow shows the way there; pulled in
+            // from the side it landed on the other portal's sign)
             float topY = c.y + halfH - 0.9f;
             // pushed down by the screen's top it would sit on the arch: beside the portal instead (on the side the cat
             // comes from, at the opening's height), never over it or away from it
@@ -592,19 +614,18 @@ public class StageExit : MonoBehaviour
             // the screen-fixed UI's corners (HUD top left, minimap and legend top right) are a safe area: a world sign
             // never goes under them (UI_STYLE.md)
             Vector3 sp = cam.WorldToScreenPoint(p);
-            float u = Screen.height / 1080f;
+            float u = H / 1080f;
             // the sign's own extent (icon on the left, words to the right), not just its middle
             float left = cam.WorldToScreenPoint(p - new Vector3(3.3f, 0f, 0f)).x, right = cam.WorldToScreenPoint(p + new Vector3(2.7f, 0f, 0f)).x;
-            bool inHud = left < 560f * u && sp.y > Screen.height - 360f * u;
-            bool inMap = right > Screen.width - 480f * u && sp.y > Screen.height - 260f * u;
+            bool inHud = left < 560f * u && sp.y > H - 360f * u;
+            bool inMap = right > W - 480f * u && sp.y > H - 260f * u;
             // a banner up (starter card, set bonus, stage clear) holds the top middle too while it lasts
-            bool inBanner = StageBanner.Up && right > Screen.width * 0.5f - 400f * u && left < Screen.width * 0.5f + 400f * u
-                            && sp.y > Screen.height * 0.5f + 40f * u && sp.y < Screen.height * 0.5f + 340f * u;
-            if (inHud || inMap || inBanner)
-            {
-                float below = inBanner ? Screen.height * 0.5f + 20f * u : Screen.height - (inHud ? 360f : 260f) * u - 30f * u;
-                p.y = cam.ScreenToWorldPoint(new Vector3(sp.x, below, sp.z)).y;
-            }
+            bool inBanner = StageBanner.Up && right > W * 0.5f - 400f * u && left < W * 0.5f + 400f * u
+                            && sp.y > H * 0.5f + 40f * u && sp.y < H * 0.5f + 340f * u;
+            // under the HUD, the minimap or a banner the sign stands down until the way is clear (pushed down instead it
+            // landed on its own portal); the portal's keystone - skull or sprout - still says which way it is
+            bool show = !w.shut && !(inHud || inMap || inBanner); // (the way not taken keeps its sign down)
+            if (w.sign.gameObject.activeSelf != show) w.sign.gameObject.SetActive(show);
             w.sign.position = p;
         }
     }
