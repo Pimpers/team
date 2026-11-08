@@ -43,7 +43,10 @@ public class StageExit : MonoBehaviour
         public float bumpCooldown, wordLeft;
         public TextMeshPro word;              // the closed message over it
         public Transform sign;                // the fork's sign and icon
-        public Vector3 Mouth => new Vector3(holeX - holeSide * 0.2f, floorY + 1.3f, 0f);
+        // The fork's two are portals (a standing arch, its opening's middle 1.6 up), the others logs (mouth at the cut end).
+        public bool Portal => kind == "_hunt" || kind == "_safe";
+        public float Offset => Portal ? 0f : holeSide * HoleFromCentre; // from the hole to the sprite's middle
+        public Vector3 Mouth => Portal ? new Vector3(holeX, floorY + 1.6f, 0f) : new Vector3(holeX - holeSide * 0.2f, floorY + 1.3f, 0f);
     }
 
     readonly List<Way> ways = new List<Way>();
@@ -108,7 +111,8 @@ public class StageExit : MonoBehaviour
         PlaceClosed();
     }
 
-    static Sprite Load(string kind, string state) => Resources.Load<Sprite>($"StageExit/exit_logbig{kind}_{state}");
+    static Sprite Load(string kind, string state) =>
+        Resources.Load<Sprite>(kind == "_hunt" || kind == "_safe" ? $"StageExit/exit_portal{kind}_{state}" : $"StageExit/exit_logbig{kind}_{state}");
     string PlainKind => crimson ? "_crimson" : "";
 
     // ------------------------------------------------------------------ arriving
@@ -117,7 +121,8 @@ public class StageExit : MonoBehaviour
         StageWipe.ArrivedThroughExit = false;
         // The cat waits inside a log at the start until the iris has opened, then pops out.
         var feet = body.Feet;
-        var arrive = MakeLog(feet.x - HoleFromCentre, feet.y, Load(arrivedKind, "open_0") ?? Load("", "open_0"));
+        bool portal = arrivedKind == "_hunt" || arrivedKind == "_safe"; // out of the same kind of way it went in by
+        var arrive = MakeLog(feet.x - (portal ? 0f : HoleFromCentre), feet.y, Load(arrivedKind, "open_0") ?? Load("", "open_0"));
         arrive.flipX = true; // mouth on the right, at the cat
         arrive.sortingOrder = body.Renderer.sortingOrder - 1;
         body.skillLock = true;
@@ -177,7 +182,7 @@ public class StageExit : MonoBehaviour
     Way AddWay(Vector2 spot, float holeSide, string kind, bool closed)
     {
         var w = new Way { kind = kind, holeX = spot.x, floorY = spot.y, holeSide = holeSide, hunt = kind == "_hunt" };
-        w.log = MakeLog(spot.x - holeSide * HoleFromCentre, spot.y, Load(kind, closed ? "closed" : "open_0"));
+        w.log = MakeLog(spot.x - w.Offset, spot.y, Load(kind, closed ? "closed" : "open_0"));
         w.log.flipX = holeSide > 0f;
         w.log.sortingOrder = body.Renderer.sortingOrder - 1; // the cat stays in front of it, shrinking into the swirl
         ways.Add(w);
@@ -236,7 +241,7 @@ public class StageExit : MonoBehaviour
     void MakeSign(Way w)
     {
         var root = new GameObject("ForkSign").transform;
-        root.position = new Vector3(w.holeX - w.holeSide * HoleFromCentre, w.floorY + 2.85f, 0f); // just over the log (one line, icon beside: a ledge's camera still shows it)
+        root.position = new Vector3(w.holeX - w.Offset, w.floorY + (w.Portal ? 3.45f : 2.85f), 0f); // just over the arch (one line, icon beside: a ledge's camera still shows it)
         w.sign = root;
         float scale = GameSettings.LargeText ? 1.3f : 1f;
         var icon = new GameObject("Icon").AddComponent<SpriteRenderer>();
@@ -417,9 +422,10 @@ public class StageExit : MonoBehaviour
         return best;
     }
 
-    // Room for the 4-unit log on flat floor: both ends on ground, nothing solid through its 2.5-unit height, and open
-    // sky (no ground, no ledge) up to 1.5 times that - a log jammed under the floor above reads as stuck.
-    const float Headroom = 2.5f * 1.5f;
+    // Room for the 4-unit log (or the 2.5-unit portal, 3 tall) on flat floor: both ends on ground, nothing solid through
+    // its height, and open sky (no ground, no ledge) up to 1.5 times the portal's height - jammed under the floor above
+    // it reads as stuck.
+    const float Headroom = 3f * 1.5f;
     static bool Roomy(StageMap map, Vector2 p)
     {
         for (float dx = -2f; dx <= 2.01f; dx += 0.8f)

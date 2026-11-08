@@ -218,3 +218,70 @@ sprite("firefly", { w: 10, h: 5 }, (c) => {
 })
 
 sheet("exit_preview", ["exit_log", "exit_log_crimson", "leaf_*", "firefly"], { pad: 2 })
+
+// The fork's portals (2026-11-09: the user asked for portals instead of the fork's two logs): a standing arch of
+// stone seen from the side, about twice the cat's height, its opening facing the way the cat comes.
+//   hunt - jagged black stone, thorns on top, red cracks, a skull keystone; a red/orange swirl
+//   safe - round pale stones, vines with small flowers and sprouts; a green swirl
+//   closed - dark inside, barred (chains on the hard way, vines on the easy way); open 0-3 - the swirl turning
+function portal(c, v, state, frame) {
+  const hunt = v === "hunt"
+  const out = "#141218", st = hunt ? ["#141218", "#504b5f", "#7b7081"] : ["#967c5f", "#c1b89a", "#dbcba7"]
+  const cx = 20, cy = 25
+  // the arch: an outlined oval ring on a flat stone step
+  c.ellipse(cx, cy, 18, 22, out)
+  c.ellipse(cx, cy, 17, 21, st[1])
+  // stones: the ring split into blocks with dark joints, lit from above
+  for (let a = 0; a < 360; a += hunt ? 26 : 32) {
+    const r = a * Math.PI / 180
+    for (let k = 12; k <= 21; k++) c.px(Math.round(cx + Math.cos(r) * k * 17 / 21), Math.round(cy + Math.sin(r) * k), out)
+  }
+  for (let y = cy - 21; y < cy - 8; y++) for (let x = cx - 17; x <= cx + 17; x++) {
+    const dx = (x - cx) / 17, dy = (y - cy) / 21, d = dx * dx + dy * dy
+    if (d < 1 && d > 0.78 && dy < -0.5) c.px(x, y, st[2])                         // the lit top of the stones
+  }
+  c.rect(1, 43, 38, 5, out); c.rect(2, 44, 36, 3, st[0] === out ? "#504b5f" : st[0]); c.line(2, 44, 37, 44, st[2]) // the step
+  // the opening
+  c.ellipse(cx, cy + 1, 11, 16, out)
+  c.ellipse(cx, cy + 1, 10, 15, state === "closed" ? "#141218" : "#3e1f27")
+  if (hunt) {
+    // jagged chips out of the rim, thorns along the top, glowing cracks, a skull on the keystone
+    for (const [x, y] of [[3, 20], [2, 27], [37, 18], [38, 29], [8, 8], [32, 9]]) { c.px(x, y, "_"); c.px(x + (x < cx ? 1 : -1), y + 1, out) }
+    for (const [x, h] of [[9, 3], [14, 4], [26, 4], [31, 3]]) {
+      const top = cy - Math.round(21 * Math.sqrt(Math.max(0, 1 - ((x - cx) / 17) ** 2)))
+      for (let i = 1; i <= h; i++) { c.px(x, top - i, i === h ? "#b1c3ca" : "#7b7081"); if (i < 2) { c.px(x - 1, top - i, "#7b7081"); c.px(x - 2, top - i, out) } c.px(x + 1, top - i, out) }
+      c.px(x, top - h - 1, out)
+    }
+    for (const [x, y] of [[6, 30], [7, 31], [7, 32], [8, 33], [33, 14], [34, 15], [34, 16], [35, 17]]) c.px(x, y, "#e5354e")
+    c.rect(17, 2, 7, 6, out); c.rect(18, 3, 5, 4, "#ebe3cf"); c.px(19, 4, out); c.px(21, 4, out); c.line(18, 6, 22, 6, "#c1b89a"); c.px(19, 7, "#ebe3cf"); c.px(21, 7, "#ebe3cf")
+  } else {
+    // vines climbing both sides, small flowers, a sprout on top
+    const vine = [[4, 38], [4, 35], [3, 32], [3, 29], [4, 26], [4, 23], [5, 20], [6, 17], [8, 14], [10, 11], [13, 8]]
+    for (const [x, y] of vine) { c.px(x, y, "#4e8415"); c.px(x + 1, y, "#63a019"); c.px(x + 1, y + 1, "#63a019") }
+    for (const [x, y] of vine) c.px(40 - x, y + 2, "#4e8415")
+    for (const [x, y] of [[3, 33], [5, 24], [9, 13], [36, 30], [35, 21]]) { c.px(x, y, "#85d527"); c.px(x + 1, y, "#63a019"); c.px(x, y - 1, "#85d527") }
+    const flower = (x, y, p) => { c.px(x, y - 1, p); c.px(x - 1, y, p); c.px(x + 1, y, p); c.px(x, y + 1, p); c.px(x, y, "#fbcd0d") }
+    flower(6, 28, "#f29cb0"); flower(34, 24, "#ebe3cf"); flower(12, 9, "#f29cb0")
+    c.px(20, 2, "#4e8415"); c.px(20, 1, "#4e8415"); c.rect(17, -1, 3, 2, "#85d527"); c.rect(21, -1, 3, 2, "#63a019")
+  }
+  if (state === "closed") {
+    if (hunt) for (let y = 11; y <= 38; y += 3) { c.rect(cx - 1, y, 3, 2, "#7b7081"); c.px(cx, y, "#b1c3ca"); c.px(cx, y + 2, "#504b5f") }     // a chain down the middle
+    if (hunt) for (let x = 11; x <= 29; x += 3) { c.rect(x, 25, 2, 3, "#7b7081"); c.px(x, 25, "#b1c3ca"); c.px(x + 2, 26, "#504b5f") }             // and across
+    if (!hunt) { c.line(11, 14, 29, 36, "#4e8415"); c.line(29, 14, 11, 36, "#4e8415"); c.line(12, 14, 29, 35, "#63a019"); c.line(28, 14, 11, 35, "#63a019") }
+  } else {
+    const sw = hunt ? ["#e5354e", "#fbcd0d", "#ec6309", "#f3a15e"] : ["#63a019", "#c3d971", "#85d527", "#ebe3cf"]
+    const ring = (rx, ry, n, dir, len, col, head) => {
+      for (let s = 0; s < n; s++) for (let i = 0; i < len; i++) {
+        const a = dir * frame * Math.PI / 6 + s * 2 * Math.PI / n + i * 0.16
+        c.px(Math.round(cx + Math.cos(a) * rx), Math.round(cy + 1 + Math.sin(a) * ry), i < 2 ? head : col)
+      }
+    }
+    ring(8, 12, 3, 1, 7, sw[0], sw[1])
+    ring(4, 7, 3, -1, 6, sw[2], sw[3])
+    ring(1, 3, 2, 1, 4, sw[2], sw[3])
+  }
+}
+for (const v of ["hunt", "safe"]) {
+  sprite(`exit_portal_${v}_closed`, { w: 40, h: 48, pivot: "bottom" }, (c) => portal(c, v, "closed", 0))
+  for (let f = 0; f < 4; f++) sprite(`exit_portal_${v}_open_${f}`, { w: 40, h: 48, pivot: "bottom" }, (c) => portal(c, v, "open", f))
+}

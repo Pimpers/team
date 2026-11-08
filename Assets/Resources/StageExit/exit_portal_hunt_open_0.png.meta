@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 43723546d299e5d4b9d2007d8b9c6769
+guid: a5b84121a1cc16c4984b280afdff6a4d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4816699442170268871
-    second: exit_logbig_safe_open_2_0
+      213: -3224942905600181185
+    second: exit_portal_hunt_open_0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: exit_logbig_safe_open_2_0
+      name: exit_portal_hunt_open_0_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 40
+        width: 40
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9337e979065a72db0800000000000000
-      internalID: -4816699442170268871
+      spriteID: f3cf8ca8383be33d0800000000000000
+      internalID: -3224942905600181185
       vertices: []
       indices: 
       edges: []

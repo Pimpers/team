@@ -19,7 +19,7 @@ public class StageExitImport : AssetPostprocessor
 
     static bool Configure(TextureImporter ti, string path)
     {
-        bool log = System.IO.Path.GetFileNameWithoutExtension(path).StartsWith("exit_log");
+        bool log = System.IO.Path.GetFileNameWithoutExtension(path).StartsWith("exit_log") || System.IO.Path.GetFileNameWithoutExtension(path).StartsWith("exit_portal"); // stand on the floor
         var s = new TextureImporterSettings();
         ti.ReadTextureSettings(s);
         int align = (int)(log ? SpriteAlignment.BottomCenter : SpriteAlignment.Center);
