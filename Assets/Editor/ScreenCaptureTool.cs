@@ -107,7 +107,7 @@ public static class ScreenCaptureTool
         // The recoloured art in a real fight: the cat beside the bear boss (Stage5), beside a mushroom (Stage4 mixes them
         // in), and the catnip cloud going off in front of it.
         Add("Stage5", "fight_bear", () => NextTo(e => e.isBoss));
-        Add("Stage4", "fight_mushroom", () => NextTo(e => e.definition != null && e.definition.name.Contains("Mushroom")));
+        Add("Stage4", "fight_mushroom", MushroomBeside); // forced: the line-up mix is random
         Add("Stage2", "fight_catnip", () => Vfx.Play("a_catnip_fx", PlayerStats.Instance.transform.position + Vector3.right * 1.8f, 1f), 0, 0, 0.15f); // 9 frames at 24 fps: the cloud is at its fullest about now
         // The result board with a long build (20 cards: past two rows the strip ends in "+N").
         Add("Stage2", "result_many", () => { int n = 0; foreach (var c in CardPool.All) { if (n >= 20) break; if (c.job == PlayerStats.Instance.Job || c.job == CardPool.Job.Any) { PlayerStats.Instance.ApplyCard(c.id); n++; } } Find<ResultUI>().Show(true, 48, -1); });
@@ -153,6 +153,26 @@ public static class ScreenCaptureTool
             r.sprite = frames[frames.Length / 2];
             if (sr != null) { r.sortingLayerID = sr.sortingLayerID; r.sortingOrder = 5000; } // over the foreground decor too
         }
+    }
+
+    // The enemy nearest the player becomes a mushroom (as StageRandomizer's mix does) two units to its right.
+    static void MushroomBeside()
+    {
+        var roster = EnemyRoster.Load();
+        EnemyDefinition mush = null;
+        if (roster != null && roster.others != null) foreach (var d in roster.others) if (d != null && d.name.Contains("Mushroom")) mush = d;
+        var p = PlayerStats.Instance.transform.position;
+        Enemy near = null; float best = float.MaxValue;
+        foreach (var e in Enemy.All) if (e != null && !e.IsDead && !e.isBoss) { float d = (e.transform.position - p).sqrMagnitude; if (d < best) { best = d; near = e; } }
+        if (mush == null || near == null) { Debug.LogWarning("[ScreenCapture] no mushroom to show"); return; }
+        near.definition = mush;
+        near.name = mush.name;
+        near.transform.position = p + Vector3.right * 2f;
+        // the swap comes after its Awake (the line-up mix comes before it): run Awake again for the new size and stats,
+        // then restart its idle animation, whose frames were read from the old definition
+        near.SendMessage("Awake", SendMessageOptions.DontRequireReceiver);
+        var state = typeof(Enemy).GetNestedType("State", System.Reflection.BindingFlags.NonPublic);
+        typeof(Enemy).GetMethod("Play", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.Invoke(near, new[] { System.Enum.ToObject(state, 0) });
     }
 
     // Puts the player two units left of the first enemy that matches (the camera follows the player).
