@@ -61,6 +61,7 @@ ui.close = 닫기
 # DamagePopup
 
 # DashBar
+hud.passives = 패시브
 hud.dash = 대시 · 우클릭   <color=$gold>Tab</color> 능력치
 
 # Enemy.Behaviour

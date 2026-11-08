@@ -28,6 +28,7 @@ public class SkillHUD : MonoBehaviour
     readonly Slot[] slots = new Slot[SkillSystem.MaxActiveSlots];
     readonly List<(string id, Image icon, Image shade)> chips = new List<(string, Image, Image)>();
     RectTransform chipRow;
+    TMP_Text chipLabel; // "패시브" left of the chips: on its own the row read as a stray icon over the Q slot
     TMP_FontAsset font;
     int shownCount = -1;
     CanvasGroup group;
@@ -176,6 +177,8 @@ public class SkillHUD : MonoBehaviour
         chipRow.pivot = new Vector2(0.5f, 0f);
         chipRow.anchoredPosition = new Vector2(0f, SlotY + SlotSize + 10f);
         chipRow.sizeDelta = new Vector2(600f, ChipSize);
+        chipLabel = MakeText("PassivesLabel", chipRow, Loc.T("hud.passives"), UISkin.FontSmall, UISkin.OverlayText, Vector2.zero, new Vector2(120f, ChipSize), TextAlignmentOptions.MidlineRight);
+        UiTheme.Backdrop(chipLabel);
 
     }
 
@@ -250,6 +253,14 @@ public class SkillHUD : MonoBehaviour
             int lv = stats.CardLevel(passives[i].id);
             if (lv >= 2) MakeText("Lv", rt, "+", 22f, new Color(1f, 0.85f, 0.35f), new Vector2(ChipSize * 0.32f, -ChipSize * 0.3f), new Vector2(20f, 20f), TextAlignmentOptions.Center);
             chips.Add((passives[i].id, icon, shade));
+        }
+        chipLabel.gameObject.SetActive(passives.Count > 0);
+        if (passives.Count > 0)
+        {
+            var lrt = chipLabel.rectTransform;
+            lrt.anchorMin = lrt.anchorMax = new Vector2(0.5f, 0f);
+            lrt.pivot = new Vector2(1f, 0f);
+            lrt.anchoredPosition = new Vector2(-passives.Count * (ChipSize + ChipGap) * 0.5f - 6f, 0f);
         }
     }
 
