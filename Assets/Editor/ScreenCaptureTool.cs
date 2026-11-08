@@ -104,6 +104,11 @@ public static class ScreenCaptureTool
         Add("Stage2", "draft_4x3", () => Find<CardDraftUI>().Show(() => { }), 1440, 1080);
         Add("MainScene", "village_16x10", null, 1680, 1050);
         Add("MainScene", "village_4x3", null, 1440, 1080);
+        // The recoloured art in a real fight: the cat beside the bear boss (Stage5), beside a mushroom (Stage4 mixes them
+        // in), and the catnip cloud going off in front of it.
+        Add("Stage5", "fight_bear", () => NextTo(e => e.isBoss));
+        Add("Stage4", "fight_mushroom", () => NextTo(e => e.definition != null && e.definition.name.Contains("Mushroom")));
+        Add("Stage2", "fight_catnip", () => Vfx.Play("a_catnip_fx", PlayerStats.Instance.transform.position + Vector3.right * 1.8f, 1f), 0, 0, 0.15f); // 9 frames at 24 fps: the cloud is at its fullest about now
         // The result board with a long build (20 cards: past two rows the strip ends in "+N").
         Add("Stage2", "result_many", () => { int n = 0; foreach (var c in CardPool.All) { if (n >= 20) break; if (c.job == PlayerStats.Instance.Job || c.job == CardPool.Job.Any) { PlayerStats.Instance.ApplyCard(c.id); n++; } } Find<ResultUI>().Show(true, 48, -1); });
         // The set banner while it is up (0.7 s after the cards that finish 발톱: fully in, before it fades), 16:9 and 4:3.
@@ -148,6 +153,14 @@ public static class ScreenCaptureTool
             r.sprite = frames[frames.Length / 2];
             if (sr != null) { r.sortingLayerID = sr.sortingLayerID; r.sortingOrder = 5000; } // over the foreground decor too
         }
+    }
+
+    // Puts the player two units left of the first enemy that matches (the camera follows the player).
+    static void NextTo(Func<Enemy, bool> match)
+    {
+        foreach (var e in Enemy.All)
+            if (e != null && !e.IsDead && match(e)) { PlayerStats.Instance.transform.position = e.transform.position + Vector3.left * 2f; return; }
+        Debug.LogWarning("[ScreenCapture] no enemy to stand by");
     }
 
     static void Add(string scene, string shot, Action act = null, int w = 0, int h = 0, float wait = 0f) => steps.Add(new Step { scene = scene, shot = shot, act = act, w = w, h = h, wait = wait });
