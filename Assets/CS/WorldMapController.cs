@@ -35,12 +35,22 @@ public class WorldMapController : MonoBehaviour
     [Tooltip("World size of the map picture; the camera zooms out so all of it fits on any screen.")]
     public Vector2 mapSize = new Vector2(19.2f, 8.85f);
 
+    // Fit the whole (very wide) map: by width on 16:9 and narrower screens, else by height - again whenever the
+    // view's shape changes (a resized window; the batch capture, whose 4:3 window left the map at 75 % of a 16:9 shot).
+    float fittedAspect;
+    void FitMap()
+    {
+        if (cam == null || !cam.orthographic || Mathf.Approximately(cam.aspect, fittedAspect)) return;
+        fittedAspect = cam.aspect;
+        cam.orthographicSize = Mathf.Max(mapSize.y * 0.5f, mapSize.x * 0.5f / cam.aspect);
+    }
+
+    void LateUpdate() => FitMap();
+
     void Start()
     {
         cam = Camera.main;
-        // Fit the whole (very wide) map: by width on 16:9 and narrower screens, else by height.
-        if (cam != null && cam.orthographic)
-            cam.orthographicSize = Mathf.Max(mapSize.y * 0.5f, mapSize.x * 0.5f / cam.aspect);
+        FitMap();
         if (ring != null) ringScale = ring.transform.localScale;
         if (marker != null) markerPos = marker.localPosition;
         if (messageText != null) messageText.gameObject.SetActive(false);
