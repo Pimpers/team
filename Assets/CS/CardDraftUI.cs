@@ -410,19 +410,9 @@ public class CardDraftUI : MonoBehaviour
             bg.color = Color.white;
         }
 
-        // The picture window's own tint by the card's first set tag, so two cards of one grade don't share one window
-        // (a light wash over the art; no tag, no wash).
-        var wash = Child<Image>(button, "CardTagWash", PicturePos, PictureSize * 0.9f);
-        var tags = CardPool.TagsOf(card.id);
-        wash.color = tags.Length > 0 ? TagWash[(int)tags[0]] : Color.clear;
-        wash.raycastTarget = false;
-        // A second tag: its colour as a band along the window's foot (stronger than the wash, so it reads as a band).
-        var band = Child<Image>(button, "CardTagBand", PicturePos + new Vector2(0f, -PictureSize.y * 0.45f + 7f), new Vector2(PictureSize.x * 0.9f, 14f));
-        if (tags.Length > 1) { var c = TagWash[(int)tags[1]]; c.a = 0.5f; band.color = c; } else band.color = Color.clear;
-        band.raycastTarget = false;
+        // No set marks on the picture (a tag tint, a second-tag band, corner badges): the user found them odd. The
+        // tags stay in the set line above the window.
         var picture = Child<Image>(button, "CardPicture", PicturePos, PictureSize);
-        wash.transform.SetSiblingIndex(picture.transform.GetSiblingIndex()); // under the picture
-        band.transform.SetSiblingIndex(picture.transform.GetSiblingIndex());
         var frames = !string.IsNullOrEmpty(card.icon) ? Vfx.Frames(card.icon) : null;
         picture.sprite = card.Art != null ? card.Art : frames == null ? null : frames[frames.Length == 1 ? 0 : frames.Length * 2 / 5];
         picture.enabled = picture.sprite != null;
