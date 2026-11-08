@@ -102,10 +102,27 @@ public class ResultUI : MonoBehaviour
         foreach (var l in labels) { l.enableAutoSizing = false; l.fontSize = size; }
     }
 
+    // The fight HUD goes with the fight: the skill bar and its 패시브 label sat on the board (and over its
+    // 마을로 돌아가기 button), the hearts, map and counters showed round it. The run is over, nothing brings them back.
+    static void HideRunHud()
+    {
+        var kinds = new[] { typeof(SkillHUD), typeof(HeartHUD), typeof(DashBar), typeof(StageMinimap), typeof(MonsterTracker), typeof(SetHUD) };
+        foreach (var kind in kinds)
+            foreach (var o in Object.FindObjectsByType(kind, FindObjectsSortMode.None)) ((Component)o).gameObject.SetActive(false);
+        var run = RunManager.Instance;
+        if (run != null && run.hudText != null)
+        {
+            run.hudText.gameObject.SetActive(false);
+            var backing = run.hudText.transform.parent != null ? run.hudText.transform.parent.Find("HudBacking") : null;
+            if (backing != null) backing.gameObject.SetActive(false);
+        }
+    }
+
     // unlockedCorruption: the 타락도 tier this win just opened (-1 = none).
     public void Show(bool win, int goldEarned, int unlockedCorruption = -1)
     {
         StageBanner.ClearAll();
+        HideRunHud();
         if (panel != null) panel.SetActive(true);
         OutlineOnBoard();
         BuildSummary(win);
@@ -229,8 +246,7 @@ public class ResultUI : MonoBehaviour
     // taken, then the stat cards). The text above makes room for the strip.
     static void BuildIcons(RectTransform sheet, TextMeshProUGUI text)
     {
-        const int PerRow = 7, MaxRows = 2;
-        const float Cell = 64f, IconSize = 54f;
+        const int MaxRows = 2;
         var old = sheet.Find("Icons");
         if (old != null) Destroy(old.gameObject);
         text.rectTransform.offsetMin = new Vector2(22f, 16f);
@@ -241,14 +257,22 @@ public class ResultUI : MonoBehaviour
         foreach (var c in CardPool.Stats) if (stats.CardLevel(c.id) > 0) cards.Add(c);
         if (cards.Count == 0) return;
 
+        // One strip 448 wide: a short build gets big icons (a few small ones left the sheet empty), a long one
+        // eight a row; past two full rows the last cell says how many more.
+        int perRow = cards.Count <= 5 ? 5 : cards.Count <= 14 ? 7 : 8;
+        float Cell = 448f / perRow, IconSize = Cell - 10f;
+        int PerRow = perRow;
         int rows = Mathf.Min(MaxRows, (cards.Count + PerRow - 1) / PerRow);
+        int shown = Mathf.Min(cards.Count, rows * PerRow);
+        int more = cards.Count - shown;
+        if (more > 0) { shown--; more++; } // the last cell becomes "+N"
         var strip = new GameObject("Icons", typeof(RectTransform));
         var srt = (RectTransform)strip.transform;
         srt.SetParent(sheet, false);
         srt.anchorMin = srt.anchorMax = srt.pivot = new Vector2(0.5f, 0f);
         srt.anchoredPosition = new Vector2(0f, 16f);
         srt.sizeDelta = new Vector2(PerRow * Cell, rows * Cell);
-        for (int i = 0; i < Mathf.Min(cards.Count, rows * PerRow); i++)
+        for (int i = 0; i < shown + (more > 0 ? 1 : 0); i++)
         {
             int row = i / PerRow, col = i % PerRow;
             var slot = new GameObject("Slot", typeof(RectTransform), typeof(Image));
@@ -260,6 +284,19 @@ public class ResultUI : MonoBehaviour
             var bg = slot.GetComponent<Image>();
             bg.color = new Color(1f, 1f, 1f, 0.08f);
             bg.raycastTarget = false;
+            if (i == shown)
+            {
+                var plus = new GameObject("More", typeof(RectTransform), typeof(TextMeshProUGUI)).GetComponent<TextMeshProUGUI>();
+                plus.rectTransform.SetParent(rt, false);
+                plus.rectTransform.sizeDelta = rt.sizeDelta;
+                plus.font = text.font;
+                plus.fontSize = UISkin.FontSmall;
+                plus.alignment = TextAlignmentOptions.Center;
+                plus.color = UiTheme.Cream;
+                plus.raycastTarget = false;
+                plus.text = "+" + more;
+                continue;
+            }
             var icon = new GameObject("Icon", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
             icon.rectTransform.SetParent(rt, false);
             icon.rectTransform.sizeDelta = new Vector2(IconSize, IconSize);
