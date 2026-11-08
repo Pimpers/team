@@ -46,6 +46,7 @@ public static class WorldMapLabels
     {
         if (plate == null || font == null) return;
         var root = new GameObject("MapLabels").transform;
+        var avoid = new[] { WorldPos(OpenRegion, mapSize), WorldPos(NextRegion, mapSize) }; // never under a cloud
         foreach (var l in Labels)
         {
             var at = new Vector3((l.x - 0.5f) * mapSize.x, (0.5f - l.y) * mapSize.y, 0f);
@@ -53,7 +54,7 @@ public static class WorldMapLabels
             if (hidden)
             {
                 // cloud over the region and its erased label (a flat patch under where its plate was)
-                Fog(root, at, new Vector2(l.w * mapSize.x, l.h * mapSize.y));
+                Fog(root, at, new Vector2(l.w * mapSize.x, l.h * mapSize.y), avoid);
                 continue;
             }
             var go = new GameObject("Label_" + l.key);
@@ -92,26 +93,42 @@ public static class WorldMapLabels
     // A cluster of pixel clouds (drawn here, Point filtered: 3 tones and a dark outline, like the map's own clouds)
     // big enough to cover a region's name box with room to spare.
     static Sprite cloud;
-    static void Fog(Transform root, Vector3 at, Vector2 box)
+    // One big cloud close on the region's name (it hides the flat patch under it), with one or two small puffs round
+    // it at uneven heights and gaps: a row of equal clouds read as a band. Puffs never land on the open region or the
+    // next one's plate (avoid).
+    static Sprite puff;
+    static void Fog(Transform root, Vector3 at, Vector2 box, Vector3[] avoid)
     {
         if (cloud == null) cloud = MakeCloud();
+        if (puff == null) puff = MakePuff();
         var rng = new System.Random(Mathf.RoundToInt(at.x * 100f) ^ Mathf.RoundToInt(at.y * 1000f)); // fixed per region
         float w = cloud.bounds.size.x, h = cloud.bounds.size.y;
-        // just enough to hide the name box (one row): a cluster per region ran together into a bank over half the map
-        int cols = Mathf.Max(1, Mathf.CeilToInt(box.x / (w * 0.8f))), rows = 1;
-        for (int r = 0; r < rows; r++)
-            for (int c = 0; c < cols; c++)
-            {
-                var go = new GameObject("Fog");
-                go.transform.SetParent(root, false);
-                float x = (c - (cols - 1) * 0.5f) * w * 0.7f + (float)(rng.NextDouble() - 0.5) * w * 0.5f; // scattered, not in a row
-                float y = (r - (rows - 1) * 0.5f) * h * 0.6f + (float)(rng.NextDouble() - 0.5) * h * 0.7f;
-                go.transform.position = at + new Vector3(x, y, 0f);
-                var sr = go.AddComponent<SpriteRenderer>();
-                sr.sprite = cloud;
-                sr.flipX = rng.Next(2) == 0;
-                sr.sortingOrder = 14 + r; // over the map, lower rows over higher ones
-            }
+        int bigs = Mathf.Max(1, Mathf.CeilToInt(box.x / (w * 0.9f))); // a wide name (the realm's) takes two
+        for (int b = 0; b < bigs; b++)
+        {
+            float bx = (b - (bigs - 1) * 0.5f) * w * 0.75f;
+            Put(root, cloud, at + new Vector3(bx + (float)(rng.NextDouble() - 0.5) * 0.2f, (b % 2 == 0 ? 1f : -1f) * 0.12f + (float)(rng.NextDouble() - 0.5) * 0.12f, 0f), rng, 14 + b);
+        }
+        int extra = 1 + rng.Next(2);
+        for (int i = 0; i < extra; i++)
+        {
+            float side = rng.Next(2) == 0 ? -1f : 1f;
+            var p = at + new Vector3(side * w * (0.45f + (float)rng.NextDouble() * 0.35f), (float)(rng.NextDouble() - 0.3) * h * 0.9f, 0f);
+            bool clear = true;
+            foreach (var a in avoid) if (((Vector2)(p - a)).magnitude < 1.6f) clear = false;
+            if (clear) Put(root, puff, p, rng, 15 + i); // in front of the big one where they touch
+        }
+    }
+
+    static void Put(Transform root, Sprite s, Vector3 at, System.Random rng, int order)
+    {
+        var go = new GameObject("Fog");
+        go.transform.SetParent(root, false);
+        go.transform.position = at;
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = s;
+        sr.flipX = rng.Next(2) == 0;
+        sr.sortingOrder = order;
     }
 
     // A small pixel padlock (iron, 3 tones, dark outline) on the next region's plate: a "?" alone read as a bug.
@@ -153,6 +170,40 @@ public static class WorldMapLabels
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = lockSprite;
         sr.sortingOrder = 17; // over the plate and its text
+    }
+
+    // A small puff (14 x 8) in the same tones, for the clusters' edges.
+    static Sprite MakePuff()
+    {
+        string[] g =
+        {
+            "....kkkk......",
+            "..kkwwwwkkkk..",
+            ".kwwwwwwwwwwk.",
+            "kwwwwwwwwwwwwk",
+            "kswwwwwwwwwwsk",
+            "kssswwwwwwsssk",
+            ".kkssssssssk..",
+            "...kkkkkkkk...",
+        };
+        return Grid(g);
+    }
+
+    static Sprite Grid(string[] g)
+    {
+        int W = g[0].Length, H = g.Length;
+        var tex = RuntimeGeneratedAssets.Texture(W, H);
+        var px = new Color[W * H];
+        var k = new Color32(0x5a, 0x3c, 0x22, 0xff); var w = new Color32(0xee, 0xde, 0xb0, 0xff); var s = new Color32(0xd2, 0xb8, 0x80, 0xff);
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+            {
+                char ch = g[H - 1 - y][x];
+                px[y * W + x] = ch == 'k' ? (Color)k : ch == 'w' ? (Color)w : ch == 's' ? (Color)s : Color.clear;
+            }
+        tex.SetPixels(px);
+        tex.Apply();
+        return RuntimeGeneratedAssets.Sprite(tex, new Vector2(0.5f, 0.5f), 12.5f);
     }
 
     static Sprite MakeCloud()
