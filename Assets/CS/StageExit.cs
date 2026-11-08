@@ -593,11 +593,16 @@ public class StageExit : MonoBehaviour
             // never goes under them (UI_STYLE.md)
             Vector3 sp = cam.WorldToScreenPoint(p);
             float u = Screen.height / 1080f;
-            bool inHud = sp.x < 560f * u && sp.y > Screen.height - 360f * u;
-            bool inMap = sp.x > Screen.width - 480f * u && sp.y > Screen.height - 260f * u;
-            if (inHud || inMap)
+            // the sign's own extent (icon on the left, words to the right), not just its middle
+            float left = cam.WorldToScreenPoint(p - new Vector3(3.3f, 0f, 0f)).x, right = cam.WorldToScreenPoint(p + new Vector3(2.7f, 0f, 0f)).x;
+            bool inHud = left < 560f * u && sp.y > Screen.height - 360f * u;
+            bool inMap = right > Screen.width - 480f * u && sp.y > Screen.height - 260f * u;
+            // a banner up (starter card, set bonus, stage clear) holds the top middle too while it lasts
+            bool inBanner = StageBanner.Up && right > Screen.width * 0.5f - 400f * u && left < Screen.width * 0.5f + 400f * u
+                            && sp.y > Screen.height * 0.5f + 40f * u && sp.y < Screen.height * 0.5f + 340f * u;
+            if (inHud || inMap || inBanner)
             {
-                float below = Screen.height - (inHud ? 360f : 260f) * u - 30f * u;
+                float below = inBanner ? Screen.height * 0.5f + 20f * u : Screen.height - (inHud ? 360f : 260f) * u - 30f * u;
                 p.y = cam.ScreenToWorldPoint(new Vector3(sp.x, below, sp.z)).y;
             }
             w.sign.position = p;

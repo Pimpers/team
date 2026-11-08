@@ -62,7 +62,8 @@ Health, dash and counters top-left; the map top-right; skills bottom-centre - wh
 screen is checked at 16:9, 16:10 and 4:3 (`Cats Smash > Capture Screens`).
 
 World signs (the fork portals' signs) keep out of the screen-fixed UI: the HUD's corner top left (560 x 360 at 1080p)
-and the minimap with its legend top right (480 x 260) are a safe area. A sign that would fall in one is pushed down
+and the minimap with its legend top right (480 x 260) are a safe area, and so is the top middle while a banner is
+up (800 wide, from 40 to 340 px above the centre); the test is on the sign's whole width, icon included. A sign that would fall in one is pushed down
 below it; one pushed off the top of the screen moves under its portal instead of onto it. Sign words are light (cream,
 light orange, light green) on the dark strip; the route's colour is in the icon only.
 
