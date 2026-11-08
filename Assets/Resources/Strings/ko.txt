@@ -468,7 +468,7 @@ smith.talk.poor = 생선뼈가 모자라 보인다냥. 의뢰를 몇 번 더 다
 smith.talk.maxed = 자네 장비는 더 손볼 데가 없다냥. 아주 훌륭하다냥!
 smith.talk.prompt = 자, 무엇을 강화하겠냥?
 smith.talk.next = <color=$muted>클릭해서 넘기기</color> ▼
-result.next_goal = 다음엔 타락도 {0}에 도전해 보세요!
+result.next_goal = 타락도 {0}에 도전해 보세요!
 result.all_clear = 모든 타락도를 정복했어요. 최고 기록에 도전!
 
 # BuildSheet (held Tab)
