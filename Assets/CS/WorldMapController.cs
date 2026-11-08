@@ -47,13 +47,34 @@ public class WorldMapController : MonoBehaviour
 
     void LateUpdate() => FitMap();
 
+    // The open region's pieces never overlap (UI_STYLE.md, 12 px apart): the 고대 숲 plate stays on its erased label,
+    // the ring sits just above it round the forest art, the CHAPTER tag to the ring's right. The ring breathes up
+    // to x1.13 (hover and pulse), so the gaps allow for that.
+    void PlaceRingAndTag()
+    {
+        const float Gap = 0.12f; // ~12 px at this camera
+        var label = GameObject.Find("Label_forest");
+        var plate = label != null ? label.GetComponent<SpriteRenderer>() : null;
+        if (ring == null || plate == null) return;
+        var rb = ring.bounds;
+        float grow = rb.extents.y * 0.13f;
+        float lift = plate.bounds.max.y + Gap + grow - rb.min.y;
+        if (lift > 0f) ring.transform.position += Vector3.up * lift;
+        rb = ring.bounds;
+        if (marker == null) return;
+        var tag = marker.GetComponentInChildren<SpriteRenderer>(true);
+        float half = tag != null ? tag.bounds.extents.y : 0.3f;
+        // to the ring's right, over the sea: above it ran into the next region's plate
+        float halfW = tag != null ? tag.bounds.extents.x : 1f;
+        marker.position = new Vector3(rb.max.x + grow + Gap + halfW, rb.center.y, marker.position.z);
+        markerPos = marker.localPosition;
+    }
+
     void Start()
     {
         cam = Camera.main;
         FitMap();
         if (ring != null) ringScale = ring.transform.localScale;
-        // The CHAPTER tag sits right over the region it opens (it floated out at sea between the realm and the forest).
-        if (marker != null) marker.position = WorldMapLabels.WorldPos("forest", mapSize) + new Vector3(0f, 0.9f, marker.position.z);
         if (marker != null) markerPos = marker.localPosition;
         if (messageText != null) messageText.gameObject.SetActive(false);
         if (backButton != null) backButton.onClick.AddListener(() => SceneLoader.Load(villageSceneName));
@@ -64,6 +85,7 @@ public class WorldMapController : MonoBehaviour
         var tagPlate = marker != null ? marker.GetComponentInChildren<SpriteRenderer>(true) : null;
         var tagText = marker != null ? marker.GetComponentInChildren<TMP_Text>(true) : null;
         WorldMapLabels.Build(mapSize, tagPlate, tagText != null ? tagText.font : null);
+        PlaceRingAndTag();
         var recordCanvas = backButton != null ? backButton.GetComponentInParent<Canvas>() : null;
         if (recordCanvas != null) ShowRecords(recordCanvas.rootCanvas, messageText != null ? messageText.font : null);
         // After the first clear: pick the 타락도 (difficulty) of the next run.
@@ -110,6 +132,8 @@ public class WorldMapController : MonoBehaviour
             // First voyage: the tutorial first (it starts the real run when finished or skipped).
             SceneLoader.Load(TutorialProgress.Done ? stageSceneName : TutorialProgress.SceneName);
         }
+        // the next region's plate (the "다음 지역" lock) says how it opens
+        else if (((Vector2)WorldMapLabels.WorldPos(WorldMapLabels.NextRegion, mapSize) - world).magnitude < 1.2f) ShowMessage(Loc.T("worldmap.next_hint"));
         else ShowMessage(Loc.T("worldmap.locked"));
     }
 

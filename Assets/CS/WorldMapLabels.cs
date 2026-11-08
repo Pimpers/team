@@ -71,12 +71,13 @@ public static class WorldMapLabels
             text.color = next ? Next : Open;
             text.sortingOrder = 16;
             // The title carries the realm's name as its second line (a map title, not a place); the next region is "?".
-            text.text = next ? "?" : l.big ? Loc.T("worldmap.region.title") + "\n<size=55%>" + Loc.T("worldmap.region.realm") + "</size>"
+            text.text = next ? Loc.T("worldmap.region.next") : l.big ? Loc.T("worldmap.region.title") + "\n<size=55%>" + Loc.T("worldmap.region.realm") + "</size>"
                               : Loc.T("worldmap.region." + l.key);
             text.lineSpacing = -12f;
             Vector2 need = text.GetPreferredValues(text.text);
-            Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.4f), Mathf.Max(l.h * mapSize.y, need.y + 0.12f));
+            Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.4f + (next ? 0.9f : 0f)), Mathf.Max(l.h * mapSize.y, need.y + 0.12f)); // the next one: room for its lock
             text.rectTransform.sizeDelta = size;
+            if (next) text.rectTransform.anchoredPosition = new Vector2(0.3f, 0f); // beside the lock
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = plate.sprite;
@@ -84,6 +85,7 @@ public static class WorldMapLabels
             sr.size = size;
             sr.color = next ? plate.color * new Color(0.6f, 0.6f, 0.6f, 1f) : plate.color; // the "?": a duller plate
             sr.sortingOrder = 15; // over the map, under the forest's tag (19 / 20)
+            if (next) Lock(go.transform, new Vector3(-size.x * 0.5f + 0.5f, 0f, 0f));
         }
     }
 
@@ -102,14 +104,55 @@ public static class WorldMapLabels
             {
                 var go = new GameObject("Fog");
                 go.transform.SetParent(root, false);
-                float x = (c - (cols - 1) * 0.5f) * w * 0.7f + (float)(rng.NextDouble() - 0.5) * w * 0.2f;
-                float y = (r - (rows - 1) * 0.5f) * h * 0.6f + (float)(rng.NextDouble() - 0.5) * h * 0.2f;
+                float x = (c - (cols - 1) * 0.5f) * w * 0.7f + (float)(rng.NextDouble() - 0.5) * w * 0.5f; // scattered, not in a row
+                float y = (r - (rows - 1) * 0.5f) * h * 0.6f + (float)(rng.NextDouble() - 0.5) * h * 0.7f;
                 go.transform.position = at + new Vector3(x, y, 0f);
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = cloud;
                 sr.flipX = rng.Next(2) == 0;
                 sr.sortingOrder = 14 + r; // over the map, lower rows over higher ones
             }
+    }
+
+    // A small pixel padlock (iron, 3 tones, dark outline) on the next region's plate: a "?" alone read as a bug.
+    static Sprite lockSprite;
+    static void Lock(Transform plate, Vector3 at)
+    {
+        if (lockSprite == null)
+        {
+            string[] g =
+            {
+                "..kkkkk..",
+                ".kjjjjjk.",
+                ".kj...jk.",
+                ".kj...jk.",
+                "kkkkkkkkk",
+                "khhhhhhhk",
+                "khjjkjjjk",
+                "khjjkjjjk",
+                "kjiiiiiik",
+                "kkkkkkkkk",
+            };
+            int W = g[0].Length, H = g.Length;
+            var tex = RuntimeGeneratedAssets.Texture(W, H);
+            var px = new Color[W * H];
+            var c = new System.Collections.Generic.Dictionary<char, Color>
+            {
+                { 'k', new Color32(0x2a, 0x1a, 0x14, 0xff) }, { 'i', new Color32(0x6a, 0x5a, 0x40, 0xff) },
+                { 'j', new Color32(0xb0, 0x90, 0x50, 0xff) }, { 'h', new Color32(0xe8, 0xc8, 0x70, 0xff) },
+            };
+            for (int y = 0; y < H; y++)
+                for (int x = 0; x < W; x++) { char ch = g[H - 1 - y][x]; px[y * W + x] = c.TryGetValue(ch, out var col) ? col : Color.clear; }
+            tex.SetPixels(px);
+            tex.Apply();
+            lockSprite = RuntimeGeneratedAssets.Sprite(tex, new Vector2(0.5f, 0.5f), 25f);
+        }
+        var go = new GameObject("Lock");
+        go.transform.SetParent(plate, false);
+        go.transform.localPosition = at;
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = lockSprite;
+        sr.sortingOrder = 17; // over the plate and its text
     }
 
     static Sprite MakeCloud()
@@ -132,7 +175,9 @@ public static class WorldMapLabels
         int W = g[0].Length, H = g.Length;
         var tex = RuntimeGeneratedAssets.Texture(W, H);
         var px = new Color[W * H];
-        var k = new Color32(0x4a, 0x56, 0x6a, 0xff); var w = new Color32(0xf4, 0xf0, 0xe4, 0xff); var s = new Color32(0xc8, 0xcc, 0xd4, 0xff);
+        // parchment tones from the map itself, the ink outline the map draws with (pure white with blue-grey edges sat
+        // on it like a sticker)
+        var k = new Color32(0x5a, 0x3c, 0x22, 0xff); var w = new Color32(0xee, 0xde, 0xb0, 0xff); var s = new Color32(0xd2, 0xb8, 0x80, 0xff);
         for (int y = 0; y < H; y++)
             for (int x = 0; x < W; x++)
             {

@@ -33,7 +33,7 @@ boss.phase2 = {0} - 2페이즈
 draft.reroll = 다시 뽑기  {0}{1}  <size=75%><color=$label>(보유 {2})</color></size>
 draft.instant = 즉시
 draft.max =   최대
-draft.kind.active = <color=$ink>액티브 · {0}키</color>
+draft.kind.active = {0}키
 draft.kind.enhance = <color=$enhance>{0} 강화</color>
 draft.set_complete = <b>{0} 완성!</b>
 
@@ -457,6 +457,8 @@ smith.reroll.effect = 판마다 다시 뽑기 1회 무료
 route.treasure.title = 사냥 길 보물!
 route.treasure.reward = 골드 +{0}  ·  하트 반 칸 회복
 worldmap.region.locked = 준비 중
+worldmap.region.next = 다음 지역
+worldmap.next_hint = 고대 숲 보스를 이기면 열려요
 worldmap.records = <color=$dimlabel>기록</color>  의뢰 완수 {0}회  ·  최고 타락도 {1}
 draft.set_tip = 같은 #태그 카드를 2장 모으면 세트 보너스, 3장이면 완성!
 
