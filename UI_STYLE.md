@@ -71,3 +71,9 @@ The cards: wooden-vine fronts by grade, the grade in the medallion, the window t
 ## Principles
 The UI is made of the village's own wood and parchment, drawn at the same pixel size as the world, so a screenshot
 of any screen reads as this harbour island. Distinctive in look, conventional in where things are.
+
+## Design notes
+- **The first reroll of every run is free** (`CardDraftUI.BaseFreeRerolls`), plus one per level of 행운의 방울. The
+  first draft comes before any fish, so a paid-only reroll was a dead button on the screen that teaches it.
+- A button the player cannot afford stays clickable but looks off (grey board, price in red) and answers a click
+  (a shake, 생선뼈 부족) rather than ignoring it.

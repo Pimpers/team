@@ -448,7 +448,8 @@ draft.badge.to_unlock = {0} 세트까지 {1}장
 draft.badge.to_complete = {0} 완성까지 {1}장
 draft.badge.unlock = ★ {0} 세트 해금
 draft.badge.complete = ★ {0} 세트 완성
-draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음 · 이후 5부터)</color></size>
+draft.reroll_free = 다시 뽑기  <color=$gold>무료</color>  <size=75%><color=$label>({0}회 남음)</color></size>
+draft.reroll_short = 생선뼈 부족
 
 # Blacksmith: the fourth upgrade (MetaProgress.Upgrade.Reroll)
 smith.reroll = 행운의 방울

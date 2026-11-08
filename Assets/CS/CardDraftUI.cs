@@ -84,11 +84,15 @@ public class CardDraftUI : MonoBehaviour
     const int RerollBase = 5;
     // Paid rerolls so far this run (the free ones first): the price climbs over the whole run, not anew each draft,
     // so rerolling is a spend to weigh rather than a free retry every stage.
-    static int PaidRerolls => Mathf.Max(0, RunStats.Rerolls - MetaProgress.Level(MetaProgress.Upgrade.Reroll));
+    static int PaidRerolls => Mathf.Max(0, RunStats.Rerolls - FreeRerolls);
+    // Every run's first reroll is free (the first draft comes with no fish yet, so the button was dead), plus one per
+    // level of 행운의 방울 (MetaProgress.Upgrade.Reroll).
+    const int BaseFreeRerolls = 1;
+    static int FreeRerolls => BaseFreeRerolls + MetaProgress.Level(MetaProgress.Upgrade.Reroll);
     Button rerollButton;
     TextMeshProUGUI rerollLabel;
     // 행운의 방울 (MetaProgress.Upgrade.Reroll): the run's first rerolls are free, one per level.
-    static int FreeRerollsLeft => Mathf.Max(0, MetaProgress.Level(MetaProgress.Upgrade.Reroll) - RunStats.Rerolls);
+    static int FreeRerollsLeft => Mathf.Max(0, FreeRerolls - RunStats.Rerolls);
     // Capped at 20: past the fourth paid reroll the price stops climbing, so late in a run it stays a choice.
     const int RerollMaxSteps = 4;
     int RerollCost => FreeRerollsLeft > 0 ? 0 : RerollBase * Mathf.Min(PaidRerolls + 1, RerollMaxSteps);
@@ -96,10 +100,35 @@ public class CardDraftUI : MonoBehaviour
     void Reroll()
     {
         var stats = PlayerStats.Instance;
-        if (stats == null || dealing != null || !stats.SpendGold(RerollCost)) { Sfx.Play("ui_error", 0.6f); return; }
+        if (stats == null || dealing != null) return;
+        if (!stats.SpendGold(RerollCost))
+        {
+            // too few fish: say so - the button shakes and reads 생선뼈 부족 for a moment (it used to just not react)
+            Sfx.Play("ui_error", 0.6f);
+            if (shortFish != null) StopCoroutine(shortFish);
+            shortFish = StartCoroutine(ShortOfFish());
+            return;
+        }
         RunStats.Rerolls++;
         Sfx.Play("coin", 1f, 0.8f);
         Deal();
+    }
+
+    Coroutine shortFish;
+    System.Collections.IEnumerator ShortOfFish()
+    {
+        var rt = (RectTransform)rerollButton.transform;
+        Vector2 home = rt.anchoredPosition;
+        rerollLabel.text = Loc.T("draft.reroll_short");
+        for (float t = 0f; t < 0.3f; t += Time.unscaledDeltaTime)
+        {
+            rt.anchoredPosition = home + Vector2.right * Mathf.Round(Mathf.Sin(t * 60f) * 4f) * 2f; // whole pixels
+            yield return null;
+        }
+        rt.anchoredPosition = home;
+        yield return new WaitForSecondsRealtime(0.7f);
+        shortFish = null;
+        RefreshReroll();
     }
 
     void BuildReroll()
@@ -140,9 +169,12 @@ public class CardDraftUI : MonoBehaviour
 
         var stats = PlayerStats.Instance;
         bool afford = stats != null && stats.Gold >= RerollCost;
-        rerollButton.interactable = afford;
+        // stays clickable (so a click can say why not) but plainly off: a grey board, the price in red
+        rerollButton.interactable = true;
+        rerollButton.GetComponent<Image>().color = afford ? Color.white : new Color(0.55f, 0.55f, 0.55f, 1f);
+        string cost = afford ? RerollCost.ToString() : $"<color={UiTheme.Html("hurt")}>{RerollCost}</color>";
         rerollLabel.text = FreeRerollsLeft > 0 ? Loc.F("draft.reroll_free", FreeRerollsLeft)
-                         : Loc.F("draft.reroll", Currency.Icon, RerollCost, (stats != null ? stats.Gold : 0));
+                         : Loc.F("draft.reroll", Currency.Icon, cost, (stats != null ? stats.Gold : 0));
         rerollLabel.color = afford ? UiTheme.Cream : UiTheme.DisabledText;
     }
 
