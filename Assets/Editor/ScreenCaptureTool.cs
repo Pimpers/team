@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
 // sprite's sorting order for the shot, as an overlay is in the game.)
 public static class ScreenCaptureTool
 {
-    struct Step { public string scene, shot; public Action act; public int w, h; } // w/h 0: the default 16:9
+    struct Step { public string scene, shot; public Action act; public int w, h; public float wait; } // w/h 0: the default 16:9; wait 0: 3 s after the action
     static readonly List<Step> steps = new List<Step>();
     static int index;
     static double at;
@@ -104,6 +104,9 @@ public static class ScreenCaptureTool
         Add("Stage2", "draft_4x3", () => Find<CardDraftUI>().Show(() => { }), 1440, 1080);
         Add("MainScene", "village_16x10", null, 1680, 1050);
         Add("MainScene", "village_4x3", null, 1440, 1080);
+        // The set banner while it is up (0.7 s after the cards that finish 발톱: fully in, before it fades), 16:9 and 4:3.
+        Add("Stage2", "set_banner", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 0, 0, 0.7f);
+        Add("Stage2", "set_banner_4x3", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 1440, 1080, 0.7f);
         // The way out open, so the minimap's exit marker (cyan) shows.
         Add("Stage2", "minimap_exit", () => { var e = StageExit.Instance != null ? StageExit.Instance : StageExit.Create(2); if (e != null) e.Open("Stage3"); });
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
@@ -145,7 +148,7 @@ public static class ScreenCaptureTool
         }
     }
 
-    static void Add(string scene, string shot, Action act = null, int w = 0, int h = 0) => steps.Add(new Step { scene = scene, shot = shot, act = act, w = w, h = h });
+    static void Add(string scene, string shot, Action act = null, int w = 0, int h = 0, float wait = 0f) => steps.Add(new Step { scene = scene, shot = shot, act = act, w = w, h = h, wait = wait });
 
     static void Tick()
     {
@@ -158,7 +161,7 @@ public static class ScreenCaptureTool
             {
                 var s = steps[index];
                 if (!prepared) { Width = s.w > 0 ? s.w : DefaultWidth; Height = s.h > 0 ? s.h : DefaultHeight; Prepare(); prepared = true; at = now + 0.6; return; }
-                if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot }; at = now + 3.0; return; } // past a set banner (fade in, 1.45 s, fade out) the cards may raise
+                if (s.act != null) { s.act(); steps[index] = new Step { scene = s.scene, shot = s.shot, w = s.w, h = s.h }; at = now + (s.wait > 0f ? s.wait : 3.0); return; } // 3 s: past a set banner the cards may raise (or a step's own wait, to catch one)
                 // An action that loaded another scene took the camera with it: set up on the new one first.
                 if (targetCam == null) { Release(); Prepare(); at = now + 0.6; return; }
                 Shot(s.shot);
