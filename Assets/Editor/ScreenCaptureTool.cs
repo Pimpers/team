@@ -118,8 +118,8 @@ public static class ScreenCaptureTool
         Add("Stage2", "minimap_exit", () => { var e = StageExit.Instance != null ? StageExit.Instance : StageExit.Create(2); if (e != null) e.Open("Stage3"); });
         // The exit log: shut while monsters are left, open after the card, the cat pulled in, the iris shut, out again.
         Add("Stage1", "exit_closed", () => CatBeforeExit(3f));
-        Add("Stage1", "exit_open", () => { StageExit.Instance.Open("Stage2"); CatBeforeExit(3f); }, wait: 0.6f);
-        Add("Stage1", "exit_pull", () => { StageExit.Instance.Open("Stage2"); StageExit.Instance.ForCapture(true); }, wait: 0.4f);
+        Add("Stage1", "exit_open", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(3f); }, wait: 0.6f);
+        Add("Stage1", "exit_pull", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); StageExit.Instance.ForCapture(true); }, wait: 0.4f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
@@ -134,7 +134,7 @@ public static class ScreenCaptureTool
         Add("MainScene", "a11y_smith_4x3", () => Find<BlacksmithUI>().Open(), 1440, 1080);
         // 큰 글씨 + 색약 still on: the closed log's message, and the exit's edge arrow in the colour-blind colour.
         Add("Stage1", "a11y_exit_closed", () => { BuildSheet.ForceShow = false; CatBeforeExit(0.3f); }, wait: 0.35f); // (the word lasts 0.7 s)
-        Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
+        Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;
@@ -193,6 +193,13 @@ public static class ScreenCaptureTool
     }
 
     // Puts the cat on the exit log's floor, `gap` units before its mouth.
+    // The game opens the exit only once every monster is gone (RunManager.StageCleared): the shots that open it
+    // by hand clear them first, so the picture matches play.
+    static void ClearEnemies()
+    {
+        foreach (var e in Enemy.All.ToArray()) if (e != null) UnityEngine.Object.Destroy(e.gameObject);
+    }
+
     static void CatBeforeExit(float gap)
     {
         var body = PlayerStats.Instance.Body;
