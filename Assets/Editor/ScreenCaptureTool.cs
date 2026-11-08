@@ -134,7 +134,7 @@ public static class ScreenCaptureTool
         Add("MainScene", "a11y_smith_4x3", () => Find<BlacksmithUI>().Open(), 1440, 1080);
         // 큰 글씨 + 색약 still on: the closed log's message, and the exit's edge arrow in the colour-blind colour.
         Add("Stage1", "a11y_exit_closed", () => { BuildSheet.ForceShow = false; CatBeforeExit(0.3f); }, wait: 0.35f); // (the word lasts 0.7 s)
-        Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; StageExit.Instance.Open("Stage2"); CatBeforeExit(16f); }, wait: 1.5f); // the log off screen: its arrow shows
+        Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
 
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;

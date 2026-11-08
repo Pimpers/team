@@ -361,7 +361,8 @@ public class StageExit : MonoBehaviour
         if (entering || body.IsAirborne) return;
         Vector2 feet = body.Feet;
         float into = (feet.x - holeX) * -holeSide; // > 0 once past the opening, toward the log's middle
-        if (into > -0.45f && Mathf.Abs(feet.y - floorY) < 0.8f) StartCoroutine(Enter());
+        // only at the mouth: a cat past the log (behind it, or beyond) is not drawn in
+        if (into > -0.45f && into < 1.2f && Mathf.Abs(feet.y - floorY) < 0.8f) StartCoroutine(Enter());
     }
 
     Vector3 Mouth => new Vector3(holeX - holeSide * 0.2f, floorY + 1.3f, 0f);
