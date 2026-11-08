@@ -192,8 +192,8 @@ public class StageExit : MonoBehaviour
         w.log.sortingOrder = body.Renderer.sortingOrder - 1; // the cat stays in front of it, shrinking into the swirl
         ways.Add(w);
         if (kind == "_hunt" || kind == "_safe") MakeSign(w);
-        // still in front of a big prop (no clear spot): a dark silhouette behind it so the arch reads against it
-        if (PropsNear(spot))
+        // a dark silhouette behind every portal: the arch reads against any backdrop (trees and canopies are tiles,
+        // not props, so PropsNear never sees them)
         {
             var plate = new GameObject("Backdrop").AddComponent<SpriteRenderer>();
             plate.transform.SetParent(w.log.transform, false);
@@ -309,10 +309,12 @@ public class StageExit : MonoBehaviour
     void MakeSign(Way w)
     {
         var root = new GameObject("ForkSign").transform;
-        root.position = new Vector3(w.holeX - w.Offset, w.floorY + 3.75f, 0f); // over the keystone with a gap: never on the arch
+        // on the ground in front of the portal's step: never on the arch, and low on the screen where the HUD, the
+        // minimap and the banners never are - so it is there at the moment of choosing
+        root.position = new Vector3(w.holeX - w.Offset + 0.4f, w.floorY - 0.55f, 0f);
         w.sign = root;
         w.signHome = root.position;
-        float scale = GameSettings.LargeText ? 1.3f : 1f;
+        float scale = (GameSettings.LargeText ? 1.3f : 1f) * 0.85f;
         var icon = new GameObject("Icon").AddComponent<SpriteRenderer>();
         icon.transform.SetParent(root, false);
         icon.sprite = Resources.Load<Sprite>(w.hunt ? "StageExit/exit_icon_hunt" : "StageExit/exit_icon_safe");

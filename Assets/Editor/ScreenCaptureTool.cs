@@ -144,6 +144,7 @@ public static class ScreenCaptureTool
         Add("Stage1", "fork_camera_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1440, 1080, 0.7f);
         Add("Stage1", "fork_open_16x10", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, 1680, 1050, 1f);
         Add("Stage1", "fork_open_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, 1440, 1080, 1f);
+        Add("Stage1", "fork_signs", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(5f); }, wait: 4f); // the banner gone and the camera back: both signs in view
         Add("Stage2", "fork_stage2", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage3", _ => { }); }, wait: 1f);
         Add("Stage3", "fork_stage3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage4", _ => { }); }, wait: 1f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
