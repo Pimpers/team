@@ -149,7 +149,7 @@ public class ResultUI : MonoBehaviour
             goldText.fontSizeMax = UiTheme.TextLarge;
             goldText.fontSizeMin = UiTheme.TextSmall;
             goldText.textWrappingMode = TextWrappingModes.NoWrap;
-            rt.sizeDelta = new Vector2(1000f, 110f);
+            rt.sizeDelta = new Vector2(1000f, 150f); // the gold line and up to three news lines
         }
 
         // Upgrades moved to the village blacksmith.
@@ -173,7 +173,9 @@ public class ResultUI : MonoBehaviour
         foreach (MetaProgress.Upgrade u in System.Enum.GetValues(typeof(MetaProgress.Upgrade)))
             if (!MetaProgress.IsMaxed(u) && MetaProgress.Gold >= MetaProgress.Cost(u) && before < MetaProgress.Cost(u)) ready++;
         if (ready > 0) parts.Add(Loc.F("result.unlock.smith", ready));
-        return string.Join("  ·  ", parts);
+        // one line each (at most three): run together they shrank to fit the board's width
+        if (parts.Count > 3) parts.RemoveRange(3, parts.Count - 3);
+        return string.Join("\n", parts);
     }
 
     // ---------------------------------------------------------------- the run, looked back on
