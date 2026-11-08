@@ -29,8 +29,8 @@ public static class WorldMapLabels
         new Label("atoll", 0.9215f, 0.715f, 0.075f, 0.055f),
     };
     const string OpenRegion = "forest";
-    static readonly Color Locked = new Color(0.85f, 0.77f, 0.6f);
-    static readonly Color Open = new Color(1f, 0.82f, 0.4f);
+    static readonly Color Locked = new Color(0.72f, 0.65f, 0.52f); // closed: small and dim, so the open one stands out
+    static readonly Color Open = new Color(1f, 0.9f, 0.55f);    // brighter on the brown plate
 
     // plate: the CHAPTER tag's plate, whose sliced sprite and font the labels share.
     public static void Build(Vector2 mapSize, SpriteRenderer plate, TMP_FontAsset font)
@@ -46,11 +46,11 @@ public static class WorldMapLabels
             var text = new GameObject("Text").AddComponent<TextMeshPro>();
             text.transform.SetParent(go.transform, false);
             text.font = font;
-            text.fontSize = l.big ? 3.4f : 2.2f;
+            bool locked = l.key != OpenRegion && !l.big && l.key != "realm";
+            text.fontSize = l.big ? 3.8f : locked ? 1.8f : 2.8f; // (the plate keeps its box either way: under it the map is a flat patch)
             text.fontStyle = FontStyles.Bold;
             text.alignment = TextAlignmentOptions.Center;
             text.textWrappingMode = TextWrappingModes.NoWrap;
-            bool locked = l.key != OpenRegion && !l.big && l.key != "realm";
             text.color = locked ? Locked : Open;
             text.sortingOrder = 16;
             // Closed regions say so: eleven names and one open forest otherwise read as content that isn't there.
@@ -64,7 +64,7 @@ public static class WorldMapLabels
             sr.sprite = plate.sprite;
             sr.drawMode = SpriteDrawMode.Sliced;
             sr.size = size;
-            sr.color = locked ? plate.color * new Color(0.7f, 0.7f, 0.7f, 1f) : plate.color; // closed: a duller plate
+            sr.color = locked ? plate.color * new Color(0.55f, 0.55f, 0.55f, 1f) : plate.color; // closed: a duller plate
             sr.sortingOrder = 15; // over the map, under the forest's tag (19 / 20)
         }
     }
