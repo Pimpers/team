@@ -391,7 +391,18 @@ public class RunManager : MonoBehaviour
             GameSave.Data.bestClear = Mathf.Max(GameSave.Data.bestClear, Corruption.Level);
             GameSave.Save();
         }
+        // A won boss room opens the crimson log: walking in irises shut and the result board opens behind it.
+        if (win && StageExit.Instance != null && StageExit.Instance.OpenToResult(() => ShowResultNow(true, earned, unlocked))) return;
         StartCoroutine(ShowResult(win, earned, unlocked));
+    }
+
+    void ShowResultNow(bool win, int gold, int unlockedCorruption)
+    {
+        if (cardDraftUI != null && cardDraftUI.panel != null) cardDraftUI.panel.SetActive(false);
+        SetGameplayHudVisible(false);
+        resultUI.Show(win, gold, unlockedCorruption);
+        Sfx.Play(win ? "victory" : "defeat");
+        GameClock.Pause("result");
     }
     const int LossPay = 10;
 
@@ -400,11 +411,7 @@ public class RunManager : MonoBehaviour
     System.Collections.IEnumerator ShowResult(bool win, int gold, int unlockedCorruption)
     {
         yield return new WaitForSecondsRealtime(resultDelay);
-        if (cardDraftUI != null && cardDraftUI.panel != null) cardDraftUI.panel.SetActive(false);
-        SetGameplayHudVisible(false);
-        resultUI.Show(win, gold, unlockedCorruption);
-        Sfx.Play(win ? "victory" : "defeat");
-        GameClock.Pause("result");
+        ShowResultNow(win, gold, unlockedCorruption);
     }
 
     // Pause menu "give up": counts as a defeat - the gold so far is deposited - and goes

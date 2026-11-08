@@ -33,6 +33,19 @@ public class StageWipe : MonoBehaviour
         instance.StartCoroutine(instance.CloseRoutine(screenPoint, then));
     }
 
+    // Closes on `screenPoint`, runs `middle` behind the shut iris (the boss room's result board), then opens again.
+    public static void CloseAndOpen(Vector2 screenPoint, Action middle)
+    {
+        if (Busy) return;
+        if (instance == null) Create();
+        var wipe = instance;
+        wipe.StartCoroutine(wipe.CloseRoutine(screenPoint, () =>
+        {
+            middle?.Invoke();
+            wipe.StartCoroutine(wipe.OpenRoutine());
+        }));
+    }
+
     static void Create()
     {
         var go = new GameObject("StageWipe", typeof(RectTransform));
@@ -96,7 +109,7 @@ public class StageWipe : MonoBehaviour
     // are screen pixels.)
     void Set(Vector2 centre, float radius)
     {
-        float w = Screen.width, h = Screen.height, d = Mathf.Max(radius, 0f);
+        Vector2 px = Size; float w = px.x, h = px.y, d = Mathf.Max(radius, 0f);
         hole.anchoredPosition = centre;
         hole.sizeDelta = Vector2.one * d * 2f;
         hole.gameObject.SetActive(d > 0.5f);
@@ -114,7 +127,9 @@ public class StageWipe : MonoBehaviour
         rt.sizeDelta = new Vector2(x1 - x0, y1 - y0);
     }
 
-    static float Full => Mathf.Sqrt(Screen.width * (float)Screen.width + Screen.height * (float)Screen.height);
+    // The canvas's own size in pixels (Screen.* can disagree with the rendered size, e.g. in batch captures).
+    static Vector2 Size => instance != null ? ((RectTransform)instance.transform).rect.size : new Vector2(Screen.width, Screen.height);
+    static float Full => Size.magnitude;
 
     IEnumerator CloseRoutine(Vector2 at, Action then)
     {
@@ -145,7 +160,7 @@ public class StageWipe : MonoBehaviour
         // the load frame and the one after it (asset clean-up) pass while still shut
         yield return null;
         yield return null;
-        Vector2 at = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+        Vector2 at = Size * 0.5f;
         var cam = Camera.main;
         if (cam != null && PlayerStats.Instance != null) at = cam.WorldToScreenPoint(PlayerStats.Instance.transform.position);
         float r1 = Full;
@@ -168,6 +183,7 @@ public class StageWipe : MonoBehaviour
         instance.busy = true;
         instance.shut = true; // the next scene load opens it as usual
         instance.Show(true);
-        instance.Set(new Vector2(Screen.width * 0.5f, Screen.height * 0.5f), 0f);
+        instance.Set(Size * 0.5f, 0f);
+        Rect(instance.sides[0], 0f, 0f, 100000f, 100000f); // all black whatever size the capture renders at
     }
 }

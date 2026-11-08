@@ -60,7 +60,7 @@ public class StageExit : MonoBehaviour
     {
         body = PlayerStats.Instance != null ? PlayerStats.Instance.Body : null;
         if (body == null) return;
-        crimson = stage == 4; // the way to the boss
+        crimson = stage >= 4; // the way to the boss, and the boss room's way out
         if (StageWipe.ArrivedThroughExit) Arrive();
         PlaceClosed();
     }
@@ -75,7 +75,7 @@ public class StageExit : MonoBehaviour
         var feet = body.Feet;
         var arrive = MakeLog(feet.x - HoleFromCentre, feet.y, Load("open_0"));
         arrive.flipX = true; // mouth on the right, at the cat
-        arrive.sortingOrder = body.Renderer.sortingOrder + 2;
+        arrive.sortingOrder = body.Renderer.sortingOrder - 1;
         body.skillLock = true;
         body.Renderer.enabled = false;
         StageWipe.Revealed += PopOut;
@@ -137,19 +137,29 @@ public class StageExit : MonoBehaviour
     {
         var map = StageMap.Instance;
         if (map == null || map.verticalLayout || map.spawnSlots == null || map.spawnSlots.Length == 0) return;
-        Vector2 end = map.spawnSlots[0];
-        foreach (var s in map.spawnSlots) if (s.x > end.x) end = s;
-        if (!Roomy(map, end)) return;
+        // the farthest roomy floor spot toward the stage's end (the last slot may sit on a ledge too short for it)
+        bool found = false; Vector2 end = default;
+        foreach (var s in map.spawnSlots)
+            if ((!found || s.x > end.x) && Roomy(map, s)) { end = s; found = true; }
+        if (!found) return;
         floorY = end.y;
         holeSide = -1f; // the cat comes from the left
         holeX = end.x;
         log = MakeLog(holeX - holeSide * HoleFromCentre, floorY, Load("closed"));
-        log.sortingOrder = body.Renderer.sortingOrder + 2; // the cat goes in behind its front
+        log.sortingOrder = body.Renderer.sortingOrder - 1; // the cat stays in front of it, shrinking into the swirl
     }
 
     // ------------------------------------------------------------------ the way out
     // Called when the draft card is picked. Returns false if there is no stage map to put a log on (the caller then
     // just loads the next scene).
+    // The boss room: the log leads to the result board (shown behind the iris by `show`) instead of a scene.
+    System.Action toResult;
+    public bool OpenToResult(System.Action show)
+    {
+        toResult = show;
+        return Open("(result)");
+    }
+
     public bool Open(string next)
     {
         var map = StageMap.Instance;
@@ -169,7 +179,7 @@ public class StageExit : MonoBehaviour
             holeX = spot.x;
             log = MakeLog(spot.x - holeSide * HoleFromCentre, floorY, swirl[0]);
             log.flipX = holeSide > 0f;
-            log.sortingOrder = body.Renderer.sortingOrder + 2;
+            log.sortingOrder = body.Renderer.sortingOrder - 1;
             StartCoroutine(Appear(log));
         }
         StartCoroutine(Gather(feet));
@@ -424,7 +434,8 @@ public class StageExit : MonoBehaviour
         var visual = body.visual != null ? body.visual : body.Renderer.transform;
         Vector3 scale = visual.localScale;
         Vector3 start = body.transform.position;
-        Vector3 target = new Vector3(Mouth.x, start.y + 0.3f, start.z);
+        // the cat's middle to the mouth's middle: lifted off the floor as it is drawn in
+        Vector3 target = new Vector3(Mouth.x, start.y + (Mouth.y - 0.45f - body.Feet.y), start.z);
         var cam = Camera.main;
         var ppc = cam != null ? cam.GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>() : null;
         float size0 = cam != null ? cam.orthographicSize : 0f;
@@ -448,7 +459,8 @@ public class StageExit : MonoBehaviour
             {
                 closing = true;
                 Vector2 mouthOnScreen = cam != null ? (Vector2)cam.WorldToScreenPoint(Mouth) : new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-                SceneLoader.LoadThroughExit(nextScene, mouthOnScreen);
+                if (toResult != null) StageWipe.CloseAndOpen(mouthOnScreen, toResult);
+                else SceneLoader.LoadThroughExit(nextScene, mouthOnScreen);
             }
             yield return null;
         }
@@ -461,6 +473,6 @@ public class StageExit : MonoBehaviour
     public void ForCapture(bool pull)
     {
         if (!open) Open("Stage3");
-        if (pull && body != null) body.transform.position = new Vector3(holeX + holeSide * 0.3f, floorY + 0.1f, 0f);
+        if (pull && body != null) body.transform.position += new Vector3(holeX + holeSide * 0.3f - body.Feet.x, floorY - body.Feet.y, 0f); // feet on the floor
     }
 }

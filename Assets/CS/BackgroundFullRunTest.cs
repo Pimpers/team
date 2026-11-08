@@ -180,8 +180,18 @@ public class BackgroundFullRunTest : MonoBehaviour
 
             if (stage == 5)
             {
-                float until = Time.realtimeSinceStartup + 5f;
-                while ((run.resultUI == null || run.resultUI.panel == null || !run.resultUI.panel.activeSelf) && Time.realtimeSinceStartup < until)
+                // The boss room's crimson log opens on the win: walk in, the result board opens behind the iris.
+                float logDeadline = Time.realtimeSinceStartup + 6f;
+                while ((StageExit.Instance == null || !StageExit.Instance.IsOpen) && Time.realtimeSinceStartup < logDeadline) yield return null;
+                if (StageExit.Instance != null && StageExit.Instance.IsOpen && PlayerStats.Instance != null)
+                {
+                    var bossBody = PlayerStats.Instance.Body;
+                    var bossFeet = bossBody.Feet;
+                    var bossExit = StageExit.Instance.ExitPoint;
+                    bossBody.transform.position += new Vector3(bossExit.x - bossFeet.x, bossExit.y - 0.5f - bossFeet.y, 0f);
+                }
+                float until = Time.realtimeSinceStartup + 8f;
+                while ((run.resultUI == null || run.resultUI.panel == null || !run.resultUI.panel.activeSelf || StageWipe.Busy) && Time.realtimeSinceStartup < until)
                     yield return null;
                 result.cardsAppeared = false;
                 report.victoryScreen = run.resultUI != null && run.resultUI.panel != null && run.resultUI.panel.activeSelf;

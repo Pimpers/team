@@ -46,6 +46,27 @@ public class GameplayPlayModeTests
         Assert.That(PlayerStats.Instance.Body.skillLock, Is.False, "the cat is still locked");
     }
 
+    // The boss room's log: walking in irises shut, the result board is shown behind it, and the iris opens again.
+    [UnityTest]
+    public IEnumerator BossRoomLog_Entered_OpensOnResult()
+    {
+        SceneManager.LoadScene("Stage5");
+        yield return new WaitForSecondsRealtime(2f);
+        var exit = StageExit.Instance;
+        Assert.That(exit, Is.Not.Null, "no exit");
+        bool shown = false;
+        Assert.That(exit.OpenToResult(() => shown = true), Is.True, "exit did not open");
+        var body = PlayerStats.Instance.Body;
+        var feet = body.Feet;
+        body.transform.position += new Vector3(exit.ExitPoint.x - feet.x, exit.ExitPoint.y - 0.5f - feet.y, 0f);
+
+        float until = Time.realtimeSinceStartup + 8f;
+        while ((!shown || StageWipe.Busy) && Time.realtimeSinceStartup < until) yield return null;
+        Assert.That(shown, Is.True, "the result was never shown");
+        Assert.That(StageWipe.Busy, Is.False, "the iris stayed shut");
+        Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("Stage5"), "left the scene");
+    }
+
     [UnityTest]
     public IEnumerator Title_AddsSettingsAndCreditsButtons()
     {
