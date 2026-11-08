@@ -201,7 +201,7 @@ public class CardDraftUI : MonoBehaviour
             {
                 plate.enabled = true;
                 plate.sprite = null;
-                plate.color = new Color(0.025f, 0.018f, 0.035f, 0.72f);
+                plate.color = new Color(0.025f, 0.018f, 0.035f, 0.8f); // 0.72 let the cat show grey between the cards
                 plate.raycastTarget = true;
                 // the veil's colour goes to the full-screen shade; the box itself draws nothing (else a darker rectangle)
                 var shade = panel.transform.Find("ScreenShade").GetComponent<Image>();
@@ -428,13 +428,13 @@ public class CardDraftUI : MonoBehaviour
         tier.text = CardPool.TierNames[t];
         tier.fontSize = UISkin.FontBody;
         tier.alignment = TextAlignmentOptions.Center;
-        // Cream on a dark 1 px outline: the grade's own ink sank into the medallion's engraving (and TMP's outline
-        // draws nothing with the pixel font).
-        tier.color = UiTheme.Cream;
+        // Dark letters (the grade's ink) on one light 1 px rim: cream with a dark rim read blurred in the medallion,
+        // and TMP's own outline draws nothing with the pixel font.
+        tier.color = Inks[t].medallion; // the grade's darkest ink (cream with a dark rim read blurred)
         tier.raycastTarget = false;
         tier.textWrappingMode = TextWrappingModes.NoWrap;
         tier.fontStyle = FontStyles.Bold;
-        UiTheme.Outline(tier);
+        TextOutline.Attach(tier, UiTheme.Cream, 2f); // one light 1 px rim round the dark letters
 
         // (Tags used to be their own label between the picture and the text box: it ran over the frame and, on the
         // blue card, the name. They are a line of the card text now - see CardText.)
