@@ -299,10 +299,20 @@ function portal(c, v, state, frame) {
     // the crown is the keystone: a stone block set into the arch's top, a gold band on it and three points, its
     // shoulders running into the horns' bases along the arch's rim (one piece, not a box on top)
     const kt = top(cx)
-    c.rect(cx - 6, kt - 2, 13, 8, out); c.rect(cx - 5, kt - 1, 11, 6, st[1]); c.line(cx - 5, kt + 4, cx + 5, kt + 4, P.sh)
-    c.line(cx - 5, kt - 1, cx + 5, kt - 1, "#cb8940"); c.line(cx - 5, kt, cx + 5, kt, "#fbcd0d"); c.line(cx - 4, kt, cx - 2, kt, "#fdeb7b")
-    for (const dx of [-4, 0, 4]) { c.px(cx + dx, kt - 2, "#fbcd0d"); c.px(cx + dx, kt - 3, dx === 0 ? "#fdeb7b" : "#fbcd0d"); c.px(cx + dx, kt - 4, out); c.px(cx + dx - 1, kt - 3, out); c.px(cx + dx + 1, kt - 3, out) }
-    c.px(cx, kt + 2, "#e5354e"); c.px(cx, kt + 1, "#f8759b")
+    // a crown 23 wide set into the arch's top (over half its width): the band follows the rim, five points rise
+    // from it, outlined as one piece with the stone
+    const half = 11
+    for (let dx = -half; dx <= half; dx++) {
+      const x = cx + dx, t = top(x)
+      for (let y = t - 1; y <= t + 3; y++) c.px(x, y, y === t - 1 ? out : y === t ? "#fdeb7b" : y === t + 3 ? "#cb8940" : "#fbcd0d")
+      c.px(x, t + 4, out)
+    }
+    for (const dx of [-10, -5, 0, 5, 10]) {
+      const x = cx + dx, t = top(x), h = dx === 0 ? 5 : Math.abs(dx) === 5 ? 4 : 3
+      for (let i = 1; i <= h; i++) { c.px(x, t - i, i === h ? "#fdeb7b" : "#fbcd0d"); c.px(x - 1, t - i, out); c.px(x + 1, t - i, out) }
+      c.px(x, t - h - 1, out)
+    }
+    c.px(cx, kt + 1, "#e5354e"); c.px(cx - 5, top(cx - 5) + 1, "#f8759b"); c.px(cx + 5, top(cx + 5) + 1, "#f8759b")
     for (const sd of [-1, 1]) for (let x = 7; x <= 14; x++) { const xx = cx + sd * x, t = top(xx); c.px(xx, t, out); c.px(xx, t + 1, "#7b364d") } // the rim joining horn to crown
     for (const [x, y] of [[6, 34], [7, 35], [8, 36], [41, 18], [40, 19], [40, 20]]) c.px(x, y, "#f8759b")
   } else if (v === "victory") {
@@ -332,14 +342,15 @@ function portal(c, v, state, frame) {
     c.ellipse(cx, cy + 1, hrx - 1, hry - 1, sw[0])
     c.ellipse(cx, cy + 1, Math.round((hrx - 1) * 0.68), Math.round((hry - 1) * 0.68), sw[1])
     c.ellipse(cx, cy + 1, Math.round((hrx - 1) * 0.34), Math.round((hry - 1) * 0.34), sw[2])
-    // two thick spiral arms turning (4 frames), bright, a highlight at their heads
-    for (let arm = 0; arm < 2; arm++) {
-      for (let i = 0; i < 22; i++) {
-        const t = i / 22, a = frame * Math.PI / 2 + arm * Math.PI + t * Math.PI * 1.6
-        const rx = (hrx - 2) * (0.2 + 0.8 * t), ry = (hry - 2) * (0.2 + 0.8 * t)
+    // three curved arms turning (4 frames, a third of a turn apart), starting off the middle so no frame draws a
+    // letter (two arms through the centre read as S or $)
+    for (let arm = 0; arm < 3; arm++) {
+      for (let i = 0; i < 16; i++) {
+        const t = i / 16, a = frame * Math.PI / 6 + arm * 2 * Math.PI / 3 + t * Math.PI * 0.9
+        const rx = (hrx - 2) * (0.38 + 0.6 * t), ry = (hry - 2) * (0.38 + 0.6 * t)
         const x = Math.round(cx + Math.cos(a) * rx), y = Math.round(cy + 1 + Math.sin(a) * ry)
-        const col = t < 0.25 ? sw[3] : t < 0.6 ? sw[2] : sw[1]
-        c.px(x, y, col); c.px(x + 1, y, col)
+        const col = t < 0.3 ? sw[3] : t < 0.65 ? sw[2] : sw[1]
+        c.px(x, y, col); c.px(x, y + 1, col)
       }
     }
     c.px(cx, cy + 1, sw[3]); c.px(cx + 1, cy + 1, sw[3])
