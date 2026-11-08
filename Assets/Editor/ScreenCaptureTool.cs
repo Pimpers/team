@@ -104,6 +104,8 @@ public static class ScreenCaptureTool
         Add("Stage2", "draft_4x3", () => Find<CardDraftUI>().Show(() => { }), 1440, 1080);
         Add("MainScene", "village_16x10", null, 1680, 1050);
         Add("MainScene", "village_4x3", null, 1440, 1080);
+        // The result board with a long build (20 cards: past two rows the strip ends in "+N").
+        Add("Stage2", "result_many", () => { int n = 0; foreach (var c in CardPool.All) { if (n >= 20) break; if (c.job == PlayerStats.Instance.Job || c.job == CardPool.Job.Any) { PlayerStats.Instance.ApplyCard(c.id); n++; } } Find<ResultUI>().Show(true, 48, -1); });
         // The set banner while it is up (0.7 s after the cards that finish 발톱: fully in, before it fades), 16:9 and 4:3.
         Add("Stage2", "set_banner", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 0, 0, 0.7f);
         Add("Stage2", "set_banner_4x3", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 1440, 1080, 0.7f);
