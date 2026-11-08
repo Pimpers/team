@@ -232,7 +232,7 @@ const PORTAL = {
   safe:    { st: ["#967c5f", "#c1b89a", "#dbcba7"], sh: "#967c5f", sw: ["#4e8415", "#63a019", "#85d527", "#c3d971"], rim: ["#85d527", "#c3d971"], bar: "vine" },
   plain:   { st: ["#504b5f", "#7e8f99", "#b1c3ca"], sh: "#504b5f", sw: ["#2d67a9", "#799acb", "#a7daf9", "#cef4fb"], rim: ["#799acb", "#cef4fb"], bar: "chain" },
   boss:    { st: ["#141218", "#504b5f", "#7b364d"], sh: "#3e1f27", sw: ["#7b364d", "#e5354e", "#f8759b", "#e9b7bb"], rim: ["#e5354e", "#f8759b"], bar: "chain" },
-  victory: { st: ["#a5905b", "#fad567", "#fdeb7b"], sh: "#cb8940", sw: ["#cb8940", "#fbcd0d", "#fdeb7b", "#f5ebe6"], rim: ["#fbcd0d", "#f5ebe6"], bar: "chain" },
+  victory: { st: ["#a5905b", "#c9b688", "#d3bf8f"], sh: "#a5905b", sw: ["#cb8940", "#fbcd0d", "#fdeb7b", "#f5ebe6"], rim: ["#fbcd0d", "#f5ebe6"], bar: "chain" },
 }
 const GEO = {
   normal: { cx: 20, cy: 25, o: [18, 22], h: [11, 16], step: 43, w: 40 },
@@ -296,16 +296,24 @@ function portal(c, v, state, frame) {
         c.px(x, y, dy > -4 ? "#7b7081" : "#b1c3ca"); c.px(x + s, y, out); c.px(x - s, y, out)
       }
     }
-    c.rect(cx - 5, 1, 11, 6, out); c.rect(cx - 4, 3, 9, 3, "#fbcd0d"); c.line(cx - 4, 5, cx + 4, 5, "#cb8940")
-    for (const dx of [-4, 0, 4]) { c.px(cx + dx, 2, "#fbcd0d"); c.px(cx + dx, 1, "#fbcd0d"); c.px(cx + dx, 0, out) }
-    c.px(cx, 4, "#e5354e")
+    // the crown is the keystone: a stone block set into the arch's top, a gold band on it and three points, its
+    // shoulders running into the horns' bases along the arch's rim (one piece, not a box on top)
+    const kt = top(cx)
+    c.rect(cx - 6, kt - 2, 13, 8, out); c.rect(cx - 5, kt - 1, 11, 6, st[1]); c.line(cx - 5, kt + 4, cx + 5, kt + 4, P.sh)
+    c.line(cx - 5, kt - 1, cx + 5, kt - 1, "#cb8940"); c.line(cx - 5, kt, cx + 5, kt, "#fbcd0d"); c.line(cx - 4, kt, cx - 2, kt, "#fdeb7b")
+    for (const dx of [-4, 0, 4]) { c.px(cx + dx, kt - 2, "#fbcd0d"); c.px(cx + dx, kt - 3, dx === 0 ? "#fdeb7b" : "#fbcd0d"); c.px(cx + dx, kt - 4, out); c.px(cx + dx - 1, kt - 3, out); c.px(cx + dx + 1, kt - 3, out) }
+    c.px(cx, kt + 2, "#e5354e"); c.px(cx, kt + 1, "#f8759b")
+    for (const sd of [-1, 1]) for (let x = 7; x <= 14; x++) { const xx = cx + sd * x, t = top(xx); c.px(xx, t, out); c.px(xx, t + 1, "#7b364d") } // the rim joining horn to crown
     for (const [x, y] of [[6, 34], [7, 35], [8, 36], [41, 18], [40, 19], [40, 20]]) c.px(x, y, "#f8759b")
   } else if (v === "victory") {
     // a laurel up both sides (green leaves in two tones, edged in gold) and a star on the keystone
     for (const sd of [-1, 1]) for (let i = 0; i < 6; i++) {
-      const y = 36 - i * 5, x = cx + sd * (orx - 1 - Math.round(i * 0.9)) + sd
-      c.px(x, y, "#4e8415"); c.px(x + sd, y - 1, "#85d527"); c.px(x + sd, y, "#4e8415"); c.px(x + 2 * sd, y - 2, "#85d527")
-      c.px(x + 2 * sd, y - 1, "#fbcd0d"); c.px(x + sd, y - 2, "#fbcd0d"); c.px(x - sd, y, out)
+      // a leaf slanting up and out: dark green base, light green blade, a gold tip, outlined below
+      const y = 37 - i * 5, x = cx + sd * (orx - 3 - Math.round(i * 0.9))
+      c.px(x, y, "#4e8415"); c.px(x + sd, y, "#4e8415"); c.px(x + sd, y - 1, "#85d527"); c.px(x + 2 * sd, y - 1, "#85d527")
+      c.px(x + 2 * sd, y - 2, "#85d527"); c.px(x + 3 * sd, y - 2, "#fbcd0d")
+      c.px(x, y + 1, out); c.px(x + sd, y + 1, out); c.px(x + 2 * sd, y, out); c.px(x + 3 * sd, y - 1, out); c.px(x + 4 * sd, y - 2, out)
+      c.px(x + sd, y - 2, out); c.px(x + 2 * sd, y - 3, out); c.px(x + 3 * sd, y - 3, out); c.px(x - sd, y, out)
     }
     c.px(20, 1, "#f5ebe6"); c.line(18, 3, 22, 3, "#f5ebe6"); c.px(20, 2, "#fdeb7b"); c.px(20, 4, "#fdeb7b"); c.px(19, 5, "#fdeb7b"); c.px(21, 5, "#fdeb7b")
   }
