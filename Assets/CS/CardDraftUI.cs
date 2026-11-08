@@ -162,6 +162,7 @@ public class CardDraftUI : MonoBehaviour
         if (panel != null)
         {
             panel.SetActive(true);
+            UiPanels.ScreenShade((RectTransform)panel.transform); // the veil over the whole screen, not the box
             // A quiet dark veil separates the paused choice from the live battlefield.
             var plate = panel.GetComponent<Image>();
             if (plate != null)
@@ -170,6 +171,10 @@ public class CardDraftUI : MonoBehaviour
                 plate.sprite = null;
                 plate.color = new Color(0.025f, 0.018f, 0.035f, 0.72f);
                 plate.raycastTarget = true;
+                // the veil's colour goes to the full-screen shade; the box itself draws nothing (else a darker rectangle)
+                var shade = panel.transform.Find("ScreenShade").GetComponent<Image>();
+                shade.color = plate.color;
+                plate.color = Color.clear;
             }
         }
         // Freeze the game while the player picks a card: the character stops where it is
@@ -306,12 +311,11 @@ public class CardDraftUI : MonoBehaviour
         if (cooldown >= 0 && !string.IsNullOrEmpty(kind)) { kind += " · " + effect.Substring(cooldown + 1); effect = effect.Substring(0, cooldown); }
         string meta = string.IsNullOrEmpty(level) ? kind : string.IsNullOrEmpty(kind) ? level : kind + "  " + level;
         // <nobr>: the short lines shrink (auto-size) rather than wrap into an extra line.
-        string metaLine = string.IsNullOrEmpty(meta) ? "" : $"<size=76%><nobr>{meta}</nobr></size>\n";
+        string metaLine = string.IsNullOrEmpty(meta) ? "" : $"<nobr>{meta}</nobr>\n";
         // The name sits on its own label over the frame (CardName, see Dress): this text box holds
         // only what fits inside the cream area, so nothing lands on the dark ornament.
         return metaLine +
-               $"<size=72%><nobr>{TagLine(card)}</nobr></size>\n" +
-               $"<size=82%>{CompactEffect(effect)}</size>";
+               CompactEffect(effect); // all at 24 (UI_STYLE.md: nothing under TextSmall); the tags are the window's badge now
     }
 
     // ---- Card face by grade (CardPool.Tier). Layout in card units (the card is 320 x 480, the
@@ -423,8 +427,9 @@ public class CardDraftUI : MonoBehaviour
         label.textWrappingMode = TextWrappingModes.Normal;
         label.alignment = TextAlignmentOptions.Top;
         label.enableAutoSizing = true;
-        label.fontSizeMin = UiTheme.TextMin;
-        label.fontSizeMax = 28f;
+        label.fontSizeMin = UiTheme.TextSmall; // never under 24: three lines at most fit the cream box
+        label.fontSizeMax = UiTheme.TextSmall;
+        label.overflowMode = TextOverflowModes.Ellipsis; // a long effect ends in … rather than running onto the frame
         label.overflowMode = TextOverflowModes.Truncate;
         label.lineSpacing = -6f; // four lines (kind, tags, two of effect) fit the cream box above the corner curls
 

@@ -18,6 +18,22 @@ public static class UiPanels
         else img.color = UiTheme.Plate;
     }
 
+    // A full-screen darkening behind a panel that is smaller than the screen (the card draft's 1192 x 664 box left a
+    // hard-edged rectangle with the game - and the cat - showing round and between the cards). It is the panel's first
+    // child, so it comes and goes with the panel; it reaches far past every edge, so any aspect ratio is covered.
+    public static void ScreenShade(RectTransform panel)
+    {
+        if (panel == null || panel.Find("ScreenShade") != null) return;
+        var img = new GameObject("ScreenShade", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        var rt = img.rectTransform;
+        rt.SetParent(panel, false);
+        rt.SetAsFirstSibling();
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        rt.offsetMin = new Vector2(-4000f, -4000f); rt.offsetMax = new Vector2(4000f, 4000f);
+        img.color = UISkin.ModalShade;
+        img.raycastTarget = true; // clicks outside the cards do not reach the fight
+    }
+
     // A dark inset slot inside `parent`, top-left at `pos`, `size` big; text goes on top of it.
     public static Image Inset(RectTransform parent, string name, Vector2 pos, Vector2 size)
     {

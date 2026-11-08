@@ -33,7 +33,7 @@ boss.phase2 = {0} - 2페이즈
 draft.reroll = 다시 뽑기  {0}{1}  <size=75%><color=$label>(보유 {2})</color></size>
 draft.instant = 즉시
 draft.max =   최대
-draft.kind.active = <color=$active>액티브 · {0}키</color>
+draft.kind.active = <color=$ink>액티브 · {0}키</color>
 draft.kind.enhance = <color=$enhance>{0} 강화</color>
 draft.set_complete = <b>{0} 완성!</b>
 

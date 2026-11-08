@@ -39,6 +39,8 @@ line; the CHAPTER tag sits over the region it opens.
 ## Type
 One pixel font, three crisp steps at the 1920 x 1080 reference (match 0.5): small 24, body 36, title 48
 (`UiTheme.TextSmall / TextLarge / TextTitle`). Nothing under 24 on screen; the 큰 글씨 option raises the HUD lines.
+**Minimum size: 24 (TextSmall), auto-size included** - no `<size=7x%>` lines and no `fontSizeMin` under it. A box
+that cannot hold its text at 24 gets fewer lines or shorter words (the card face: kind line + effect, tags as a badge).
 
 ## Icons
 Pixel art in the game's palette at the game's pixel size (one art pixel ~ 8-10 screen px), 1 px dark outline, 3-4
