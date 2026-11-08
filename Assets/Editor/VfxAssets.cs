@@ -33,7 +33,7 @@ public static class VfxAssets
     }
 
     // Bump when the effect set changes, so an open project rebuilds the library by itself.
-    const int LibraryVersion = 24;
+    const int LibraryVersion = 25;
     const float CatPixelsPerUnit = 12.5f; // the cats: 100 px/unit drawn at x8
 
     static Def BD(string id, float fps, Pivot pivot = Pivot.Center, float scale = 1f, int order = 7, bool turns = false,
@@ -88,8 +88,9 @@ public static class VfxAssets
         BD("a_can_fx", 16f, scale: 1f, folder: "Archer", cell: 64), // Aether (캔따개), 3 frames
         // Knight skills (Assets/Effects/Knight: one drawn effect each, flash then fade; the wheel ring spins).
         BD("k_highcut_fx", 24f, scale: 1f, folder: "Knight", cell: 32), BD("k_knead_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 32),
-        BD("k_tower_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 64), BD("k_loaf_fx", 14f, scale: 1f, folder: "Knight", cell: 32), // k_loaf_fx: Aether (식빵 자세)
-        BD("k_groom_fx", 14f, scale: 1f, folder: "Knight", cell: 32), BD("k_ilseom_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
+        BD("k_tower_fx", 16f, Pivot.Ground, scale: 1f, folder: "Knight", cell: 64), BD("k_loaf_fx", 14f, scale: 1f, order: -1, folder: "Knight", cell: 32), // k_loaf_fx: Aether (식빵 자세); behind the cat (a buff: the cat stays readable)
+        BD("k_groom_fx", 14f, scale: 1f, order: -1, folder: "Knight", cell: 32), // behind the cat (a buff)
+        BD("k_ilseom_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_rush_fx", 16f, scale: 1f, folder: "Knight", cell: 32), BD("k_leap_fx", 16f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_wheel_fx", 20f, scale: 1f, folder: "Knight", cell: 64), BD("k_paw_fx", 22f, scale: 1f, folder: "Knight", cell: 32),
         BD("k_hiss_fx", 18f, scale: 1f, folder: "Knight", cell: 32), BD("k_night_fx", 12f, scale: 1f, folder: "Knight", cell: 32), // both Aether (하악질, 야간 시야); hiss halved like lure, fps x1.5
@@ -97,7 +98,7 @@ public static class VfxAssets
         BD("slash", 30f),
         BD("slash_gold", 30f),
         BD("xcut", 24f),
-        BD("heal", 16f, Pivot.Ground, scale: 1f, folder: "RetroDiffusion", cell: 48, file: "rd_heal"),
+        BD("heal", 16f, Pivot.Ground, scale: 1f, order: -1, folder: "RetroDiffusion", cell: 48, file: "rd_heal"), // behind the cat (a buff)
         BD("rupture", 26f, Pivot.Ground),
         BD("explosion", 20f, scale: 1f), // Aether (폭발)
         BD("parry", 26f),

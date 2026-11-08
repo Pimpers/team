@@ -619,7 +619,7 @@ MonoBehaviour:
     - {fileID: 1592116953, guid: 5fb83fc15bfc8e64292c02975149382d, type: 3}
     fps: 14
     scale: 1
-    sortingOrder: 7
+    sortingOrder: -1
     pixelSnap: 1
     freeRotation: 0
   - id: k_groom_fx
@@ -634,7 +634,7 @@ MonoBehaviour:
     - {fileID: 1947726671, guid: 210eba2263632e94a99bd9d4113c67d2, type: 3}
     fps: 14
     scale: 1
-    sortingOrder: 7
+    sortingOrder: -1
     pixelSnap: 1
     freeRotation: 0
   - id: k_ilseom_fx
@@ -828,7 +828,7 @@ MonoBehaviour:
     - {fileID: 306277523, guid: 16f12e52c9f6cda44bcb5ee05a97453a, type: 3}
     fps: 16
     scale: 1
-    sortingOrder: 7
+    sortingOrder: -1
     pixelSnap: 1
     freeRotation: 0
   - id: rupture
@@ -1401,4 +1401,4 @@ MonoBehaviour:
     sortingOrder: 9
     pixelSnap: 0
     freeRotation: 0
-  version: 24
+  version: 25
