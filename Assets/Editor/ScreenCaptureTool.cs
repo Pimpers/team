@@ -123,6 +123,11 @@ public static class ScreenCaptureTool
         // Every stage: where its log lands once open (headroom above it, not jammed under a ledge).
         for (int n = 1; n <= 5; n++)
             Add("Stage" + n, "exit_stage" + n, () => { ClearEnemies(); StageExit.Instance.Open("Stage1"); CatBeforeExit(1.5f); });
+        // The fork: the hard way (red, skull) and the easy way (green, sprout), shut, open, and each one taking the cat.
+        Add("Stage1", "fork_closed", () => CatBeforeExit(4f));
+        Add("Stage1", "fork_open", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, wait: 1f);
+        Add("Stage1", "fork_pull_hunt", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); StageExit.Instance.ForCapture(true, true); }, wait: 0.4f);
+        Add("Stage1", "fork_pull_safe", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); StageExit.Instance.ForCapture(true, false); }, wait: 0.4f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
@@ -136,6 +141,7 @@ public static class ScreenCaptureTool
         Add("MainScene", "a11y_smith_16x10", () => Find<BlacksmithUI>().Open(), 1680, 1050); // narrower screens: the bubble wraps sooner
         Add("MainScene", "a11y_smith_4x3", () => Find<BlacksmithUI>().Open(), 1440, 1080);
         // 큰 글씨 + 색약 still on: the closed log's message, and the exit's edge arrow in the colour-blind colour.
+        Add("Stage1", "a11y_fork", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, wait: 1f);
         Add("Stage1", "a11y_exit_closed", () => { BuildSheet.ForceShow = false; CatBeforeExit(0.3f); }, wait: 0.35f); // (the word lasts 0.7 s)
         Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
 

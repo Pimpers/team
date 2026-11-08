@@ -6,6 +6,7 @@ pal({
   K: "#201932", P: "#3f1a41", b: "#79492f", B: "#5a3326", t: "#b6963a", T: "#d9bd68",
   g: "#69c71d", G: "#1d864f", D: "#154645",
   c: "#6e2440", C: "#a83a4c", o: "#e08a2e", O: "#a8561f", r: "#e0414a", R: "#8a2342", y: "#f6f7a0", Y: "#c8e86a",
+  E: "#ebe3cf", e: "#c1b89a", X: "#150904", L: "#85d527", M: "#63a019", s: "#4e8415",
 })
 
 // The log, lying on the ground, its open end on the left (flipped in game for the way out on the right).
@@ -49,12 +50,20 @@ const LOG = {
   forest: { out: "#150904", barkD: "#483430", bark: "#886644", barkL: "#a7845d", rim: "#c9b688",
             woodL: "#d3bf8f", woodM: "#a7845d", woodD: "#886644", hole: "#150904", depth: "#3e1f27",
             mossD: "#4e8415", moss: "#63a019", mossL: "#85d527" },
+  // the hard fork: scorched red-brown bark, raw orange wood (not the boss's plum crimson)
+  hunt: { out: "#150904", barkD: "#3e1f27", bark: "#5e2c19", barkL: "#742b21", rim: "#b4564f",
+          woodL: "#f3a15e", woodM: "#e6934f", woodD: "#ba6834", hole: "#150904", depth: "#3e1f27",
+          mossD: "#3e1f27", moss: "#742b21", mossL: "#b4564f" },
   crimson: { out: "#150904", barkD: "#3e1f27", bark: "#7b364d", barkL: "#825665", rim: "#aa7980",
              woodL: "#e9b7bb", woodM: "#aa7980", woodD: "#825665", hole: "#150904", depth: "#3e1f27",
              mossD: "#3e1f27", moss: "#7b364d", mossL: "#b4564f" },
 }
-function bigLog(c, crimson, state, frame) {
-  const k = crimson ? LOG.crimson : LOG.forest
+// kind: false / "forest" (the plain way), true / "crimson" (the boss way), "hunt" (the hard fork: thorns, cracked
+// bark, a skull mark, a red swirl), "safe" (the easy fork: flowers and round leaves on the moss, a green swirl).
+function bigLog(c, kind, state, frame) {
+  const v = kind === true ? "crimson" : kind === false ? "forest" : kind
+  const crimson = v === "crimson"
+  const k = crimson ? LOG.crimson : v === "hunt" ? LOG.hunt : LOG.forest
   // body: from the mouth (x 12) to a rounded back end (x 55, radius 6), 30 px tall (y 6-35)
   c.ellipse(55, 21, 7, 16, k.out); c.rect(12, 5, 44, 32, k.out)
   c.ellipse(55, 21, 6, 15, k.bark); c.rect(12, 6, 44, 30, k.bark)
@@ -89,8 +98,34 @@ function bigLog(c, crimson, state, frame) {
       c.px(x, 8 + len, k.out); c.px(x - 1, 8, k.mossD)
     }
   }
-  blob(24, 33, 2, [[26, 2], [31, 1]])
-  blob(43, 48, 3, [[45, 3]])
+  if (v === "hunt") {
+    // thorns along the top instead of moss, a split in the bark, a skull mark burnt into it
+    for (const x of [18, 23, 28, 33, 38, 43, 48]) {
+      const h = x % 10 === 3 ? 4 : 3
+      // a thorn two pixels wide at the base, one at the tip, a pale point
+      for (let i = 0; i < h; i++) {
+        const w = i < 2 ? 1 : 0
+        for (let dx = -w; dx <= 0; dx++) c.px(x + dx, 5 - i, i === h - 1 ? "#d3bf8f" : "#483430")
+        c.px(x - w - 1, 5 - i, k.out); c.px(x + 1, 5 - i, k.out)
+      }
+      c.px(x, 5 - h, k.out)
+    }
+    for (const [x, y] of [[20, 9], [21, 10], [21, 11], [22, 12], [22, 13], [23, 14], [50, 26], [49, 27], [49, 28], [48, 29], [48, 30]]) c.px(x, y, k.out)
+    for (const [x, y] of [[22, 10], [23, 13], [50, 27]]) c.px(x, y, "#b4564f")          // raw red wood in the cracks
+    // the skull: bone, two dark eyes, a nose, teeth
+    c.rect(38, 17, 7, 5, k.out); c.rect(39, 18, 5, 4, "#ebe3cf"); c.rect(39, 21, 5, 2, "#c1b89a"); c.line(38, 22, 44, 22, k.out)
+    c.px(40, 19, k.out); c.px(42, 19, k.out); c.px(41, 20, "#c1b89a"); c.px(40, 22, "#ebe3cf"); c.px(42, 22, "#ebe3cf")
+    c.line(39, 24, 43, 24, k.out); c.line(40, 23, 42, 23, "#c1b89a")
+  } else {
+    blob(24, 33, 2, [[26, 2], [31, 1]])
+    blob(43, 48, 3, [[45, 3]])
+  }
+  if (v === "safe") {
+    // flowers on the moss and round leaves sprouting from it
+    const flower = (x, y, petal) => { c.px(x, y - 1, petal); c.px(x - 1, y, petal); c.px(x + 1, y, petal); c.px(x, y + 1, petal); c.px(x, y, "#fbcd0d") }
+    flower(26, 1, "#f29cb0"); flower(31, 2, "#ebe3cf"); flower(46, 2, "#f29cb0")
+    for (const [x, y] of [[36, 3], [52, 7]]) { c.px(x, y, "#4e8415"); c.rect(x - 2, y - 2, 2, 2, "#85d527"); c.rect(x + 1, y - 2, 2, 2, "#63a019"); c.px(x - 2, y - 3, k.out); c.px(x + 2, y - 3, k.out) }
+  }
   // the cut end: bark rim, then rings of wood round the hole (light, mid, dark), the hole itself
   c.ellipse(12, 21, 11, 18, k.out)
   c.ellipse(12, 21, 10, 17, k.barkD)
@@ -114,12 +149,36 @@ function bigLog(c, crimson, state, frame) {
           c.px(Math.round(12 + Math.cos(a) * rx), Math.round(22 + Math.sin(a) * ry), i < 2 ? head : col)
         }
     }
-    ring(3, 8, 3, 1, 6, crimson ? "#b4564f" : "#85d527", crimson ? "#e9b7bb" : "#c3d971")
-    ring(1, 4, 2, -1, 5, crimson ? "#7b364d" : "#4e8415", crimson ? "#aa7980" : "#85d527")
+    const sw = { forest: ["#85d527", "#c3d971", "#4e8415", "#85d527"], crimson: ["#b4564f", "#e9b7bb", "#7b364d", "#aa7980"],
+                 hunt: ["#e5354e", "#fbcd0d", "#ec6309", "#f3a15e"], safe: ["#63a019", "#c3d971", "#85d527", "#ebe3cf"] }[v]
+    ring(3, 8, 3, 1, 6, sw[0], sw[1])
+    ring(1, 4, 2, -1, 5, sw[2], sw[3])
   }
 }
 sprite("exit_logbig_closed", { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, false, "closed", 0))
 sprite("exit_logbig_crimson_closed", { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, true, "closed", 0))
+// the fork: the hard way (사냥 길) and the easy way (안전 길)
+for (const v of ["hunt", "safe"]) {
+  sprite(`exit_logbig_${v}_closed`, { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, v, "closed", 0))
+  for (let f = 0; f < 4; f++) sprite(`exit_logbig_${v}_open_${f}`, { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, v, "open", f))
+}
+// The fork's head icons (shape as well as colour, for 색약): a skull for the hard way, a sprout for the easy way.
+sprite("exit_icon_hunt", { outline: "#150904" }, `
+  .EEEEE.
+  EEEEEEE
+  EXXEXXE
+  EXXEXXE
+  EEEXEEE
+  .eEEEe.
+  .E.E.E.`)
+sprite("exit_icon_safe", { outline: "#150904" }, `
+  .LL.MM.
+  LLLMMMM
+  LLLMMMM
+  .LLsMM.
+  ...s...
+  ...s...
+  ..sss..`)
 for (let f = 0; f < 4; f++) {
   sprite(`exit_logbig_open_${f}`, { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, false, "open", f))
   sprite(`exit_logbig_crimson_open_${f}`, { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, true, "open", f))

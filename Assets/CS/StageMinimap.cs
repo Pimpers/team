@@ -32,8 +32,8 @@ public class StageMinimap : MonoBehaviour
     Camera cam;
     RectTransform mapRect;
     RectTransform playerMarker;
-    RectTransform exitMarker;
-    Image exitImage;
+    RectTransform exitMarker, exitMarker2; // the second: the fork's other log
+    Image exitImage, exitImage2;
     // Cyan, not the shared green: green read as the grass edge on this small map (색약 모드 keeps its own colour).
     static Color ExitColor => GameSettings.Colorblind ? UiTheme.ExitMark : new Color(0.35f, 0.9f, 1f);
     RectTransform[] viewEdges;
@@ -104,6 +104,10 @@ public class StageMinimap : MonoBehaviour
         exitMarker.localRotation = Quaternion.Euler(0f, 0f, 45f);
         exitImage = exitMarker.GetComponent<Image>();
         exitMarker.gameObject.SetActive(false);
+        exitMarker2 = Marker("Exit2", ExitColor, Vector2.one * 10f);
+        exitMarker2.localRotation = Quaternion.Euler(0f, 0f, 45f);
+        exitImage2 = exitMarker2.GetComponent<Image>();
+        exitMarker2.gameObject.SetActive(false);
 
         playerMarker = Marker("Player", PlayerColor, Vector2.one * 9f);
         BuildLegend(panel, font);
@@ -329,25 +333,34 @@ public class StageMinimap : MonoBehaviour
         }
     }
 
-    // Shown only once the exit log is out; it pulses slowly when the cat is close.
+    // Shown only once the exit log is out (one marker per log: the fork's red and green); it pulses slowly when the
+    // cat is close.
     void UpdateExitMarker()
     {
         if (exitMarker == null) return;
         var exit = StageExit.Instance;
-        bool show = exit != null && exit.IsOpen;
-        if (exitMarker.gameObject.activeSelf != show)
+        int count = exit != null ? exit.WayCount : 0;
+        UpdateOne(exitMarker, exitImage, exit, 0, count);
+        UpdateOne(exitMarker2, exitImage2, exit, 1, count);
+    }
+
+    void UpdateOne(RectTransform marker, Image image, StageExit exit, int i, int count)
+    {
+        bool show = exit != null && i < count && exit.WayOpen(i);
+        if (marker.gameObject.activeSelf != show)
         {
-            exitMarker.gameObject.SetActive(show);
-            if (show) exitMarker.SetAsLastSibling();
+            marker.gameObject.SetActive(show);
+            if (show) marker.SetAsLastSibling();
             if (show && playerMarker != null) playerMarker.SetAsLastSibling();
         }
         if (!show) return;
-        Vector2 point = exit.ExitPoint;
-        exitMarker.anchoredPosition = ToMap(point);
+        Vector2 point = exit.WayPoint(i);
+        marker.anchoredPosition = ToMap(point);
         bool near = player != null && Vector2.Distance(player.position, point) < 6f;
         float pulse = near ? 0.55f + 0.45f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 3f)) : 1f;
-        exitImage.color = new Color(ExitColor.r, ExitColor.g, ExitColor.b, pulse);
-        exitMarker.localScale = Vector3.one * (near ? 1f + 0.2f * pulse : 1f);
+        var c = exit.WayColor(i);
+        image.color = new Color(c.r, c.g, c.b, pulse);
+        marker.localScale = Vector3.one * (near ? 1f + 0.2f * pulse : 1f);
     }
 
     static void SetEdge(RectTransform edge, Vector2 pos, Vector2 size)

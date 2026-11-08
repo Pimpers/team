@@ -135,7 +135,7 @@ public class RunManager : MonoBehaviour
                 setHud = SetHUD.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font); // the build's sets, bottom-left
                 setHud.transform.SetAsFirstSibling(); // under the popups (card draft, result board)
             }
-            if (!tutorial && StageMap.Instance != null) StageExit.Create(stageNumber); // the log out (and in) - see StageExit
+            if (!tutorial && StageMap.Instance != null) StageExit.Create(stageNumber, HasFork); // the log out (and in), or the fork's two - see StageExit
             if (!tutorial && StageMap.Instance != null && stageNumber >= 2 && stageNumber < totalStages) StartCoroutine(SetupTraps()); // none in the boss arena
             MonsterTracker.Create(hudText.canvas.rootCanvas);
             // Q / E / R bar for the run skills picked from the drafts.
@@ -331,10 +331,21 @@ public class RunManager : MonoBehaviour
         if (IsStageScene)
         {
             // Stage 1-3: card first, then choose the route that shapes the next normal stage.
-            if (!tutorial && stageNumber < totalStages - 1 && hudText != null && hudText.canvas != null)
+            if (HasFork)
             {
-                StageRouteChoiceUI.Show(this, hudText.canvas.rootCanvas, hudText.font, ChooseNextRoute);
-                return;
+                // Two logs at the stage's end: the red hard way (사냥 길) and the green easy way (안전 길). Walking into
+                // one picks the route. A stage with no room for two falls back to the route window.
+                PlayerStats.Instance.SaveForNextStage();
+                if (StageExit.Instance != null && StageExit.Instance.OpenFork(nextSceneName, RouteProgress.SetNextRoute))
+                {
+                    OneTimeTip.ShowInRun("route"); // the first fork: what the two logs mean
+                    return;
+                }
+                if (hudText != null && hudText.canvas != null)
+                {
+                    StageRouteChoiceUI.Show(this, hudText.canvas.rootCanvas, hudText.font, ChooseNextRoute);
+                    return;
+                }
             }
             LoadNextStage();
             return;
@@ -345,6 +356,9 @@ public class RunManager : MonoBehaviour
             monstersRemaining = CountMonsters(stageGroups[currentStage - 1]);
         RefreshHud();
     }
+
+    // Stages 1-3 end at a fork (the boss way and the boss room have one log).
+    bool HasFork => IsStageScene && !tutorial && stageNumber < totalStages - 1;
 
     void ChooseNextRoute(bool hunt)
     {

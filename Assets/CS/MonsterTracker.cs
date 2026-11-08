@@ -70,14 +70,14 @@ public class MonsterTracker : MonoBehaviour
             foreach (var e in targets)
                 Place(cam.WorldToViewportPoint(e.Renderer != null ? e.Renderer.bounds.center : e.transform.position),
                       (e.IsElite ? 1.25f : 1f) * pulse, EnemyArrow, size, ref used);
-            if (toExit) Place(cam.WorldToViewportPoint(exit.ExitPoint), 1.25f * pulse, ExitArrow, size, ref used);
+            if (toExit) // one arrow per log out: the fork's red and green, in their own colours
+                for (int i = 0; i < exit.WayCount; i++)
+                    if (exit.WayOpen(i)) Place(cam.WorldToViewportPoint(exit.WayPoint(i)), 1.25f * pulse, exit.WayColor(i), size, ref used);
         }
         for (int i = used; i < arrows.Count; i++) arrows[i].gameObject.SetActive(false);
     }
 
     static readonly Color EnemyArrow = new Color(1f, 0.32f, 0.28f);
-    // the minimap's exit colour (StageMinimap), so the arrow and the map mark read as one thing
-    static Color ExitArrow => GameSettings.Colorblind ? UiTheme.ExitMark : new Color(0.35f, 0.9f, 1f);
 
     void Place(Vector3 vp, float scale, Color color, Vector2 size, ref int used)
     {

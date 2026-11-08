@@ -46,6 +46,42 @@ public class GameplayPlayModeTests
         Assert.That(PlayerStats.Instance.Body.skillLock, Is.False, "the cat is still locked");
     }
 
+    // The fork at a stage's end: the red log is the hard way (사냥 길), the green one the easy way (안전 길). Walking into
+    // one sets up the next stage on that route, and the other log shuts at once.
+    [UnityTest]
+    public IEnumerator ForkHardLog_Entered_NextStageIsHunt() => ForkEntered(true);
+
+    [UnityTest]
+    public IEnumerator ForkEasyLog_Entered_NextStageIsSafe() => ForkEntered(false);
+
+    IEnumerator ForkEntered(bool hunt)
+    {
+        RouteProgress.Reset();
+        SceneManager.LoadScene("Stage1");
+        yield return new WaitForSecondsRealtime(2f);
+        var exit = StageExit.Instance;
+        Assert.That(exit, Is.Not.Null, "no exit");
+        PlayerStats.Instance.SaveForNextStage(); // as the card pick does: the run carries on (without it Stage2 starts a new run)
+        Assert.That(exit.OpenFork("Stage2", RouteProgress.SetNextRoute), Is.True, "no fork");
+        Assert.That(exit.IsFork && exit.WayCount == 2, Is.True, "the fork has not two logs");
+        var body = PlayerStats.Instance.Body;
+        var feet = body.Feet;
+        var way = exit.RoutePoint(hunt);
+        body.transform.position += new Vector3(way.x - feet.x, way.y - 0.5f - feet.y, 0f);
+        yield return null;
+        yield return null;
+        Assert.That(StageExit.Entering, Is.True, "not drawn in");
+        int other = exit.WayIsHunt(0) == hunt ? 1 : 0;
+        Assert.That(exit.WayOpen(other), Is.False, "the other log stayed open");
+
+        float until = Time.realtimeSinceStartup + 8f;
+        while ((SceneManager.GetActiveScene().name != "Stage2" || StageWipe.Busy) && Time.realtimeSinceStartup < until) yield return null;
+        Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("Stage2"), "never left through the log");
+        yield return new WaitForSecondsRealtime(1f); // the next stage applies the route
+        Assert.That(hunt ? RouteProgress.HuntChoices : RouteProgress.SafeChoices, Is.EqualTo(1), "the next stage is not on the chosen route");
+        Assert.That(hunt ? RouteProgress.SafeChoices : RouteProgress.HuntChoices, Is.Zero, "the other route was taken too");
+    }
+
     // The boss room's log: walking in irises shut, the result board is shown behind it, and the iris opens again.
     [UnityTest]
     public IEnumerator BossRoomLog_Entered_OpensOnResult()

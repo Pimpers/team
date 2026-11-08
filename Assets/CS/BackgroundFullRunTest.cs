@@ -236,11 +236,16 @@ public class BackgroundFullRunTest : MonoBehaviour
 
             if (stage <= 3)
             {
+                // The fork: two logs (the hard way and the easy way), or the route window where a stage has no room for
+                // two. Plain mode takes the easy way, dodge mode the hard way, so both routes are played to the end.
                 float routeDeadline = Time.realtimeSinceStartup + 4f;
                 StageRouteChoiceUI route = null;
-                while ((route = FindAnyObjectByType<StageRouteChoiceUI>()) == null && Time.realtimeSinceStartup < routeDeadline) yield return null;
-                result.routeAppeared = route != null;
-                if (route == null)
+                bool forkOpen = false;
+                while (!(forkOpen = StageExit.Instance != null && StageExit.Instance.IsFork && StageExit.Instance.IsOpen)
+                       && (route = FindAnyObjectByType<StageRouteChoiceUI>()) == null && Time.realtimeSinceStartup < routeDeadline) yield return null;
+                result.routeAppeared = forkOpen || route != null;
+                if (forkOpen) yield return Save($"stage{stage}_route");
+                else if (route == null)
                 {
                     report.error = $"Stage{stage}: route choice missing";
                     report.stages.Add(Close(result));
@@ -248,16 +253,16 @@ public class BackgroundFullRunTest : MonoBehaviour
                 }
                 yield return new WaitForSecondsRealtime(0.4f);
                 yield return Save($"stage{stage}_route");
-                string choice = stage % 2 == 1 ? "Hunt" : "Safe";
-                var buttonTransform = route.transform.Find("Panel/" + choice);
+                string choice = dodge ? "Hunt" : "Safe";
+                var buttonTransform = forkOpen ? null : route.transform.Find("Panel/" + choice);
                 var button = buttonTransform != null ? buttonTransform.GetComponent<Button>() : null;
-                if (button == null)
+                if (button == null && !forkOpen)
                 {
                     report.error = $"Stage{stage}: {choice} button missing";
                     report.stages.Add(Close(result));
                     break;
                 }
-                button.onClick.Invoke();
+                if (button != null) button.onClick.Invoke();
             }
 
             report.stages.Add(Close(result));
@@ -272,7 +277,8 @@ public class BackgroundFullRunTest : MonoBehaviour
             {
                 var exitBody = PlayerStats.Instance.Body;
                 var exitFeet = exitBody.Feet;
-                exitBody.transform.position += new Vector3(exitLog.ExitPoint.x - exitFeet.x, exitLog.ExitPoint.y - 0.5f - exitFeet.y, 0f);
+                Vector2 way = exitLog.IsFork ? exitLog.RoutePoint(dodge) : exitLog.ExitPoint;
+                exitBody.transform.position += new Vector3(way.x - exitFeet.x, way.y - 0.5f - exitFeet.y, 0f);
             }
             float sceneDeadline = Time.realtimeSinceStartup + 8f;
             while (SceneManager.GetActiveScene().name != wanted && Time.realtimeSinceStartup < sceneDeadline) yield return null;
