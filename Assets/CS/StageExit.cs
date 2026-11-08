@@ -48,6 +48,8 @@ public class StageExit : MonoBehaviour
         public bool Portal => true; // every way out is a portal now (2026-11-09); the log geometry is kept for reference
         public float Offset => Portal ? 0f : holeSide * HoleFromCentre; // from the hole to the sprite's middle
         public Vector3 signHome;
+        public SpriteRenderer rim;
+        public Sprite[] rims;
         public Vector3 Mouth => Portal ? new Vector3(holeX, floorY + 1.6f, 0f) : new Vector3(holeX - holeSide * 0.2f, floorY + 1.3f, 0f);
     }
 
@@ -190,6 +192,23 @@ public class StageExit : MonoBehaviour
         w.log.sortingOrder = body.Renderer.sortingOrder - 1; // the cat stays in front of it, shrinking into the swirl
         ways.Add(w);
         if (kind == "_hunt" || kind == "_safe") MakeSign(w);
+        // still in front of a big prop (no clear spot): a dark silhouette behind it so the arch reads against it
+        if (PropsNear(spot))
+        {
+            var plate = new GameObject("Backdrop").AddComponent<SpriteRenderer>();
+            plate.transform.SetParent(w.log.transform, false);
+            plate.transform.localScale = new Vector3(1.12f, 1.06f, 1f);
+            plate.sprite = w.log.sprite;
+            plate.color = new Color(0.08f, 0.06f, 0.08f, 0.9f);
+            plate.sortingOrder = w.log.sortingOrder - 1;
+        }
+        // the opening's inner edge, blinking between two colours once open (RimBlink)
+        var rimGo = new GameObject("Rim");
+        rimGo.transform.SetParent(w.log.transform, false);
+        w.rim = rimGo.AddComponent<SpriteRenderer>();
+        w.rim.sortingOrder = w.log.sortingOrder + 1;
+        w.rims = new[] { Resources.Load<Sprite>($"StageExit/exit_portal{kind}_rim_0"), Resources.Load<Sprite>($"StageExit/exit_portal{kind}_rim_1") };
+        w.rim.enabled = false;
         return w;
     }
 
@@ -216,35 +235,59 @@ public class StageExit : MonoBehaviour
 
     // The fork's two logs among the roomy floor spots `near` allows: the hard way as high as it can go (위), the easy
     // way low (아래), far enough apart that one's pull never reaches the other. False if the place has no room for two.
+    // The fork's two portals among the roomy floor spots `near` allows, side by side so both fit one screen (a choice
+    // is only a choice when both answers are in view): 7-10 units apart (one's pull never reaches the other), at most
+    // a portal's height (3) apart in height, clear of big props (trees, bushes) so they stand out, toward the stage's
+    // end. The hard way takes the farther one. False if the place has no such pair.
     bool PlaceFork(StageMap map, System.Func<Vector2, bool> near, bool closed)
     {
         var spots = new List<Vector2>();
         foreach (var s in map.spawnSlots) if (near(s) && Roomy(map, s)) spots.Add(s);
         if (spots.Count < 2) return false;
-        Vector2 hunt = spots[0];
-        foreach (var s in spots) if (s.y > hunt.y + 0.5f || (Mathf.Abs(s.y - hunt.y) <= 0.5f && s.x > hunt.x)) hunt = s;
-        bool found = false; Vector2 safe = default;
-        foreach (var s in spots)
-        {
-            bool apart = Mathf.Abs(s.x - hunt.x) >= 7f || Mathf.Abs(s.y - hunt.y) >= 3f;
-            if (!apart) continue;
-            // low first, then the nearest to the hard way (the two read as one fork)
-            if (!found || s.y < safe.y - 0.5f || (Mathf.Abs(s.y - safe.y) <= 0.5f && Mathf.Abs(s.x - hunt.x) < Mathf.Abs(safe.x - hunt.x)))
-            { safe = s; found = true; }
-        }
-        if (!found) return false;
-        foreach (var w in ways) if (w.log != null) Destroy(w.log.gameObject);
+        float bestScore = float.MaxValue; Vector2 a = default, b = default;
+        for (int i = 0; i < spots.Count; i++)
+            for (int j = 0; j < spots.Count; j++)
+            {
+                if (i == j || spots[j].x <= spots[i].x) continue;
+                float dx = spots[j].x - spots[i].x, dy = Mathf.Abs(spots[j].y - spots[i].y);
+                if (dx < 7f || dx > 10f || dy > 3f) continue;
+                float score = dy * 2f + Mathf.Abs(dx - 8f) - spots[j].x * 0.02f
+                            + (PropsNear(spots[i]) ? 6f : 0f) + (PropsNear(spots[j]) ? 6f : 0f);
+                if (score < bestScore) { bestScore = score; a = spots[i]; b = spots[j]; }
+            }
+        if (bestScore == float.MaxValue) return false;
+        foreach (var w in ways) DestroyWay(w);
         ways.Clear();
-        AddWay(hunt, -1f, "_hunt", closed);
-        AddWay(safe, -1f, "_safe", closed);
+        AddWay(b, -1f, "_hunt", closed); // the farther one: the harder way
+        AddWay(a, -1f, "_safe", closed);
         return true;
+    }
+
+    // Big props (trees, bushes: the scene's Props) within a portal's width of the spot - a green portal in front of a
+    // green bush is lost in it.
+    static readonly List<Bounds> props = new List<Bounds>();
+    static bool propsRead;
+    bool PropsNear(Vector2 spot)
+    {
+        if (!propsRead)
+        {
+            propsRead = true;
+            props.Clear();
+            var root = GameObject.Find("Props");
+            if (root != null)
+                foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>())
+                    if (sr.bounds.size.x > 1.2f || sr.bounds.size.y > 1.2f) props.Add(sr.bounds);
+        }
+        var zone = new Bounds(new Vector3(spot.x, spot.y + 1.5f, 0f), new Vector3(2.5f * 3f, 3f, 10f)); // the portal and a portal's width each side
+        foreach (var bo in props) if (bo.Intersects(zone)) return true;
+        return false;
     }
 
     // The fork's sign over a log: the route's name and what it means, with its icon (skull / sprout).
     void MakeSign(Way w)
     {
         var root = new GameObject("ForkSign").transform;
-        root.position = new Vector3(w.holeX - w.Offset, w.floorY + (w.Portal ? 3.45f : 2.85f), 0f); // just over the arch (one line, icon beside: a ledge's camera still shows it)
+        root.position = new Vector3(w.holeX - w.Offset, w.floorY + 3.75f, 0f); // over the keystone with a gap: never on the arch
         w.sign = root;
         w.signHome = root.position;
         float scale = GameSettings.LargeText ? 1.3f : 1f;
@@ -252,7 +295,8 @@ public class StageExit : MonoBehaviour
         icon.transform.SetParent(root, false);
         icon.sprite = Resources.Load<Sprite>(w.hunt ? "StageExit/exit_icon_hunt" : "StageExit/exit_icon_safe");
         icon.sortingOrder = 57;
-        var text = MakeWord(root, Loc.T(w.hunt ? "route.sign.hunt" : "route.sign.safe"), WayColorOf(w), scale);
+        // light words on the dark strip (a red word on a red portal can't be read): the colour is the icon's alone
+        var text = MakeWord(root, Loc.T(w.hunt ? "route.sign.hunt" : "route.sign.safe"), w.hunt ? new Color(0.95f, 0.63f, 0.37f) : new Color(0.76f, 0.85f, 0.44f), scale);
         text.transform.localPosition = Vector3.zero;
         icon.transform.localPosition = new Vector3(-text.textBounds.extents.x - 0.55f, 0f, 0f);
     }
@@ -313,6 +357,9 @@ public class StageExit : MonoBehaviour
         fork = true;
         chooseRoute = choose;
         OpenAll(next);
+        // Frame both: the camera eases over to the pair's middle, holds a moment and comes back to the cat (position
+        // only - the Pixel Perfect camera keeps its whole-number zoom; the controls stay live).
+        if (ways.Count == 2) CameraFollow.Focus((Point(ways[0]) + Point(ways[1])) * 0.5f + Vector2.up * 1f, 1.4f);
         return true;
     }
 
@@ -379,6 +426,29 @@ public class StageExit : MonoBehaviour
         }
         tr.position = home;
         w.log.sprite = w.swirl[0];
+        if (w.rim != null) w.rim.enabled = true;
+        StartCoroutine(Burst(w));
+    }
+
+    // The moment a portal opens: one ring of light spreads from its opening (0.2 s), in the portal's colour.
+    IEnumerator Burst(Way w)
+    {
+        var sprite = Resources.Load<Sprite>("StageExit/exit_portal_burst");
+        if (sprite == null) yield break;
+        var sr = new GameObject("PortalBurst").AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = w.log.sortingOrder + 2;
+        sr.transform.position = w.Mouth;
+        Color col = w.kind == "_hunt" ? new Color(1f, 0.6f, 0.3f) : w.kind == "_safe" ? new Color(0.75f, 0.95f, 0.45f)
+                  : w.kind == "_boss" ? new Color(0.97f, 0.46f, 0.6f) : w.kind == "_victory" ? new Color(1f, 0.9f, 0.45f) : new Color(0.66f, 0.85f, 0.98f);
+        for (float t = 0f; t < 0.2f; t += Time.deltaTime)
+        {
+            float k = t / 0.2f;
+            sr.transform.localScale = Vector3.one * Mathf.Lerp(0.5f, 1.6f, k);
+            sr.color = k < 0.5f ? col : new Color(col.r, col.g, col.b, 0.5f); // two steps, then gone
+            yield return null;
+        }
+        Destroy(sr.gameObject);
     }
 
     // Where the log goes when the end is far: a floor spot a few steps ahead of the cat (or behind it), or near the
@@ -503,14 +573,33 @@ public class StageExit : MonoBehaviour
     {
         var cam = Camera.main;
         if (cam == null) return;
+        // batch captures render at 1920x1080 while the batch "screen" is tiny: the Pixel Perfect camera's size read here
+        // is not the one drawn, so the screen-edge rules only run in a real window
+        bool clamp = !Application.isBatchMode;
         float halfH = cam.orthographicSize, halfW = halfH * cam.aspect;
         Vector3 c = cam.transform.position;
         foreach (var w in ways)
         {
+            if (w.rim != null && w.rim.enabled && w.rims != null) w.rim.sprite = w.rims[(int)(Time.time / 0.25f) % 2]; // a slow two-colour blink
             if (w.sign == null) continue;
             var p = w.signHome;
-            p.y = Mathf.Min(p.y, c.y + halfH - 0.9f);
+            if (!clamp) { w.sign.position = p; continue; }
             p.x = Mathf.Clamp(p.x, c.x - halfW + 3.4f, c.x + halfW - 3.4f);
+            float topY = c.y + halfH - 0.9f;
+            // pushed down by the screen's top it would sit on the arch: beside the portal instead (on the side the cat
+            // comes from, at the opening's height), never over it or away from it
+            if (p.y > topY) { p.y = Mathf.Min(w.floorY + 2.2f, topY); p.x = w.holeX + w.holeSide * 4.4f; }
+            // the screen-fixed UI's corners (HUD top left, minimap and legend top right) are a safe area: a world sign
+            // never goes under them (UI_STYLE.md)
+            Vector3 sp = cam.WorldToScreenPoint(p);
+            float u = Screen.height / 1080f;
+            bool inHud = sp.x < 560f * u && sp.y > Screen.height - 360f * u;
+            bool inMap = sp.x > Screen.width - 480f * u && sp.y > Screen.height - 260f * u;
+            if (inHud || inMap)
+            {
+                float below = Screen.height - (inHud ? 360f : 260f) * u - 30f * u;
+                p.y = cam.ScreenToWorldPoint(new Vector3(sp.x, below, sp.z)).y;
+            }
             w.sign.position = p;
         }
     }
@@ -676,6 +765,7 @@ public class StageExit : MonoBehaviour
             other.shut = true;
             if (other.log != null) other.log.sprite = Load(other.kind, "closed");
             if (other.sign != null) other.sign.gameObject.SetActive(false);
+            if (other.rim != null) other.rim.enabled = false;
         }
         if (chooseRoute != null) chooseRoute(w.hunt);
         arrivedKind = w.kind;

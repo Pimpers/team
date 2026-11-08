@@ -61,6 +61,11 @@ tones a material - drawn in pxl (`Tools/pxl/`), never a painted picture shrunk.
 Health, dash and counters top-left; the map top-right; skills bottom-centre - where the genre puts them. Every
 screen is checked at 16:9, 16:10 and 4:3 (`Cats Smash > Capture Screens`).
 
+World signs (the fork portals' signs) keep out of the screen-fixed UI: the HUD's corner top left (560 x 360 at 1080p)
+and the minimap with its legend top right (480 x 260) are a safe area. A sign that would fall in one is pushed down
+below it; one pushed off the top of the screen moves under its portal instead of onto it. Sign words are light (cream,
+light orange, light green) on the dark strip; the route's colour is in the icon only.
+
 ## Motion and sound
 A press: the button's own pressed sprite and a click. A pick: the card deal and `card_pick`. Banners (starter card, set
 bonus, stage name: StageBanner, StageTitle) share one rule: the dark band and the words come up together in 0.15 s
