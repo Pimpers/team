@@ -11,6 +11,9 @@ One-off asset scripts moved out of the project root (2026-10-31). Nothing in the
 
 - `precommit.ps1 [-Checks compile,test]` - unity-kit:precommit's compile and test checks, run on the verification
   copy (`%TEMP%\cs_verify`): the skill's scripts stop at the space in this project's path ("2학년 2학기").
+- Pixel Perfect Camera: the fight only (`CS/StagePixelPerfect.cs`). The menus (village, world map, title, lobby)
+  have still cameras, so no shimmer to fix: they keep their cameras, and their backgrounds are imported Point, no
+  compression, no mipmaps (the title's 480 animated frames stay compressed: 72 MB uncompressed, no visible artifacts).
 - UI work follows `UI_STYLE.md` at the repo root (palette roles, type steps, text-over-picture styles, layout).
 
 ### Art passes (each backs up to `_art_backup/<name>_<date>` first; `-Restore` where noted puts the originals back)
