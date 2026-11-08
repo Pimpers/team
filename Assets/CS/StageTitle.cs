@@ -75,7 +75,7 @@ public class StageTitle : MonoBehaviour
     IEnumerator Play(CanvasGroup group, RectTransform rt)
     {
         // Wait for the screen to open (leaf sweep / black fade), then a beat.
-        while (LeafWipe.Busy || ScreenFader.Switching) yield return null;
+        while (StageWipe.Busy || ScreenFader.Switching) yield return null;
         yield return new WaitForSecondsRealtime(0.35f);
         Sfx.Play("card_pick", 0.6f, 0.8f);
         for (float t = 0f; t < FadeIn; t += Time.unscaledDeltaTime)

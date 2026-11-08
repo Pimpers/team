@@ -527,4 +527,5 @@ options.largetext.on = 큰 글씨: 켜짐
 options.largetext.off = 큰 글씨: 꺼짐
 pause.run_info = 스테이지 {0} / {1}   ·   {2}\n처치 {3}   ·   골드 {4}
 sheet.more_hint = 스테이지를 클리어하면 카드를 더 고를 수 있어요
+exit.closed = 적을 모두 물리치세요
 tutorial.tip.village = <color=$gold>대장간</color>에서 강화하고 <color=$gold>출항하기</color>로 의뢰를 떠나요

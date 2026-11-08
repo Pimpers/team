@@ -195,7 +195,7 @@ public class PlayerStats : MonoBehaviour
     System.Collections.IEnumerator AnnounceStarter(CardPool.Card card)
     {
         yield return null;
-        while (StageTitle.Showing || LeafWipe.Busy || ScreenFader.Switching) yield return null;
+        while (StageTitle.Showing || StageWipe.Busy || ScreenFader.Switching) yield return null;
         yield return new WaitForSecondsRealtime(0.2f);
         var run = RunManager.Instance;
         if (run != null && run.hudText != null && run.hudText.canvas != null)

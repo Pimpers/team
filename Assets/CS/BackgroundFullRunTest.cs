@@ -253,8 +253,25 @@ public class BackgroundFullRunTest : MonoBehaviour
             report.stages.Add(Close(result));
             yield return new WaitForSecondsRealtime(0.5f);
             yield return Save($"stage{stage}_exit");
-            var next = SceneManager.LoadSceneAsync($"Stage{stage + 1}");
-            while (!next.isDone) yield return null;
+            // Through the exit log, like a player: wait for it to open, step into its mouth, ride the iris to the next stage.
+            string wanted = $"Stage{stage + 1}";
+            float exitDeadline = Time.realtimeSinceStartup + 4f;
+            while ((StageExit.Instance == null || !StageExit.Instance.IsOpen) && Time.realtimeSinceStartup < exitDeadline) yield return null;
+            var exitLog = StageExit.Instance;
+            if (exitLog != null && exitLog.IsOpen && PlayerStats.Instance != null)
+            {
+                var exitBody = PlayerStats.Instance.Body;
+                var exitFeet = exitBody.Feet;
+                exitBody.transform.position += new Vector3(exitLog.ExitPoint.x - exitFeet.x, exitLog.ExitPoint.y - 0.5f - exitFeet.y, 0f);
+            }
+            float sceneDeadline = Time.realtimeSinceStartup + 8f;
+            while (SceneManager.GetActiveScene().name != wanted && Time.realtimeSinceStartup < sceneDeadline) yield return null;
+            if (SceneManager.GetActiveScene().name != wanted)
+            {
+                report.error = $"Stage{stage}: the exit log did not lead to {wanted}";
+                break;
+            }
+            while (StageWipe.Busy && Time.realtimeSinceStartup < sceneDeadline + 4f) yield return null;
         }
 
         report.seconds = Time.realtimeSinceStartup - began;

@@ -14,19 +14,19 @@ public static class SceneLoader
     {
         if (ScreenFader.Switching) return; // a second click while already leaving
         TargetScene = sceneName;
-        LeafWipe.ArrivedThroughLeaves = false;
+        StageWipe.ArrivedThroughExit = false;
         GameClock.ResetAll(); // never carry a paused card draft into the loading screen
         ScreenFader.FadeOut(() => SceneManager.LoadScene(LoadingSceneName));
     }
 
-    // Stage to stage through the forest (StageExit): leaves sweep over the screen (LeafWipe) and the next stage
-    // loads straight behind them - no loading screen in between, the leaves are the transition.
-    public static void LoadThroughLeaves(string sceneName)
+    // Stage to stage through the exit log (StageExit): the screen irises shut on the log's mouth (StageWipe) and the
+    // next stage loads straight behind it - no loading screen in between, the iris is the transition.
+    public static void LoadThroughExit(string sceneName, Vector2 mouthOnScreen)
     {
-        if (ScreenFader.Switching || LeafWipe.Busy) return;
+        if (ScreenFader.Switching || StageWipe.Busy) return;
         TargetScene = sceneName;
         GameClock.ResetAll();
-        LeafWipe.ArrivedThroughLeaves = true;
-        LeafWipe.Cover(LeafWipe.ToneFor(sceneName), () => SceneManager.LoadScene(sceneName));
+        StageWipe.ArrivedThroughExit = true;
+        StageWipe.Close(mouthOnScreen, () => SceneManager.LoadScene(sceneName));
     }
 }

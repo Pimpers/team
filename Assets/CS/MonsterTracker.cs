@@ -58,7 +58,9 @@ public class MonsterTracker : MonoBehaviour
             if (targets.Count > 2) targets.RemoveRange(2, targets.Count - 2);
         }
         if (targets.Count == 0 && alive.Count <= showAtOrBelow) targets.AddRange(alive);
-        bool show = targets.Count > 0 && cam != null;
+        var exit = StageExit.Instance;
+        bool toExit = exit != null && exit.IsOpen; // the stage is done: the way out gets the arrow
+        bool show = (targets.Count > 0 || toExit) && cam != null;
 
         int used = 0;
         if (show)
@@ -66,25 +68,34 @@ public class MonsterTracker : MonoBehaviour
             Vector2 size = canvasRect.rect.size;
             float pulse = 0.75f + 0.25f * Mathf.Sin(Time.unscaledTime * 6f);
             foreach (var e in targets)
-            {
-                Vector3 vp = cam.WorldToViewportPoint(e.Renderer != null ? e.Renderer.bounds.center : e.transform.position);
-                if (vp.x > 0f && vp.x < 1f && vp.y > 0f && vp.y < 1f) continue; // on screen: no arrow
-
-                Vector2 fromCenter = new Vector2(vp.x - 0.5f, vp.y - 0.5f);
-                Vector2 half = size * 0.5f - Vector2.one * EdgeMargin;
-                Vector2 dir = new Vector2(fromCenter.x * size.x, fromCenter.y * size.y);
-                // Push the point out to the screen-edge rectangle along its direction.
-                float k = Mathf.Min(Mathf.Abs(half.x / (dir.x == 0f ? 0.0001f : dir.x)), Mathf.Abs(half.y / (dir.y == 0f ? 0.0001f : dir.y)));
-                Vector2 pos = dir * k;
-                if (pos.x > half.x - MapClearW && pos.y > half.y - MapClearH) pos.y = half.y - MapClearH; // not over the minimap
-
-                var arrow = GetArrow(used++);
-                arrow.anchoredPosition = pos;
-                arrow.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-                arrow.localScale = Vector3.one * (e.IsElite ? 1.25f : 1f) * pulse;
-            }
+                Place(cam.WorldToViewportPoint(e.Renderer != null ? e.Renderer.bounds.center : e.transform.position),
+                      (e.IsElite ? 1.25f : 1f) * pulse, EnemyArrow, size, ref used);
+            if (toExit) Place(cam.WorldToViewportPoint(exit.ExitPoint), 1.25f * pulse, ExitArrow, size, ref used);
         }
         for (int i = used; i < arrows.Count; i++) arrows[i].gameObject.SetActive(false);
+    }
+
+    static readonly Color EnemyArrow = new Color(1f, 0.32f, 0.28f);
+    // the minimap's exit colour (StageMinimap), so the arrow and the map mark read as one thing
+    static Color ExitArrow => GameSettings.Colorblind ? UiTheme.ExitMark : new Color(0.35f, 0.9f, 1f);
+
+    void Place(Vector3 vp, float scale, Color color, Vector2 size, ref int used)
+    {
+        if (vp.x > 0f && vp.x < 1f && vp.y > 0f && vp.y < 1f) return; // on screen: no arrow
+
+        Vector2 fromCenter = new Vector2(vp.x - 0.5f, vp.y - 0.5f);
+        Vector2 half = size * 0.5f - Vector2.one * EdgeMargin;
+        Vector2 dir = new Vector2(fromCenter.x * size.x, fromCenter.y * size.y);
+        // Push the point out to the screen-edge rectangle along its direction.
+        float k = Mathf.Min(Mathf.Abs(half.x / (dir.x == 0f ? 0.0001f : dir.x)), Mathf.Abs(half.y / (dir.y == 0f ? 0.0001f : dir.y)));
+        Vector2 pos = dir * k;
+        if (pos.x > half.x - MapClearW && pos.y > half.y - MapClearH) pos.y = half.y - MapClearH; // not over the minimap
+
+        var arrow = GetArrow(used++);
+        arrow.anchoredPosition = pos;
+        arrow.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        arrow.localScale = Vector3.one * scale;
+        arrow.GetComponent<Image>().color = color;
     }
 
     RectTransform GetArrow(int i)
@@ -105,13 +116,13 @@ public class MonsterTracker : MonoBehaviour
         return arrows[i];
     }
 
-    // A small pixel arrow pointing right (red with a dark outline), drawn once.
+    // A small pixel arrow pointing right (a white fill, tinted per arrow, with a dark outline), drawn once.
     static Sprite MakeArrowSprite()
     {
         int n = ArrowPx;
         var tex = RuntimeGeneratedAssets.Texture(n, n);
         var clear = new Color(0, 0, 0, 0);
-        var fill = new Color(1f, 0.32f, 0.28f);
+        var fill = Color.white;
         var edge = new Color(0.16f, 0.06f, 0.06f);
         int mid = n / 2;
         var px = new Color[n * n];

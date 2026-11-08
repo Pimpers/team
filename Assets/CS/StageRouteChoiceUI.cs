@@ -33,7 +33,7 @@ public class StageRouteChoiceUI : MonoBehaviour
 
     IEnumerator Open()
     {
-        while (StageTitle.Showing || LeafWipe.Busy || ScreenFader.Switching) yield return null;
+        while (StageTitle.Showing || StageWipe.Busy || ScreenFader.Switching) yield return null;
         Build();
         for (float t = 0f; t < 0.18f; t += Time.unscaledDeltaTime)
         {

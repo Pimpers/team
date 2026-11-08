@@ -2,28 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// The way from one stage to the next, through the forest instead of a portal (created by RunManager in the stage
-// scenes):
-//   Out - after the draft card is picked, a hollow log turns up on the floor at the end of the stage (or a few steps
-//         ahead, if the end is far away) and fireflies gather into a dotted path to it. Walking into its open end,
-//         the cat ducks and crawls in, and leaves sweep over the screen (LeafWipe) while the next stage loads.
-//   In  - a stage entered that way opens with the leaves blowing away and the cat pops out of a log at the start
-//         (the stage's title at the top is StageTitle's, shown on every entry).
-// The art (log, fireflies) is pxl art in Resources/StageExit at the tiles' 16 px per unit.
+// The way from one stage to the next, through a big hollow log (created by RunManager in the stage scenes):
+//   Closed - from the start, the log lies at the end of the stage with vines and a plank across its mouth; walking
+//            into it shakes it and says 적을 모두 물리치세요.
+//   Open   - after the draft card is picked the vines blow off (dust, a creak), a wind swirls in the mouth and
+//            fireflies string out a path to it; leaves near it are pulled in, an edge arrow (MonsterTracker) shows
+//            the way when it is off screen. A stage where the end is too far (or a climbing one) gets the log a few
+//            steps away instead, popping up out of the ground.
+//   In     - walking into the open mouth: the cat is locked, pulled to the mouth stretching, then shrinking and
+//            spinning in; the camera leans in; the screen irises shut on the mouth (StageWipe) and the next stage
+//            loads. About a second.
+//   Out    - the next stage opens its iris on the cat inside a log at the start; it pops out, lands with a squash
+//            and a puff of dust.
+// The art is pxl (Tools/pxl/pxl_stage_exit.px.js) in Resources/StageExit at the tiles' 16 px per unit.
 public class StageExit : MonoBehaviour
 {
     public static StageExit Instance { get; private set; }
+    // True while the cat is being pulled in: pause, the Tab sheet and the like keep out (PauseMenu, BuildSheet).
+    public static bool Entering => Instance != null && Instance.entering;
 
-    const float HoleFromCentre = 1f;   // the log's open end: 16 px left of the middle of the 48 px log
-    const float FarEnd = 22f;          // the end of the stage is used when no further than this from the cat
+    const float HoleFromCentre = 1.25f; // the mouth: 20 px left of the middle of the 64 px log
+    const float FarEnd = 22f;           // a closed log at the stage's end is used if the cat is no further than this
+    const float SwirlFps = 10f, SuckFps = 24f;
 
     PlayerController2D body;
     SpriteRenderer log;
-    float holeX, floorY, holeSide; // holeSide: -1 = the open end faces left (the cat comes from the left)
+    Sprite[] swirl;
+    float holeX, floorY, holeSide; // holeSide: -1 = the mouth faces left (the cat comes from the left)
     string nextScene;
-    bool open, entering;
+    bool open, entering, crimson;
+    float frameClock, bumpCooldown, pullIn;
     readonly List<Firefly> flies = new List<Firefly>();
-    Sprite[] flyFrames;
+    readonly List<Transform> drawn = new List<Transform>();
+    Sprite[] flyFrames, leafSprites;
 
     class Firefly { public Transform tr; public SpriteRenderer sr; public Vector3 home; public float phase; public bool gone; }
 
@@ -37,57 +48,103 @@ public class StageExit : MonoBehaviour
 
     int stage;
 
-    // The log's open end, once the way out has appeared (the minimap marks it).
+    // The log's mouth, once the way out is open (the minimap and the edge arrow mark it).
     public bool IsOpen => open && !entering;
     public bool Opened => open; // the stage is done: traps switch off (TrapHazard)
     public Vector2 ExitPoint => new Vector2(holeX, floorY + 0.5f);
 
     void Awake() => Instance = this;
-    void OnDestroy() { if (Instance == this) Instance = null; LeafWipe.Revealed -= PopOut; }
+    void OnDestroy() { if (Instance == this) Instance = null; StageWipe.Revealed -= PopOut; }
 
     void Start()
     {
         body = PlayerStats.Instance != null ? PlayerStats.Instance.Body : null;
-        if (body == null || !LeafWipe.ArrivedThroughLeaves) return;
-        LeafWipe.ArrivedThroughLeaves = false;
-        // Came through the leaves: the cat waits inside a log at the start until the curtain has blown away.
+        if (body == null) return;
+        crimson = stage == 4; // the way to the boss
+        if (StageWipe.ArrivedThroughExit) Arrive();
+        PlaceClosed();
+    }
+
+    Sprite Load(string state) => Resources.Load<Sprite>($"StageExit/exit_logbig{(crimson ? "_crimson" : "")}_{state}");
+
+    // ------------------------------------------------------------------ arriving
+    void Arrive()
+    {
+        StageWipe.ArrivedThroughExit = false;
+        // The cat waits inside a log at the start until the iris has opened, then pops out.
         var feet = body.Feet;
-        var arrive = MakeLog(feet.x - HoleFromCentre, feet.y, false); // open end on the right, at the cat
-        arrive.flipX = true;
-        arrive.sortingOrder = body.Renderer.sortingOrder - 1;
+        var arrive = MakeLog(feet.x - HoleFromCentre, feet.y, Load("open_0"));
+        arrive.flipX = true; // mouth on the right, at the cat
+        arrive.sortingOrder = body.Renderer.sortingOrder + 2;
         body.skillLock = true;
         body.Renderer.enabled = false;
-        LeafWipe.Revealed += PopOut;
-        if (!LeafWipe.Busy) PopOut(); // (no curtain running: straight out)
+        StageWipe.Revealed += PopOut;
+        if (!StageWipe.Busy) PopOut(); // (no iris running: straight out)
     }
 
     void PopOut()
     {
-        LeafWipe.Revealed -= PopOut;
+        StageWipe.Revealed -= PopOut;
         if (body == null) return;
         StartCoroutine(PopOutRoutine());
     }
 
     IEnumerator PopOutRoutine()
     {
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.1f);
         body.Renderer.enabled = true;
         body.FaceTowards(1f);
-        body.Launch(7f);
-        Sfx.Play("jump", 1f, 1.2f);
+        body.Launch(8f);
+        Sfx.Play("fx_pop");
         Vfx.Play("dust_small", body.Feet, 1f);
-        for (float t = 0f; t < 0.22f; t += Time.deltaTime) { body.TryMove(3.2f * Time.deltaTime); yield return null; }
+        var visual = body.visual != null ? body.visual : body.Renderer.transform;
+        Vector3 scale = visual.localScale;
+        for (float t = 0f; t < 0.25f; t += Time.deltaTime) // out, stretched tall, drifting right
+        {
+            visual.localScale = new Vector3(scale.x * 0.85f, scale.y * 1.2f, scale.z);
+            body.TryMove(3.2f * Time.deltaTime);
+            yield return null;
+        }
+        visual.localScale = scale;
+        float until = Time.time + 1.2f;
+        while (body.IsAirborne && Time.time < until) yield return null;
+        // landing: a squash and a puff
+        Vfx.Play("dust_mid", body.Feet, 1f);
+        for (float t = 0f; t < 0.12f; t += Time.deltaTime)
+        {
+            float k = 1f - t / 0.12f;
+            visual.localScale = new Vector3(scale.x * (1f + 0.25f * k), scale.y * (1f - 0.22f * k), scale.z);
+            yield return null;
+        }
+        visual.localScale = scale;
         body.skillLock = false;
     }
 
-    SpriteRenderer MakeLog(float x, float feetY, bool crimson)
+    SpriteRenderer MakeLog(float x, float feetY, Sprite sprite)
     {
         var go = new GameObject("ExitLog");
         go.transform.position = new Vector3(x, feetY - 0.06f, 0f); // sits a pixel into the grass
         var sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = Resources.Load<Sprite>(crimson ? "StageExit/exit_log_crimson" : "StageExit/exit_log");
+        sr.sprite = sprite;
         sr.sortingOrder = -47; // with the bushes and rocks
         return sr;
+    }
+
+    // ------------------------------------------------------------------ the closed log
+    // A side-scrolling stage shows its way out from the start, shut. (Climbing stages put it near the card chest
+    // when the stage is done, so there is no fixed end to show.)
+    void PlaceClosed()
+    {
+        var map = StageMap.Instance;
+        if (map == null || map.verticalLayout || map.spawnSlots == null || map.spawnSlots.Length == 0) return;
+        Vector2 end = map.spawnSlots[0];
+        foreach (var s in map.spawnSlots) if (s.x > end.x) end = s;
+        if (!Roomy(map, end)) return;
+        floorY = end.y;
+        holeSide = -1f; // the cat comes from the left
+        holeX = end.x;
+        log = MakeLog(holeX - holeSide * HoleFromCentre, floorY, Load("closed"));
+        log.sortingOrder = body.Renderer.sortingOrder + 2; // the cat goes in behind its front
     }
 
     // ------------------------------------------------------------------ the way out
@@ -99,23 +156,48 @@ public class StageExit : MonoBehaviour
         if (open || body == null || map == null || string.IsNullOrEmpty(next)) return false;
         open = true;
         nextScene = next;
+        swirl = new[] { Load("open_0"), Load("open_1"), Load("open_2"), Load("open_3") };
         Vector2 feet = body.Feet;
-        Vector2 spot = PickSpot(map, feet);
-        floorY = spot.y;
-        // The open end faces the cat.
-        holeSide = feet.x <= spot.x ? -1f : 1f;
-        float centre = spot.x - holeSide * HoleFromCentre;
-        holeX = spot.x;
-        log = MakeLog(centre, floorY, next == "Stage5");
-        log.flipX = holeSide > 0f;
-        log.sortingOrder = body.Renderer.sortingOrder + 2; // the cat crawls in behind its front
-        StartCoroutine(Appear(log));
+        if (log != null && Mathf.Abs(holeX - feet.x) <= FarEnd)
+            StartCoroutine(Unblock()); // the closed log at the end opens where it is
+        else
+        {
+            if (log != null) Destroy(log.gameObject);
+            Vector2 spot = PickSpot(map, feet);
+            floorY = spot.y;
+            holeSide = feet.x <= spot.x ? -1f : 1f; // the mouth faces the cat
+            holeX = spot.x;
+            log = MakeLog(spot.x - holeSide * HoleFromCentre, floorY, swirl[0]);
+            log.flipX = holeSide > 0f;
+            log.sortingOrder = body.Renderer.sortingOrder + 2;
+            StartCoroutine(Appear(log));
+        }
         StartCoroutine(Gather(feet));
         return true;
     }
 
-    // Where the log goes: the floor at the far end of the stage when that is close enough, otherwise a floor spot a
-    // few steps ahead of the cat (or behind it, if there's none ahead). Floor spots are the map's spawn slots.
+    // The vines blow off: a puff of leaves and dust at the mouth, a creak, a little shudder, then the swirl.
+    IEnumerator Unblock()
+    {
+        var mouth = new Vector3(holeX, floorY + 1.2f, 0f);
+        Vfx.Play("dust_mid", mouth, 1.4f);
+        Vfx.Play("smoke", mouth, 0.5f);
+        Sfx.Play("land_heavy", 0.6f, 1.4f);
+        Sfx.Play("fx_suck", 0.5f, 1.3f); // the wind starts up
+        LeafBurst(mouth, 6);
+        var tr = log.transform;
+        Vector3 home = tr.position;
+        for (float t = 0f; t < 0.25f; t += Time.deltaTime)
+        {
+            tr.position = home + Vector3.right * Mathf.Round(Mathf.Sin(t * 70f) * 1.5f) / 16f; // whole pixels
+            yield return null;
+        }
+        tr.position = home;
+        log.sprite = swirl[0];
+    }
+
+    // Where the log goes when the end is far: a floor spot a few steps ahead of the cat (or behind it), or near the
+    // card chest on a climbing stage. Floor spots are the map's spawn slots.
     Vector2 PickSpot(StageMap map, Vector2 feet)
     {
         var slots = map.spawnSlots;
@@ -159,12 +241,12 @@ public class StageExit : MonoBehaviour
         return best;
     }
 
-    // Room for the 3-unit log on flat floor (both ends on ground, nothing solid through it).
+    // Room for the 4-unit log on flat floor (both ends on ground, nothing solid through its 2.5-unit height).
     static bool Roomy(StageMap map, Vector2 p)
     {
-        for (float dx = -1.4f; dx <= 1.41f; dx += 0.7f)
+        for (float dx = -2f; dx <= 2.01f; dx += 0.8f)
         {
-            if (map.IsSolid(new Vector2(p.x + dx, p.y + 0.4f)) || map.IsSolid(new Vector2(p.x + dx, p.y + 1.2f))) return false;
+            if (map.IsSolid(new Vector2(p.x + dx, p.y + 0.4f)) || map.IsSolid(new Vector2(p.x + dx, p.y + 1.4f)) || map.IsSolid(new Vector2(p.x + dx, p.y + 2.3f))) return false;
             var under = new Vector2(p.x + dx, p.y - 0.15f);
             if (!map.IsSolid(under) && !map.IsPlatform(under)) return false;
         }
@@ -187,7 +269,7 @@ public class StageExit : MonoBehaviour
         tr.localScale = Vector3.one;
     }
 
-    // Fireflies rise around the cat, then string out along the way to the log's open end.
+    // Fireflies rise around the cat, then string out along the way to the log's mouth.
     IEnumerator Gather(Vector2 from)
     {
         if (flyFrames == null)
@@ -202,7 +284,7 @@ public class StageExit : MonoBehaviour
             };
         }
         Sfx.Play("card_pick", 0.5f, 1.6f);
-        Vector2 hole = new Vector2(holeX, floorY + 0.55f);
+        Vector2 hole = new Vector2(holeX, floorY + 0.8f);
         float dist = Vector2.Distance(hole, from);
         int n = Mathf.Clamp(Mathf.RoundToInt(dist / 1.1f), 4, 18);
         for (int i = 0; i < n; i++)
@@ -219,71 +301,166 @@ public class StageExit : MonoBehaviour
             if (i % 3 == 0) Sfx.Play("ui_click", 0.25f, 2.2f + i * 0.04f);
             yield return new WaitForSeconds(0.05f);
         }
-        // Two more hover at the open end.
-        for (int i = 0; i < 2; i++)
-        {
-            var go = new GameObject("Firefly");
-            go.transform.position = (Vector3)from + Vector3.up;
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sprite = flyFrames[0];
-            sr.sortingOrder = body.Renderer.sortingOrder + 3;
-            flies.Add(new Firefly { tr = go.transform, sr = sr, home = (Vector3)hole + new Vector3(holeSide * (0.5f + 0.3f * i), 0.35f + 0.4f * i, 0f), phase = i * 2f });
-        }
     }
 
     void Update()
     {
-        if (!open) return;
+        if (body == null || log == null) return;
+        if (!open) { Bump(); return; }
+
+        // the swirl in the mouth; faster while it swallows the cat
+        frameClock += Time.deltaTime * (entering ? SuckFps : SwirlFps);
+        if (swirl != null && log.transform.localScale == Vector3.one) log.sprite = swirl[(int)frameClock % swirl.Length];
+
         // Fireflies: drift to their place on the path, bob, and blink; the one the cat passes flies on into the log.
         foreach (var f in flies)
         {
             if (f.tr == null) continue;
             f.phase += Time.deltaTime;
             Vector3 target = f.home + new Vector3(Mathf.Sin(f.phase * 1.3f) * 0.12f, Mathf.Sin(f.phase * 2.1f) * 0.15f, 0f);
-            if (!f.gone && !entering && body != null && Mathf.Abs(body.transform.position.x - f.home.x) < 0.5f && Mathf.Abs(f.home.x - holeX) > 1f)
+            if (!f.gone && !entering && Mathf.Abs(body.transform.position.x - f.home.x) < 0.5f && Mathf.Abs(f.home.x - holeX) > 1f)
                 f.gone = true;
-            if (f.gone) target = new Vector3(holeX, floorY + 0.5f, 0f);
+            if (f.gone || entering) target = Mouth;
             f.tr.position = Vector3.Lerp(f.tr.position, target, 1f - Mathf.Exp(-(f.gone ? 6f : 3.5f) * Time.deltaTime));
             bool bright = Mathf.Sin(f.phase * 4f) > -0.2f;
             f.sr.sprite = flyFrames[bright ? 0 : 1];
             f.sr.color = new Color(1f, 1f, 1f, bright ? 1f : 0.65f);
-            if (f.gone && Vector2.Distance(f.tr.position, target) < 0.15f) { Destroy(f.tr.gameObject); f.tr = null; }
+            if ((f.gone || entering) && Vector2.Distance(f.tr.position, target) < 0.15f) { Destroy(f.tr.gameObject); f.tr = null; }
         }
 
-        // Walking into the open end.
-        if (entering || body == null || body.IsAirborne) return;
+        // Near the open log, loose leaves are pulled into the mouth: the way in, without a word.
+        float near = Mathf.Abs(body.transform.position.x - holeX);
+        if (near < 7f || entering)
+        {
+            pullIn -= Time.deltaTime;
+            if (pullIn <= 0f) { pullIn = entering ? 0.04f : 0.22f; Drawn(); }
+        }
+        for (int i = drawn.Count - 1; i >= 0; i--)
+        {
+            var d = drawn[i];
+            if (d == null) { drawn.RemoveAt(i); continue; }
+            Vector3 to = Mouth;
+            d.position = Vector3.MoveTowards(d.position, to, (entering ? 9f : 4f) * Time.deltaTime);
+            d.Rotate(0f, 0f, 400f * Time.deltaTime);
+            float left = Vector2.Distance(d.position, to);
+            d.localScale = Vector3.one * Mathf.Clamp01(left / 1.5f + 0.2f);
+            if (left < 0.1f) { Destroy(d.gameObject); drawn.RemoveAt(i); }
+        }
+
+        // Walking into the open mouth.
+        if (entering || body.IsAirborne) return;
         Vector2 feet = body.Feet;
         float into = (feet.x - holeX) * -holeSide; // > 0 once past the opening, toward the log's middle
-        if (into > -0.35f && Mathf.Abs(feet.y - floorY) < 0.6f) StartCoroutine(Enter());
+        if (into > -0.45f && Mathf.Abs(feet.y - floorY) < 0.8f) StartCoroutine(Enter());
     }
 
-    // Duck, crawl in out of sight behind the log's front, and the leaves take over.
+    Vector3 Mouth => new Vector3(holeX - holeSide * 0.2f, floorY + 1.3f, 0f);
+
+    // Walking into the closed log: it shudders and says why.
+    void Bump()
+    {
+        bumpCooldown -= Time.deltaTime;
+        if (bumpCooldown > 0f || body.IsAirborne) return;
+        Vector2 feet = body.Feet;
+        if (Mathf.Abs(feet.x - holeX) > 0.6f || Mathf.Abs(feet.y - floorY) > 0.8f) return;
+        bumpCooldown = 1.6f;
+        StartCoroutine(Shudder());
+        Sfx.Play("ui_error", 0.6f);
+        DamagePopup.SpawnLabel(Mouth + Vector3.up * 1.2f, Loc.T("exit.closed"), new Color(1f, 0.85f, 0.6f));
+    }
+
+    IEnumerator Shudder()
+    {
+        var tr = log.transform;
+        Vector3 home = tr.position;
+        for (float t = 0f; t < 0.25f; t += Time.deltaTime)
+        {
+            tr.position = home + Vector3.right * Mathf.Round(Mathf.Sin(t * 80f) * 1.5f) / 16f;
+            yield return null;
+        }
+        tr.position = home;
+    }
+
+    // A leaf from round the log, about to be pulled in.
+    void Drawn()
+    {
+        if (leafSprites == null)
+        {
+            var list = new List<Sprite>();
+            foreach (var n in crimson ? new[] { "red_a", "red_b", "gold_a" } : new[] { "green_a", "green_b", "gold_a" })
+            {
+                var s = Resources.Load<Sprite>("StageExit/leaf_" + n);
+                if (s != null) list.Add(s);
+            }
+            leafSprites = list.ToArray();
+        }
+        if (leafSprites.Length == 0) return;
+        var go = new GameObject("DrawnLeaf");
+        go.transform.position = Mouth + new Vector3(holeSide * Random.Range(1.2f, 3.4f), Random.Range(-1.0f, 1.6f), 0f); // from the open side
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = leafSprites[Random.Range(0, leafSprites.Length)];
+        sr.sortingOrder = log.sortingOrder + 1;
+        drawn.Add(go.transform);
+    }
+
+    void LeafBurst(Vector3 at, int n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            Drawn();
+            if (drawn.Count > 0) drawn[drawn.Count - 1].position = at + new Vector3(Random.Range(-1f, 1f), Random.Range(-0.8f, 0.8f), 0f);
+        }
+    }
+
+    // Pulled in: the controls lock, the cat is drawn to the mouth stretching toward it, then shrinks spinning in; the
+    // camera leans in; the screen irises shut on the mouth and the next stage loads.
     IEnumerator Enter()
     {
         entering = true;
         body.skillLock = true;
+        body.skillHover = true;
         body.FaceTowards(-holeSide);
-        Sfx.Play("dash", 0.7f, 1.3f);
+        Sfx.Play("fx_suck");
         var visual = body.visual != null ? body.visual : body.Renderer.transform;
         Vector3 scale = visual.localScale;
-        for (float t = 0f; t < 0.1f; t += Time.deltaTime) // duck
+        Vector3 start = body.transform.position;
+        Vector3 target = new Vector3(Mouth.x, start.y + 0.3f, start.z);
+        var cam = Camera.main;
+        var ppc = cam != null ? cam.GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>() : null;
+        float size0 = cam != null ? cam.orthographicSize : 0f;
+        if (ppc != null) { if (ppc.orthographicSize > 0f) size0 = ppc.orthographicSize; ppc.enabled = false; } // it would hold the size
+        // shake off in the settings: only a gentle lean in
+        float zoom = GameSettings.ShakeStrength > 0f ? 0.86f : 0.95f;
+        CameraFollow.Focus(Mouth, 1.2f);
+        const float Pull = 1.0f;
+        bool closing = false;
+        for (float t = 0f; t < Pull; t += Time.deltaTime)
         {
-            visual.localScale = new Vector3(scale.x * 1.1f, scale.y * 0.82f, scale.z);
-            yield return null;
-        }
-        bool leaving = false;
-        for (float t = 0f; t < 0.45f; t += Time.deltaTime) // crawl in
-        {
-            body.TryMove(-holeSide * 4f * Time.deltaTime);
-            if (!leaving && t > 0.12f)
+            float k = t / Pull;
+            body.transform.position = Vector3.Lerp(start, target, k * k);
+            // stretch toward the mouth for the first half, then shrink and spin away
+            float stretch = k < 0.5f ? k / 0.5f : 1f;
+            float shrink = k < 0.5f ? 1f : 1f - (k - 0.5f) / 0.5f;
+            visual.localScale = new Vector3(scale.x * (1f + 0.45f * stretch) * shrink, scale.y * (1f - 0.3f * stretch) * shrink, scale.z);
+            visual.localRotation = Quaternion.Euler(0f, 0f, k < 0.5f ? 0f : (k - 0.5f) * 2f * 540f * holeSide);
+            if (cam != null) cam.orthographicSize = Mathf.Lerp(size0, size0 * zoom, Mathf.SmoothStep(0f, 1f, k));
+            if (!closing && k >= 0.55f)
             {
-                leaving = true;
-                Vfx.Play("dust_small", new Vector3(holeX, floorY, 0f), 1f, flipX: holeSide < 0f);
-                SceneLoader.LoadThroughLeaves(nextScene);
+                closing = true;
+                Vector2 mouthOnScreen = cam != null ? (Vector2)cam.WorldToScreenPoint(Mouth) : new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+                SceneLoader.LoadThroughExit(nextScene, mouthOnScreen);
             }
             yield return null;
         }
-        body.Renderer.enabled = false; // inside now (the leaves cover the screen by then)
+        body.Renderer.enabled = false; // inside now (the iris covers the screen by then)
         visual.localScale = scale;
+        visual.localRotation = Quaternion.identity;
+    }
+
+    // For the capture tool: the log open (or the cat put at its mouth so it is being pulled in).
+    public void ForCapture(bool pull)
+    {
+        if (!open) Open("Stage3");
+        if (pull && body != null) body.transform.position = new Vector3(holeX + holeSide * 0.3f, floorY + 0.1f, 0f);
     }
 }

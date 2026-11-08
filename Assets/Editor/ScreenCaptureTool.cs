@@ -116,6 +116,12 @@ public static class ScreenCaptureTool
         Add("Stage2", "set_banner_4x3", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); }, 1440, 1080, 0.7f);
         // The way out open, so the minimap's exit marker (cyan) shows.
         Add("Stage2", "minimap_exit", () => { var e = StageExit.Instance != null ? StageExit.Instance : StageExit.Create(2); if (e != null) e.Open("Stage3"); });
+        // The exit log: shut while monsters are left, open after the card, the cat pulled in, the iris shut, out again.
+        Add("Stage1", "exit_closed", () => CatBeforeExit(3f));
+        Add("Stage1", "exit_open", () => { StageExit.Instance.Open("Stage2"); CatBeforeExit(3f); }, wait: 0.6f);
+        Add("Stage1", "exit_pull", () => { StageExit.Instance.Open("Stage2"); StageExit.Instance.ForCapture(true); }, wait: 0.4f);
+        Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
+        Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
         Add("Stage1", "a11y", () =>
         {
@@ -181,6 +187,15 @@ public static class ScreenCaptureTool
         foreach (var e in Enemy.All)
             if (e != null && !e.IsDead && match(e)) { PlayerStats.Instance.transform.position = e.transform.position + Vector3.left * 2f; return; }
         Debug.LogWarning("[ScreenCapture] no enemy to stand by");
+    }
+
+    // Puts the cat on the exit log's floor, `gap` units before its mouth.
+    static void CatBeforeExit(float gap)
+    {
+        var body = PlayerStats.Instance.Body;
+        var exit = StageExit.Instance.ExitPoint;
+        var feet = body.Feet;
+        body.transform.position += new Vector3(exit.x - gap - feet.x, exit.y - 0.5f - feet.y, 0f);
     }
 
     static void Add(string scene, string shot, Action act = null, int w = 0, int h = 0, float wait = 0f) => steps.Add(new Step { scene = scene, shot = shot, act = act, w = w, h = h, wait = wait });

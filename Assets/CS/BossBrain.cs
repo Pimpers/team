@@ -105,7 +105,7 @@ public class BossBrain : MonoBehaviour
         if (enemy == null) return false;
         if (!introDone)
         {
-            if (StageTitle.Showing || LeafWipe.Busy || ScreenFader.Switching) return false;
+            if (StageTitle.Showing || StageWipe.Busy || ScreenFader.Switching) return false;
             introTimer -= Time.deltaTime;
             if (introTimer > 0f) return false;
             PlayIntro();

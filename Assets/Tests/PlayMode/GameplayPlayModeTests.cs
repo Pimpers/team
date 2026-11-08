@@ -22,6 +22,30 @@ public class GameplayPlayModeTests
         Assert.That(Object.FindAnyObjectByType<SetHUD>(FindObjectsInactive.Include), Is.Not.Null, "no set chips");
     }
 
+    // The exit log: open it, walk into its mouth, and the next stage loads behind the iris with the cat out and free.
+    [UnityTest]
+    public IEnumerator ExitLog_Entered_StartsNextStage()
+    {
+        SceneManager.LoadScene("Stage1");
+        yield return new WaitForSecondsRealtime(2f);
+        var exit = StageExit.Instance;
+        Assert.That(exit, Is.Not.Null, "no exit");
+        Assert.That(exit.Open("Stage2"), Is.True, "exit did not open");
+        var body = PlayerStats.Instance.Body;
+        var feet = body.Feet;
+        body.transform.position += new Vector3(exit.ExitPoint.x - feet.x, exit.ExitPoint.y - 0.5f - feet.y, 0f);
+
+        float until = Time.realtimeSinceStartup + 6f;
+        while (SceneManager.GetActiveScene().name != "Stage2" && Time.realtimeSinceStartup < until) yield return null;
+        Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("Stage2"), "never left through the log");
+
+        until = Time.realtimeSinceStartup + 5f;
+        while ((StageWipe.Busy || PlayerStats.Instance == null || PlayerStats.Instance.Body.skillLock) && Time.realtimeSinceStartup < until) yield return null;
+        Assert.That(StageWipe.Busy, Is.False, "the iris stayed shut");
+        Assert.That(PlayerStats.Instance.Body.Renderer.enabled, Is.True, "the cat never came out");
+        Assert.That(PlayerStats.Instance.Body.skillLock, Is.False, "the cat is still locked");
+    }
+
     [UnityTest]
     public IEnumerator Title_AddsSettingsAndCreditsButtons()
     {

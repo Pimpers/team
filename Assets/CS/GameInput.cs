@@ -220,12 +220,15 @@ public static class GameInput
     // Held: the build sheet (BuildSheet) shows while Tab, or the pad's View / Select button, is down.
     public static bool BuildSheetHeld
     {
-        get { var kb = Keyboard.current; var pad = Pad; return (kb != null && kb.tabKey.isPressed) || (pad != null && pad.selectButton.isPressed); }
+        get { if (InTransition) return false; var kb = Keyboard.current; var pad = Pad; return (kb != null && kb.tabKey.isPressed) || (pad != null && pad.selectButton.isPressed); }
     }
+
+    // Being pulled into the exit log or behind the iris: no pause, no Tab sheet.
+    static bool InTransition => StageWipe.Busy || StageExit.Entering;
 
     public static bool PausePressed
     {
-        get { var kb = Keyboard.current; var pad = Pad; return (kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame); }
+        get { if (InTransition) return false; var kb = Keyboard.current; var pad = Pad; return (kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame); }
     }
 
     // Menus with a gamepad: puts the UI selection on `button`, so A (submit) presses it and the d-pad moves on from

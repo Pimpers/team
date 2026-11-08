@@ -247,7 +247,7 @@ public class RunManager : MonoBehaviour
         // Let StageRandomizer finish its Start work before moving the selected route's foes.
         yield return null;
         ApplyRoute(hunt, false);
-        while (StageTitle.Showing || LeafWipe.Busy || ScreenFader.Switching) yield return null;
+        while (StageTitle.Showing || StageWipe.Busy || ScreenFader.Switching) yield return null;
         if (hudText != null && hudText.canvas != null)
             StageBanner.Show(hudText.canvas.rootCanvas, hudText.font, hunt ? Loc.T("route.hunt") : Loc.T("route.safe"),
                              hunt ? Loc.T("route.hunt.hint") : Loc.T("route.safe.hint"), 1.2f);

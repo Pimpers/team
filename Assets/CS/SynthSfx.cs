@@ -25,7 +25,9 @@ public static class SynthSfx
     //   "fx_hiss"  - rough breath: noise through a slow wobble, rising then dying (the hiss)
     //   "fx_churu" - a soft squish and a small rising pop (the churu landing)
     //   "fx_groom" - three soft brushing strokes (grooming)
-    public static readonly string[] Ids = { "voice_blip", "preview_tick", "tip_chime", "fx_bell", "fx_trap", "fx_can", "fx_hiss", "fx_churu", "fx_groom" };
+    //   "fx_suck"  - wind rising through a narrowing band (the exit log pulling the cat in)
+    //   "fx_pop"   - a cork-like pop and a little upward chirp (the cat popping out of the log)
+    public static readonly string[] Ids = { "voice_blip", "preview_tick", "tip_chime", "fx_bell", "fx_trap", "fx_can", "fx_hiss", "fx_churu", "fx_groom", "fx_suck", "fx_pop" };
 
     public static void Register(System.Collections.Generic.Dictionary<string, SfxLibrary.Entry> byId)
     {
@@ -50,6 +52,8 @@ public static class SynthSfx
             case "fx_hiss": return (Make(id, Hiss()), 0.55f, 0.04f);
             case "fx_churu": return (Make(id, Churu()), 0.5f, 0.06f);
             case "fx_groom": return (Make(id, Groom()), 0.45f, 0.08f);
+            case "fx_suck": return (Make(id, Suck()), 0.55f, 0.04f);
+            case "fx_pop": return (Make(id, Pop()), 0.55f, 0.05f);
             default: return (Make(id, Notes(new[] { 660f, 880f }, 0.11f)), 0.6f, 0f);    // news: a little over
         }
     }
@@ -167,6 +171,44 @@ public static class SynthSfx
         var pop = Chirp(0.08f, 380f, 760f);                                            // and a small rising pop
         int at = Mathf.RoundToInt(0.06f * Rate);
         for (int i = 0; i < pop.Length && at + i < data.Length; i++) data[at + i] += 0.6f * pop[i];
+        return data;
+    }
+
+    // Wind drawn into a hole: noise through a band whose centre rises, swelling then cut off as it swallows.
+    static float[] Suck()
+    {
+        rng = new System.Random(13);
+        var data = new float[Mathf.CeilToInt(0.9f * Rate)];
+        float lp = 0f, bp = 0f;
+        for (int i = 0; i < data.Length; i++)
+        {
+            float k = i / (float)data.Length;
+            float a = Mathf.Lerp(0.05f, 0.45f, k * k);                                 // the band climbs
+            lp += a * (Noise() - lp);
+            bp += a * 0.5f * (lp - bp);
+            float env = Mathf.Min(1f, k / 0.6f) * Mathf.Min(1f, (1f - k) / 0.06f);     // swells, then gone
+            data[i] = 2.2f * env * (lp - bp);
+        }
+        var whistle = Chirp(0.5f, 300f, 900f);
+        int at = Mathf.RoundToInt(0.35f * Rate);
+        for (int i = 0; i < whistle.Length && at + i < data.Length; i++) data[at + i] += 0.25f * whistle[i];
+        return data;
+    }
+
+    static float[] Pop()
+    {
+        rng = new System.Random(17);
+        var data = new float[Mathf.CeilToInt(0.2f * Rate)];
+        for (int i = 0; i < data.Length; i++)
+        {
+            float t = i / (float)Rate;
+            float thump = Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(180f, 420f, Mathf.Min(1f, t / 0.04f)) * t) * Mathf.Exp(-30f * t);
+            float click = t < 0.006f ? Noise() * (1f - t / 0.006f) : 0f;
+            data[i] = 0.9f * thump + 0.5f * click;
+        }
+        var chirp = Chirp(0.09f, 600f, 1100f);
+        int at = Mathf.RoundToInt(0.03f * Rate);
+        for (int i = 0; i < chirp.Length && at + i < data.Length; i++) data[at + i] += 0.45f * chirp[i];
         return data;
     }
 
