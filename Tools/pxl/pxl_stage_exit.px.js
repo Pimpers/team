@@ -40,49 +40,82 @@ function logBody(c, crimson) {
 sprite("exit_log", { w: 48, h: 24, pivot: "bottom" }, (c) => logBody(c, false))
 sprite("exit_log_crimson", { w: 48, h: 24, pivot: "bottom" }, (c) => logBody(c, true))
 
-// The big exit log (about twice the cat's height): its mouth on the left, big enough to swallow the cat.
-//   closed - vines and a plank across the mouth, the hole dark: monsters are left
-//   open 0-3 - the vines gone and a wind swirl turning inside (4-frame loop; faster when it pulls the cat in)
+// The big exit log (about twice the cat's height), lying on the ground, its mouth on the left. Colours from the
+// reference palette (Tools/palette.png): bark in three browns, the cut face in rings of light wood, moss in three
+// greens, a 1 px near-black outline.
+//   closed - vines and a plank across the mouth: monsters are left
+//   open 0-3 - a wind swirl turning inside the hole (4-frame loop; faster when it pulls the cat in)
+const LOG = {
+  forest: { out: "#150904", barkD: "#483430", bark: "#886644", barkL: "#a7845d", rim: "#c9b688",
+            woodL: "#d3bf8f", woodM: "#a7845d", woodD: "#886644", hole: "#150904", depth: "#3e1f27",
+            mossD: "#4e8415", moss: "#63a019", mossL: "#85d527" },
+  crimson: { out: "#150904", barkD: "#3e1f27", bark: "#7b364d", barkL: "#825665", rim: "#aa7980",
+             woodL: "#e9b7bb", woodM: "#aa7980", woodD: "#825665", hole: "#150904", depth: "#3e1f27",
+             mossD: "#3e1f27", moss: "#7b364d", mossL: "#b4564f" },
+}
 function bigLog(c, crimson, state, frame) {
-  const bark = crimson ? "c" : "b", shadeC = crimson ? "P" : "B", top = crimson ? "C" : "t"
-  c.ellipse(57, 21, 6, 17, "K"); c.rect(12, 4, 46, 34, "K")
-  c.ellipse(57, 21, 5, 16, bark); c.rect(12, 5, 46, 32, bark)
-  c.line(13, 5, 56, 5, top); c.line(14, 6, 38, 6, top); c.line(14, 7, 24, 7, top)        // light along the top
-  c.line(13, 36, 57, 36, shadeC); c.line(16, 35, 54, 35, shadeC); c.line(20, 34, 50, 34, shadeC) // shade under
-  for (const [x0, x1, y] of [[24, 34, 10], [38, 50, 12], [22, 30, 16], [34, 46, 18], [26, 38, 24], [42, 54, 26], [24, 32, 30], [38, 48, 31]]) {
-    c.line(x0, y, x1, y, "P")
-    if ((x0 + y) % 3 === 0) c.line(x0 + 1, y - 1, x1 - 1, y - 1, top)
+  const k = crimson ? LOG.crimson : LOG.forest
+  // body: from the mouth (x 12) to a rounded back end (x 55, radius 6), 30 px tall (y 6-35)
+  c.ellipse(55, 21, 7, 16, k.out); c.rect(12, 5, 44, 32, k.out)
+  c.ellipse(55, 21, 6, 15, k.bark); c.rect(12, 6, 44, 30, k.bark)
+  c.line(13, 6, 54, 6, k.barkL); c.line(14, 7, 46, 7, k.barkL)                  // the lit top of the round trunk
+  c.line(13, 35, 55, 35, k.barkD); c.line(16, 34, 52, 34, k.barkD)              // the shaded underside
+  // the back end: the round of the trunk, a thin pale rim where its old cut shows
+  c.ellipse(56, 21, 4, 13, k.barkD); c.ellipse(56, 21, 3, 12, k.bark)
+  for (let y = 10; y <= 32; y++) c.px(59 + (Math.abs(y - 21) > 8 ? -1 : 0), y, k.rim)
+  // grain: short broken runs, each offset from the last, in the dark bark tone
+  for (const [x0, x1, y] of [[24, 29, 11], [33, 41, 12], [45, 50, 11], [22, 27, 17], [31, 34, 18], [40, 47, 17],
+                             [26, 33, 23], [38, 41, 24], [46, 51, 23], [23, 28, 29], [33, 39, 30], [44, 49, 29]]) {
+    c.line(x0, y, x1, y, k.barkD)
+    c.px(x1 + 1, y + 1, k.barkD)                                                // the run kinks down where it ends
   }
-  const m1 = crimson ? "P" : "g", m2 = crimson ? "K" : "G"
-  for (const [x, w] of [[26, 12], [44, 9]]) {
-    c.line(x + 1, 1, x + w - 3, 1, m1); c.rect(x, 2, w, 3, m1); c.line(x, 5, x + w - 1, 5, m2)
-    c.px(x + 2, 6, m2); c.px(x + 2, 7, m2); c.px(x + 2, 8, m2); c.px(x + w - 3, 6, m2)
+  // two knots: long dark ovals along the grain with a lighter heart
+  for (const [x, y] of [[37, 15], [30, 26]]) {
+    c.line(x - 3, y, x + 3, y, k.barkD); c.line(x - 2, y - 1, x + 2, y - 1, k.barkD); c.line(x - 1, y, x + 1, y, k.barkL) // long, along the grain
   }
-  // the cut end: rings round a big dark hole
-  c.ellipse(12, 21, 11, 18, "K")
-  c.ellipse(12, 21, 10, 17, crimson ? "r" : "T")
-  c.ellipse(12, 21, 9, 16, top)
-  c.ellipse(12, 21, 7, 14, crimson ? "R" : "B")
-  c.ellipse(12, 22, 6, 12, "K")
+  // moss lying over the top, irregular, a few drips down the side (1 px outline, three greens)
+  const mossTop = [[24, 3], [25, 2], [26, 2], [27, 1], [28, 1], [29, 2], [30, 2], [31, 3], [32, 3], [33, 4],
+                   [43, 4], [44, 3], [45, 2], [46, 2], [47, 3], [48, 4]]
+  const blob = (x0, x1, y0, drips) => {
+    for (let x = x0; x <= x1; x++) {
+      const top = (mossTop.find(([mx]) => mx === x) || [x, 4])[1]
+      c.px(x, top - 1, k.out)                                                   // outline above
+      for (let y = top; y <= 7; y++) c.px(x, y, y === top ? k.mossL : y < 6 ? k.moss : k.mossD)
+      c.px(x, 8, k.out)
+    }
+    c.line(x0 - 1, 4, x0 - 1, 7, k.out); c.line(x1 + 1, 5, x1 + 1, 7, k.out)
+    for (const [x, len] of drips) {                                             // drips hanging down the bark
+      for (let y = 8; y < 8 + len; y++) c.px(x, y, k.mossD)
+      c.px(x, 8 + len, k.out); c.px(x - 1, 8, k.mossD)
+    }
+  }
+  blob(24, 33, 2, [[26, 2], [31, 1]])
+  blob(43, 48, 3, [[45, 3]])
+  // the cut end: bark rim, then rings of wood round the hole (light, mid, dark), the hole itself
+  c.ellipse(12, 21, 11, 18, k.out)
+  c.ellipse(12, 21, 10, 17, k.barkD)
+  c.ellipse(12, 21, 9, 16, k.woodL)
+  c.ellipse(12, 21, 8, 15, k.woodM)
+  c.ellipse(12, 21, 7, 14, k.woodL)
+  c.ellipse(12, 21, 6, 13, k.woodD)
+  c.ellipse(12, 22, 5, 11, k.hole)
   if (state === "closed") {
     // vines across the hole and a plank nailed over it: shut
-    c.line(5, 13, 19, 31, m2); c.line(6, 13, 20, 31, m1); c.line(19, 12, 6, 30, m2); c.line(18, 12, 5, 30, m1)
-    for (const [x, y] of [[8, 17], [16, 18], [10, 26], [15, 27], [12, 21]]) { c.px(x, y, "g"); c.px(x + 1, y, "G"); c.px(x, y + 1, "G") }
-    c.rect(3, 19, 19, 4, "K"); c.rect(4, 20, 17, 2, bark); c.line(4, 20, 20, 20, top); c.px(6, 21, "K"); c.px(18, 21, "K")
+    c.line(6, 13, 18, 31, k.mossD); c.line(7, 13, 19, 31, k.moss); c.line(18, 12, 7, 30, k.mossD); c.line(17, 12, 6, 30, k.moss)
+    for (const [x, y] of [[9, 17], [15, 18], [10, 26], [14, 27], [12, 21]]) { c.px(x, y, k.mossL); c.px(x + 1, y, k.mossD); c.px(x, y + 1, k.mossD) }
+    c.rect(3, 19, 19, 4, k.out); c.rect(4, 20, 17, 2, k.barkL); c.line(4, 20, 20, 20, k.rim); c.px(6, 21, k.out); c.px(18, 21, k.out)
   } else {
-    // the wind: streaks turning on two oval rings (outer three, inner two, the inner one the other way), nothing
-    // from the middle out - arms from the centre made a symbol-like mark
-    c.ellipse(12, 22, 5, 11, "D")
-    const ring = (rx, ry, n, dir, len, col) => {
-      for (let s = 0; s < n; s++) {
+    // the wind: streaks turning on two oval rings (outer three, inner two, the inner one the other way)
+    c.ellipse(12, 22, 4, 10, k.depth)
+    const ring = (rx, ry, n, dir, len, col, head) => {
+      for (let s = 0; s < n; s++)
         for (let i = 0; i < len; i++) {
           const a = dir * frame * Math.PI / 6 + s * 2 * Math.PI / n + i * 0.16
-          c.px(Math.round(12 + Math.cos(a) * rx), Math.round(22 + Math.sin(a) * ry), i < 2 ? "y" : col)
+          c.px(Math.round(12 + Math.cos(a) * rx), Math.round(22 + Math.sin(a) * ry), i < 2 ? head : col)
         }
-      }
     }
-    ring(4, 9, 3, 1, 6, "Y")
-    ring(2, 4, 2, -1, 5, "G")
+    ring(3, 8, 3, 1, 6, crimson ? "#b4564f" : "#85d527", crimson ? "#e9b7bb" : "#c3d971")
+    ring(1, 4, 2, -1, 5, crimson ? "#7b364d" : "#4e8415", crimson ? "#aa7980" : "#85d527")
   }
 }
 sprite("exit_logbig_closed", { w: 64, h: 40, pivot: "bottom" }, (c) => bigLog(c, false, "closed", 0))

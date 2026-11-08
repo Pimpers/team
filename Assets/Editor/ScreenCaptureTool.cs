@@ -117,8 +117,8 @@ public static class ScreenCaptureTool
         // The way out open, so the minimap's exit marker (cyan) shows.
         Add("Stage2", "minimap_exit", () => { var e = StageExit.Instance != null ? StageExit.Instance : StageExit.Create(2); if (e != null) e.Open("Stage3"); });
         // The exit log: shut while monsters are left, open after the card, the cat pulled in, the iris shut, out again.
-        Add("Stage1", "exit_closed", () => CatBeforeExit(3f));
-        Add("Stage1", "exit_open", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(3f); }, wait: 0.6f);
+        Add("Stage1", "exit_closed", () => CatBeforeExit(1.5f)); // close enough that the whole log is in the frame
+        Add("Stage1", "exit_open", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(1.5f); }, wait: 0.6f);
         Add("Stage1", "exit_pull", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); StageExit.Instance.ForCapture(true); }, wait: 0.4f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
