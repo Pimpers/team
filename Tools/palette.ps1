@@ -6,7 +6,10 @@
 # recoloured to brown only would lose what they are. Apply keeps alpha; originals go to _art_backup/palette_20261108.
 param([switch]$Build, [string[]]$Apply = @(), [switch]$Restore, [double]$MaxShift = 14,
   # colours added by hand after the cut, where a picture's own key colours were too far from it (catnip, blast, bear)
-  [string[]]$AddColours = @("85d527", "4e8415", "fdeb7b", "ec6309", "ba6834"))
+  [string[]]$AddColours = @("85d527", "4e8415", "fdeb7b", "ec6309", "ba6834",
+    "150904", "472216", "5e2c19",  # the bear's own browns (without them it went purple)
+    "aa7980", "825665", "e6934f",  # the mushroom's cap and its orange spores
+    "c3d971", "a1d443"))           # the catnip's light greens
 $Apply = @($Apply | ForEach-Object { $_ -split ',' } | Where-Object { $_ })
 $repo = Resolve-Path (Join-Path $PSScriptRoot '..')
 $out = Join-Path $repo 'Tools\palette.png'
