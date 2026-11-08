@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-// The way from one stage to the next, through big hollow logs (created by RunManager in the stage scenes):
-//   Closed - from the start, the logs lie at the end of the stage with vines and a plank across their mouths; walking
-//            into one shakes it and says 적을 모두 물리치세요.
+// The way from one stage to the next, through portals - stone arches (created by RunManager in the stage scenes;
+// they were hollow logs until 2026-11-09, which is why the code still says "log" for the sprite):
+//   Closed - from the start, the portals stand at the end of the stage, barred by chains or vines; walking into one
+//            shakes it and says 적을 모두 물리치세요.
 //   Open   - after the draft card is picked the vines blow off (dust, a creak), a wind swirls in the mouth and
 //            fireflies string out a path to it; leaves near it are pulled in, an edge arrow (MonsterTracker) and the
 //            minimap show the way. A stage where the end is too far (or a climbing one) gets a single log a few steps
@@ -44,8 +45,9 @@ public class StageExit : MonoBehaviour
         public TextMeshPro word;              // the closed message over it
         public Transform sign;                // the fork's sign and icon
         // The fork's two are portals (a standing arch, its opening's middle 1.6 up), the others logs (mouth at the cut end).
-        public bool Portal => kind == "_hunt" || kind == "_safe";
+        public bool Portal => true; // every way out is a portal now (2026-11-09); the log geometry is kept for reference
         public float Offset => Portal ? 0f : holeSide * HoleFromCentre; // from the hole to the sprite's middle
+        public Vector3 signHome;
         public Vector3 Mouth => Portal ? new Vector3(holeX, floorY + 1.6f, 0f) : new Vector3(holeX - holeSide * 0.2f, floorY + 1.3f, 0f);
     }
 
@@ -59,7 +61,7 @@ public class StageExit : MonoBehaviour
     readonly List<Firefly> flies = new List<Firefly>();
     readonly List<Transform> drawn = new List<Transform>();
     Sprite[] flyFrames, leafSprites;
-    static string arrivedKind = ""; // the log the cat left the last stage by: it pops out of the same kind
+    static string arrivedKind = "_plain"; // the portal the cat left the last stage by: it pops out of the same kind
 
     class Firefly { public Transform tr; public SpriteRenderer sr; public Vector3 home; public float phase; public bool gone; }
 
@@ -111,9 +113,10 @@ public class StageExit : MonoBehaviour
         PlaceClosed();
     }
 
-    static Sprite Load(string kind, string state) =>
-        Resources.Load<Sprite>(kind == "_hunt" || kind == "_safe" ? $"StageExit/exit_portal{kind}_{state}" : $"StageExit/exit_logbig{kind}_{state}");
-    string PlainKind => crimson ? "_crimson" : "";
+    static Sprite Load(string kind, string state) => Resources.Load<Sprite>($"StageExit/exit_portal{kind}_{state}");
+    // The single way on: plain (cyan), the way to the boss (stage 4: horns and a crown), the boss room's way to the
+    // result (gold).
+    string PlainKind => stage >= 5 ? "_victory" : stage == 4 ? "_boss" : "_plain";
 
     // ------------------------------------------------------------------ arriving
     void Arrive()
@@ -121,8 +124,8 @@ public class StageExit : MonoBehaviour
         StageWipe.ArrivedThroughExit = false;
         // The cat waits inside a log at the start until the iris has opened, then pops out.
         var feet = body.Feet;
-        bool portal = arrivedKind == "_hunt" || arrivedKind == "_safe"; // out of the same kind of way it went in by
-        var arrive = MakeLog(feet.x - (portal ? 0f : HoleFromCentre), feet.y, Load(arrivedKind, "open_0") ?? Load("", "open_0"));
+        // out of the same kind of portal it went in by
+        var arrive = MakeLog(feet.x, feet.y, Load(arrivedKind, "open_0") ?? Load("_plain", "open_0"));
         arrive.flipX = true; // mouth on the right, at the cat
         arrive.sortingOrder = body.Renderer.sortingOrder - 1;
         body.skillLock = true;
@@ -243,6 +246,7 @@ public class StageExit : MonoBehaviour
         var root = new GameObject("ForkSign").transform;
         root.position = new Vector3(w.holeX - w.Offset, w.floorY + (w.Portal ? 3.45f : 2.85f), 0f); // just over the arch (one line, icon beside: a ledge's camera still shows it)
         w.sign = root;
+        w.signHome = root.position;
         float scale = GameSettings.LargeText ? 1.3f : 1f;
         var icon = new GameObject("Icon").AddComponent<SpriteRenderer>();
         icon.transform.SetParent(root, false);
@@ -321,7 +325,7 @@ public class StageExit : MonoBehaviour
         {
             // the closed log(s) at the end open where they are - a fork opened without a choice (OpenFork) keeps only
             // one log, the plain way
-            if (IsFork) { for (int i = 1; i < ways.Count; i++) DestroyWay(ways[i]); ways.RemoveRange(1, ways.Count - 1); ways[0].kind = PlainKind; ways[0].hunt = false; }
+            if (IsFork) { for (int i = 1; i < ways.Count; i++) DestroyWay(ways[i]); ways.RemoveRange(1, ways.Count - 1); ways[0].kind = PlainKind; ways[0].hunt = false; if (ways[0].sign != null) Destroy(ways[0].sign.gameObject); }
         }
         else
         {
@@ -490,6 +494,24 @@ public class StageExit : MonoBehaviour
             flies.Add(new Firefly { tr = go.transform, sr = sr, home = home, phase = Random.Range(0f, 6f) });
             if (i % 3 == 0) Sfx.Play("ui_click", 0.25f, 2.2f + i * 0.04f);
             yield return new WaitForSeconds(0.05f);
+        }
+    }
+
+    // The fork's signs stay on screen: one over a portal on a high ledge is pulled down to the screen's top edge (and
+    // in from the sides) instead of being cut off.
+    void LateUpdate()
+    {
+        var cam = Camera.main;
+        if (cam == null) return;
+        float halfH = cam.orthographicSize, halfW = halfH * cam.aspect;
+        Vector3 c = cam.transform.position;
+        foreach (var w in ways)
+        {
+            if (w.sign == null) continue;
+            var p = w.signHome;
+            p.y = Mathf.Min(p.y, c.y + halfH - 0.9f);
+            p.x = Mathf.Clamp(p.x, c.x - halfW + 3.4f, c.x + halfW - 3.4f);
+            w.sign.position = p;
         }
     }
 

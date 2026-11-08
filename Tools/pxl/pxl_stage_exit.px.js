@@ -219,42 +219,57 @@ sprite("firefly", { w: 10, h: 5 }, (c) => {
 
 sheet("exit_preview", ["exit_log", "exit_log_crimson", "leaf_*", "firefly"], { pad: 2 })
 
-// The fork's portals (2026-11-09: the user asked for portals instead of the fork's two logs): a standing arch of
-// stone seen from the side, about twice the cat's height, its opening facing the way the cat comes.
-//   hunt - jagged black stone, thorns on top, red cracks, a skull keystone; a red/orange swirl
-//   safe - round pale stones, vines with small flowers and sprouts; a green swirl
-//   closed - dark inside, barred (chains on the hard way, vines on the easy way); open 0-3 - the swirl turning
+// The exits are portals (2026-11-09: the user asked for portals instead of logs): a standing arch of stone seen
+// from the side, about twice the cat's height, its opening's middle about 1.6 units up.
+//   hunt    - the fork's hard way: jagged black stone, thorns, red cracks, a skull keystone; a red/orange swirl
+//   safe    - the fork's easy way: round pale stones, vines, small flowers, a sprout; a green swirl
+//   plain   - the single way on: grey-blue stone, a cyan swirl (the minimap's exit colour)
+//   boss    - the way to the boss: bigger, heavy black stone, horns and a crown; a purple/red swirl
+//   victory - the boss room's way out to the result: gold stone, a gold swirl
+//   closed - dark inside, barred (chains or vines); open 0-3 - the swirl turning (faster in game while it pulls)
+const PORTAL = {
+  hunt:    { st: ["#141218", "#504b5f", "#7b7081"], sw: ["#e5354e", "#fbcd0d", "#ec6309", "#f3a15e"], bar: "chain" },
+  safe:    { st: ["#967c5f", "#c1b89a", "#dbcba7"], sw: ["#63a019", "#c3d971", "#85d527", "#ebe3cf"], bar: "vine" },
+  plain:   { st: ["#504b5f", "#7e8f99", "#b1c3ca"], sw: ["#799acb", "#cef4fb", "#2d67a9", "#a7daf9"], bar: "chain" },
+  boss:    { st: ["#141218", "#504b5f", "#7b364d"], sw: ["#e5354e", "#f8759b", "#aa7980", "#e9b7bb"], bar: "chain" },
+  victory: { st: ["#a5905b", "#fad567", "#fdeb7b"], sw: ["#fbcd0d", "#fbe89c", "#cb8940", "#f5ebe6"], bar: "chain" },
+}
+const GEO = {
+  normal: { cx: 20, cy: 25, o: [18, 22], h: [11, 16], step: 43, w: 40 },
+  big:    { cx: 24, cy: 31, o: [22, 26], h: [13, 19], step: 51, w: 48 },
+}
 function portal(c, v, state, frame) {
-  const hunt = v === "hunt"
-  const out = "#141218", st = hunt ? ["#141218", "#504b5f", "#7b7081"] : ["#967c5f", "#c1b89a", "#dbcba7"]
-  const cx = 20, cy = 25
+  const P = PORTAL[v], g = v === "boss" ? GEO.big : GEO.normal, out = "#141218", st = P.st
+  const cx = g.cx, cy = g.cy, orx = g.o[0], ory = g.o[1], hrx = g.h[0], hry = g.h[1]
   // the arch: an outlined oval ring on a flat stone step
-  c.ellipse(cx, cy, 18, 22, out)
-  c.ellipse(cx, cy, 17, 21, st[1])
+  c.ellipse(cx, cy, orx, ory, out)
+  c.ellipse(cx, cy, orx - 1, ory - 1, st[1])
   // stones: the ring split into blocks with dark joints, lit from above
-  for (let a = 0; a < 360; a += hunt ? 26 : 32) {
+  const jag = v === "hunt" || v === "boss"
+  for (let a = 0; a < 360; a += jag ? 26 : 32) {
     const r = a * Math.PI / 180
-    for (let k = 12; k <= 21; k++) c.px(Math.round(cx + Math.cos(r) * k * 17 / 21), Math.round(cy + Math.sin(r) * k), out)
+    for (let k = hry - 4; k <= ory - 1; k++) c.px(Math.round(cx + Math.cos(r) * k * (orx - 1) / (ory - 1)), Math.round(cy + Math.sin(r) * k), out)
   }
-  for (let y = cy - 21; y < cy - 8; y++) for (let x = cx - 17; x <= cx + 17; x++) {
-    const dx = (x - cx) / 17, dy = (y - cy) / 21, d = dx * dx + dy * dy
-    if (d < 1 && d > 0.78 && dy < -0.5) c.px(x, y, st[2])                         // the lit top of the stones
+  for (let y = cy - ory; y < cy - 8; y++) for (let x = cx - orx; x <= cx + orx; x++) {
+    const dx = (x - cx) / (orx - 1), dy = (y - cy) / (ory - 1), d = dx * dx + dy * dy
+    if (d < 1 && d > 0.78 && dy < -0.5) c.px(x, y, st[2]) // the lit top of the stones
   }
-  c.rect(1, 43, 38, 5, out); c.rect(2, 44, 36, 3, st[0] === out ? "#504b5f" : st[0]); c.line(2, 44, 37, 44, st[2]) // the step
+  c.rect(1, g.step, g.w - 2, 5, out); c.rect(2, g.step + 1, g.w - 4, 3, st[0] === out ? "#504b5f" : st[0]); c.line(2, g.step + 1, g.w - 3, g.step + 1, st[2]) // the step
   // the opening
-  c.ellipse(cx, cy + 1, 11, 16, out)
-  c.ellipse(cx, cy + 1, 10, 15, state === "closed" ? "#141218" : "#3e1f27")
-  if (hunt) {
+  c.ellipse(cx, cy + 1, hrx, hry, out)
+  c.ellipse(cx, cy + 1, hrx - 1, hry - 1, state === "closed" ? "#141218" : "#3e1f27")
+  const top = (x) => cy - Math.round((ory - 1) * Math.sqrt(Math.max(0, 1 - Math.pow((x - cx) / (orx - 1), 2))))
+  if (v === "hunt") {
     // jagged chips out of the rim, thorns along the top, glowing cracks, a skull on the keystone
     for (const [x, y] of [[3, 20], [2, 27], [37, 18], [38, 29], [8, 8], [32, 9]]) { c.px(x, y, "_"); c.px(x + (x < cx ? 1 : -1), y + 1, out) }
     for (const [x, h] of [[9, 3], [14, 4], [26, 4], [31, 3]]) {
-      const top = cy - Math.round(21 * Math.sqrt(Math.max(0, 1 - ((x - cx) / 17) ** 2)))
-      for (let i = 1; i <= h; i++) { c.px(x, top - i, i === h ? "#b1c3ca" : "#7b7081"); if (i < 2) { c.px(x - 1, top - i, "#7b7081"); c.px(x - 2, top - i, out) } c.px(x + 1, top - i, out) }
-      c.px(x, top - h - 1, out)
+      const t = top(x)
+      for (let i = 1; i <= h; i++) { c.px(x, t - i, i === h ? "#b1c3ca" : "#7b7081"); if (i < 2) { c.px(x - 1, t - i, "#7b7081"); c.px(x - 2, t - i, out) } c.px(x + 1, t - i, out) }
+      c.px(x, t - h - 1, out)
     }
     for (const [x, y] of [[6, 30], [7, 31], [7, 32], [8, 33], [33, 14], [34, 15], [34, 16], [35, 17]]) c.px(x, y, "#e5354e")
     c.rect(17, 2, 7, 6, out); c.rect(18, 3, 5, 4, "#ebe3cf"); c.px(19, 4, out); c.px(21, 4, out); c.line(18, 6, 22, 6, "#c1b89a"); c.px(19, 7, "#ebe3cf"); c.px(21, 7, "#ebe3cf")
-  } else {
+  } else if (v === "safe") {
     // vines climbing both sides, small flowers, a sprout on top
     const vine = [[4, 38], [4, 35], [3, 32], [3, 29], [4, 26], [4, 23], [5, 20], [6, 17], [8, 14], [10, 11], [13, 8]]
     for (const [x, y] of vine) { c.px(x, y, "#4e8415"); c.px(x + 1, y, "#63a019"); c.px(x + 1, y + 1, "#63a019") }
@@ -263,17 +278,42 @@ function portal(c, v, state, frame) {
     const flower = (x, y, p) => { c.px(x, y - 1, p); c.px(x - 1, y, p); c.px(x + 1, y, p); c.px(x, y + 1, p); c.px(x, y, "#fbcd0d") }
     flower(6, 28, "#f29cb0"); flower(34, 24, "#ebe3cf"); flower(12, 9, "#f29cb0")
     c.px(20, 2, "#4e8415"); c.px(20, 1, "#4e8415"); c.rect(17, -1, 3, 2, "#85d527"); c.rect(21, -1, 3, 2, "#63a019")
+  } else if (v === "plain") {
+    // a keystone with a small cyan rune
+    c.rect(17, 2, 7, 5, out); c.rect(18, 3, 5, 3, "#7e8f99"); c.px(20, 4, "#a7daf9"); c.px(19, 4, "#799acb"); c.px(21, 4, "#799acb")
+  } else if (v === "boss") {
+    // two curled horns from the shoulders and a spiked crown on the keystone, glowing seams
+    for (const s of [-1, 1]) {
+      const hx = cx + s * 15
+      for (const [dx, dy] of [[0, 0], [1, -1], [1, -2], [2, -3], [2, -4], [3, -5], [3, -6], [2, -7]]) {
+        const x = hx + s * dx, y = top(hx) + 2 + dy
+        c.px(x, y, dy > -4 ? "#7b7081" : "#b1c3ca"); c.px(x + s, y, out); c.px(x - s, y, out)
+      }
+    }
+    c.rect(cx - 5, 1, 11, 6, out); c.rect(cx - 4, 3, 9, 3, "#fbcd0d"); c.line(cx - 4, 5, cx + 4, 5, "#cb8940")
+    for (const dx of [-4, 0, 4]) { c.px(cx + dx, 2, "#fbcd0d"); c.px(cx + dx, 1, "#fbcd0d"); c.px(cx + dx, 0, out) }
+    c.px(cx, 4, "#e5354e")
+    for (const [x, y] of [[6, 34], [7, 35], [8, 36], [41, 18], [40, 19], [40, 20]]) c.px(x, y, "#f8759b")
+  } else if (v === "victory") {
+    // a laurel of gold leaves round the top and a star on the keystone
+    for (let x = 6; x <= 34; x += 4) { const t = top(x); c.px(x, t - 1, "#cb8940"); c.px(x + 1, t - 2, "#fbcd0d"); c.px(x - 1, t - 2, "#fbcd0d"); c.px(x, t - 3, out) }
+    c.px(20, 1, "#f5ebe6"); c.line(18, 3, 22, 3, "#f5ebe6"); c.px(20, 2, "#fdeb7b"); c.px(20, 4, "#fdeb7b"); c.px(19, 5, "#fdeb7b"); c.px(21, 5, "#fdeb7b")
   }
   if (state === "closed") {
-    if (hunt) for (let y = 11; y <= 38; y += 3) { c.rect(cx - 1, y, 3, 2, "#7b7081"); c.px(cx, y, "#b1c3ca"); c.px(cx, y + 2, "#504b5f") }     // a chain down the middle
-    if (hunt) for (let x = 11; x <= 29; x += 3) { c.rect(x, 25, 2, 3, "#7b7081"); c.px(x, 25, "#b1c3ca"); c.px(x + 2, 26, "#504b5f") }             // and across
-    if (!hunt) { c.line(11, 14, 29, 36, "#4e8415"); c.line(29, 14, 11, 36, "#4e8415"); c.line(12, 14, 29, 35, "#63a019"); c.line(28, 14, 11, 35, "#63a019") }
+    const by0 = cy + 1 - hry + 3, by1 = cy + 1 + hry - 3
+    if (P.bar === "chain") {
+      for (let y = by0; y <= by1; y += 3) { c.rect(cx - 1, y, 3, 2, "#7b7081"); c.px(cx, y, "#b1c3ca"); c.px(cx, y + 2, "#504b5f") }
+      for (let x = cx - hrx + 2; x <= cx + hrx - 2; x += 3) { c.rect(x, cy, 2, 3, "#7b7081"); c.px(x, cy, "#b1c3ca"); c.px(x + 2, cy + 1, "#504b5f") }
+    } else {
+      const lx = cx - hrx + 2, rx = cx + hrx - 2
+      c.line(lx, by0, rx, by1, "#4e8415"); c.line(rx, by0, lx, by1, "#4e8415"); c.line(lx + 1, by0, rx, by1 - 1, "#63a019"); c.line(rx - 1, by0, lx, by1 - 1, "#63a019")
+    }
   } else {
-    const sw = hunt ? ["#e5354e", "#fbcd0d", "#ec6309", "#f3a15e"] : ["#63a019", "#c3d971", "#85d527", "#ebe3cf"]
+    const sw = P.sw, k = hry / 16
     const ring = (rx, ry, n, dir, len, col, head) => {
       for (let s = 0; s < n; s++) for (let i = 0; i < len; i++) {
         const a = dir * frame * Math.PI / 6 + s * 2 * Math.PI / n + i * 0.16
-        c.px(Math.round(cx + Math.cos(a) * rx), Math.round(cy + 1 + Math.sin(a) * ry), i < 2 ? head : col)
+        c.px(Math.round(cx + Math.cos(a) * rx * k), Math.round(cy + 1 + Math.sin(a) * ry * k), i < 2 ? head : col)
       }
     }
     ring(8, 12, 3, 1, 7, sw[0], sw[1])
@@ -281,7 +321,9 @@ function portal(c, v, state, frame) {
     ring(1, 3, 2, 1, 4, sw[2], sw[3])
   }
 }
-for (const v of ["hunt", "safe"]) {
-  sprite(`exit_portal_${v}_closed`, { w: 40, h: 48, pivot: "bottom" }, (c) => portal(c, v, "closed", 0))
-  for (let f = 0; f < 4; f++) sprite(`exit_portal_${v}_open_${f}`, { w: 40, h: 48, pivot: "bottom" }, (c) => portal(c, v, "open", f))
+for (const v of Object.keys(PORTAL)) {
+  const g = v === "boss" ? GEO.big : GEO.normal
+  const size = { w: g.w, h: g.step + 5, pivot: "bottom" }
+  sprite("exit_portal_" + v + "_closed", size, (c) => portal(c, v, "closed", 0))
+  for (let f = 0; f < 4; f++) sprite("exit_portal_" + v + "_open_" + f, size, (c) => portal(c, v, "open", f))
 }

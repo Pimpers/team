@@ -128,6 +128,8 @@ public static class ScreenCaptureTool
         Add("Stage1", "fork_open", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, wait: 1f);
         Add("Stage1", "fork_pull_hunt", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); StageExit.Instance.ForCapture(true, true); }, wait: 0.4f);
         Add("Stage1", "fork_pull_safe", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); StageExit.Instance.ForCapture(true, false); }, wait: 0.4f);
+        Add("Stage5", "portal_victory_closed", () => CatBeforeExit(3f)); // the boss room's gold portal, shut while the boss stands
+        Add("Stage4", "portal_boss_open", () => { ClearEnemies(); StageExit.Instance.Open("Stage5"); CatBeforeExit(3f); }, wait: 1f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
