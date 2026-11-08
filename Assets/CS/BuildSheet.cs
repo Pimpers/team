@@ -13,6 +13,8 @@ public class BuildSheet : MonoBehaviour
     const int RowsPerColumn = 8;
 
     public static bool ForceShow; // ScreenCaptureTool: the sheet without a key held
+    public static bool Showing;   // the sheet is up: SkillHUD steps aside (its bar peeked out under the sheet)
+    void OnDestroy() { Showing = false; } // a static outlives the scene (no domain reload on play)
 
     TMP_FontAsset font;
     CanvasGroup group;
@@ -104,6 +106,7 @@ public class BuildSheet : MonoBehaviour
         bool popup = GameClock.Paused || (RunManager.Instance != null && RunManager.Instance.RunEnded);
         bool show = stats != null && !popup && (ForceShow || GameInput.BuildSheetHeld);
         group.alpha = show ? 1f : 0f;
+        Showing = show;
         if (!show) return;
         transform.SetAsLastSibling(); // over the HUD bits made after it
         Refresh(stats);
