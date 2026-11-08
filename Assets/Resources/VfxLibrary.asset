@@ -396,7 +396,7 @@ MonoBehaviour:
     - {fileID: 1853282969, guid: e1ec5e88f07f2d2488c63f8a9b15d92b, type: 3}
     - {fileID: 780910204, guid: e1ec5e88f07f2d2488c63f8a9b15d92b, type: 3}
     - {fileID: -8195811, guid: e1ec5e88f07f2d2488c63f8a9b15d92b, type: 3}
-    fps: 16
+    fps: 24
     scale: 1
     sortingOrder: 7
     pixelSnap: 1
@@ -709,7 +709,7 @@ MonoBehaviour:
     - {fileID: -1544116474, guid: 21fd7f2ff0d5b5e4c9e9fedd9d7a8733, type: 3}
     - {fileID: 797363434, guid: 21fd7f2ff0d5b5e4c9e9fedd9d7a8733, type: 3}
     - {fileID: -523726178, guid: 21fd7f2ff0d5b5e4c9e9fedd9d7a8733, type: 3}
-    fps: 12
+    fps: 18
     scale: 1
     sortingOrder: 7
     pixelSnap: 1
@@ -1179,7 +1179,7 @@ MonoBehaviour:
     - {fileID: -6909661776375215796, guid: ffed51493e4a4c747a30afac199b663f, type: 3}
     - {fileID: -6371250962591447765, guid: ffed51493e4a4c747a30afac199b663f, type: 3}
     - {fileID: 6892428855962819583, guid: ffed51493e4a4c747a30afac199b663f, type: 3}
-    fps: 22
+    fps: 33
     scale: 1
     sortingOrder: 7
     pixelSnap: 1
@@ -1401,4 +1401,4 @@ MonoBehaviour:
     sortingOrder: 9
     pixelSnap: 0
     freeRotation: 0
-  version: 23
+  version: 24
