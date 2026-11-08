@@ -19,17 +19,19 @@ public class CorruptionSelector : MonoBehaviour
         var rt = (RectTransform)panel.transform;
         rt.SetParent(canvas.transform, false);
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 1f);
-        rt.anchoredPosition = new Vector2(-24f, -20f);
-        rt.sizeDelta = new Vector2(470f, 190f); // was 600x270: it covered the map names top-right
+        // One strip in the top row, level with 항구: the 470 x 190 box covered the map's top-right corner once the
+        // map filled the screen's width.
+        rt.anchoredPosition = new Vector2(-24f, -10f);
+        rt.sizeDelta = new Vector2(660f, 86f);
         UISkin.Apply(panel.GetComponent<Image>(), skin != null ? skin.panel : null, UISkin.LargeScale);
 
         var sel = panel.AddComponent<CorruptionSelector>();
-        sel.levelText = Text(rt, "Level", "", 40f, UISkin.InkTitle, font, new Vector2(0f, 34f), new Vector2(240f, 56f)); // title and description sit evenly about the middle
-        sel.descText = Text(rt, "Desc", "", 26f, UISkin.Ink, font, new Vector2(0f, -36f), new Vector2(400f, 70f));
+        sel.levelText = Text(rt, "Level", "", 36f, UISkin.InkTitle, font, new Vector2(-150f, 0f), new Vector2(190f, 56f));
+        sel.descText = Text(rt, "Desc", "", 24f, UISkin.Ink, font, new Vector2(88f, 0f), new Vector2(290f, 76f));
         sel.descText.textWrappingMode = TextWrappingModes.Normal;
-        sel.descText.lineSpacing = 4f;
-        sel.prev = ArrowButton(rt, "Prev", "<", new Vector2(-166f, 34f), font, () => sel.Step(-1));
-        sel.next = ArrowButton(rt, "Next", ">", new Vector2(166f, 34f), font, () => sel.Step(1));
+        sel.descText.lineSpacing = 2f;
+        sel.prev = ArrowButton(rt, "Prev", "<", new Vector2(-288f, 0f), font, () => sel.Step(-1));
+        sel.next = ArrowButton(rt, "Next", ">", new Vector2(288f, 0f), font, () => sel.Step(1));
         sel.Refresh();
         return sel;
     }
