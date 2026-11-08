@@ -168,6 +168,7 @@ public class ResultUI : MonoBehaviour
         if (unlockedCorruption > 0) parts.Add(Loc.F("result.unlock.corruption", unlockedCorruption));
         if (win && GameSave.Data.wins == 1) parts.Add(Loc.T("result.unlock.first_win"));
         else if (win && NewBest) parts.Add(Loc.T("result.unlock.best"));
+        if (win) parts.Add(Loc.T("result.unlock.next_region")); // the boss beaten: what the map's "?" is
         int before = MetaProgress.Gold - goldEarned, ready = 0;
         foreach (MetaProgress.Upgrade u in System.Enum.GetValues(typeof(MetaProgress.Upgrade)))
             if (!MetaProgress.IsMaxed(u) && MetaProgress.Gold >= MetaProgress.Cost(u) && before < MetaProgress.Cost(u)) ready++;

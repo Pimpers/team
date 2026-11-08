@@ -52,6 +52,8 @@ public class WorldMapController : MonoBehaviour
         cam = Camera.main;
         FitMap();
         if (ring != null) ringScale = ring.transform.localScale;
+        // The CHAPTER tag sits right over the region it opens (it floated out at sea between the realm and the forest).
+        if (marker != null) marker.position = WorldMapLabels.WorldPos("forest", mapSize) + new Vector3(0f, 0.9f, marker.position.z);
         if (marker != null) markerPos = marker.localPosition;
         if (messageText != null) messageText.gameObject.SetActive(false);
         if (backButton != null) backButton.onClick.AddListener(() => SceneLoader.Load(villageSceneName));

@@ -38,7 +38,12 @@ public class GameplayPlayModeTests
         yield return new WaitForSecondsRealtime(0.5f);
         var labels = GameObject.Find("MapLabels");
         Assert.That(labels, Is.Not.Null);
-        Assert.That(labels.transform.childCount, Is.EqualTo(12));
+        // Progressive reveal: the title, the open forest and the next region ("?") carry plates; the other nine
+        // painted English names (the realm's joins the title) are under cloud - none of the twelve left bare.
+        int plates = 0, fog = 0;
+        foreach (Transform t in labels.transform) { if (t.name.StartsWith("Label_")) plates++; else if (t.name == "Fog") fog++; }
+        Assert.That(plates, Is.EqualTo(3), "title, open region, next region");
+        Assert.That(fog, Is.GreaterThanOrEqualTo(9), "a cloud for every hidden region");
     }
 
     [UnityTest]

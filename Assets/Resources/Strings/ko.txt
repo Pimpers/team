@@ -484,6 +484,7 @@ result.news = \n<nobr><size=85%><color=$gold>{0}</color></size></nobr>
 result.unlock.corruption = 타락도 {0} 해금! <size=80%>(월드맵)</size>
 result.unlock.first_win = 첫 승리!
 result.unlock.best = 최고 기록 갱신!
+result.unlock.next_region = 다음 지역 <color=$gold>그르렁 동굴</color> 곧 공개!
 result.unlock.smith = 대장간 강화 {0}개 가능
 smith.talk.reroll_unlock = 자주 오는구냥. 특별히 <color=$gold>행운의 방울</color>을 꺼내 주겠다냥!
 smith.talk.regular = 이제 완전히 단골이다냥. 자네 발톱 소리만 들어도 알겠다냥.

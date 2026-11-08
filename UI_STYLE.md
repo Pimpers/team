@@ -30,6 +30,12 @@ One rule for the fight HUD (hearts, dash, counters, minimap, arrows, set badges,
 - a quick look that leaves the fight running (the Tab sheet) **dims** it to 35 %;
 - banners and tips sit on top and change nothing.
 
+## World map: progressive reveal
+One region is open; only the **next** one is shown, as a "?" plate (`WorldMapLabels.NextRegion`); every other region
+is under pixel cloud. A list of "준비 중" plates reads as content the game lacks; one "?" reads as what comes next. A
+boss win says "다음 지역 … 곧 공개!" on the result board. The map's own title carries the realm's name as its second
+line; the CHAPTER tag sits over the region it opens.
+
 ## Type
 One pixel font, three crisp steps at the 1920 x 1080 reference (match 0.5): small 24, body 36, title 48
 (`UiTheme.TextSmall / TextLarge / TextTitle`). Nothing under 24 on screen; the 큰 글씨 option raises the HUD lines.

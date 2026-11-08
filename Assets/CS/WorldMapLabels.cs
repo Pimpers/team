@@ -29,8 +29,17 @@ public static class WorldMapLabels
         new Label("atoll", 0.9215f, 0.715f, 0.075f, 0.055f),
     };
     const string OpenRegion = "forest";
-    static readonly Color Locked = new Color(0.72f, 0.65f, 0.52f); // closed: small and dim, so the open one stands out
+    // Progressive reveal (UI_STYLE.md): one region open, the next one teased as a "?", the rest under cloud. Eight
+    // "준비 중" plates read as a list of things the game does not have; one "?" reads as what comes next.
+    public const string NextRegion = "caverns";
+    static readonly Color Next = new Color(0.86f, 0.8f, 0.66f);
     static readonly Color Open = new Color(1f, 0.9f, 0.55f);    // brighter on the brown plate
+
+    public static Vector3 WorldPos(string key, Vector2 mapSize)
+    {
+        foreach (var l in Labels) if (l.key == key) return new Vector3((l.x - 0.5f) * mapSize.x, (0.5f - l.y) * mapSize.y, 0f);
+        return Vector3.zero;
+    }
 
     // plate: the CHAPTER tag's plate, whose sliced sprite and font the labels share.
     public static void Build(Vector2 mapSize, SpriteRenderer plate, TMP_FontAsset font)
@@ -39,22 +48,31 @@ public static class WorldMapLabels
         var root = new GameObject("MapLabels").transform;
         foreach (var l in Labels)
         {
+            var at = new Vector3((l.x - 0.5f) * mapSize.x, (0.5f - l.y) * mapSize.y, 0f);
+            bool hidden = !l.big && l.key != OpenRegion && l.key != NextRegion; // the realm too: it joins the title
+            if (hidden)
+            {
+                // cloud over the region and its erased label (a flat patch under where its plate was)
+                Fog(root, at, new Vector2(l.w * mapSize.x, l.h * mapSize.y));
+                continue;
+            }
             var go = new GameObject("Label_" + l.key);
             go.transform.SetParent(root, false);
-            go.transform.position = new Vector3((l.x - 0.5f) * mapSize.x, (0.5f - l.y) * mapSize.y, 0f);
+            go.transform.position = at;
 
             var text = new GameObject("Text").AddComponent<TextMeshPro>();
             text.transform.SetParent(go.transform, false);
             text.font = font;
-            bool locked = l.key != OpenRegion && !l.big && l.key != "realm";
-            text.fontSize = l.big ? 3.8f : locked ? 1.8f : 2.8f; // (the plate keeps its box either way: under it the map is a flat patch)
+            bool next = l.key == NextRegion;
+            text.fontSize = l.big ? 3.8f : next ? 2.2f : 2.8f; // (the plate keeps its box either way: under it the map is a flat patch)
             text.fontStyle = FontStyles.Bold;
             text.alignment = TextAlignmentOptions.Center;
             text.textWrappingMode = TextWrappingModes.NoWrap;
-            text.color = locked ? Locked : Open;
+            text.color = next ? Next : Open;
             text.sortingOrder = 16;
-            // Closed regions say so: eleven names and one open forest otherwise read as content that isn't there.
-            text.text = Loc.T("worldmap.region." + l.key) + (locked ? "\n" + Loc.T("worldmap.region.locked") : ""); // as big as the name (70 / 85% was too small on the map)
+            // The title carries the realm's name as its second line (a map title, not a place); the next region is "?".
+            text.text = next ? "?" : l.big ? Loc.T("worldmap.region.title") + "\n<size=55%>" + Loc.T("worldmap.region.realm") + "</size>"
+                              : Loc.T("worldmap.region." + l.key);
             text.lineSpacing = -12f;
             Vector2 need = text.GetPreferredValues(text.text);
             Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.4f), Mathf.Max(l.h * mapSize.y, need.y + 0.12f));
@@ -64,8 +82,65 @@ public static class WorldMapLabels
             sr.sprite = plate.sprite;
             sr.drawMode = SpriteDrawMode.Sliced;
             sr.size = size;
-            sr.color = locked ? plate.color * new Color(0.55f, 0.55f, 0.55f, 1f) : plate.color; // closed: a duller plate
+            sr.color = next ? plate.color * new Color(0.6f, 0.6f, 0.6f, 1f) : plate.color; // the "?": a duller plate
             sr.sortingOrder = 15; // over the map, under the forest's tag (19 / 20)
         }
+    }
+
+    // A cluster of pixel clouds (drawn here, Point filtered: 3 tones and a dark outline, like the map's own clouds)
+    // big enough to cover a region's name box with room to spare.
+    static Sprite cloud;
+    static void Fog(Transform root, Vector3 at, Vector2 box)
+    {
+        if (cloud == null) cloud = MakeCloud();
+        var rng = new System.Random(Mathf.RoundToInt(at.x * 100f) ^ Mathf.RoundToInt(at.y * 1000f)); // fixed per region
+        float w = cloud.bounds.size.x, h = cloud.bounds.size.y;
+        // just enough to hide the name box (one row): a cluster per region ran together into a bank over half the map
+        int cols = Mathf.Max(1, Mathf.CeilToInt(box.x / (w * 0.8f))), rows = 1;
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+            {
+                var go = new GameObject("Fog");
+                go.transform.SetParent(root, false);
+                float x = (c - (cols - 1) * 0.5f) * w * 0.7f + (float)(rng.NextDouble() - 0.5) * w * 0.2f;
+                float y = (r - (rows - 1) * 0.5f) * h * 0.6f + (float)(rng.NextDouble() - 0.5) * h * 0.2f;
+                go.transform.position = at + new Vector3(x, y, 0f);
+                var sr = go.AddComponent<SpriteRenderer>();
+                sr.sprite = cloud;
+                sr.flipX = rng.Next(2) == 0;
+                sr.sortingOrder = 14 + r; // over the map, lower rows over higher ones
+            }
+    }
+
+    static Sprite MakeCloud()
+    {
+        string[] g =
+        {
+            "........kkkkk...........",
+            "......kkwwwwwkk..kkkk...",
+            ".....kwwwwwwwwwkkwwwwk..",
+            "...kkwwwwwwwwwwwwwwwwwk.",
+            "..kwwwwwwwwwwwwwwwwwwwwk",
+            ".kwwwwwwwwwwwwwwwwwwwwwk",
+            "kwwwwwwwwwwwwwwwwwwwwwsk",
+            "kswwwwwwwwwwwwwwwwwwwssk",
+            "kssswwwwwwwwwwwwwwwsssk.",
+            ".kssssssswwwwwwssssssk..",
+            "..kkssssssssssssssskk...",
+            "....kkkkkkkkkkkkkkk.....",
+        };
+        int W = g[0].Length, H = g.Length;
+        var tex = RuntimeGeneratedAssets.Texture(W, H);
+        var px = new Color[W * H];
+        var k = new Color32(0x4a, 0x56, 0x6a, 0xff); var w = new Color32(0xf4, 0xf0, 0xe4, 0xff); var s = new Color32(0xc8, 0xcc, 0xd4, 0xff);
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+            {
+                char ch = g[H - 1 - y][x];
+                px[y * W + x] = ch == 'k' ? (Color)k : ch == 'w' ? (Color)w : ch == 's' ? (Color)s : Color.clear;
+            }
+        tex.SetPixels(px);
+        tex.Apply();
+        return RuntimeGeneratedAssets.Sprite(tex, new Vector2(0.5f, 0.5f), 12.5f); // the island's pixel size
     }
 }
