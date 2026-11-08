@@ -141,6 +141,7 @@ public class RunManager : MonoBehaviour
             // Q / E / R bar for the run skills picked from the drafts.
             if (!tutorial && PlayerStats.Instance != null && PlayerStats.Instance.Job != CardPool.Job.Any)
                 SkillHUD.Create(hudText.canvas.rootCanvas, hudText.font);
+            RunHudOverlay.Ensure(); // the one HUD-under-panels rule (UI_STYLE.md)
             if (!tutorial) BuildSheet.Create(hudText.canvas.rootCanvas, hudText.font); // Tab: stats and cards, mid-run
         }
         RefreshHud();

@@ -301,8 +301,9 @@ public class SkillHUD : MonoBehaviour
                 foreach (var e in Enemy.All)
                     if (e != null && !e.IsDead && Covers(e.transform.position + Vector3.up * 0.4f)) { covered = true; break; }
             // Out of the way of the card draft, the pause menu and the result board (it is drawn over them).
-            bool popup = GameClock.Paused || BuildSheet.Showing || (RunManager.Instance != null && RunManager.Instance.RunEnded);
-            group.alpha = popup ? 0f : Mathf.MoveTowards(group.alpha, covered ? 0.3f : 1f, Time.unscaledDeltaTime * 4f);
+            float overlay = RunHudOverlay.Alpha; // the shared rule: hidden under a full panel, dimmed under Tab
+            bool popup = overlay <= 0f || (RunManager.Instance != null && RunManager.Instance.RunEnded);
+            group.alpha = popup ? 0f : Mathf.MoveTowards(group.alpha, Mathf.Min(overlay, covered ? 0.3f : 1f), Time.unscaledDeltaTime * 4f);
         }
     }
 

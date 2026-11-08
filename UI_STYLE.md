@@ -19,6 +19,17 @@ mid-fight; the draft, the blacksmith and the village are read at rest.
 **Text over the game picture** (it moves): a translucent dark band (`UiTheme.Backdrop`, `TextBand` 70 %), or for a
 short label a 1 px dark outline (`UiTheme.Outline`). The pixel font has no SDF, so TMP's own outline draws nothing.
 
+**Accent colours follow the ground.** On a dark plate or the game picture: `$gold` for keywords and
+`UiTheme.TagOnDark` for set tags. On cream parchment: `$key` / `$ink` and `CardPool.TagColors`. A dark ink on a dark
+plate (or a light one on cream) is a bug.
+
+## Overlays
+One rule for the fight HUD (hearts, dash, counters, minimap, arrows, set badges, skill bar), applied by
+`RunHudOverlay`:
+- a panel that covers the screen and stops the fight (card draft, pause, route choice, result) **hides** it;
+- a quick look that leaves the fight running (the Tab sheet) **dims** it to 35 %;
+- banners and tips sit on top and change nothing.
+
 ## Type
 One pixel font, three crisp steps at the 1920 x 1080 reference (match 0.5): small 24, body 36, title 48
 (`UiTheme.TextSmall / TextLarge / TextTitle`). Nothing under 24 on screen; the 큰 글씨 option raises the HUD lines.
