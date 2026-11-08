@@ -187,7 +187,7 @@ public class BuildSheet : MonoBehaviour
             int have = s.SetCount((CardPool.Tag)t);
             if (have <= 0) continue;
             int goal = have >= CardPool.SetStep1 ? CardPool.SetStep2 : CardPool.SetStep1;
-            sets.Add($"<color={CardPool.TagColors[t]}>#{CardPool.TagNames[t]} {Mathf.Min(have, goal)}/{goal}</color>");
+            sets.Add($"<color={UiTheme.TagOnDarkHex(t)}>#{CardPool.TagNames[t]} {Mathf.Min(have, goal)}/{goal}</color>");
         }
         setsText.text = sets.Count == 0 ? Loc.T("sheet.no_sets") : Loc.F("sheet.sets", string.Join("   ", sets));
     }

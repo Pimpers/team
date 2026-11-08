@@ -18,6 +18,15 @@ public static class UiTheme
     public static readonly Color Plate = new Color(0.07f, 0.05f, 0.08f, 0.88f); // dark plate behind world labels
     public static readonly Color TextBand = new Color(0.06f, 0.04f, 0.05f, 0.7f); // band under text on the picture (0.55 left red keywords faint over the bright village)
 
+    // Set-tag colours for text on a dark plate or the game picture (CardPool.TagColors are the dark inks for the cream
+    // cards; on dark they sank - the Tab sheet's red #발톱). Rule: dark ground, these; cream ground, TagColors.
+    public static readonly Color[] TagOnDark =
+    {
+        new Color32(0xff, 0x8a, 0x6a, 0xff), new Color32(0x6f, 0xd3, 0xf0, 0xff), new Color32(0xe8, 0xb8, 0x80, 0xff),
+        new Color32(0xa6, 0xe8, 0x6e, 0xff), new Color32(0xff, 0xd7, 0x5e, 0xff),
+    };
+    public static string TagOnDarkHex(int tag) => "#" + ColorUtility.ToHtmlStringRGB(TagOnDark[tag]);
+
     // The shared style for text that sits straight on the game picture: a translucent dark band behind it.
     public static void Backdrop(TMPro.TMP_Text text) => TextBackdrop.Attach(text, TextBand, new Vector2(12f, 4f));
 

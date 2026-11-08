@@ -578,7 +578,7 @@ public class CardDraftUI : MonoBehaviour
                 int goal = lv >= 2 ? CardPool.SetStep2 : CardPool.SetStep1;
                 int was = have >= CardPool.SetStep1 ? CardPool.SetStep2 : CardPool.SetStep1;
                 parts.Add(Loc.F(lv >= 2 ? "draft.preview.set_complete" : "draft.preview.set_unlock",
-                    CardPool.TagColors[(int)t], CardPool.TagNames[(int)t], have, was, have + 1, goal));
+                    UiTheme.TagOnDarkHex((int)t), CardPool.TagNames[(int)t], have, was, have + 1, goal)); // on the dark screen under the cards
                 break;
             }
 

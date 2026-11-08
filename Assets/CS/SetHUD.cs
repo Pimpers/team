@@ -9,12 +9,7 @@ using TMPro;
 // reached. Created by RunManager; RunManager places it under the plate.
 public class SetHUD : MonoBehaviour
 {
-    // The tag colours on a dark plate (CardPool.TagColors are for the cream cards).
-    static readonly Color[] Bright =
-    {
-        new Color32(0xff, 0x8a, 0x6a, 0xff), new Color32(0x6f, 0xd3, 0xf0, 0xff), new Color32(0xe8, 0xb8, 0x80, 0xff),
-        new Color32(0xa6, 0xe8, 0x6e, 0xff), new Color32(0xff, 0xd7, 0x5e, 0xff),
-    };
+    static Color[] Bright => UiTheme.TagOnDark; // the tag colours on a dark plate
     const float ChipH = 44f, Gap = 8f, FontSize = UISkin.FontBody;
 
     class Chip { public RectTransform rt; public Image bg, icon; public TextMeshProUGUI text; public int shown = -1; public float punch; }
