@@ -228,11 +228,11 @@ sheet("exit_preview", ["exit_log", "exit_log_crimson", "leaf_*", "firefly"], { p
 //   victory - the boss room's way out to the result: gold stone, a gold swirl
 //   closed - dark inside, barred (chains or vines); open 0-3 - the swirl turning (faster in game while it pulls)
 const PORTAL = {
-  hunt:    { st: ["#141218", "#504b5f", "#7b7081"], sw: ["#e5354e", "#fbcd0d", "#ec6309", "#f3a15e"], bar: "chain" },
-  safe:    { st: ["#967c5f", "#c1b89a", "#dbcba7"], sw: ["#63a019", "#c3d971", "#85d527", "#ebe3cf"], bar: "vine" },
-  plain:   { st: ["#504b5f", "#7e8f99", "#b1c3ca"], sw: ["#799acb", "#cef4fb", "#2d67a9", "#a7daf9"], bar: "chain" },
-  boss:    { st: ["#141218", "#504b5f", "#7b364d"], sw: ["#e5354e", "#f8759b", "#aa7980", "#e9b7bb"], bar: "chain" },
-  victory: { st: ["#a5905b", "#fad567", "#fdeb7b"], sw: ["#fbcd0d", "#fbe89c", "#cb8940", "#f5ebe6"], bar: "chain" },
+  hunt:    { st: ["#141218", "#504b5f", "#7b7081"], sh: "#3e1f27", sw: ["#742b21", "#e5354e", "#ec6309", "#fbcd0d"], rim: ["#e5354e", "#f3a15e"], bar: "chain" },
+  safe:    { st: ["#967c5f", "#c1b89a", "#dbcba7"], sh: "#967c5f", sw: ["#4e8415", "#63a019", "#85d527", "#c3d971"], rim: ["#85d527", "#c3d971"], bar: "vine" },
+  plain:   { st: ["#504b5f", "#7e8f99", "#b1c3ca"], sh: "#504b5f", sw: ["#2d67a9", "#799acb", "#a7daf9", "#cef4fb"], rim: ["#799acb", "#cef4fb"], bar: "chain" },
+  boss:    { st: ["#141218", "#504b5f", "#7b364d"], sh: "#3e1f27", sw: ["#7b364d", "#e5354e", "#f8759b", "#e9b7bb"], rim: ["#e5354e", "#f8759b"], bar: "chain" },
+  victory: { st: ["#a5905b", "#fad567", "#fdeb7b"], sh: "#cb8940", sw: ["#cb8940", "#fbcd0d", "#fdeb7b", "#f5ebe6"], rim: ["#fbcd0d", "#f5ebe6"], bar: "chain" },
 }
 const GEO = {
   normal: { cx: 20, cy: 25, o: [18, 22], h: [11, 16], step: 43, w: 40 },
@@ -244,6 +244,12 @@ function portal(c, v, state, frame) {
   // the arch: an outlined oval ring on a flat stone step
   c.ellipse(cx, cy, orx, ory, out)
   c.ellipse(cx, cy, orx - 1, ory - 1, st[1])
+  // the lower half of the ring in shade (the arch reads round, not flat)
+  for (let y = cy + 4; y <= cy + ory; y++) for (let x = cx - orx; x <= cx + orx; x++) {
+    const dx = (x - cx) / (orx - 1), dy = (y - cy) / (ory - 1), d = dx * dx + dy * dy
+    const ex = (x - cx) / (hrx + 1), ey = (y - cy - 1) / (hry + 1)
+    if (d < 1 && ex * ex + ey * ey > 1 && (dy > 0.45 || Math.abs(dx) > 0.82)) c.px(x, y, P.sh)
+  }
   // stones: the ring split into blocks with dark joints, lit from above
   const jag = v === "hunt" || v === "boss"
   for (let a = 0; a < 360; a += jag ? 26 : 32) {
@@ -295,8 +301,12 @@ function portal(c, v, state, frame) {
     c.px(cx, 4, "#e5354e")
     for (const [x, y] of [[6, 34], [7, 35], [8, 36], [41, 18], [40, 19], [40, 20]]) c.px(x, y, "#f8759b")
   } else if (v === "victory") {
-    // a laurel of gold leaves round the top and a star on the keystone
-    for (let x = 6; x <= 34; x += 4) { const t = top(x); c.px(x, t - 1, "#cb8940"); c.px(x + 1, t - 2, "#fbcd0d"); c.px(x - 1, t - 2, "#fbcd0d"); c.px(x, t - 3, out) }
+    // a laurel up both sides (green leaves in two tones, edged in gold) and a star on the keystone
+    for (const sd of [-1, 1]) for (let i = 0; i < 6; i++) {
+      const y = 36 - i * 5, x = cx + sd * (orx - 1 - Math.round(i * 0.9)) + sd
+      c.px(x, y, "#4e8415"); c.px(x + sd, y - 1, "#85d527"); c.px(x + sd, y, "#4e8415"); c.px(x + 2 * sd, y - 2, "#85d527")
+      c.px(x + 2 * sd, y - 1, "#fbcd0d"); c.px(x + sd, y - 2, "#fbcd0d"); c.px(x - sd, y, out)
+    }
     c.px(20, 1, "#f5ebe6"); c.line(18, 3, 22, 3, "#f5ebe6"); c.px(20, 2, "#fdeb7b"); c.px(20, 4, "#fdeb7b"); c.px(19, 5, "#fdeb7b"); c.px(21, 5, "#fdeb7b")
   }
   if (state === "closed") {
@@ -309,16 +319,22 @@ function portal(c, v, state, frame) {
       c.line(lx, by0, rx, by1, "#4e8415"); c.line(rx, by0, lx, by1, "#4e8415"); c.line(lx + 1, by0, rx, by1 - 1, "#63a019"); c.line(rx - 1, by0, lx, by1 - 1, "#63a019")
     }
   } else {
-    const sw = P.sw, k = hry / 16
-    const ring = (rx, ry, n, dir, len, col, head) => {
-      for (let s = 0; s < n; s++) for (let i = 0; i < len; i++) {
-        const a = dir * frame * Math.PI / 6 + s * 2 * Math.PI / n + i * 0.16
-        c.px(Math.round(cx + Math.cos(a) * rx * k), Math.round(cy + 1 + Math.sin(a) * ry * k), i < 2 ? head : col)
+    const sw = P.sw
+    // three steps from the dark rim to a bright middle (no dithering)
+    c.ellipse(cx, cy + 1, hrx - 1, hry - 1, sw[0])
+    c.ellipse(cx, cy + 1, Math.round((hrx - 1) * 0.68), Math.round((hry - 1) * 0.68), sw[1])
+    c.ellipse(cx, cy + 1, Math.round((hrx - 1) * 0.34), Math.round((hry - 1) * 0.34), sw[2])
+    // two thick spiral arms turning (4 frames), bright, a highlight at their heads
+    for (let arm = 0; arm < 2; arm++) {
+      for (let i = 0; i < 22; i++) {
+        const t = i / 22, a = frame * Math.PI / 2 + arm * Math.PI + t * Math.PI * 1.6
+        const rx = (hrx - 2) * (0.2 + 0.8 * t), ry = (hry - 2) * (0.2 + 0.8 * t)
+        const x = Math.round(cx + Math.cos(a) * rx), y = Math.round(cy + 1 + Math.sin(a) * ry)
+        const col = t < 0.25 ? sw[3] : t < 0.6 ? sw[2] : sw[1]
+        c.px(x, y, col); c.px(x + 1, y, col)
       }
     }
-    ring(8, 12, 3, 1, 7, sw[0], sw[1])
-    ring(4, 7, 3, -1, 6, sw[2], sw[3])
-    ring(1, 3, 2, 1, 4, sw[2], sw[3])
+    c.px(cx, cy + 1, sw[3]); c.px(cx + 1, cy + 1, sw[3])
   }
 }
 for (const v of Object.keys(PORTAL)) {
@@ -327,3 +343,17 @@ for (const v of Object.keys(PORTAL)) {
   sprite("exit_portal_" + v + "_closed", size, (c) => portal(c, v, "closed", 0))
   for (let f = 0; f < 4; f++) sprite("exit_portal_" + v + "_open_" + f, size, (c) => portal(c, v, "open", f))
 }
+
+// The opening's inner edge, a 1 px ring in two colours the game swaps (a slow blink, colour not alpha).
+for (const v of Object.keys(PORTAL)) {
+  const g = v === "boss" ? GEO.big : GEO.normal
+  for (const [i, col] of PORTAL[v].rim.entries())
+    sprite("exit_portal_" + v + "_rim_" + i, { w: g.w, h: g.step + 5, pivot: "bottom" }, (c) => {
+      c.ellipse(g.cx, g.cy + 1, g.h[0] - 1, g.h[1] - 1, col)
+      c.ellipse(g.cx, g.cy + 1, g.h[0] - 2, g.h[1] - 2, "_")
+    })
+}
+// The burst when a portal opens: one ring of light, white (tinted per portal in game).
+sprite("exit_portal_burst", { w: 24, h: 32 }, (c) => {
+  c.ellipse(12, 16, 11, 15, "#f5ebe6"); c.ellipse(12, 16, 9, 13, "_")
+})
