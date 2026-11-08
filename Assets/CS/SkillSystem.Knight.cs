@@ -81,7 +81,7 @@ public partial class SkillSystem
         body.skillHover = true;
         body.FaceTowards(MoveDir());
         invulnTimer = Mathf.Max(invulnTimer, 1.1f);
-        Vfx.Play("charge", Me, 1f);
+        Vfx.Play("charge", Feet, 1f); // round the feet, not over the face
         Sfx.Play("dash", 1f, 0.6f);
         Pose(0, 0.05f); // hold the drawn-back first frame while it gathers
         yield return new WaitForSeconds(0.35f);
@@ -108,7 +108,7 @@ public partial class SkillSystem
             cut.Add(e);
         }
         yield return new WaitForSeconds(0.14f);
-        Vfx.Play("ring_big", Me, 0.5f, tint: new Color(0.75f, 0.9f, 1f)); // the flash (blue like the rest of the knight); x1 was twice the cat
+        Vfx.Play("ring_big", Feet, 0.5f, tint: new Color(0.75f, 0.9f, 1f)); // the flash (blue like the rest of the knight); x1 was twice the cat
         Vfx.Play("dust_mid", Feet, 1f);
         HitStop.Do(0.12f);
         CameraFollow.Shake(0.35f, 0.25f);
@@ -131,7 +131,7 @@ public partial class SkillSystem
         body.FaceTowards(MoveDir());
         invulnTimer = Mathf.Max(invulnTimer, 0.4f);
         Sfx.Play("dash", 1f, 0.85f);
-        Vfx.Play("k_rush_fx", Me, 1f, flipX: Facing < 0f);
+        Vfx.Play("k_rush_fx", Me - Vector3.right * Facing * 0.6f, 1f, flipX: Facing < 0f); // a trail behind the rush, off the cat
         Vfx.Play("dust_side", Feet, 1f, flipX: Facing < 0f);
         if (body.dodgeFrames != null && body.dodgeFrames.Length > 0) body.PlayAttack(body.dodgeFrames, 16f);
         var hit = new HashSet<Enemy>();
@@ -170,8 +170,8 @@ public partial class SkillSystem
     {
         body.skillLock = true;
         Sfx.Play("fx_hiss");
-        Vfx.Play("k_hiss_fx", Me + Vector3.up * 0.3f, 1f);
-        Vfx.Play("ring_big", Me, 1f, tint: new Color(1f, 0.95f, 0.85f));
+        Vfx.Play("k_hiss_fx", Me + Vector3.right * Facing * 0.6f, 1f); // in front, where it goes: on the cat it covered the face
+        Vfx.Play("ring_big", Feet, 1f, tint: new Color(1f, 0.95f, 0.85f));
         Vfx.Play("dust_side", Feet, 1f); Vfx.Play("dust_side", Feet, 1f, flipX: true); // the pressure kicks dust out both ways
         CameraFollow.Shake(0.2f, 0.18f);
         float stun = Lv("k_hiss") >= 2 ? 2.6f : 1.8f;
@@ -207,7 +207,7 @@ public partial class SkillSystem
     {
         body.skillLock = true;
         body.CancelActions();
-        Vfx.Play("ring_small", Me, 1f, tint: new Color(0.6f, 0.9f, 1f));
+        Vfx.Play("ring_small", Feet, 1f, tint: new Color(0.6f, 0.9f, 1f));
         Vfx.Play("blink", Me, 1f);
         Sfx.Play("dash", 1f, 1.5f);
         DamagePopup.SpawnLabel(Head, Loc.T("skill.counter"), new Color(0.6f, 0.9f, 1f));

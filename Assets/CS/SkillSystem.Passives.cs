@@ -135,7 +135,7 @@ public partial class SkillSystem
         OnPlaystyleDashEnded();
         int lv = Lv("k_leap");
         if (lv <= 0) return;
-        Vfx.Play("k_leap_fx", Me, 1f);
+        Vfx.Play("k_leap_fx", Feet, 1f); // the take-off at the feet
         HitCircle(Me, 1.6f, lv >= 2 ? 1.2f : 0.6f, strong: false);
     }
 }

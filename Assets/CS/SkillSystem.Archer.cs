@@ -127,7 +127,7 @@ public partial class SkillSystem
         body.skillLock = true;
         var heart = Vfx.Sprite("heart");
         SkillFx.Burst(heart, Head, 10, 5f, 0.9f, SkillFx.PropScale * 0.7f, 2f);
-        Vfx.Play("a_smile_fx", Me, 1f);
+        Vfx.Play("a_smile_fx", Feet, 1f); // at the feet: on the body it covered the face
         Sfx.Play("card_pick", 1f, 1.4f);
         float seconds = Lv("a_smile") >= 2 ? 3.5f : 2.5f;
         foreach (var e in Enemy.All.ToArray())
