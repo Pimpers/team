@@ -261,7 +261,7 @@ public class PlayerStats : MonoBehaviour
             // A full-screen ribbon, burst and shake make a set threshold feel like a real build moment.
             var run = RunManager.Instance;
             if (run != null && run.hudText != null && run.hudText.canvas != null)
-                StageBanner.Show(run.hudText.canvas.rootCanvas, run.hudText.font, $"{setName} {milestone}!", CardPool.SetText[i][now - 1], 0.6f, compact: true); // short and up top: the big one held the middle of the fight for 2.35 s
+                StageBanner.Show(run.hudText.canvas.rootCanvas, run.hudText.font, $"{setName} {milestone}!", CardPool.SetText[i][now - 1], 1.1f, compact: true); // short and up top: the big one held the middle of the fight for 2.35 s (1.1 s fully shown now the fades are quick)
             // At the feet (the heal glow stands on its bottom edge; transform.position is the body centre), cat-sized.
             Vfx.Play("heal", transform.position + Vector3.down * (animator != null ? animator.feetOffset : 0.67f), now == 2 ? 1f : 0.5f, tint: col, parent: transform);
             CameraFollow.Shake(now == 2 ? 0.36f : 0.24f, now == 2 ? 0.28f : 0.18f);

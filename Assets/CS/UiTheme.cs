@@ -106,6 +106,9 @@ public static class UiTheme
     public const float TextSmall = 24f;
     public const float TextLarge = 36f;
     public const float TextTitle = 48f;
+    // Banners (StageBanner, StageTitle): band and words come up together in this long, are held fully shown, and
+    // go just as fast - no half-faded words over the fight (UI_STYLE.md, Motion).
+    public const float BannerFade = 0.15f;
     public const float TextMin = 16f;   // auto-size floors (snapped to 12)
     public const float TextBody = 32f;  // older body size (snaps to 36)
 }

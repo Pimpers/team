@@ -7,7 +7,7 @@ using TMPro;
 // bar's spot so the two never cover each other. Started by RunManager; built at runtime, unscaled time.
 public class StageTitle : MonoBehaviour
 {
-    const float FadeIn = 0.35f, Hold = 1.6f, FadeOut = 0.7f, Drop = 24f, Top = -120f;
+    const float FadeIn = UiTheme.BannerFade, Hold = 2f, FadeOut = UiTheme.BannerFade, Drop = 24f, Top = -120f;
 
     // The forest, a step deeper each stage (index = stage number).
     // Built on first use, not as a static initializer: that can run inside Unity's object construction,
@@ -42,7 +42,7 @@ public class StageTitle : MonoBehaviour
         brt.anchoredPosition = new Vector2(0f, 6f);
         brt.sizeDelta = new Vector2(720f, 150f);
         var bimg = band.GetComponent<UnityEngine.UI.Image>();
-        bimg.color = new Color(0.05f, 0.03f, 0.05f, 0.45f);
+        bimg.color = UiTheme.TextBand; // the shared dark band, as dense as the other banners'
         bimg.raycastTarget = false;
 
         string name = stage < Names.Length ? Names[stage] : "";

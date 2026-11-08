@@ -62,8 +62,10 @@ Health, dash and counters top-left; the map top-right; skills bottom-centre - wh
 screen is checked at 16:9, 16:10 and 4:3 (`Cats Smash > Capture Screens`).
 
 ## Motion and sound
-A press: the button's own pressed sprite and a click. A pick: the card deal and `card_pick`. Banners fade in, hold,
-fade out on unscaled time. The HUD does not move while nothing happens.
+A press: the button's own pressed sprite and a click. A pick: the card deal and `card_pick`. Banners (starter card, set
+bonus, stage name: StageBanner, StageTitle) share one rule: the dark band and the words come up together in 0.15 s
+(`UiTheme.BannerFade`), are held fully shown for the banner's time, and go in 0.15 s, on unscaled time. Never a long
+fade: half-faded words over the fight can't be read. The band is the shared `UiTheme.TextBand`. The HUD does not move while nothing happens.
 
 ## The signature
 The cards: wooden-vine fronts by grade, the grade in the medallion, the window tinted by the card's set tags.
