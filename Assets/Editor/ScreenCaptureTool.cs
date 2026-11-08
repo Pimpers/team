@@ -120,6 +120,9 @@ public static class ScreenCaptureTool
         Add("Stage1", "exit_closed", () => CatBeforeExit(1.5f)); // close enough that the whole log is in the frame
         Add("Stage1", "exit_open", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(1.5f); }, wait: 0.6f);
         Add("Stage1", "exit_pull", () => { ClearEnemies(); StageExit.Instance.Open("Stage2"); StageExit.Instance.ForCapture(true); }, wait: 0.4f);
+        // Every stage: where its log lands once open (headroom above it, not jammed under a ledge).
+        for (int n = 1; n <= 5; n++)
+            Add("Stage" + n, "exit_stage" + n, () => { ClearEnemies(); StageExit.Instance.Open("Stage1"); CatBeforeExit(1.5f); });
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier

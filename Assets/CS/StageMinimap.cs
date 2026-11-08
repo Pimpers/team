@@ -149,10 +149,11 @@ public class StageMinimap : MonoBehaviour
         var plateGo = new GameObject("LegendPlate", typeof(RectTransform), typeof(Image));
         var plate = (RectTransform)plateGo.transform;
         plate.SetParent(panel, false);
-        plate.anchorMin = plate.anchorMax = new Vector2(1f, 0f);
+        plate.anchorMin = new Vector2(0f, 0f); // as wide as the map, in two short lines (one long line ran past it)
+        plate.anchorMax = new Vector2(1f, 0f);
         plate.pivot = new Vector2(1f, 1f);
         plate.anchoredPosition = new Vector2(0f, -6f);
-        plate.sizeDelta = new Vector2(540f, 48f); // room for the legend at 36 (24 read small next to the map)
+        plate.sizeDelta = new Vector2(0f, 64f); // two lines at the small size
         var plateImage = plateGo.GetComponent<Image>();
         plateImage.color = UISkin.OverlayBack;
         plateImage.raycastTarget = false;
@@ -164,8 +165,9 @@ public class StageMinimap : MonoBehaviour
         legend.rectTransform.offsetMin = new Vector2(8f, 0f);
         legend.rectTransform.offsetMax = new Vector2(-8f, 0f);
         if (font != null) legend.font = font;
-        legend.fontSize = UiTheme.TextLarge;
-        legend.alignment = TextAlignmentOptions.Right;
+        legend.fontSize = UiTheme.TextSmall;
+        legend.lineSpacing = -10f;
+        legend.alignment = TextAlignmentOptions.Center;
         legend.textWrappingMode = TextWrappingModes.NoWrap;
         legend.raycastTarget = false;
         legend.outlineWidth = 0.2f;
