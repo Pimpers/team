@@ -189,9 +189,8 @@ public class StageExit : MonoBehaviour
         var w = new Way { kind = kind, holeX = spot.x, floorY = spot.y, holeSide = holeSide, hunt = kind == "_hunt" };
         w.log = MakeLog(spot.x - w.Offset, spot.y, Load(kind, closed ? "closed" : "open_0"));
         w.log.flipX = holeSide > 0f;
-        w.log.sortingOrder = body.Renderer.sortingOrder - 1; // the cat stays in front of it, shrinking into the swirl
+        w.log.sortingOrder = body.Renderer.sortingOrder - 4; // behind the fork's signpost (-2, its words -1) and the cat
         ways.Add(w);
-        if (kind == "_hunt" || kind == "_safe") MakeSign(w);
         // a dark silhouette behind every portal: the arch reads against any backdrop (trees and canopies are tiles,
         // not props, so PropsNear never sees them)
         {
@@ -219,12 +218,8 @@ public class StageExit : MonoBehaviour
     {
         var map = StageMap.Instance;
         if (map == null || map.verticalLayout || map.spawnSlots == null || map.spawnSlots.Length == 0) return;
-        if (fork)
-        {
-            float endX = float.MinValue;
-            foreach (var s in map.spawnSlots) endX = Mathf.Max(endX, s.x);
-            if (PlaceFork(map, s => s.x >= endX - 24f, closed: true)) return;
-        }
+        // a fork stage shows nothing until it is cleared: then its two portals rise beside the cat (OpenFork)
+        if (fork) return;
         // the farthest roomy floor spot toward the stage's end (the last slot may sit on a ledge too short for it)
         bool found = false; Vector2 end = default;
         foreach (var s in map.spawnSlots)
@@ -250,9 +245,12 @@ public class StageExit : MonoBehaviour
             {
                 if (i == j || spots[j].x <= spots[i].x) continue;
                 float dx = spots[j].x - spots[i].x, dy = Mathf.Abs(spots[j].y - spots[i].y);
-                if (dx < 7f || dx > 10f || dy > 3f || !Walkable(map, spots[i], spots[j])) continue;
-                float score = dy * 2f + Mathf.Abs(dx - 8f) - spots[j].x * 0.02f
-                            + (PropsNear(spots[i]) ? 6f : 0f) + (PropsNear(spots[j]) ? 6f : 0f);
+                // 6.2-10 apart, 6.5 best: the 5-wide signposts never touch, and the pair with its signs fits the screen
+                // with margin at 6.5 (wider pairs, where the floor allows no closer one, still fit the portals)
+                if (dx < 6.2f || dx > 10f || dy > 3f || !Walkable(map, spots[i], spots[j])) continue;
+                float score = dy * 2f + Mathf.Abs(dx - 6.5f) - spots[j].x * 0.02f
+                            + (PropsNear(spots[i]) ? 6f : 0f) + (PropsNear(spots[j]) ? 6f : 0f)
+                            + (LedgeOver(map, spots[i], spots[j]) ? 5f : 0f);
                 if (score < bestScore) { bestScore = score; a = spots[i]; b = spots[j]; }
             }
         if (bestScore == float.MaxValue) return false;
@@ -260,6 +258,7 @@ public class StageExit : MonoBehaviour
         ways.Clear();
         AddWay(b, -1f, "_hunt", closed); // the farther one: the harder way
         AddWay(a, -1f, "_safe", closed);
+        foreach (var w in ways) MakeSign(w); // the crossroads sign stands between the two
         return true;
     }
 
@@ -285,6 +284,18 @@ public class StageExit : MonoBehaviour
         return Mathf.Abs(last - b.y) <= 2.5f;
     }
 
+    // A big floating ledge over the space between the two (3-6 above the floor): it pulls the eye to the middle when
+    // the camera shows the pair. The level is not changed - such a pair just scores lower.
+    static bool LedgeOver(StageMap map, Vector2 a, Vector2 b)
+    {
+        float floor = Mathf.Max(a.y, b.y);
+        int hits = 0;
+        for (float x = a.x + 1.5f; x <= b.x - 1.5f; x += 0.5f)
+            for (float y = floor + 3f; y <= floor + 6f; y += 0.5f)
+                if (map.IsSolid(new Vector2(x, y)) || map.IsPlatform(new Vector2(x, y))) { hits++; break; }
+        return hits >= 4;
+    }
+
     // Big props (trees, bushes: the scene's Props) within a portal's width of the spot - a green portal in front of a
     // green bush is lost in it.
     static readonly List<Bounds> props = new List<Bounds>();
@@ -306,29 +317,52 @@ public class StageExit : MonoBehaviour
     }
 
     // The fork's sign over a log: the route's name and what it means, with its icon (skull / sprout).
+    // The fork's crossroads signpost: one post between the two portals (covering neither) with an arrow-shaped arm
+    // pointing at each - the hard way's above, the easy way's below - its icon and name on the arm (shrunk to fit, large
+    // text too). Drawn behind the cat.
     void MakeSign(Way w)
     {
+        float mid = ways.Count == 2 ? (ways[0].holeX + ways[1].holeX) * 0.5f : w.holeX;
+        float floor = ways.Count == 2 ? Mathf.Min(ways[0].floorY, ways[1].floorY) : w.floorY;
+        float dir = Mathf.Sign(w.holeX - mid); if (dir == 0f) dir = 1f;
         var root = new GameObject("ForkSign").transform;
-        // on the ground in front of the portal's step: never on the arch, and low on the screen where the HUD, the
-        // minimap and the banners never are - so it is there at the moment of choosing
-        root.position = new Vector3(w.holeX - w.Offset + 0.4f, w.floorY - 0.55f, 0f);
+        root.position = new Vector3(mid, floor - 0.06f, 0f);
         w.sign = root;
         w.signHome = root.position;
-        float scale = (GameSettings.LargeText ? 1.3f : 1f) * 0.85f;
+        int order = body.Renderer.sortingOrder;
+        if (w.hunt)
+        {
+            var pole = new GameObject("Pole").AddComponent<SpriteRenderer>();
+            pole.transform.SetParent(root, false);
+            pole.sprite = Resources.Load<Sprite>("StageExit/exit_signpole");
+            pole.sortingOrder = order - 3;
+        }
+        float armY = w.hunt ? 2.25f : 1.35f;
+        var arm = new GameObject("Arm").AddComponent<SpriteRenderer>();
+        arm.transform.SetParent(root, false);
+        arm.sprite = Resources.Load<Sprite>("StageExit/exit_signarm");
+        arm.flipX = dir < 0f;
+        arm.sortingOrder = order - 2;
+        const float armW = 60f / 16f, tip = 8f / 16f;
+        arm.transform.localPosition = new Vector3(dir * (armW * 0.5f - 0.15f), armY, 0f); // from the post outward
+        float plankMid = dir * (armW * 0.5f - 0.15f) - dir * tip * 0.5f, inner = armW - tip - 0.4f;
+        bool large = GameSettings.LargeText;
         var icon = new GameObject("Icon").AddComponent<SpriteRenderer>();
         icon.transform.SetParent(root, false);
         icon.sprite = Resources.Load<Sprite>(w.hunt ? "StageExit/exit_icon_hunt" : "StageExit/exit_icon_safe");
-        icon.sortingOrder = 57;
-        // light words on the dark strip (a red word on a red portal can't be read): the colour is the icon's alone
-        var text = MakeWord(root, Loc.T(w.hunt ? "route.sign.hunt" : "route.sign.safe"), w.hunt ? new Color(0.95f, 0.63f, 0.37f) : new Color(0.76f, 0.85f, 0.44f), scale);
-        text.transform.localPosition = Vector3.zero;
-        icon.transform.localPosition = new Vector3(-text.textBounds.extents.x - 0.55f, 0f, 0f);
+        icon.sortingOrder = order - 1;
+        var text = MakeWord(root, Loc.T(w.hunt ? "route.hunt" : "route.safe"), new Color(0.98f, 0.92f, 0.78f), (large ? 1.3f : 1f) * 0.75f, order - 1, false);
+        float iconW = 0.55f, wordsW = text.textBounds.size.x;
+        if (iconW + 0.12f + wordsW > inner) { text.fontSize *= (inner - iconW - 0.12f) / wordsW; text.ForceMeshUpdate(); wordsW = text.textBounds.size.x; }
+        float total = iconW + 0.12f + wordsW;
+        icon.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW * 0.5f, armY, 0f);
+        text.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW + 0.12f + wordsW * 0.5f - text.textBounds.center.x, armY - text.textBounds.center.y, 0f);
     }
 
     Color WayColorOf(Way w) => WayColor(ways.IndexOf(w) >= 0 ? ways.IndexOf(w) : 0);
 
     // A short line of world text on a dark strip (the fork's signs and the closed message).
-    TextMeshPro MakeWord(Transform parent, string label, Color color, float scale)
+    TextMeshPro MakeWord(Transform parent, string label, Color color, float scale, int order = 56, bool backing = true)
     {
         var go = new GameObject("Word");
         go.transform.SetParent(parent, false);
@@ -341,8 +375,9 @@ public class StageExit : MonoBehaviour
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.textWrappingMode = TextWrappingModes.NoWrap;
         tmp.rectTransform.sizeDelta = new Vector2(6f, 1f);
-        tmp.sortingOrder = 56;
+        tmp.sortingOrder = order;
         tmp.ForceMeshUpdate();
+        if (!backing) return tmp; // on the signpost's plank: the wood is its backing
         var back = new GameObject("Back").AddComponent<SpriteRenderer>();
         back.transform.SetParent(go.transform, false);
         back.sprite = RuntimeGeneratedAssets.WhiteSprite(); // 1 unit square

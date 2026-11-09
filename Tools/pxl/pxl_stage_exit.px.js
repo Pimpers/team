@@ -376,3 +376,16 @@ for (const v of Object.keys(PORTAL)) {
 sprite("exit_portal_burst", { w: 24, h: 32 }, (c) => {
   c.ellipse(12, 16, 11, 15, "#f5ebe6"); c.ellipse(12, 16, 9, 13, "_")
 })
+
+// The fork's crossroads signpost (between the two portals, covering neither): a post and two arrow-shaped arms the
+// game points left and right, each with the route's icon and name on it.
+sprite("exit_signpole", { w: 6, h: 44, pivot: "bottom" }, (c) => {
+  c.rect(0, 0, 6, 44, "#150904"); c.rect(1, 1, 4, 43, "#5e2c19"); c.line(1, 1, 1, 43, "#886644"); c.rect(0, 0, 6, 2, "#150904")
+})
+sprite("exit_signarm", { w: 60, h: 14 }, (c) => {
+  const out = "#150904"
+  c.rect(0, 0, 52, 14, out); c.poly([51, 0, 59, 7, 51, 13], out)          // the plank and its arrow tip
+  c.rect(1, 1, 51, 12, "#886644"); c.poly([51, 2, 57, 7, 51, 11], "#886644")
+  c.line(1, 1, 52, 1, "#a7845d"); c.line(1, 12, 51, 12, "#5e2c19")
+  c.line(8, 4, 18, 4, "#5e2c19"); c.line(30, 9, 42, 9, "#5e2c19"); c.px(3, 6, out)
+})
