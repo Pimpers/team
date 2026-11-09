@@ -68,8 +68,8 @@ public class GameplayPlayModeTests
         var feet = body.Feet;
         var way = exit.RoutePoint(hunt);
         body.transform.position += new Vector3(way.x - feet.x, way.y - 0.5f - feet.y, 0f);
-        yield return null;
-        yield return null;
+        float settle = Time.realtimeSinceStartup + 1f; // set down by the mouth: a frame or a few to land
+        while (!StageExit.Entering && Time.realtimeSinceStartup < settle) yield return null;
         Assert.That(StageExit.Entering, Is.True, "not drawn in");
         int other = exit.WayIsHunt(0) == hunt ? 1 : 0;
         Assert.That(exit.WayOpen(other), Is.False, "the other log stayed open");

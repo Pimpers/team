@@ -193,11 +193,11 @@ public class StageExit : MonoBehaviour
         ways.Add(w);
         // still before a tree or bush (props or tiles: no clear spot was left): a dark silhouette behind it so the arch
         // reads against it
-        if (PropsNear(spot))
+        // (a background tree - the parallax picture - can't be cleared or read; the plate keeps the arch apart from it)
         {
             var plate = new GameObject("Backdrop").AddComponent<SpriteRenderer>();
             plate.transform.SetParent(w.log.transform, false);
-            plate.transform.localScale = new Vector3(1.12f, 1.06f, 1f);
+            plate.transform.localScale = new Vector3(1.3f, 1.06f, 1f);
             plate.sprite = w.log.sprite;
             plate.color = new Color(0.08f, 0.06f, 0.08f, 0.9f);
             plate.sortingOrder = w.log.sortingOrder - 1;
@@ -231,6 +231,100 @@ public class StageExit : MonoBehaviour
 
     // The fork's two logs among the roomy floor spots `near` allows: the hard way as high as it can go (위), the easy
     // way low (아래), far enough apart that one's pull never reaches the other. False if the place has no room for two.
+    // The staged fork: safe portal to the left, hunt portal to the right, each "half" from a centre on the cat's floor
+    // (or the nearest flat run that holds the whole stage), the signpost between them.
+    float StageHalf()
+    {
+        var cam = Camera.main;
+        float aspect = cam != null ? Mathf.Min(cam.aspect, 4f / 3f) : 4f / 3f; // narrowest screen we ship: 4:3
+        float width = ViewHeight(cam) * aspect * 0.84f; // 8% margin each side
+        return Mathf.Clamp(width * 0.5f - 1.25f - 0.25f, 2.6f, 5f);
+    }
+
+    // The view's height in units as the game draws it: the Pixel Perfect camera's reference height over its PPU (the
+    // same in a window and a capture), else the orthographic size.
+    static float ViewHeight(Camera cam)
+    {
+        var ppc = cam != null ? cam.GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>() : null;
+        if (ppc != null && ppc.enabled && ppc.assetsPPU > 0) return ppc.refResolutionY / (float)ppc.assetsPPU;
+        return (cam != null ? cam.orthographicSize : 4.5f) * 2f;
+    }
+
+    bool PlaceStaged(StageMap map, Vector2 feet)
+    {
+        float half = StageHalf();
+        float floorY = FloorAt(map, feet.x, feet.y);
+        if (float.IsNaN(floorY)) return false;
+        for (float off = 0f; off <= 30f; off += 0.5f) // nearest first, out to where a low ledge ends
+            foreach (float sgn in new[] { 1f, -1f })
+            {
+                if (off == 0f && sgn < 0f) continue;
+                float c = feet.x + sgn * off;
+                float yl = FloorAt(map, c - half, floorY), yr = FloorAt(map, c + half, floorY), yc = FloorAt(map, c, floorY);
+                if (float.IsNaN(yl) || float.IsNaN(yr) || float.IsNaN(yc)) continue;
+                if (Mathf.Abs(yl - floorY) > 0.3f || Mathf.Abs(yr - floorY) > 0.3f || Mathf.Abs(yc - floorY) > 0.3f) continue;
+                var a = new Vector2(c - half, floorY); var b = new Vector2(c + half, floorY);
+                // on the staged floor a ledge may pass over a portal as long as the arch (3 tall) stands clear under it
+                if (!Roomy(map, a, 3.3f) || !Roomy(map, b, 3.3f) || !Walkable(map, a, b) || UnderHud(a) || UnderHud(b)) continue;
+                foreach (var w in ways) DestroyWay(w);
+                ways.Clear();
+                AddWay(b, -1f, "_hunt", false);
+                AddWay(a, -1f, "_safe", false);
+                foreach (var w in ways) MakeSign(w);
+                return true;
+            }
+        return false;
+    }
+
+    // The floor surface at x near height y (the highest walkable top within 1 above to 3 below), NaN if none.
+    static float FloorAt(StageMap map, float x, float y)
+    {
+        for (float t = y + 1f; t >= y - 3f; t -= 0.05f) // fine steps: the floor exactly (a cat set on it must not float)
+        {
+            var under = new Vector2(x, t - 0.15f);
+            if ((map.IsSolid(under) || map.IsPlatform(under)) && !map.IsSolid(new Vector2(x, t + 0.4f))) return t;
+        }
+        return float.NaN;
+    }
+
+    // A spot whose portal would stand under the screen-fixed UI's corners at the current view (the minimap, the HUD).
+    bool UnderHud(Vector2 spot)
+    {
+        var cam = Camera.main;
+        if (cam == null) return false;
+        Vector3 sp = cam.WorldToScreenPoint(new Vector3(spot.x, spot.y + 3f, 0f));
+        float W = cam.pixelWidth, H = cam.pixelHeight, u = H / 1080f;
+        if (sp.y < H - 360f * u) return false;
+        return sp.x < 560f * u || sp.x > W - 480f * u;
+    }
+
+    // Clear-out: as the portals rise, the decoration around them and the sign - decor tiles and small props, a
+    // portal's width round each - goes under the dust (floor tiles, colliders, enemies, chests are never touched; the
+    // scene reloads whole on a restart or the next stage, so nothing needs putting back).
+    void ClearOut()
+    {
+        if (ways.Count != 2) return;
+        float lo = Mathf.Min(ways[0].holeX, ways[1].holeX) - 1.25f - 2.5f, hi = Mathf.Max(ways[0].holeX, ways[1].holeX) + 1.25f + 2.5f;
+        float bot = Mathf.Min(ways[0].floorY, ways[1].floorY), top = bot + 4f;
+        foreach (var tm in DecorMaps())
+            for (float x = lo; x <= hi; x += 0.5f)
+                for (float y = bot + 0.1f; y <= top; y += 0.5f)
+                {
+                    var cell = tm.WorldToCell(new Vector3(x, y, 0f));
+                    if (tm.HasTile(cell)) tm.SetTile(cell, null);
+                }
+        var root = GameObject.Find("Props");
+        if (root != null)
+            foreach (var sr in root.GetComponentsInChildren<SpriteRenderer>())
+            {
+                var b = sr.bounds;
+                if (b.max.x < lo || b.min.x > hi || b.max.y < bot || b.min.y > top) continue;
+                if (sr.GetComponentInParent<Collider2D>() != null || sr.GetComponentInParent<Enemy>() != null) continue; // never what plays
+                sr.gameObject.SetActive(false);
+            }
+        for (float x = lo + 1f; x < hi; x += 2.5f) Vfx.Play("dust_mid", new Vector3(x, bot + 0.6f, 0f), 1.2f);
+    }
+
     // The fork's two portals among the roomy floor spots `near` allows, side by side so both fit one screen (a choice
     // is only a choice when both answers are in view): 7-10 units apart (one's pull never reaches the other), at most
     // a portal's height (3) apart in height, clear of big props (trees, bushes) so they stand out, toward the stage's
@@ -363,31 +457,35 @@ public class StageExit : MonoBehaviour
         arm.sprite = Resources.Load<Sprite>("StageExit/exit_signarm");
         arm.flipX = dir < 0f;
         arm.sortingOrder = order - 2;
-        float armW = 60f / 16f * S, tip = 8f / 16f * S;
-        // the tip stops 4 px short of the arch's outer edge (the portal is 2.5 wide); on a narrow pair the arm reaches
-        // back across the post instead of over the portal
+        // The arm fits its content (UI_STYLE.md): 4 px inside each end, the icon, 2 px, the name, then the arrow tip -
+        // a sliced sprite, so the plank stretches and its ends and tip keep their pixels. The tip stops 4 px short of
+        // the arch's outer edge; an arm that would be longer than that keeps the icon alone.
+        const float Px = 1f / 16f;
+        float px = S * Px, tip = 8f * px, pad = 4f * px, gap = 2f * px, iconW = 9f * px;
         float limit = Mathf.Abs(w.holeX - mid) - 1.25f - 0.25f;
-        float centre = dir * (Mathf.Min(limit, armW + 0.2f) - armW * 0.5f);
-        arm.transform.localPosition = new Vector3(centre, armY, 0f);
-        float plankMid = centre - dir * tip * 0.5f, inner = armW - tip - 0.2f;
         bool large = GameSettings.LargeText;
         var icon = new GameObject("Icon").AddComponent<SpriteRenderer>();
         icon.transform.SetParent(root, false);
         icon.transform.localScale = Vector3.one * S;
         icon.sprite = Resources.Load<Sprite>(w.hunt ? "StageExit/exit_icon_hunt" : "StageExit/exit_icon_safe");
         icon.sortingOrder = order - 1;
-        // the name at no less than the small text size; where it doesn't fit the arm, the icon alone says it
+        // the name at no less than the small text size
         var text = MakeWord(root, Loc.T(w.hunt ? "route.hunt" : "route.safe"), new Color(0.98f, 0.92f, 0.78f), large ? 0.98f : 0.75f, order - 1, false);
-        float iconW = 0.33f, wordsW = text.textBounds.size.x;
-        if (iconW + 0.08f + wordsW > inner)
+        float wordsW = text.textBounds.size.x;
+        float armLen = pad + iconW + gap + wordsW + pad + tip;
+        if (armLen > limit + 0.6f) { Destroy(text.gameObject); text = null; armLen = pad + iconW + pad + tip; } // (the post side may take 0.6)
+        arm.drawMode = SpriteDrawMode.Sliced;
+        arm.size = new Vector2(armLen / S, 14f * Px);
+        float centre = dir * (Mathf.Min(limit, armLen - 0.1f) - armLen * 0.5f);
+        arm.transform.localPosition = new Vector3(centre, armY, 0f);
+        float start = centre - dir * armLen * 0.5f; // the arm's post end
+        float iconX = start + dir * (pad + iconW * 0.5f);
+        icon.transform.localPosition = new Vector3(iconX, armY, 0f);
+        if (text != null)
         {
-            Destroy(text.gameObject);
-            icon.transform.localPosition = new Vector3(plankMid, armY, 0f);
-            return;
+            float wordsMid = start + dir * (pad + iconW + gap + wordsW * 0.5f);
+            text.transform.localPosition = new Vector3(wordsMid - text.textBounds.center.x, armY - text.textBounds.center.y, 0f);
         }
-        float total = iconW + 0.08f + wordsW;
-        icon.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW * 0.5f, armY, 0f);
-        text.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW + 0.08f + wordsW * 0.5f - text.textBounds.center.x, armY - text.textBounds.center.y, 0f);
     }
 
     Color WayColorOf(Way w) => WayColor(ways.IndexOf(w) >= 0 ? ways.IndexOf(w) : 0);
@@ -441,7 +539,11 @@ public class StageExit : MonoBehaviour
         {
             // no closed fork (a climbing stage, or no room at the end): two logs near the cat, on its floor or close
             Vector2 at = body.Feet;
-            if (!PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f, closed: false)) return false;
+            // an authored stage, not a hunt for gaps: the two rise either side of the cat on its own floor, a fixed step
+            // apart that fits the screen (4:3 too); a short floor moves the stage to the nearest flat run wide enough;
+            // only where there is none does the old search run
+            if (!PlaceStaged(map, at) && !PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f && !UnderHud(s), closed: false)) return false;
+            ClearOut();
             foreach (var w in ways) StartCoroutine(Appear(w.log));
         }
         fork = true;
@@ -449,7 +551,7 @@ public class StageExit : MonoBehaviour
         OpenAll(next);
         // Frame both: the camera eases over to the pair's middle, holds a moment and comes back to the cat (position
         // only - the Pixel Perfect camera keeps its whole-number zoom; the controls stay live).
-        if (ways.Count == 2) CameraFollow.Focus(FrameFork(), 1.4f);
+        if (ways.Count == 2) CameraFollow.Focus(FrameFork(), 2f); // eased in 0.45 s, about a second held, back in 0.55 s
         return true;
     }
 
@@ -526,8 +628,8 @@ public class StageExit : MonoBehaviour
     {
         Vector2 cat = (Vector2)body.Feet + new Vector2(0f, 0.6f), a = Point(ways[0]) + Vector2.up * 1f, b = Point(ways[1]) + Vector2.up * 1f;
         var cam = Camera.main;
-        float width = cam != null ? cam.orthographicSize * 2f * cam.aspect * 0.84f : 12f;
-        float height = cam != null ? cam.orthographicSize * 2f * 0.84f : 7f;
+        float width = ViewHeight(cam) * (cam != null ? cam.aspect : 16f / 9f) * 0.84f;
+        float height = ViewHeight(cam) * 0.84f;
         float lo = Mathf.Min(cat.x, Mathf.Min(a.x, b.x) - 1.5f), hi = Mathf.Max(cat.x, Mathf.Max(a.x, b.x) + 1.5f);
         float bot = Mathf.Min(cat.y - 1f, Mathf.Min(a.y, b.y) - 1.5f), top = Mathf.Max(cat.y + 1f, Mathf.Max(a.y, b.y) + 2f);
         if (hi - lo <= width && top - bot <= height) return new Vector2((lo + hi) * 0.5f, (bot + top) * 0.5f);
@@ -605,12 +707,13 @@ public class StageExit : MonoBehaviour
     // its height, and open sky (no ground, no ledge) up to 1.5 times the portal's height - jammed under the floor above
     // it reads as stuck.
     const float Headroom = 3f * 1.5f;
-    static bool Roomy(StageMap map, Vector2 p)
+    static bool Roomy(StageMap map, Vector2 p) => Roomy(map, p, Headroom);
+    static bool Roomy(StageMap map, Vector2 p, float headroom)
     {
         for (float dx = -2f; dx <= 2.01f; dx += 0.8f)
         {
             if (map.IsSolid(new Vector2(p.x + dx, p.y + 0.4f)) || map.IsSolid(new Vector2(p.x + dx, p.y + 1.4f)) || map.IsSolid(new Vector2(p.x + dx, p.y + 2.3f))) return false;
-            for (float dy = 2.6f; dy <= Headroom; dy += 0.5f)
+            for (float dy = 2.6f; dy <= headroom; dy += 0.5f)
             {
                 var above = new Vector2(p.x + dx, p.y + dy);
                 if (map.IsSolid(above) || map.IsPlatform(above)) return false;
@@ -665,7 +768,7 @@ public class StageExit : MonoBehaviour
             go.transform.position = (Vector3)from + new Vector3(Random.Range(-0.8f, 0.8f), Random.Range(0.2f, 1.4f), 0f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = flyFrames[0];
-            sr.sortingOrder = body.Renderer.sortingOrder + 3;
+            sr.sortingOrder = body.Renderer.sortingOrder - 3; // over the portal, under the signpost and the cat
             flies.Add(new Firefly { tr = go.transform, sr = sr, home = home, phase = Random.Range(0f, 6f) });
             if (i % 3 == 0) Sfx.Play("ui_click", 0.25f, 2.2f + i * 0.04f);
             yield return new WaitForSeconds(0.05f);

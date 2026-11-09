@@ -64,7 +64,9 @@ screen is checked at 16:9, 16:10 and 4:3 (`Cats Smash > Capture Screens`).
 World signs (the fork portals' signs) keep out of the screen-fixed UI: the HUD's corner top left (560 x 360 at 1080p)
 and the minimap with its legend top right (480 x 260) are a safe area, and so is the top middle while a banner is
 up (800 wide, from 40 to 340 px above the centre); the test is on the sign's whole width, icon included. A sign that would fall in one is hidden until the
-way is clear (pushed down it landed on its own portal); one pushed off the top of the screen moves beside its portal instead of onto it. Sign words are light (cream,
+way is clear (pushed down it landed on its own portal); one pushed off the top of the screen moves beside its portal instead of onto it. Sign arms fit their content: 4 px inside each end, the icon, 2 px, the name (never under the small text size), then
+the arrow tip; an arm that would reach past its portal's arch (4 px short of it) keeps the icon alone. Draw order
+round a sign: background, portal, sparkles, signpost, cat, hit effects. Sign words are light (cream,
 light orange, light green) on the dark strip; the route's colour is in the icon only.
 
 ## Motion and sound
