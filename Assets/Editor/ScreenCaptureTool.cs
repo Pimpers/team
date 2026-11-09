@@ -125,7 +125,7 @@ public static class ScreenCaptureTool
             Add("Stage" + n, "exit_stage" + n, () => { ClearEnemies(); StageExit.Instance.Open("Stage1"); CatBeforeExit(1.5f); });
         // The fork: the hard way (red, skull) and the easy way (green, sprout), shut, open, and each one taking the cat.
         Add("Stage1", "fork_closed", () => CatBeforeExit(4f));
-        Add("Stage1", "fork_open", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, wait: 1f);
+        Add("Stage1", "fork_open", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, wait: 1f);
         Add("Stage1", "fork_pull_hunt", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); StageExit.Instance.ForCapture(true, true); }, wait: 0.4f);
         Add("Stage1", "fork_pull_safe", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); StageExit.Instance.ForCapture(true, false); }, wait: 0.4f);
         Add("Stage5", "portal_victory_closed", () => CatBeforeExit(3f)); // the boss room's gold portal, shut while the boss stands
@@ -142,9 +142,9 @@ public static class ScreenCaptureTool
         // the signs against the HUD, the minimap and the banner at every shape of screen, and the fork on stages 2 and 3
         Add("Stage1", "fork_camera_16x10", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1680, 1050, 0.7f);
         Add("Stage1", "fork_camera_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1440, 1080, 0.7f);
-        Add("Stage1", "fork_open_16x10", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, 1680, 1050, 1f);
-        Add("Stage1", "fork_open_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, 1440, 1080, 1f);
-        Add("Stage1", "fork_signs", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(5f); }, wait: 4f); // the banner gone and the camera back: both signs in view
+        Add("Stage1", "fork_open_16x10", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1680, 1050, 1f);
+        Add("Stage1", "fork_open_4x3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, 1440, 1080, 1f);
+        Add("Stage1", "fork_signs", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, wait: 4f); // the banner gone and the camera back: both signs in view
         Add("Stage2", "fork_stage2", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage3", _ => { }); }, wait: 1f);
         Add("Stage3", "fork_stage3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage4", _ => { }); }, wait: 1f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
@@ -160,7 +160,7 @@ public static class ScreenCaptureTool
         Add("MainScene", "a11y_smith_16x10", () => Find<BlacksmithUI>().Open(), 1680, 1050); // narrower screens: the bubble wraps sooner
         Add("MainScene", "a11y_smith_4x3", () => Find<BlacksmithUI>().Open(), 1440, 1080);
         // 큰 글씨 + 색약 still on: the closed log's message, and the exit's edge arrow in the colour-blind colour.
-        Add("Stage1", "a11y_fork", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); CatBeforeExit(4f); }, wait: 1f);
+        Add("Stage1", "a11y_fork", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, wait: 1f);
         Add("Stage1", "a11y_exit_closed", () => { BuildSheet.ForceShow = false; CatBeforeExit(0.3f); }, wait: 0.35f); // (the word lasts 0.7 s)
         Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
 

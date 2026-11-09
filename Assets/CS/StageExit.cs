@@ -241,20 +241,17 @@ public class StageExit : MonoBehaviour
         return Mathf.Clamp(width * 0.5f - 1.25f - 0.25f, 2.6f, 5f);
     }
 
-    // The view's height in units as the game draws it: the Pixel Perfect camera's reference height over its PPU (the
-    // same in a window and a capture), else the orthographic size.
-    static float ViewHeight(Camera cam)
-    {
-        var ppc = cam != null ? cam.GetComponent<UnityEngine.Rendering.Universal.PixelPerfectCamera>() : null;
-        if (ppc != null && ppc.enabled && ppc.assetsPPU > 0) return ppc.refResolutionY / (float)ppc.assetsPPU;
-        return (cam != null ? cam.orthographicSize : 4.5f) * 2f;
-    }
+    // The view's height in units as the game draws it.
+    // The game's view is fixed (16 px art drawn 7.8x on 1080 lines, the Pixel Perfect decision): 8.65 units tall at
+    // every window size. A constant, not the camera's size - in a batch capture that reports the tiny batch window.
+    static float ViewHeight(Camera cam) => 8.65f;
 
     bool PlaceStaged(StageMap map, Vector2 feet)
     {
         float half = StageHalf();
         float floorY = FloorAt(map, feet.x, feet.y);
-        if (float.IsNaN(floorY)) return false;
+        if (float.IsNaN(floorY)) { Debug.Log($"[StageExit] staged: no floor under the cat at {feet}"); return false; }
+        int nFloor = 0, nRoom = 0, nWalk = 0;
         for (float off = 0f; off <= 30f; off += 0.5f) // nearest first, out to where a low ledge ends
             foreach (float sgn in new[] { 1f, -1f })
             {
@@ -262,10 +259,12 @@ public class StageExit : MonoBehaviour
                 float c = feet.x + sgn * off;
                 float yl = FloorAt(map, c - half, floorY), yr = FloorAt(map, c + half, floorY), yc = FloorAt(map, c, floorY);
                 if (float.IsNaN(yl) || float.IsNaN(yr) || float.IsNaN(yc)) continue;
-                if (Mathf.Abs(yl - floorY) > 0.3f || Mathf.Abs(yr - floorY) > 0.3f || Mathf.Abs(yc - floorY) > 0.3f) continue;
+                if (Mathf.Abs(yl - floorY) > 0.3f || Mathf.Abs(yr - floorY) > 0.3f || Mathf.Abs(yc - floorY) > 0.3f) { nFloor++; continue; }
                 var a = new Vector2(c - half, floorY); var b = new Vector2(c + half, floorY);
                 // on the staged floor a ledge may pass over a portal as long as the arch (3 tall) stands clear under it
-                if (!Roomy(map, a, 3.3f) || !Roomy(map, b, 3.3f) || !Walkable(map, a, b) || UnderHud(a) || UnderHud(b)) continue;
+                // (no HUD test here: the camera reframes on the stage as it opens, so where it is now says nothing)
+                if (!PortalRoom(map, a) || !PortalRoom(map, b)) { nRoom++; continue; }
+                if (!Walkable(map, a, b)) { nWalk++; continue; }
                 foreach (var w in ways) DestroyWay(w);
                 ways.Clear();
                 AddWay(b, -1f, "_hunt", false);
@@ -273,7 +272,28 @@ public class StageExit : MonoBehaviour
                 foreach (var w in ways) MakeSign(w);
                 return true;
             }
+        Debug.Log($"[StageExit] staged: no stage near {feet} (half {half:0.0}; floor {nFloor}, room {nRoom}, walk {nWalk})");
         return false;
+    }
+
+    // Room for one portal (2.5 wide, 3 tall): ground under its step, nothing solid and no ledge through the arch (a
+    // ledge just above it is fine). The 4-wide log test was stricter than a portal needs.
+    static bool PortalRoom(StageMap map, Vector2 p)
+    {
+        for (float dx = -1.4f; dx <= 1.41f; dx += 0.7f)
+        {
+            for (float dy = 0.4f; dy <= 3.2f; dy += 0.4f)
+            {
+                var at = new Vector2(p.x + dx, p.y + dy);
+                if (map.IsSolid(at) || map.IsPlatform(at)) return false;
+            }
+            if (Mathf.Abs(dx) <= 1.21f)
+            {
+                var under = new Vector2(p.x + dx, p.y - 0.15f);
+                if (!map.IsSolid(under) && !map.IsPlatform(under)) return false;
+            }
+        }
+        return true;
     }
 
     // The floor surface at x near height y (the highest walkable top within 1 above to 3 below), NaN if none.
