@@ -103,7 +103,7 @@ public class StageExit : MonoBehaviour
     }
     static Vector2 Point(Way w) => new Vector2(w.holeX, w.floorY + 0.5f);
 
-    void Awake() => Instance = this;
+    void Awake() { Instance = this; propsRead = false; decorMaps = null; } // a new scene: read its props and tiles afresh
     void OnDestroy() { if (Instance == this) Instance = null; StageWipe.Revealed -= PopOut; }
 
     void Start()
@@ -191,8 +191,9 @@ public class StageExit : MonoBehaviour
         w.log.flipX = holeSide > 0f;
         w.log.sortingOrder = body.Renderer.sortingOrder - 4; // behind the fork's signpost (-2, its words -1) and the cat
         ways.Add(w);
-        // a dark silhouette behind every portal: the arch reads against any backdrop (trees and canopies are tiles,
-        // not props, so PropsNear never sees them)
+        // still before a tree or bush (props or tiles: no clear spot was left): a dark silhouette behind it so the arch
+        // reads against it
+        if (PropsNear(spot))
         {
             var plate = new GameObject("Backdrop").AddComponent<SpriteRenderer>();
             plate.transform.SetParent(w.log.transform, false);
@@ -296,6 +297,16 @@ public class StageExit : MonoBehaviour
         return hits >= 4;
     }
 
+    static UnityEngine.Tilemaps.Tilemap[] decorMaps;
+    static UnityEngine.Tilemaps.Tilemap[] DecorMaps()
+    {
+        if (decorMaps != null && System.Array.TrueForAll(decorMaps, m => m != null)) return decorMaps;
+        var list = new List<UnityEngine.Tilemaps.Tilemap>();
+        foreach (var tm in Object.FindObjectsByType<UnityEngine.Tilemaps.Tilemap>())
+            if (tm.name == "Decor" || tm.name == "BackgroundProps") list.Add(tm);
+        return decorMaps = list.ToArray();
+    }
+
     // Big props (trees, bushes: the scene's Props) within a portal's width of the spot - a green portal in front of a
     // green bush is lost in it.
     static readonly List<Bounds> props = new List<Bounds>();
@@ -313,6 +324,11 @@ public class StageExit : MonoBehaviour
         }
         var zone = new Bounds(new Vector3(spot.x, spot.y + 1.5f, 0f), new Vector3(2.5f * 3f, 3f, 10f)); // the portal and a portal's width each side
         foreach (var bo in props) if (bo.Intersects(zone)) return true;
+        // trees and bushes painted as tiles (the Decor and BackgroundProps tilemaps) count too
+        foreach (var tm in DecorMaps())
+            for (float x = spot.x - 2f; x <= spot.x + 2f; x += 0.5f)
+                for (float y = spot.y + 0.3f; y <= spot.y + 3f; y += 0.5f)
+                    if (tm.HasTile(tm.WorldToCell(new Vector3(x, y, 0f)))) return true;
         return false;
     }
 
@@ -330,33 +346,48 @@ public class StageExit : MonoBehaviour
         w.sign = root;
         w.signHome = root.position;
         int order = body.Renderer.sortingOrder;
+        // at 60% of the drawn size (a sign, not a billboard): the post 1.65 tall, the arms near its top
+        const float S = 0.6f;
         if (w.hunt)
         {
             var pole = new GameObject("Pole").AddComponent<SpriteRenderer>();
             pole.transform.SetParent(root, false);
+            pole.transform.localScale = Vector3.one * S;
             pole.sprite = Resources.Load<Sprite>("StageExit/exit_signpole");
             pole.sortingOrder = order - 3;
         }
-        float armY = w.hunt ? 2.25f : 1.35f;
+        float armY = w.hunt ? 1.45f : 0.92f;
         var arm = new GameObject("Arm").AddComponent<SpriteRenderer>();
         arm.transform.SetParent(root, false);
+        arm.transform.localScale = Vector3.one * S;
         arm.sprite = Resources.Load<Sprite>("StageExit/exit_signarm");
         arm.flipX = dir < 0f;
         arm.sortingOrder = order - 2;
-        const float armW = 60f / 16f, tip = 8f / 16f;
-        arm.transform.localPosition = new Vector3(dir * (armW * 0.5f - 0.15f), armY, 0f); // from the post outward
-        float plankMid = dir * (armW * 0.5f - 0.15f) - dir * tip * 0.5f, inner = armW - tip - 0.4f;
+        float armW = 60f / 16f * S, tip = 8f / 16f * S;
+        // the tip stops 4 px short of the arch's outer edge (the portal is 2.5 wide); on a narrow pair the arm reaches
+        // back across the post instead of over the portal
+        float limit = Mathf.Abs(w.holeX - mid) - 1.25f - 0.25f;
+        float centre = dir * (Mathf.Min(limit, armW + 0.2f) - armW * 0.5f);
+        arm.transform.localPosition = new Vector3(centre, armY, 0f);
+        float plankMid = centre - dir * tip * 0.5f, inner = armW - tip - 0.2f;
         bool large = GameSettings.LargeText;
         var icon = new GameObject("Icon").AddComponent<SpriteRenderer>();
         icon.transform.SetParent(root, false);
+        icon.transform.localScale = Vector3.one * S;
         icon.sprite = Resources.Load<Sprite>(w.hunt ? "StageExit/exit_icon_hunt" : "StageExit/exit_icon_safe");
         icon.sortingOrder = order - 1;
-        var text = MakeWord(root, Loc.T(w.hunt ? "route.hunt" : "route.safe"), new Color(0.98f, 0.92f, 0.78f), (large ? 1.3f : 1f) * 0.75f, order - 1, false);
-        float iconW = 0.55f, wordsW = text.textBounds.size.x;
-        if (iconW + 0.12f + wordsW > inner) { text.fontSize *= (inner - iconW - 0.12f) / wordsW; text.ForceMeshUpdate(); wordsW = text.textBounds.size.x; }
-        float total = iconW + 0.12f + wordsW;
+        // the name at no less than the small text size; where it doesn't fit the arm, the icon alone says it
+        var text = MakeWord(root, Loc.T(w.hunt ? "route.hunt" : "route.safe"), new Color(0.98f, 0.92f, 0.78f), large ? 0.98f : 0.75f, order - 1, false);
+        float iconW = 0.33f, wordsW = text.textBounds.size.x;
+        if (iconW + 0.08f + wordsW > inner)
+        {
+            Destroy(text.gameObject);
+            icon.transform.localPosition = new Vector3(plankMid, armY, 0f);
+            return;
+        }
+        float total = iconW + 0.08f + wordsW;
         icon.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW * 0.5f, armY, 0f);
-        text.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW + 0.12f + wordsW * 0.5f - text.textBounds.center.x, armY - text.textBounds.center.y, 0f);
+        text.transform.localPosition = new Vector3(plankMid - total * 0.5f + iconW + 0.08f + wordsW * 0.5f - text.textBounds.center.x, armY - text.textBounds.center.y, 0f);
     }
 
     Color WayColorOf(Way w) => WayColor(ways.IndexOf(w) >= 0 ? ways.IndexOf(w) : 0);
@@ -418,7 +449,7 @@ public class StageExit : MonoBehaviour
         OpenAll(next);
         // Frame both: the camera eases over to the pair's middle, holds a moment and comes back to the cat (position
         // only - the Pixel Perfect camera keeps its whole-number zoom; the controls stay live).
-        if (ways.Count == 2) CameraFollow.Focus((Point(ways[0]) + Point(ways[1])) * 0.5f + Vector2.up * 1f, 1.4f);
+        if (ways.Count == 2) CameraFollow.Focus(FrameFork(), 1.4f);
         return true;
     }
 
@@ -487,6 +518,21 @@ public class StageExit : MonoBehaviour
         w.log.sprite = w.swirl[0];
         if (w.rim != null) w.rim.enabled = true;
         StartCoroutine(Burst(w));
+    }
+
+    // Where the camera looks as the fork opens: the middle of the cat, both portals and the sign, with an 8% margin;
+    // if that is wider than the screen, the cat and the nearer portal (the other is shown by its edge arrow).
+    Vector2 FrameFork()
+    {
+        Vector2 cat = (Vector2)body.Feet + new Vector2(0f, 0.6f), a = Point(ways[0]) + Vector2.up * 1f, b = Point(ways[1]) + Vector2.up * 1f;
+        var cam = Camera.main;
+        float width = cam != null ? cam.orthographicSize * 2f * cam.aspect * 0.84f : 12f;
+        float height = cam != null ? cam.orthographicSize * 2f * 0.84f : 7f;
+        float lo = Mathf.Min(cat.x, Mathf.Min(a.x, b.x) - 1.5f), hi = Mathf.Max(cat.x, Mathf.Max(a.x, b.x) + 1.5f);
+        float bot = Mathf.Min(cat.y - 1f, Mathf.Min(a.y, b.y) - 1.5f), top = Mathf.Max(cat.y + 1f, Mathf.Max(a.y, b.y) + 2f);
+        if (hi - lo <= width && top - bot <= height) return new Vector2((lo + hi) * 0.5f, (bot + top) * 0.5f);
+        Vector2 near = Vector2.Distance(cat, a) < Vector2.Distance(cat, b) ? a : b;
+        return (cat + near) * 0.5f;
     }
 
     // The moment a portal opens: one ring of light spreads from its opening (0.2 s), in the portal's colour.
