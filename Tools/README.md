@@ -28,6 +28,7 @@ One-off asset scripts moved out of the project root (2026-10-31). Nothing in the
 - `worldmap_refill.ps1` - the rim round each Korean plate on the world map re-filled with the map round it.
 - `icon_rescale.ps1 -Files <png,...> -Px 32 [-Restore]` - a too-fine picture shrunk to the game's pixel size and blown back up.
 - `palette.ps1 -Build` / `-Apply <png,...> [-Restore]` - `palette.png` (UI, cats, effects + a few added) and the recolour to it (files that would shift too far are kept).
+- `sd_cleanup.ps1 -In <png or folder> [-Out <dir>] [-Cell 8] [-Colours 16] [-Outline] [-Scale 1]` - a local Stable Diffusion picture (CatsSmash styles in the WebUI) to game pixel art in one pass: grid snap, backdrop cleared, colours cut and moved to `palette.png`, lone pixels cleaned, outline, trimmed. Writes `*_px.png`.
 - `fx_half.ps1`, `fx_dechecker.ps1`, `fx_fadeshrink.ps1`, `fx_outline.ps1 -Cell <n>` - effect sheets halved, checker dither cleared, fade-out frames redrawn by shrinking, outlines on big pieces.
 - `icon_shade.ps1 [-Restore]` - card skill icons: outline where missing, one shadow tone.
 
