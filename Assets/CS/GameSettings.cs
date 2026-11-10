@@ -4,13 +4,15 @@ using UnityEngine.InputSystem;
 // Player options persisted in the versioned GameSave file.
 public static class GameSettings
 {
+    static bool sliderDirty; // a slider value changed and is not on disk yet (Hotkeys writes it)
+
     public static float MasterVolume
     {
         get => GameSave.Data.masterVolume;
         set
         {
             GameSave.Data.masterVolume = Mathf.Clamp01(value);
-            GameSave.Save();
+            sliderDirty = true;
             AudioListener.volume = GameSave.Data.masterVolume;
         }
     }
@@ -18,19 +20,19 @@ public static class GameSettings
     public static float MusicVolume
     {
         get => GameSave.Data.musicVolume;
-        set { GameSave.Data.musicVolume = Mathf.Clamp01(value); GameSave.Save(); }
+        set { GameSave.Data.musicVolume = Mathf.Clamp01(value); sliderDirty = true; }
     }
 
     public static float SfxVolume
     {
         get => GameSave.Data.sfxVolume;
-        set { GameSave.Data.sfxVolume = Mathf.Clamp01(value); GameSave.Save(); }
+        set { GameSave.Data.sfxVolume = Mathf.Clamp01(value); sliderDirty = true; }
     }
 
     public static float ShakeStrength
     {
         get => GameSave.Data.shakeStrength;
-        set { GameSave.Data.shakeStrength = Mathf.Clamp01(value); GameSave.Save(); }
+        set { GameSave.Data.shakeStrength = Mathf.Clamp01(value); sliderDirty = true; }
     }
 
     // 색약 모드: the minimap's own / enemy / exit marks and enemy health bars switch to a red-green safe set
@@ -127,6 +129,17 @@ public static class GameSettings
         {
             var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.f11Key.wasPressedThisFrame) Fullscreen = !Fullscreen;
+            // A dragged slider sets its value every tick: write the file once, when the mouse lets go.
+            if (sliderDirty && (Mouse.current == null || !Mouse.current.leftButton.isPressed)) FlushSliders();
+        }
+
+        void OnApplicationQuit() => FlushSliders();
+
+        static void FlushSliders()
+        {
+            if (!sliderDirty) return;
+            sliderDirty = false;
+            GameSave.Save();
         }
     }
 }

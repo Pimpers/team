@@ -63,6 +63,26 @@ public static class GameSave
 
     static string SavePath => Path.Combine(Application.persistentDataPath, "cats-smash-save.json");
     static string BackupPath => SavePath + ".bak";
+    // Builds before the product was named saved under <some company>/team (DefaultCompany in players, the Unity
+    // organisation's name in the Editor): the newest of those is read once, when the new folder has no save.
+    // shortcut: assumes persistentDataPath ends in <company>/<product> (Windows, macOS, Linux); drop once old builds are gone.
+    static string LegacySavePath
+    {
+        get
+        {
+            try
+            {
+                string best = null;
+                foreach (var company in Directory.GetDirectories(Path.Combine(Application.persistentDataPath, "..", "..")))
+                {
+                    string path = Path.Combine(company, "team", "cats-smash-save.json");
+                    if (File.Exists(path) && (best == null || File.GetLastWriteTimeUtc(path) > File.GetLastWriteTimeUtc(best))) best = path;
+                }
+                return best;
+            }
+            catch (Exception) { return null; } // no old save to bring over
+        }
+    }
     static string TempPath => SavePath + ".tmp";
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -81,7 +101,7 @@ public static class GameSave
         data = Read(SavePath) ?? Read(BackupPath);
         if (data == null)
         {
-            data = MigratePlayerPrefs();
+            data = Read(LegacySavePath) ?? MigratePlayerPrefs();
             Save();
         }
         UpgradeAndClamp();

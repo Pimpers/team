@@ -82,6 +82,22 @@ public class GameplayPlayModeTests
         Assert.That(hunt ? RouteProgress.SafeChoices : RouteProgress.HuntChoices, Is.Zero, "the other route was taken too");
     }
 
+    // Giving up after the card pick (the carry is already saved for the next stage) must not seed the next run.
+    [UnityTest]
+    public IEnumerator GiveUpAfterCardPick_NextRunStartsClean()
+    {
+        GameSave.ResetForTests(); // giving up banks gold: never into the player's real save
+        SceneManager.LoadScene("Stage1");
+        yield return new WaitForSecondsRealtime(2f);
+        PlayerStats.Instance.AddGold(50);
+        PlayerStats.Instance.SaveForNextStage();
+        RunManager.Instance.GiveUp();
+        Assert.That(RunSession.Current.HasCarry, Is.False, "the given-up run is still carried");
+        Assert.That(RunSession.Current.CarryGold, Is.Zero);
+        float until = Time.realtimeSinceStartup + 10f; // let the fade and the scene switch finish before the next test
+        while (SceneManager.GetActiveScene().name == "Stage1" && Time.realtimeSinceStartup < until) yield return null;
+    }
+
     // The boss room's log: walking in irises shut, the result board is shown behind it, and the iris opens again.
     [UnityTest]
     public IEnumerator BossRoomLog_Entered_OpensOnResult()

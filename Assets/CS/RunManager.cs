@@ -47,7 +47,7 @@ public class RunManager : MonoBehaviour
     {
         if (!IsStageScene || tutorial || runEnded || PlayerStats.Instance == null) return;
         runEnded = true;
-        MetaProgress.AddGold(PlayerStats.Instance.Gold);
+        MetaProgress.AddGold(LossEarnings);
     }
 
     void Awake()
@@ -391,10 +391,11 @@ public class RunManager : MonoBehaviour
     void EndRun(bool win)
     {
         runEnded = true;
+        RunSession.Current.ClearCarry(); // a card picked before dying at the fork must not seed the next run
         // This run's gold goes into the saved wallet, spent at the village blacksmith.
         // A lost run still pays for the stages it cleared (10 a stage): it took ~12 from a loss to buy even the first
         // upgrade, so an early death felt like nothing. Shown on the result board as part of what it earned.
-        int earned = PlayerStats.Instance.Gold + (win ? 0 : LossPay * Mathf.Max(0, stageNumber - 1));
+        int earned = win ? PlayerStats.Instance.Gold : LossEarnings;
         MetaProgress.AddGold(earned);
         int unlocked = win ? Corruption.RegisterClear(Corruption.Level) : -1;
         if (win)
@@ -419,6 +420,8 @@ public class RunManager : MonoBehaviour
         GameClock.Pause("result");
     }
     const int LossPay = 10;
+    // What a run that did not win banks - the same whether the cat died, gave up or the game was closed.
+    int LossEarnings => PlayerStats.Instance.Gold + (tutorial ? 0 : LossPay * Mathf.Max(0, stageNumber - 1));
 
     // Let the death animation / boss collapse play first, then freeze the level behind the
     // result screen (its buttons run on unscaled time; SceneLoader unpauses on leaving).
@@ -434,7 +437,8 @@ public class RunManager : MonoBehaviour
     {
         if (runEnded) return;
         runEnded = true;
-        MetaProgress.AddGold(PlayerStats.Instance.Gold);
+        RunSession.Current.ClearCarry(); // same as EndRun: the banked gold and cards stay out of the next run
+        MetaProgress.AddGold(LossEarnings);
         SceneLoader.Load(resultUI != null ? resultUI.retrySceneName : "MainScene");
     }
 }

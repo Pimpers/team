@@ -305,7 +305,7 @@ public class PlayerController2D : MonoBehaviour
         dashElapsed += dt;
         dashTimer -= dt;
         float dashMult = PlayerStats.Instance != null ? PlayerStats.Instance.DashDistanceMultiplier : 1f; // dash card
-        MoveHorizontal(dashDir * dashSpeed * dashMult * dt); // a wall simply stops it
+        TryMove(dashDir * dashSpeed * dashMult * dt); // a wall simply stops it (stepped: a long frame can't skip a thin wall)
         velocityY = 0f;
         // No gravity runs during a dash, so check the floor here: dashing off a ledge must
         // count as airborne (otherwise the double-jump refill would stay available).
@@ -470,7 +470,7 @@ public class PlayerController2D : MonoBehaviour
                 // walking on would slide it; in the air it keeps drifting. Moving again between shots (or a dash) kites.
                 float moveMul = !isAttacking ? 1f : character != null && character.ranged && !grounded ? rangedAttackMove : 0f;
                 if (moveMul > 0f && !isHit && !isPlunging && !skillLock)
-                    MoveHorizontal(moveInput.x * speed * moveMul * Time.deltaTime);
+                    TryMove(moveInput.x * speed * moveMul * Time.deltaTime);
                 if (isPlunging)
                 {
                     // Hang for a moment, then drive straight down.
