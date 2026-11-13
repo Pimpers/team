@@ -108,7 +108,7 @@ public class ResultUI : MonoBehaviour
     {
         var kinds = new[] { typeof(SkillHUD), typeof(HeartHUD), typeof(DashBar), typeof(StageMinimap), typeof(MonsterTracker), typeof(SetHUD) };
         foreach (var kind in kinds)
-            foreach (var o in Object.FindObjectsByType(kind, FindObjectsSortMode.None)) ((Component)o).gameObject.SetActive(false);
+            foreach (var o in Object.FindObjectsByType(kind)) ((Component)o).gameObject.SetActive(false);
         var run = RunManager.Instance;
         if (run != null && run.hudText != null)
         {

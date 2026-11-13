@@ -62,18 +62,22 @@ public class BackgroundFullRunTest : MonoBehaviour
         var args = System.Environment.GetCommandLineArgs();
         bool requested = false, dodgeMode = false;
         string folder = null;
+        int fps = 0; // -playtestFps 30: the run at a fixed low frame rate (long frames are where movement bugs hide)
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i] == "-fullRunPlaytest") requested = true;
             if (args[i] == "-playtestOut" && i + 1 < args.Length) folder = args[++i];
             if (args[i] == "-playtestDodge") dodgeMode = true;
+            if (args[i] == "-playtestFps" && i + 1 < args.Length) int.TryParse(args[++i], out fps);
         }
         if (!requested) return;
+        if (fps > 0) { QualitySettings.vSyncCount = 0; Application.targetFrameRate = fps; }
         var go = new GameObject("BackgroundFullRunTest");
         DontDestroyOnLoad(go);
         var test = go.AddComponent<BackgroundFullRunTest>();
         test.output = folder;
         test.dodge = dodgeMode;
+        StageExit.AutoEnter = true; // the harness walks into the logs; it holds no key
     }
 
     IEnumerator Start()

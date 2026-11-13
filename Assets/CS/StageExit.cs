@@ -26,6 +26,9 @@ public class StageExit : MonoBehaviour
     public static StageExit Instance { get; private set; }
     // True while the cat is being pulled in: pause, the Tab sheet and the like keep out (PauseMenu, BuildSheet).
     public static bool Entering => Instance != null && Instance.entering;
+    public static bool AutoEnter; // tests and the playtest harness: walking into a mouth is enough, no key
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetAutoEnter() => AutoEnter = false;
 
     const float HoleFromCentre = 1.25f; // the mouth: 20 px left of the middle of the 64 px log
     const float FarEnd = 22f;           // a closed log at the stage's end is used if the cat is no further than this
@@ -896,7 +899,18 @@ public class StageExit : MonoBehaviour
             if (!w.open || w.shut) continue;
             float into = (feet.x - w.holeX) * -w.holeSide; // > 0 once past the opening, toward the log's middle
             // only at the mouth: a cat past the log (behind it, or beyond) is not drawn in
-            if (into > -0.45f && into < 1.2f && Mathf.Abs(feet.y - w.floorY) < 0.8f) { StartCoroutine(Enter(w)); return; }
+            if (into > -0.45f && into < 1.2f && Mathf.Abs(feet.y - w.floorY) < 0.8f)
+            {
+                // At the mouth, W / Up goes in. Touching it used to: a cat walking past a fork's log was taken down that way.
+                if (AutoEnter || GameInput.Move.y > 0.5f) { StartCoroutine(Enter(w)); return; }
+                if (w.word == null)
+                {
+                    var at = new GameObject("EnterWord").transform;
+                    at.position = w.Mouth + Vector3.up * 1.5f;
+                    w.word = MakeWord(at, Loc.T("exit.enter"), new Color(1f, 0.85f, 0.6f), GameSettings.LargeText ? 1.3f : 1f);
+                }
+                w.wordLeft = 0.3f; // gone a moment after stepping away
+            }
         }
     }
 

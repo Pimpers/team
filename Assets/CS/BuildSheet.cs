@@ -98,12 +98,16 @@ public class BuildSheet : MonoBehaviour
 
         var setsSlot = (RectTransform)UiPanels.Inset(root, "SetsSlot", new Vector2(452f, -532f), new Vector2(632f, 72f)).transform;
         setsText = Text(setsSlot, "Sets", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, 0f), new Vector2(590f, 72f));
+        setsText.textWrappingMode = TextWrappingModes.Normal; // four or five sets on one line ran off the board
+        setsText.enableAutoSizing = true;
+        setsText.fontSizeMax = UiTheme.TextSmall;
+        setsText.fontSizeMin = 14f;
     }
 
     void Update()
     {
         var stats = PlayerStats.Instance;
-        bool popup = GameClock.Paused || (RunManager.Instance != null && RunManager.Instance.RunEnded);
+        bool popup = GameClock.Paused; // (not RunEnded: after the boss the cat still walks to the log, and Tab then showed only the minimap's legend)
         bool show = stats != null && !popup && (ForceShow || GameInput.BuildSheetHeld);
         group.alpha = show ? 1f : 0f;
         Showing = show;
@@ -179,6 +183,9 @@ public class BuildSheet : MonoBehaviour
             var label = Text(cardArea, "Name", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, pos + new Vector2(IconSize + 10f, 0f), new Vector2(cards.Count > RowsPerColumn ? 235f : 530f, IconSize)); // one column: the whole width
             label.text = c.maxLevel > 0 ? Loc.F("sheet.card", c.name, lv, c.maxLevel) : c.name;
             label.overflowMode = TextOverflowModes.Ellipsis;
+            label.enableAutoSizing = true; // two columns: a long name shrinks (to 12, PixelText) instead of ending in …
+            label.fontSizeMax = UiTheme.TextSmall;
+            label.fontSizeMin = PixelText.Dot;
         }
 
         var sets = new List<string>();

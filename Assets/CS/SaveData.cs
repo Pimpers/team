@@ -11,6 +11,7 @@ public class SaveData
     public int speedLevel;
     public int hpLevel;
     public int rerollLevel; // 행운의 방울: free card rerolls per run (MetaProgress.Upgrade.Reroll)
+    public int starterLevel; // 든든한 출발: a card draft before the first fight (MetaProgress.Upgrade.Starter)
     public bool seenSetTip; // the first card draft's line on what # tags and sets are
     public string seenTips = ""; // OneTimeTip ids already shown, comma separated
     public int smithVisits;  // the blacksmith introduces himself on the first visit only
@@ -198,6 +199,7 @@ public static class GameSave
         data.speedLevel = Mathf.Clamp(data.speedLevel, 0, 3);
         data.hpLevel = Mathf.Clamp(data.hpLevel, 0, 5);
         data.rerollLevel = Mathf.Clamp(data.rerollLevel, 0, 2);
+        data.starterLevel = Mathf.Clamp(data.starterLevel, 0, 1);
         data.selectedCharacter = Mathf.Clamp(data.selectedCharacter, 0, 1);
         data.corruptionUnlocked = Mathf.Clamp(data.corruptionUnlocked, 0, Corruption.MaxLevel);
         data.corruptionSelected = Mathf.Clamp(data.corruptionSelected, Corruption.Easy, data.corruptionUnlocked);

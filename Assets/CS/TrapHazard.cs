@@ -27,6 +27,7 @@ public class TrapHazard : MonoBehaviour
     float idleTime, burstTime;
     float railLeft, railRight, sawDir = 1f;
     bool shot;
+    GameObject aim; // the arrow trap's line of fire, shown while it aims
     PlayerController2D player;
 
     static readonly Dictionary<string, Sprite[]> sheetCache = new Dictionary<string, Sprite[]>();
@@ -325,9 +326,10 @@ public class TrapHazard : MonoBehaviour
         else if (state == 1)
         {
             sr.flipX = player.transform.position.x > transform.position.x; // the bow points left in the sheet
-            sr.sprite = frames[Mathf.Min(PopFrames - 1, (int)(timer / WarnTime * PopFrames))];
-            sr.color = WarnColor();
-            if (timer >= WarnTime) { state = 2; timer = 0f; }
+            sr.sprite = frames[Mathf.Min(PopFrames - 1, (int)(timer / ArrowWarnTime * PopFrames))];
+            sr.color = new Color(1f, 0.6f, 0.5f); // steady: the blink hid the bow it was meant to show
+            ShowAim(true);
+            if (timer >= ArrowWarnTime) { state = 2; timer = 0f; }
         }
         else
         {
@@ -337,6 +339,7 @@ public class TrapHazard : MonoBehaviour
             if (!shot)
             {
                 shot = true;
+                ShowAim(false);
                 float dir = sr.flipX ? 1f : -1f;
                 TrapArrow.Fire(transform.position + new Vector3(dir * 0.45f, 0.05f, 0f), dir);
                 Sfx.Play("swing", 0.6f, 1.8f);
@@ -344,6 +347,31 @@ public class TrapHazard : MonoBehaviour
             if (timer >= burstTime) { state = 0; timer = 0f; }
         }
     }
+
+    const float ArrowWarnTime = 1f; // (the other traps' 0.7 s was too short to read which way the bow points)
+
+    // A thin steady red line from the bow to the first wall (14 tiles at most, the arrow's range): where it will fly.
+    void ShowAim(bool on)
+    {
+        if (!on) { if (aim != null) aim.SetActive(false); return; }
+        if (aim == null)
+        {
+            aim = new GameObject("TrapAim");
+            var line = aim.AddComponent<SpriteRenderer>();
+            line.sprite = RuntimeGeneratedAssets.WhiteSprite();
+            line.color = new Color(1f, 0.3f, 0.25f, 0.6f);
+            line.sortingOrder = 8;
+        }
+        float dir = sr.flipX ? 1f : -1f, length = 0f;
+        var map = StageMap.Instance;
+        Vector3 from = transform.position + new Vector3(dir * 0.45f, 0.05f, 0f);
+        while (length < 14f && (map == null || !map.IsSolid(from + Vector3.right * dir * (length + 0.5f)))) length += 0.5f;
+        aim.transform.position = from + Vector3.right * dir * length * 0.5f;
+        aim.transform.localScale = new Vector3(Mathf.Max(0.5f, length), 0.09f, 1f);
+        aim.SetActive(true);
+    }
+
+    void OnDestroy() { if (aim != null) Destroy(aim); }
 
     void Warn()
     {
@@ -385,6 +413,7 @@ public class TrapArrow : MonoBehaviour
     {
         var go = new GameObject("TrapArrow");
         go.transform.position = from;
+        go.transform.localScale = Vector3.one * 2f; // 12 x 3 px at x1 was a hair, seen too late to dodge (the hit box is unchanged)
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = ArrowSprite();
         sr.flipX = dir > 0f;

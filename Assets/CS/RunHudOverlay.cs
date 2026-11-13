@@ -50,7 +50,7 @@ public class RunHudOverlay : MonoBehaviour
 
     void Add<T>() where T : Component
     {
-        foreach (var c in FindObjectsByType<T>(FindObjectsSortMode.None)) Group(c.gameObject);
+        foreach (var c in FindObjectsByType<T>()) Group(c.gameObject);
     }
 
     void Group(GameObject go)

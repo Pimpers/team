@@ -449,7 +449,7 @@ public class CardDraftUI : MonoBehaviour
         label.textWrappingMode = TextWrappingModes.Normal;
         label.alignment = TextAlignmentOptions.Top;
         label.enableAutoSizing = true;
-        label.fontSizeMin = UiTheme.TextSmall; // never under 24: three lines at most fit the cream box
+        label.fontSizeMin = 16f; // a long effect shrinks to fit: held at 24 its last line was cut off (playtest: "what does this card do?")
         label.fontSizeMax = UiTheme.TextSmall;
         label.overflowMode = TextOverflowModes.Ellipsis; // a long effect ends in … rather than running onto the frame
         label.overflowMode = TextOverflowModes.Truncate;
@@ -489,6 +489,9 @@ public class CardDraftUI : MonoBehaviour
         badgeText.color = UiTheme.Gold;
         badgeText.alignment = TextAlignmentOptions.Center;
         badgeText.textWrappingMode = TextWrappingModes.NoWrap;
+        badgeText.enableAutoSizing = true; // "털가죽 완성까지 1장" is wider than the 230 plate at 24
+        badgeText.fontSizeMax = UiTheme.TextSmall;
+        badgeText.fontSizeMin = 16f;
         badgeText.raycastTarget = false;
         badgePlate.gameObject.SetActive(badge != null);
         badgeText.gameObject.SetActive(badge != null);
@@ -513,6 +516,9 @@ public class CardDraftUI : MonoBehaviour
         preview.color = UiTheme.Cream;
         preview.alignment = TextAlignmentOptions.Center;
         preview.textWrappingMode = TextWrappingModes.NoWrap;
+        preview.enableAutoSizing = true; // two numbers and a set step are wider than the box: shrink, don't run under the next card
+        preview.fontSizeMax = UiTheme.TextSmall;
+        preview.fontSizeMin = 16f;
         preview.outlineWidth = 0.2f;
         preview.outlineColor = new Color32(24, 14, 10, 255);
         preview.raycastTarget = false;

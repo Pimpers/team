@@ -32,8 +32,9 @@ public partial class SkillSystem
             if (groomTimer >= GroomTime)
             {
                 groomTimer = 0f;
-                if (stats.CurrentHP < stats.MaxHP)
+                if (stats.CurrentHP < stats.MaxHP && groomHeals < GroomMaxPerStage)
                 {
+                    groomHeals++;
                     stats.Heal(0.5f);
                     Vfx.Play("k_groom_fx", Head, 1f, parent: transform);
                     Sfx.Play("fx_groom");

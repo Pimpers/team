@@ -86,7 +86,6 @@ public class GameplayPlayModeTests
     [UnityTest]
     public IEnumerator GiveUpAfterCardPick_NextRunStartsClean()
     {
-        GameSave.ResetForTests(); // giving up banks gold: never into the player's real save
         SceneManager.LoadScene("Stage1");
         yield return new WaitForSecondsRealtime(2f);
         PlayerStats.Instance.AddGold(50);

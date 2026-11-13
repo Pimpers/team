@@ -74,7 +74,7 @@ public static class SdClean {
     var boxes = new List<List<int>>{ new List<int>() }; for (int i=0;i<px.Length;i++) if (!clear[i]) boxes[0].Add(i);
     if (boxes[0].Count == 0) throw new Exception("nothing left after clearing the backdrop - try -NoKey or a smaller -KeyTol");
     while (boxes.Count < colours) { int bi=-1, br=0, bch=0;
-      for (int b=0;b<boxes.Count;b++) for (int ch=0;ch<3;ch++) { int lo=255,hi=0; foreach (int i in boxes[b]) { int v=(px[i]>>(16-8*ch))&255; if(v<lo)lo=v; if(v>hi)hi=v; } if (hi-lo>br){br=hi-lo;bi=b;bch=ch;} }
+      for (int b=0;b<boxes.Count;b++) for (int cn=0;cn<3;cn++) { int lo=255,hi=0; foreach (int i in boxes[b]) { int v=(px[i]>>(16-8*cn))&255; if(v<lo)lo=v; if(v>hi)hi=v; } if (hi-lo>br){br=hi-lo;bi=b;bch=cn;} }
       if (bi<0 || boxes[bi].Count < 2) break; int sh2=16-8*bch; var bx=boxes[bi]; bx.Sort((p,q)=>((px[p]>>sh2)&255).CompareTo((px[q]>>sh2)&255));
       int m=bx.Count/2; boxes[bi]=bx.GetRange(0,m); boxes.Add(bx.GetRange(m,bx.Count-m)); }
     foreach (var bx in boxes) { if (bx.Count==0) continue; long r=0,g=0,b=0; foreach(int i in bx){r+=R(px[i]);g+=G(px[i]);b+=B(px[i]);}
@@ -100,8 +100,8 @@ public static class SdClean {
     x0=Math.Max(0,x0-pad); y0=Math.Max(0,y0-pad); x1=Math.Min(W-1,x1+pad); y1=Math.Min(H-1,y1+pad);
     // -MaxH: shrink (nearest neighbour, whole art pixels) so the picture is at most maxH art pixels tall - the game's
     // sizes are counted in art pixels (a cat is ~20), and a 60-pixel-tall chest would dwarf it
-    int cw = x1-x0+1, ch = y1-y0+1; double k = (maxH > 0 && ch > maxH) ? (double)maxH / ch : 1.0;
-    int tw = Math.Max(1,(int)Math.Round(cw*k)), th = Math.Max(1,(int)Math.Round(ch*k));
+    int cw = x1-x0+1, ch = y1-y0+1; double fit = (maxH > 0 && ch > maxH) ? (double)maxH / ch : 1.0;
+    int tw = Math.Max(1,(int)Math.Round(cw*fit)), th = Math.Max(1,(int)Math.Round(ch*fit));
     int ow=tw*scale, oh=th*scale; var o=new Bitmap(ow,oh,PixelFormat.Format32bppArgb);
     var od=o.LockBits(new Rectangle(0,0,ow,oh), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb); var op=new int[ow*oh];
     for (int y=0;y<oh;y++) for (int x=0;x<ow;x++) { int sx = x0 + Math.Min(cw-1,(int)((x/scale + 0.5) * cw / tw)), sy = y0 + Math.Min(ch-1,(int)((y/scale + 0.5) * ch / th));

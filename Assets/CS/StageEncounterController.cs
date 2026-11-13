@@ -59,7 +59,7 @@ public abstract class StageEncounterController : MonoBehaviour
         if (index < 0 || index >= gates.Count) return;
         if (gates[index].label != null) gates[index].label.gameObject.SetActive(false);
         if (gates[index].plate != null) gates[index].plate.enabled = false;
-        if (gates[index].pointer != null) gates[index].pointer.gameObject.SetActive(true);
+        if (gates[index].pointer != null) gates[index].pointer.gameObject.SetActive(false); // (the count is on the HUD now - ShowNotice)
     }
 
     void Update()
@@ -67,18 +67,17 @@ public abstract class StageEncounterController : MonoBehaviour
         if ((readyDelay -= Time.deltaTime) > 0f || currentRoom >= rooms.Count) return;
         int left = 0;
         foreach (var enemy in rooms[currentRoom]) if (enemy != null && !enemy.IsDead) left++;
-        if (currentRoom >= gates.Count) return;
+        if (currentRoom >= gates.Count) { ShowNotice(0); return; }
 
         var gate = gates[currentRoom];
-        bool noticeVisible = NoticeFullyVisible(gate);
-        if (gate.plate != null) gate.plate.enabled = noticeVisible;
-        if (gate.label != null) gate.label.gameObject.SetActive(noticeVisible);
+        // The count is one line at the top centre of the screen while the seal is in view: the plate and arrow beside
+        // the seal sat in the middle of the fight.
+        ShowNotice(!gate.open && left > 0 && NoticeFullyVisible(gate) ? left : 0);
         if (!gate.open)
         {
             if (left == 0) Open(gate);
             else
             {
-                if (gate.label != null) gate.label.text = Loc.F("encounter.enemies_left", left);
                 if (gate.pointer != null)
                 {
                     float pulse = 0.86f + 0.14f * Mathf.Sin(Time.unscaledTime * 6f);
@@ -96,27 +95,72 @@ public abstract class StageEncounterController : MonoBehaviour
 
     bool NoticeFullyVisible(Gate gate)
     {
-        if (gate == null || gate.plate == null) return true;
         var cam = Camera.main;
-        if (cam == null) return true;
-        Bounds bounds = gate.plate.bounds;
-        Vector3 min = cam.WorldToViewportPoint(bounds.min);
-        Vector3 max = cam.WorldToViewportPoint(bounds.max);
-        return min.z > 0f && min.x >= 0.02f && max.x <= 0.98f &&
-               min.y >= 0.04f && max.y <= 0.96f;
+        if (gate == null || cam == null) return true;
+        Vector3 at = cam.WorldToViewportPoint(GateEffectPosition(gate.edge)); // the seal itself (its plate is never drawn now)
+        return at.z > 0f && at.x >= 0f && at.x <= 1f && at.y >= 0f && at.y <= 1f;
     }
 
     void ActivateRoom(int room)
     {
         if (room < 0 || room >= rooms.Count) return;
-        foreach (var enemy in rooms[room])
+        StartCoroutine(Arrive(rooms[room]));
+        if (player != null && rooms[room].Count > 0)
+            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.new_area"), UiTheme.Gold); // gold, not the gate tint: the tint is red in the red stages and vanished into the trees
+    }
+
+    // The next room's monsters are announced before they stand there: a "!" over each spot, and only then the monster.
+    // They used to appear the moment the seal was passed, sometimes on top of the cat. (Still switched off they count
+    // as alive, so the room's seal can't open meanwhile.)
+    System.Collections.IEnumerator Arrive(List<Enemy> foes)
+    {
+        foreach (var enemy in foes)
+        {
+            if (enemy == null) continue;
+            Vector3 at = enemy.transform.position;
+            DamagePopup.SpawnLabel(at + Vector3.up * 1.6f, "!", new Color(1f, 0.55f, 0.35f), 1.4f);
+            Vfx.Play("blink", at + Vector3.up * 0.6f, 0.5f);
+        }
+        yield return new WaitForSeconds(0.9f);
+        foreach (var enemy in foes)
         {
             if (enemy == null) continue;
             enemy.gameObject.SetActive(true);
             Vfx.Play("blink", enemy.transform.position + Vector3.up * 0.6f, 0.5f);
         }
-        if (player != null && rooms[room].Count > 0)
-            DamagePopup.SpawnLabel(player.transform.position + Vector3.up * 1.4f, Loc.T("encounter.new_area"), UiTheme.Gold); // gold, not the gate tint: the tint is red in the red stages and vanished into the trees
+    }
+
+    TextMeshProUGUI notice;
+
+    int noticeLeft = -1; // the count the line shows now: its text is written only when this changes (not every frame)
+
+    // The room's count on the HUD, top centre; 0 hides it.
+    void ShowNotice(int left)
+    {
+        if (notice == null)
+        {
+            if (left <= 0) return;
+            var hud = RunManager.Instance != null ? RunManager.Instance.hudText : null;
+            if (hud == null || hud.canvas == null) return;
+            notice = new GameObject("EncounterNotice", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+            var rt = notice.rectTransform;
+            rt.SetParent(hud.canvas.rootCanvas.transform, false);
+            rt.SetAsFirstSibling(); // under the popups
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 1f);
+            rt.anchoredPosition = new Vector2(0f, -24f);
+            rt.sizeDelta = new Vector2(520f, 40f);
+            notice.font = hud.font;
+            notice.fontSize = GameSettings.ReadingSize;
+            notice.color = UISkin.OverlayText;
+            notice.alignment = TextAlignmentOptions.Center;
+            notice.textWrappingMode = TextWrappingModes.NoWrap;
+            notice.raycastTarget = false;
+            UiTheme.Backdrop(notice);
+        }
+        if (left == noticeLeft) return;
+        noticeLeft = left;
+        notice.gameObject.SetActive(left > 0);
+        if (left > 0) notice.text = Loc.F("encounter.enemies_left", left);
     }
 
     void Open(Gate gate)

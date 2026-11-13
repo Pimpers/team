@@ -18,23 +18,24 @@ public class BlacksmithUI : MonoBehaviour
     public Button[] buyButtons = new Button[3];
     public TMP_Text[] buyLabels = new TMP_Text[3];
 
-    static readonly MetaProgress.Upgrade[] Order = { MetaProgress.Upgrade.Attack, MetaProgress.Upgrade.Speed, MetaProgress.Upgrade.Heart, MetaProgress.Upgrade.Reroll };
+    static readonly MetaProgress.Upgrade[] Order = { MetaProgress.Upgrade.Attack, MetaProgress.Upgrade.Speed, MetaProgress.Upgrade.Heart, MetaProgress.Upgrade.Reroll, MetaProgress.Upgrade.Starter };
     // Built on first use, not as a static initializer: that can run inside Unity's object construction,
     // where the text table (Resources) can't be loaded yet.
     static string[] names, effects;
-    static string[] Names => names ??= new[] { Loc.T("smith.attack"), Loc.T("smith.speed"), Loc.T("smith.heart"), Loc.T("smith.reroll") };
-    static string[] Effects => effects ??= new[] { Loc.T("smith.attack.effect"), Loc.T("smith.speed.effect"), Loc.T("smith.heart.effect"), Loc.T("smith.reroll.effect") };
+    static string[] Names => names ??= new[] { Loc.T("smith.attack"), Loc.T("smith.speed"), Loc.T("smith.heart"), Loc.T("smith.reroll"), Loc.T("smith.starter") };
+    static string[] Effects => effects ??= new[] { Loc.T("smith.attack.effect"), Loc.T("smith.speed.effect"), Loc.T("smith.heart.effect"), Loc.T("smith.reroll.effect"), Loc.T("smith.starter.effect") };
 
-    // The scene has three rows; the fourth (행운의 방울) is a copy of the last, the panel growing by one row for it.
+    // The scene has three rows; each one after (행운의 방울, 든든한 출발) is a copy of the last, the panel growing by a row for it.
     void AddRerollRow()
     {
-        if (rowLabels.Length >= Order.Length || buyButtons.Length < 3) return;
-        var last = buyButtons[2].transform.parent as RectTransform; // Row2
-        var prev = buyButtons[1].transform.parent as RectTransform;
+        int n = rowLabels.Length; // the row being added
+        if (n >= Order.Length || buyButtons.Length < 3) return;
+        var last = buyButtons[n - 1].transform.parent as RectTransform;
+        var prev = buyButtons[n - 2].transform.parent as RectTransform;
         if (last == null || prev == null || last.parent == null) return;
         float step = last.anchoredPosition.y - prev.anchoredPosition.y; // negative: rows go down
         var row = Instantiate(last.gameObject, last.parent);
-        row.name = "Row3";
+        row.name = "Row" + n;
         var rt = (RectTransform)row.transform;
         rt.anchoredPosition = last.anchoredPosition + new Vector2(0f, step);
         // Make room: everything in the panel moves up half a row, the frame grows a row, and what sat below the
@@ -48,16 +49,16 @@ public class BlacksmithUI : MonoBehaviour
         for (var t = inner; t != null && t != panel.transform; t = t.parent as RectTransform)
             t.sizeDelta += new Vector2(0f, -step);
 
-        System.Array.Resize(ref rowLabels, Order.Length);
-        System.Array.Resize(ref buyButtons, Order.Length);
-        System.Array.Resize(ref buyLabels, Order.Length);
-        buyButtons[3] = row.GetComponentInChildren<Button>(true);
+        System.Array.Resize(ref rowLabels, n + 1);
+        System.Array.Resize(ref buyButtons, n + 1);
+        System.Array.Resize(ref buyLabels, n + 1);
+        buyButtons[n] = row.GetComponentInChildren<Button>(true);
         foreach (var t in row.GetComponentsInChildren<TMP_Text>(true))
         {
-            if (t.transform.IsChildOf(buyButtons[3].transform)) buyLabels[3] = t;
-            else rowLabels[3] = t;
+            if (t.transform.IsChildOf(buyButtons[n].transform)) buyLabels[n] = t;
+            else rowLabels[n] = t;
         }
-        buyButtons[3].onClick = new Button.ButtonClickedEvent();
+        buyButtons[n].onClick = new Button.ButtonClickedEvent();
     }
 
     static readonly Color BuyColor = UiTheme.Wine;
@@ -70,12 +71,13 @@ public class BlacksmithUI : MonoBehaviour
 
     void Awake()
     {
-        AddRerollRow();
+        for (int i = rowLabels.Length; i < Order.Length; i++) AddRerollRow();
         for (int i = 0; i < buyButtons.Length; i++)
         {
             int index = i;
             buyButtons[i].onClick.AddListener(() => Buy(index));
-            // "강화 <icon>80" must stay on one line inside the button; shrink instead of wrapping.
+            // "<icon>80" must stay on one line inside the button; shrink instead of wrapping. (Only the price: with
+            // "강화" before it a three-digit price no longer fitted at 24 and PixelText dropped it to 12.)
             var label = buyLabels[i];
             label.textWrappingMode = TextWrappingModes.NoWrap;
             label.enableAutoSizing = true;

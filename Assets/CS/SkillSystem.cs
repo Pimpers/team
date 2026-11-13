@@ -65,6 +65,10 @@ public partial class SkillSystem : MonoBehaviour
     float ShieldTime => Lv("k_loaf") >= 2 ? 8f : 12f;
     float CounterTime => Lv("k_whisker") >= 2 ? 7f : 10f;
     float GroomTime => Lv("k_groom") >= 2 ? 5f : 8f;
+    // Standing still healed to full for free, so hearts stopped mattering: three licks a stage (this component is new
+    // in each stage's scene, and the count with it).
+    const int GroomMaxPerStage = 3;
+    int groomHeals;
 
     // Read by PlayerStats (also before this component exists, so they take the stats).
     public static float CritBonus(PlayerStats s) { int lv = s.CardLevel("k_night"); return lv <= 0 ? 0f : lv == 1 ? 0.15f : 0.25f; }
@@ -138,9 +142,15 @@ public partial class SkillSystem : MonoBehaviour
         UpdatePlaystyleTimers(dt);
 
         if (PauseMenu.IsOpen || (RunManager.Instance != null && RunManager.Instance.RunEnded)) return;
-        var actives = stats.ActiveSkills;
-        for (int i = 0; i < actives.Count && i < MaxActiveSlots; i++)
-            if (GameInput.SkillPressed(i)) TryCast(actives[i]); // Q / E / R or LB / RB / Y
+        // The actives in pick order, without stats.ActiveSkills: that builds a new list, and this runs every frame.
+        var order = stats.SkillOrder;
+        for (int i = 0, slot = 0; i < order.Count && slot < MaxActiveSlots; i++)
+        {
+            var card = CardPool.Get(order[i]);
+            if (card == null || card.kind != CardPool.Kind.Active) continue;
+            if (GameInput.SkillPressed(slot)) TryCast(order[i]); // Q / E / R or LB / RB / Y
+            slot++;
+        }
     }
 
     void TryCast(string id)

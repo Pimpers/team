@@ -87,7 +87,10 @@ public class PlayerStats : MonoBehaviour
         + (animator != null && animator.character != null ? animator.character.bonusMaxHP : 0f);
 
     // Card effects read by the attack / movement code.
-    public float ReachMultiplier => (1f + 0.15f * CardLevel("reach")) * SkillSystem.RangeMultiplier(this);
+    // Melee stands inside every claw and web to land a hit while the archer shoots from safety for the same damage:
+    // the knight swings farther and harder (and has a second bonus heart, CharacterDefinition.bonusMaxHP).
+    const float KnightReach = 1.2f, KnightDamage = 1.25f;
+    public float ReachMultiplier => (1f + 0.15f * CardLevel("reach")) * SkillSystem.RangeMultiplier(this) * (Job == CardPool.Job.Knight ? KnightReach : 1f);
     public float AttackSpeedMultiplier => (1f + 0.12f * CardLevel("haste")) * SkillSystem.AttackSpeedMultiplier(this) * WindSpeed;
     public float DashCooldownMultiplier => Mathf.Pow(0.75f, CardLevel("dash"));
     public float DashDistanceMultiplier => (1f + 0.2f * CardLevel("dash")) * SkillSystem.DashDistanceMultiplier(this); // same duration, faster = farther
@@ -117,7 +120,7 @@ public class PlayerStats : MonoBehaviour
         float mult = moveMultiplier * SkillSystem.ConsumeDodgeBonus(this); // 회피 반격 card: the first hit after a dash
         if (moveMultiplier > 1f) mult *= 1f + 0.5f * CardLevel("finisher");
         crit = RunRng.Value < CritChance;
-        float dmg = AttackPower * mult * ClawDamage * (crit ? 2f : 1f);
+        float dmg = AttackPower * mult * ClawDamage * (Job == CardPool.Job.Knight ? KnightDamage : 1f) * (crit ? 2f : 1f);
         return Mathf.Max(1, Mathf.RoundToInt(dmg));
     }
 
@@ -188,6 +191,7 @@ public class PlayerStats : MonoBehaviour
                     run.RefreshHudNow();
                     StartCoroutine(AnnounceStarter(starter));
                 }
+                if (MetaProgress.Level(MetaProgress.Upgrade.Starter) > 0) StartCoroutine(OpeningDraft());
             }
         }
     }
@@ -200,6 +204,15 @@ public class PlayerStats : MonoBehaviour
         var run = RunManager.Instance;
         if (run != null && run.hudText != null && run.hudText.canvas != null)
             StageBanner.Show(run.hudText.canvas.rootCanvas, run.hudText.font, Loc.T("card.starter"), card.name, 1.6f, compact: true);
+    }
+
+    // 든든한 출발 (blacksmith): one card draft before the first fight, once the stage's name and the starter banner are gone.
+    System.Collections.IEnumerator OpeningDraft()
+    {
+        yield return null;
+        while (StageTitle.Showing || StageWipe.Busy || ScreenFader.Switching || StageBanner.Up || GameClock.Paused) yield return null;
+        var run = RunManager.Instance;
+        if (run != null && run.cardDraftUI != null && !run.RunEnded) run.cardDraftUI.Show(() => { });
     }
 
     // Copies this scene's player state into the explicit cross-scene session.

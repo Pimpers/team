@@ -223,8 +223,8 @@ public class LobbyController : MonoBehaviour
         if (roleBadge != null) roleBadge.color = def.roleColor;
         roleText.text = Loc.F("lobby.role_group", def.roleGroup);
         if (descriptionText != null) descriptionText.text = $"{def.description}\n<size=95%><color=#8a3f00>{def.role}</color></size>";
-        // Always starts empty - there is no default name, the player names the cat here.
-        nameInput.text = "";
+        // The name given last time is already in the box: typed again only to change it (it started empty every visit).
+        nameInput.text = CharacterSelection.GetName(index);
         ShowHint(false);
         if (GameInput.UsingGamepad) StartCoroutine(SelectConfirmNextFrame()); // the A that picked the cat must not press 출정
         else StartCoroutine(FocusNameInput());

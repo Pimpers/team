@@ -20,7 +20,7 @@ grammar.topic = 는
 smith.prompt = 무엇을 강화하겠냥?
 smith.owned = 보유 {0}
 smith.max = 최대
-smith.cost = 강화 {0}
+smith.cost = {0}
 
 # BossBrain
 boss.banner_hint = 점프·대시로 공격 회피
@@ -48,6 +48,7 @@ corruption.enemy_hp_speed = 적 체력 +{0}%  ·  이동 속도 +{1}%
 corruption.enemy_damage_full = \n적 공격 +1칸
 corruption.enemy_damage_half = \n적 공격 +반칸
 corruption.elites =   ·  정예 +{0}
+corruption.elite_rage = \n정예는 체력 절반에서 격노
 corruption.gold = \n<color=$amber>보상  골드 x{0}  (+{1}%)</color>
 
 # CorruptionSelector
@@ -75,6 +76,7 @@ damage.enemy_contact = 적 접촉
 
 # EnemyWeb
 enemy.web = 거미줄!
+enemy.rage = 격노!
 
 # HorizontalEncounterController
 
@@ -311,7 +313,7 @@ card.k_loaf.name = 식빵 자세
 card.k_loaf.text = 공격 1번 막는 보호막\n(12초마다)
 card.k_loaf.text2 = 보호막 8초마다
 card.k_groom.name = 그루밍
-card.k_groom.text = 8초간 안 맞으면\n하트 반 칸 회복
+card.k_groom.text = 8초간 안 맞으면\n하트 반 칸 회복\n(스테이지당 3번)
 card.k_groom.text2 = 5초간 안 맞으면 회복
 card.k_ilseom.name = 일섬: 냥냥 오의
 card.k_ilseom.text = 기를 모아 순간 돌진\n지나간 적을 X자로 벤다
@@ -454,6 +456,8 @@ draft.reroll_short = 생선뼈 부족
 # Blacksmith: the fourth upgrade (MetaProgress.Upgrade.Reroll)
 smith.reroll = 행운의 방울
 smith.reroll.effect = 판마다 다시 뽑기 1회 무료
+smith.starter = 든든한 출발
+smith.starter.effect = 첫 싸움 전에 카드 1장 선택
 route.treasure.title = 사냥 길 보물!
 route.treasure.reward = 골드 +{0}  ·  하트 반 칸 회복
 worldmap.region.locked = 준비 중
@@ -510,7 +514,7 @@ card.bounty.name = 현상금
 card.bounty.text = 정예를 처치하면\n하트 반 칸 회복
 card.bounty.text2 = 정예를 처치하면\n하트 한 칸 회복
 goals.title = 다음 목표
-goals.smith_locked = · 대장간 {0}번째 방문: <color=$gold>행운의 방울</color> 해금\n
+goals.smith_locked = · 대장간 {0}번째 방문: <color=$gold>행운의 방울</color>\n
 goals.smith_ready = · 대장간: <color=$gold>지금 강화할 수 있어요!</color>\n
 goals.smith_need = · 대장간: 다음 강화까지 생선뼈 {0}개\n
 goals.smith_done = · 대장간: 모든 강화 완료\n
@@ -528,6 +532,7 @@ options.largetext.off = 큰 글씨: 꺼짐
 pause.run_info = 스테이지 {0} / {1}   ·   {2}\n처치 {3}   ·   골드 {4}
 sheet.more_hint = 스테이지를 클리어하면 카드를 더 고를 수 있어요
 exit.closed = 적을 모두 물리치세요
+exit.enter = W  들어가기
 route.sign.hunt = 사냥 길 · 정예와 보물
 route.sign.safe = 안전 길 · 적이 적음
 tutorial.tip.village = <color=$gold>대장간</color>에서 강화하고 <color=$gold>출항하기</color>로 의뢰를 떠나요

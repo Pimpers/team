@@ -4,6 +4,8 @@ using UnityEngine;
 // Enemy: taking damage, the hit reaction, dying.
 public partial class Enemy
 {
+    bool raged;
+
     // ---------------------------------------------------------------- damage
     // Called only by the player's attacks - bumping into an enemy never calls this.
     // `push` = knockback direction and strength (sign = which way, 1 = a normal hit);
@@ -21,6 +23,14 @@ public partial class Enemy
         if (damageTakenMultiplier != 1f) amount = Mathf.Max(1, Mathf.RoundToInt(amount * damageTakenMultiplier));
         RunStats.DamageDealt += Mathf.Min(amount, Mathf.Max(0, hp)); // (overkill doesn't count)
         hp -= amount;
+        // 타락도 3+: an elite brought to half health rages - faster on its feet and quicker to strike again.
+        if (IsElite && !raged && hp > 0 && hp <= MaxHP / 2 && Corruption.EliteRage(Corruption.Level))
+        {
+            raged = true;
+            speedMultiplier *= 1.3f;
+            cooldownMultiplier *= 0.7f;
+            DamagePopup.SpawnLabel(new Vector3(transform.position.x, BodyTopY + 0.7f, 0f), Loc.T("enemy.rage"), new Color(1f, 0.35f, 0.25f));
+        }
         // 사냥 본능 (execute card): a hit that leaves a monster nearly dead finishes it (never the boss).
         if (!quiet && !isBoss && hp > 0 && hp <= MaxHP * SkillSystem.ExecuteThreshold(PlayerStats.Instance))
         {

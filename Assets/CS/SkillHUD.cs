@@ -22,6 +22,7 @@ public class SkillHUD : MonoBehaviour
         public TMP_Text key, timer, label;
         public string id;
         public bool wasCooling;
+        public int timerShown = -1; // the number last written to `timer` (tenths under a second), so the text is rebuilt only when it changes
         public float punch;
     }
 
@@ -120,8 +121,13 @@ public class SkillHUD : MonoBehaviour
     static void FitPlate(Slot s)
     {
         var rt = s.plate.rectTransform;
+        s.label.textWrappingMode = TextWrappingModes.NoWrap;
         float need = s.label.GetPreferredValues(s.label.text).x + 16f;
-        rt.sizeDelta = new Vector2(Mathf.Clamp(need, SlotSize, SlotSize + SlotGap - 6f), PlateOneLine);
+        float max = SlotSize + SlotGap - 6f;
+        // A name wider than the slot pitch (전설의 캔따개 피어싱) takes two lines: on one it ran past its plate into the next name.
+        bool two = need > max;
+        if (two) s.label.textWrappingMode = TextWrappingModes.Normal;
+        rt.sizeDelta = new Vector2(Mathf.Clamp(need, SlotSize, max), two ? PlateTwoLines : PlateOneLine);
     }
 
     void Build(RectTransform root)
@@ -272,16 +278,23 @@ public class SkillHUD : MonoBehaviour
         var sys = SkillSystem.Instance;
         if (stats == null) return;
         int sum = 0;
-        foreach (var id in stats.SkillOrder) sum += stats.CardLevel(id);
+        var order = stats.SkillOrder;
+        for (int i = 0; i < order.Count; i++) sum += stats.CardLevel(order[i]); // (foreach over the read-only list boxes an enumerator every frame)
         if (stats.SkillOrder.Count != shownCount || sum != levelSum) { levelSum = sum; Rebuild(stats); }
 
         foreach (var s in slots)
         {
-            if (s.id == null || sys == null) { s.shade.fillAmount = 0f; s.timer.text = ""; continue; }
+            if (s.id == null || sys == null) { s.shade.fillAmount = 0f; s.timer.text = ""; s.timerShown = -1; continue; }
             float left = sys.CooldownLeft(s.id), total = Mathf.Max(0.01f, sys.Cooldown(s.id));
             bool cooling = left > 0f;
             s.shade.fillAmount = cooling ? left / total : 0f;
-            s.timer.text = cooling ? (left >= 1f ? Mathf.CeilToInt(left).ToString() : left.ToString("0.0")) : "";
+            // Whole seconds above one, tenths below: a new string (and a new text mesh) only when that number changes.
+            int show = !cooling ? -1 : left >= 1f ? 1000 + Mathf.CeilToInt(left) : Mathf.RoundToInt(left * 10f);
+            if (show != s.timerShown)
+            {
+                s.timerShown = show;
+                s.timer.text = show < 0 ? "" : show >= 1000 ? (show - 1000).ToString() : (show / 10f).ToString("0.0");
+            }
             if (s.wasCooling && !cooling) s.punch = 0.18f; // ready again: a little bounce
             s.wasCooling = cooling;
             if (s.punch > 0f) s.punch -= Time.unscaledDeltaTime;

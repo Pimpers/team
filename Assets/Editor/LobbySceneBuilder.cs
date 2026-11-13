@@ -1248,7 +1248,7 @@ public static class CharacterAssets
         var plunge = k["Attack_4"];
         knight.jumpAttackFallFrames = plunge.Take(3).ToArray();
         knight.jumpAttack = Move("내려찍기", plunge.Skip(3).ToArray(), 13f, hitFrame: 0, recovery: 0, damage: 2f, lunge: 0f, allAround: true);
-        knight.bonusMaxHP = 1f; // melee: has to take hits to deal them
+        knight.bonusMaxHP = 2f; // melee: has to take hits to deal them
         // Reach from the widest shockwave frame, not the dome.
         knight.jumpAttack.reach = AsepriteFrames.ForwardReach(knight.jumpAttack.frames[1]);
         knight.comboWindow = 0.35f;

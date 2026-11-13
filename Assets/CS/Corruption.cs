@@ -24,10 +24,11 @@ public static class Corruption
     }
 
     // Per-tier modifiers (level 0 = all neutral).
-    public static float HpMultiplier(int lv) => lv < 0 ? 0.7f : 1f + 0.3f * lv;   // +30% per tier, Easy -30%
+    public static float HpMultiplier(int lv) => lv < 0 ? 0.7f : 1f + 0.15f * lv;  // +15% per tier (was +30%: a tier mostly made fights longer), Easy -30%
     public static float SpeedMultiplier(int lv) => lv < 0 ? 1f : 1f + 0.06f * lv; // +6% per tier
     public static float ExtraDamage(int lv) => lv >= 4 ? 1f : lv >= 2 ? 0.5f : lv < 0 ? -0.5f : 0f; // hearts per hit (Easy: half less)
     public static int ExtraElites(int lv) => Mathf.Max(0, (lv + 1) / 2);         // +1 at 1, +2 at 3, +3 at 5
+    public static bool EliteRage(int lv) => lv >= 3; // a rule, not a number: an elite at half health turns faster and strikes sooner (Enemy.ReceiveDamage)
     public static float GoldMultiplier(int lv) => lv < 0 ? 1f : 1f + 0.25f * lv;  // +25% per tier
 
     // Shown on the world map selector and the stage HUD.
@@ -35,10 +36,11 @@ public static class Corruption
     {
         if (lv < 0) return Loc.T("corruption.easy");
         if (lv == 0) return Loc.T("corruption.none");
-        string s = Loc.F("corruption.enemy_hp_speed", 30 * lv, 6 * lv);
+        string s = Loc.F("corruption.enemy_hp_speed", 15 * lv, 6 * lv);
         float dmg = ExtraDamage(lv);
         if (dmg > 0f) s += Loc.T(dmg >= 1f ? "corruption.enemy_damage_full" : "corruption.enemy_damage_half");
         s += Loc.F("corruption.elites", ExtraElites(lv));
+        if (EliteRage(lv)) s += Loc.T("corruption.elite_rage");
         s += Loc.F("corruption.gold", GoldMultiplier(lv).ToString("0.##"), 25 * lv); // the reward, as a number next to the cost
         return s;
     }

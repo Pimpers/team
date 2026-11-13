@@ -182,7 +182,7 @@ MonoBehaviour:
     projectilePierces: 0
     projectileSpawn: {x: 0, y: 0}
   ranged: 0
-  bonusMaxHP: 1
+  bonusMaxHP: 2
   projectileSprite: {fileID: 0}
   projectileSpeed: 16
   projectileRange: 14
