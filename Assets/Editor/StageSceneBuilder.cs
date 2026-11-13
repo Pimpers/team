@@ -349,6 +349,16 @@ public static class StageSceneBuilder
         return d;
     }
 
+    // A middle stage's other scene: `plan`'s ground, monsters and rooms as stage `mood.number`, in that stage's light.
+    static StageDef Variant(StageDef plan, StageDef mood)
+    {
+        plan.number = mood.number;
+        plan.nextScene = mood.nextScene;
+        plan.sceneName = $"Stage{mood.number}B";
+        plan.sky = mood.sky;
+        return Mood(plan, mood.terrainTint, mood.skyVariant, mood.parallaxTints, mood.ambient);
+    }
+
     static StageDef HorizontalRooms(StageDef d, params float[] gates)
     {
         d.horizontalGates = gates;
@@ -507,9 +517,9 @@ public static class StageSceneBuilder
         var m = new MapCanvas(56, 18, 55);
         m.Ground(0, 55, 2);
         m.Block(0, 0, 0, 17); m.Block(55, 55, 0, 17);
-        m.Plat(5, 7, 6); m.Plat(44, 7, 6);     // low side ledges
-        m.Plat(14, 5, 8); m.Plat(37, 5, 8);    // steps up
-        m.Plat(22, 12, 10);                    // the high branch
+        // Two short low ledges, to jump the charge and the shockwaves from - nowhere to stand and shoot. (There were
+        // steps and a high branch 8 up: an archer on it was out of reach of everything but the rock.)
+        m.Plat(8, 4, 5); m.Plat(44, 4, 5);
         m.SpawnGround('P', 4); m.SpawnGround('B', 48);
         foreach (int x in new[] { 18, 28, 38 }) m.Spawn('k', x, 2);
         ForestDressing(m, 1f, 3, 10, 24, 31, 45, 52);
@@ -553,7 +563,11 @@ public static class StageSceneBuilder
     {
         if (interactive && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
 
-        var stages = new[] { Stage1(), Stage2(), Stage3(), Stage4(), Stage5(), Tutorial() };
+        // Stages 2-4 each get a second scene in the other direction ("Stage2B"): RunManager.NextScene picks one a run.
+        // No ground plan comes twice in a run: 2B is stage 3's, 3B is stage 4's, 4B is stage 1's, and a B stage is
+        // always followed by a B stage.
+        var stages = new[] { Stage1(), Stage2(), Stage3(), Stage4(), Stage5(), Tutorial(),
+                             Variant(Stage3(), Stage2()), Variant(Stage4(), Stage3()), Variant(Stage1(), Stage4()) };
         foreach (var s in stages) s.spawnSlots = SpawnSlots(ValidateReachable(s)); // before touching any scene
 
         bool anyExists = false;
@@ -746,7 +760,7 @@ public static class StageSceneBuilder
             }
         }
 
-        if (def.number == 4) PlaceAscentSigns(propRoot);
+        if (def.number == 4 && def.sceneName == null) PlaceAscentSigns(propRoot); // (stage 4's own climb, not its B scene)
 
         // Player: feet on the 'P' cell's floor (+ a hair so the first frame lands cleanly).
         var player = FindByName(scene, "Player");

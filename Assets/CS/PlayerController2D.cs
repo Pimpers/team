@@ -143,6 +143,8 @@ public class PlayerController2D : MonoBehaviour
     public bool IsPlunging => isPlunging;
     // In the air in a stage scene (where a jump attack is possible).
     public bool IsAirborne => SideScroll && !grounded;
+    // Falls through one-way platforms for `seconds` (the bear shaking the cat off its ledge).
+    public void DropThrough(float seconds) => dropThroughTimer = Mathf.Max(dropThroughTimer, seconds);
     // Frame index of the swing currently playing (valid while IsAttacking).
     public int AttackFrame => currentFrame;
     // Not dead, flinching, dashing or diving.

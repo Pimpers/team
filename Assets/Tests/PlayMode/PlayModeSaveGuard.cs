@@ -9,6 +9,7 @@ public class PlayModeSaveGuard
     public void IsolateSave()
     {
         GameSave.ResetForTests(new SaveData { tutorialDone = true });
+        RunManager.RandomMaps = false; // the tests name the next scene
         StageExit.AutoEnter = true; // the tests set the cat down at a log's mouth; they hold no key
     }
 }

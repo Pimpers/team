@@ -32,6 +32,20 @@ public class RunManager : MonoBehaviour
     bool runEnded;
 
     bool IsStageScene => stageNumber > 0;
+
+    // Stages 2-4 have two scenes each, one sideways and one a climb ("Stage3" / "Stage3B", StageSceneBuilder): one
+    // is picked a run, once per stage. After a B stage comes a B stage (their ground plans never repeat that way).
+    public static bool RandomMaps = true; // (off in the PlayMode tests: they name the scene they expect)
+    string pickedNext;
+    string NextScene()
+    {
+        if (pickedNext != null) return pickedNext;
+        string alt = nextSceneName + "B";
+        bool fromB = SceneManager.GetActiveScene().name.EndsWith("B");
+        bool useAlt = RandomMaps && !string.IsNullOrEmpty(nextSceneName) && Application.CanStreamedLevelBeLoaded(alt) &&
+                      (fromB || RunRng.Value < 0.5f);
+        return pickedNext = useAlt ? alt : nextSceneName;
+    }
     public bool RunEnded => runEnded;
 
     [Tooltip("Seconds between the boss / player dying and the result screen, so the death plays out.")]
@@ -118,7 +132,9 @@ public class RunManager : MonoBehaviour
             StartCoroutine(ApplySavedRoute(nextRouteHunt));
         if (IsStageScene && !tutorial && StageMap.Instance != null && StageMap.Instance.verticalLayout)
             StartCoroutine(SetupVerticalEncounters());
-        if (IsStageScene && !tutorial && (stageNumber == 1 || stageNumber == 3) && StageMap.Instance != null)
+        // (Any sideways stage with rooms: 1 and 3, and the B scenes of 2 and 4.)
+        if (IsStageScene && !tutorial && StageMap.Instance != null && !StageMap.Instance.verticalLayout &&
+            StageMap.Instance.horizontalGatePositions != null && StageMap.Instance.horizontalGatePositions.Length > 0)
             StartCoroutine(SetupHorizontalEncounters());
         // Side-scrolling scenes: dash charges as a row of bars right under the hearts; the text plate moves
         // down to make room (hearts end 66 px from the top, the bars take 76-112, the plate starts at 122).
@@ -336,7 +352,7 @@ public class RunManager : MonoBehaviour
                 // Two logs at the stage's end: the red hard way (사냥 길) and the green easy way (안전 길). Walking into
                 // one picks the route. A stage with no room for two falls back to the route window.
                 PlayerStats.Instance.SaveForNextStage();
-                if (StageExit.Instance != null && StageExit.Instance.OpenFork(nextSceneName, RouteProgress.SetNextRoute))
+                if (StageExit.Instance != null && StageExit.Instance.OpenFork(NextScene(),RouteProgress.SetNextRoute))
                 {
                     OneTimeTip.ShowInRun("route"); // the first fork: what the two logs mean
                     return;
@@ -371,7 +387,7 @@ public class RunManager : MonoBehaviour
         PlayerStats.Instance.SaveForNextStage();
         // Out through the forest: fireflies lead to a hollow log; crawling in loads the next stage. Without a
         // stage map to put the log on, straight to the next scene as before.
-        if (StageExit.Instance == null || !StageExit.Instance.Open(nextSceneName)) SceneLoader.Load(nextSceneName);
+        if (StageExit.Instance == null || !StageExit.Instance.Open(NextScene())) SceneLoader.Load(NextScene());
     }
 
     public void OnBossDefeated(int goldReward)

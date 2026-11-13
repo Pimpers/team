@@ -23,7 +23,7 @@ using TMPro;
 public class BossBrain : MonoBehaviour
 {
     enum Move { None, Roar, ChargeWindup, Charge, ChargeRecover, PoundWindup, PoundRecover,
-                LeapWindup, Leap, LeapRecover, ThrowWindup, ThrowRecover, Stagger }
+                LeapWindup, Leap, LeapRecover, ThrowWindup, ThrowRecover, Stagger, ShakeWindup }
     enum Special { None, Charge, Pound, Leap, Throw }
 
     const float RoarTime = 1.1f;
@@ -32,6 +32,11 @@ public class BossBrain : MonoBehaviour
     const float SlamRadius = 3f;
     const float LeapWindupTime = 0.55f, LeapTime = 0.7f, LeapHeight = 4f, LeapRecoverTime = 0.7f;
     const float ThrowWindupTime = 0.6f, ThrowRecoverTime = 0.55f;
+    // SHAKE - the cat stood on a ledge for CampTime: the bear pounds the ground, the ledges shake for ShakeWindupTime,
+    // and a cat still standing on one is hurt and falls through. (Playtest: an archer on the high branch was out of
+    // reach of everything but the rock.)
+    const float CampTime = 2.5f, ShakeWindupTime = 0.8f, ShakeDrop = 2f, PerchHeight = 1.5f;
+    float campTimer;
     const float StaggerTime = 2.2f, StaggerDamage = 1.5f, StaggerAfter = 0.16f; // stagger after losing 16% HP in quick succession
 
     Enemy enemy;
@@ -98,7 +103,14 @@ public class BossBrain : MonoBehaviour
     public float NeutralTime { get; private set; } // (playtest report: seconds with no move running, the special clock's time)
     public float FightTime { get; private set; }   // (playtest report: seconds since the intro roar)
     public bool Threatening => move == Move.ChargeWindup || move == Move.Charge || move == Move.PoundWindup ||
-                               move == Move.LeapWindup || move == Move.Leap || move == Move.ThrowWindup;
+                               move == Move.LeapWindup || move == Move.Leap || move == Move.ThrowWindup || move == Move.ShakeWindup;
+
+    // Standing (not jumping) on a ledge above the arena floor.
+    bool CatPerched()
+    {
+        var cat = PlayerStats.Instance != null ? PlayerStats.Instance.Body : null;
+        return cat != null && !cat.IsAirborne && transform.position.y + enemy.ToPlayerFeet().y - floorY > PerchHeight;
+    }
 
     public bool Tick()
     {
@@ -142,6 +154,7 @@ public class BossBrain : MonoBehaviour
         // had 0.7 s of neutral in an 8.5 s fight and never made one special. A special still only starts from a
         // neutral state with a living player (the first such moment once the clock is out).
         specialTimer -= Time.deltaTime;
+        campTimer = CatPerched() ? campTimer + Time.deltaTime : 0f;
         if (move != Move.None)
         {
             UpdateMove(Time.deltaTime);
@@ -150,6 +163,7 @@ public class BossBrain : MonoBehaviour
 
         NeutralTime += Time.deltaTime;
         if (enemy.IsAttacking || PlayerStats.Instance == null || PlayerStats.Instance.CurrentHP <= 0f) return false;
+        if (campTimer >= CampTime) { campTimer = 0f; Specials++; StartShake(); return true; } // off the special clock: camping always brings it
         if (specialTimer > 0f) return false;
 
         var pick = PickSpecial();
@@ -239,11 +253,46 @@ public class BossBrain : MonoBehaviour
         Begin(Move.PoundWindup, phase >= 3 ? PoundWindupTime * 0.75f : PoundWindupTime);
     }
 
+    void StartShake()
+    {
+        enemy.Face(enemy.ToPlayerFeet().x);
+        enemy.AnimHold(Pose(1));
+        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY, 0f), "!", UiTheme.Alert);
+        var cat = PlayerStats.Instance != null ? PlayerStats.Instance.Body : null;
+        if (cat != null) DamagePopup.SpawnLabel(cat.transform.position + Vector3.up * 1.6f, "!", UiTheme.Alert); // over the cat too: the bear may be off screen
+        Sfx.Play("boss_roar", 0.6f, 0.8f);
+        CameraFollow.Shake(ShakeWindupTime, 0.12f); // the ledges tremble through the whole wind-up
+        Begin(Move.ShakeWindup, ShakeWindupTime);
+    }
+
+    void Shake()
+    {
+        Sfx.Play("slam", 1f, 0.75f);
+        var at = new Vector3(transform.position.x, floorY, 0f);
+        Vfx.Play("rupture", at, 2f);
+        Vfx.Play("dust_big", at + Vector3.left * 1.5f, 2f);
+        Vfx.Play("dust_big", at + Vector3.right * 1.5f, 2f, flipX: true);
+        CameraFollow.Shake(0.4f, 0.35f);
+        if (!CatPerched()) return; // jumped or stepped down in time
+        float side = enemy.ToPlayerFeet().x;
+        enemy.HitPlayer(0.5f, 1.5f, Mathf.Abs(side) > 0.05f ? Mathf.Sign(side) : enemy.Facing);
+        PlayerStats.Instance.Body.DropThrough(ShakeDrop);
+    }
+
     void UpdateMove(float dt)
     {
         moveTimer -= dt;
         switch (move)
         {
+            case Move.ShakeWindup:
+                if (moveTimer <= 0f)
+                {
+                    enemy.AnimHold(Pose(2));
+                    Shake();
+                    Begin(Move.PoundRecover, PoundRecoverTime);
+                }
+                break;
+
             case Move.Roar:
                 if (moveTimer <= 0f) End();
                 break;
@@ -409,7 +458,7 @@ public class BossBrain : MonoBehaviour
         HitStop.Do(0.07f);
         var player = PlayerStats.Instance != null ? PlayerStats.Instance.Body : null;
         Vector2 to = enemy.ToPlayerFeet();
-        bool under = Mathf.Abs(to.x) < enemy.definition.bodyHalfWidth + 0.5f && to.y < 2.5f && to.y > -0.5f;
+        bool under = Mathf.Abs(to.x) < enemy.definition.bodyHalfWidth + 0.5f && to.y < 4f && to.y > -0.5f; // up to its leap height: a ledge over the landing spot is no shelter (was 2.5)
         bool close = player != null && !player.IsAirborne && Mathf.Abs(to.x) < 2.6f && Mathf.Abs(to.y) < 1.2f;
         if (under || close) enemy.HitPlayer(1f, 2.5f, Mathf.Abs(to.x) > 0.05f ? Mathf.Sign(to.x) : enemy.Facing);
         float range = phase >= 3 ? 9f : 4f;
@@ -452,10 +501,14 @@ public class BossBrain : MonoBehaviour
         var cat = PlayerStats.Instance.Body;
         if (cat != null && cat.IsAirborne) targetY = floorY; // mid-jump: at the floor under it (a ledge stand stays a ledge)
         BossThrownRock.Spawn(from, targetX, targetY, 0.85f, sprite, enemy);
-        if (phase >= 3)
+        // At a cat on a ledge: three in every phase, close together at the ledge's height, so the whole ledge is
+        // covered and it has to jump or leave.
+        bool perched = CatPerched();
+        if (phase >= 3 || perched)
         {
-            BossThrownRock.Spawn(from, targetX - 2.4f, floorY, 0.95f, sprite, enemy);
-            BossThrownRock.Spawn(from, targetX + 2.4f, floorY, 0.95f, sprite, enemy);
+            float gap = perched ? 1.6f : 2.4f, y = perched ? targetY : floorY;
+            BossThrownRock.Spawn(from, targetX - gap, y, 0.95f, sprite, enemy);
+            BossThrownRock.Spawn(from, targetX + gap, y, 0.95f, sprite, enemy);
         }
     }
 

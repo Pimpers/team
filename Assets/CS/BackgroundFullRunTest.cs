@@ -109,7 +109,7 @@ public class BackgroundFullRunTest : MonoBehaviour
             stageBegan = Time.realtimeSinceStartup; damageAtStart = RunStats.DamageTaken; killsAtStart = RunStats.Kills;
             var map = StageMap.Instance;
             bool vertical = map != null && map.verticalLayout;
-            bool horizontalRooms = !vertical && (stage == 1 || stage == 3);
+            bool horizontalRooms = !vertical && stage <= 4; // (2 and 4 too, when the run drew their sideways scene)
             bool middleSaved = false;
             int room = 0;
             while (room < 5)

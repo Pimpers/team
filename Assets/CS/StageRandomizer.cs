@@ -38,6 +38,7 @@ public class StageRandomizer : MonoBehaviour
 
         var map = GetComponent<StageMap>();
         if (map == null || map.spawnSlots == null || map.spawnSlots.Length == 0) return;
+        if (stage >= 2) AddLedges(map); // (stage 1 is the same every run)
 
         var slots = new List<Vector2>();
         foreach (var s in map.spawnSlots)
@@ -60,6 +61,51 @@ public class StageRandomizer : MonoBehaviour
         var used = new List<Vector2>();
         foreach (var enemy in monsters)
             PlaceClosest(enemy, slots, used, 0f, map.playerStart.y, false);
+    }
+
+    // A handful of extra one-way ledges each run, one jump above a random piece of floor, where there is open air
+    // for them: the ground plan stays, the ways across it differ. One-way ledges only add footing - they can't close
+    // a path - so nothing the builder checked (every monster reachable) breaks.
+    void AddLedges(StageMap map)
+    {
+        var plats = map.platforms;
+        if (plats == null) return;
+        // The stage's own ledge tiles: a left end, a middle, a right end (from the first ledge three or longer).
+        UnityEngine.Tilemaps.TileBase left = null, mid = null, right = null;
+        foreach (var c in plats.cellBounds.allPositionsWithin)
+        {
+            if (!plats.HasTile(c) || plats.HasTile(c + Vector3Int.left)) continue;
+            int end = 0;
+            while (plats.HasTile(c + Vector3Int.right * (end + 1))) end++;
+            if (end < 2) continue;
+            left = plats.GetTile(c); mid = plats.GetTile(c + Vector3Int.right); right = plats.GetTile(c + Vector3Int.right * end);
+            break;
+        }
+        if (mid == null) return;
+
+        int want = RunRng.Range(4, 8), made = 0;
+        for (int tries = 0; tries < 80 && made < want; tries++)
+        {
+            Vector2 s = map.spawnSlots[RunRng.Range(0, map.spawnSlots.Length)];
+            if (Vector2.Distance(s, map.playerStart) < 6f) continue;
+            int len = RunRng.Range(3, 6), x0 = Mathf.FloorToInt(s.x) - len / 2, row = Mathf.RoundToInt(s.y) + 2; // stood on 3 above the floor: one jump
+            if (x0 < 2 || x0 + len > map.mapSize.x - 2 || row + 3 >= map.mapSize.y) continue;
+            if (!Open(map, x0 - 1, x0 + len, row - 2, row + 3)) continue; // air around it: not into a wall, not against another ledge
+            for (int i = 0; i < len; i++)
+                plats.SetTile(new Vector3Int(x0 + i, row, 0), i == 0 ? left : i == len - 1 ? right : mid);
+            made++;
+        }
+    }
+
+    static bool Open(StageMap map, int x0, int x1, int y0, int y1)
+    {
+        for (int x = x0; x <= x1; x++)
+            for (int y = y0; y <= y1; y++)
+            {
+                var c = new Vector3Int(x, y, 0);
+                if ((map.solid != null && map.solid.HasTile(c)) || map.platforms.HasTile(c)) return false;
+            }
+        return true;
     }
 
     // Stage 1 always opens with three ground-level rats. Every other monster starts beyond
