@@ -36,6 +36,8 @@ public class RunManager : MonoBehaviour
     // Stages 2-4 have two scenes each, one sideways and one a climb ("Stage3" / "Stage3B", StageSceneBuilder): one
     // is picked a run, once per stage. After a B stage comes a B stage (their ground plans never repeat that way).
     public static bool RandomMaps = true; // (off in the PlayMode tests: they name the scene they expect)
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetRandomMaps() => RandomMaps = true; // (a test run in the editor must not leave it off for the next play)
     string pickedNext;
     string NextScene()
     {

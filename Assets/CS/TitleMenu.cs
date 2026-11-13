@@ -68,9 +68,15 @@ public static class TitleMenu
 // panel). A plain panel built on demand; the values are GameSettings', so they match the village's settings.
 public static class TitleSettings
 {
+    // The window that is up (for ESC in the pause menu: it closes this first, then the menu).
+    static GameObject open;
+    public static bool IsOpen => open != null;
+    public static void Close() { if (open != null) Object.Destroy(open); open = null; }
+
     public static void Show(Canvas canvas, TMP_FontAsset font)
     {
-        var shade = new GameObject("TitleSettings", typeof(RectTransform), typeof(Image), typeof(Button));
+        Close();
+        var shade = open = new GameObject("TitleSettings", typeof(RectTransform), typeof(Image), typeof(Button));
         var srt = (RectTransform)shade.transform;
         srt.SetParent(canvas.transform, false);
         srt.anchorMin = Vector2.zero; srt.anchorMax = Vector2.one; srt.offsetMin = srt.offsetMax = Vector2.zero;

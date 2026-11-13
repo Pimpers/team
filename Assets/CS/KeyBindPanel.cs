@@ -15,6 +15,15 @@ public class KeyBindPanel : MonoBehaviour
     int waitingFrame;      // the frame the wait began: the click that started it isn't the new key
 
     public static bool IsOpen => open != null;
+    int cancelFrame = -1;  // the frame ESC cancelled a wait: that same press must not also close the window
+
+    // ESC from the pause menu: a row waiting for a key stops waiting; otherwise the window closes.
+    public static void Escape()
+    {
+        if (open == null) return;
+        if (open.waiting >= 0 || open.cancelFrame == Time.frameCount) { open.waiting = -1; open.Refresh(); return; }
+        open.Close();
+    }
 
     public static void Show(Canvas canvas, TMP_FontAsset font)
     {
@@ -74,7 +83,7 @@ public class KeyBindPanel : MonoBehaviour
     {
         if (waiting < 0 || Time.frameCount <= waitingFrame + 1) return;
         var kb = UnityEngine.InputSystem.Keyboard.current;
-        if (kb != null && kb.escapeKey.wasPressedThisFrame) { waiting = -1; Refresh(); return; }
+        if (kb != null && kb.escapeKey.wasPressedThisFrame) { waiting = -1; cancelFrame = Time.frameCount; Refresh(); return; }
         int code = GameInput.AnyBindablePressed();
         if (code == 0) return;
         GameInput.Rebind(GameSettings.Bindings[waiting].action, code);
