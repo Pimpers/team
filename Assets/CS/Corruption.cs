@@ -78,7 +78,7 @@ public static class StageScaling
     // +12% a stage after the first (was +20%: stage 4 took ~9 basic hits a monster); the boss keeps its own numbers.
     // (stops growing after stage 3: stage 4 took 113 hits for 14 monsters and no more damage than stage 3 - a
     // sponge, not a step up; its step up is an extra elite, StageRandomizer)
-    public static float HpMultiplier(int stage, bool boss) => boss || stage < 1 ? 1f : 1f + 0.12f * Mathf.Clamp(stage - 1, 0, 2);
+    public static float HpMultiplier(int stage, bool boss) => boss || stage < 1 ? 1f : 1f + 0.18f * Mathf.Clamp(stage - 1, 0, 3); // 1 / 1.18 / 1.36 / 1.54 (was +12% to stage 3: the forge's attack alone is +75%, and stage 4 was no tougher than 3)
 
     // The stage being played (0 outside the stages), from the scene's RunManager - not parsed out of the scene's
     // name, so renaming a scene can't quietly change the balance. Works in Awake too, before RunManager's own Awake.

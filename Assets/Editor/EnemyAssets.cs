@@ -215,7 +215,7 @@ public static class EnemyAssets
             bear.idleFps = 4f; bear.moveFps = 4.5f; bear.attackFps = 6f; bear.deathFps = 4f;
             bear.walkStridePixels = 5f;       // a front paw steps back ~5 px a frame: the walk keeps pace with the ground covered (charge too)
             bear.attackHitFrame = 2;          // head down (0), rears up, paw raised (1), the swipe lands as the paw comes forward (2)
-            bear.hp = 210; bear.goldReward = 15; bear.damage = 1f; // 270 dragged: three phases of the same moves at 210 are a fight, not a chore
+            bear.hp = 280; bear.goldReward = 15; bear.damage = 1f; // (210 fell in seconds to a cat with the forge's attack; 270 dragged before the bear had the shake and the perch rocks)
             bear.moveSpeed = 1.9f;            // slow and heavy
             bear.scale = 2.6f * W; bear.hitRadius = 3.2f * W; bear.bodyHalfWidth = 2.6f * W;   // the drawn body is ~1.5 world units each side of centre: a narrower box let the cat stand inside the bear unhurt
             bear.aggroRange = 20f; bear.attackRange = 3.8f * W; bear.attackCooldown = 1.3f;

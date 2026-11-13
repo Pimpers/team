@@ -197,7 +197,8 @@ public static class GameSave
         data.gold = Mathf.Max(0, data.gold);
         data.attackLevel = Mathf.Clamp(data.attackLevel, 0, 3);
         data.speedLevel = Mathf.Clamp(data.speedLevel, 0, 3);
-        data.hpLevel = Mathf.Clamp(data.hpLevel, 0, 5);
+        RefundLegacyExcess(data, ref data.hpLevel, 3, 20); // hearts stop at 3 now: levels 4 and 5 give their gold back (80, 100)
+        data.hpLevel = Mathf.Clamp(data.hpLevel, 0, 3);
         data.rerollLevel = Mathf.Clamp(data.rerollLevel, 0, 2);
         data.starterLevel = Mathf.Clamp(data.starterLevel, 0, 1);
         data.selectedCharacter = Mathf.Clamp(data.selectedCharacter, 0, 1);

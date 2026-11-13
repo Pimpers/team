@@ -43,7 +43,7 @@ MonoBehaviour:
   deathFps: 4
   walkStridePixels: 5
   attackHitFrame: 2
-  hp: 210
+  hp: 280
   goldReward: 15
   damage: 1
   moveSpeed: 1.9
