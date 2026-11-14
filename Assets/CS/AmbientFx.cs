@@ -2,9 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // Living backgrounds: pixelfx loops (Resources/Ambient/<name>/<name>_NN.png, rendered from the pixelfx library) laid
-// over the world map and the harbor village - fireflies on the open forest, a smoking volcano, a storm over the
-// fortress, snow on the frost peaks, a whirlpool, a school of fish, drifting clouds; the village's campfire, chimney smoke, birds, a butterfly
-// and ripples. Placed at fractions of the background picture (u from the left, v from the top), so they stay on
+// over the world map - a flame on the volcano, a whirlpool, a school of fish. Placed at fractions of the background picture (u from the left, v from the top), so they stay on
 // their spot of the art at any screen size.
 public class AmbientFx : MonoBehaviour
 {
@@ -23,7 +21,8 @@ public class AmbientFx : MonoBehaviour
     static void OnLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "WorldMapScene") WorldMap();
-        else if (scene.name == "MainScene") Village();
+        // (The harbor village had a campfire, a butterfly, chimney smoke, gulls and ripples: taken out - the moving
+        // bits drew the eye from the buttons.)
     }
 
     static SpriteRenderer Background(string name)
@@ -41,18 +40,6 @@ public class AmbientFx : MonoBehaviour
         Place(bg, "volcano", 0.79f, 0.27f, 0.03f, 11, 1f);       // a flame on the volcano's crater
         Place(bg, "whirlpool", 0.52f, 0.78f, 0.05f, 11, 0.9f);  // a whirlpool out at sea
         Place(bg, "fish", 0.7f, 0.88f, 0.05f, 11, 0.85f, 10f);   // a school of fish in the southern sea
-    }
-
-    static void Village()
-    {
-        var bg = Background("HarborBackground");
-        if (bg == null) return;
-        Place(bg, "campfire", 0.633f, 0.5f, 0.031f, 4, 1f);     // the campfire in the square (68 x 96 frames: as tall as the old 77 x 96)
-        Place(bg, "butterfly", 0.71f, 0.56f, 0.03f, 6, 1f, 10f); // a butterfly over the square
-        Place(bg, "chimney", 0.51f, 0.19f, 0.016f, 4, 0.75f);   // smoke off the roofs (a 42 x 48 column now, as tall as the old 211 x 42 drift)
-        Place(bg, "birds", 0.3f, 0.12f, 0.03f, 6, 1f);          // gulls over the harbor
-        Place(bg, "ripples", 0.08f, 0.45f, 0.06f, 4, 0.8f);     // open water: clear of the blacksmith's portrait and dialogue box (bottom-left)
-        Place(bg, "ripples", 0.2f, 0.12f, 0.06f, 4, 0.8f);
     }
 
     // `width`: the loop's width as a fraction of the background's.
