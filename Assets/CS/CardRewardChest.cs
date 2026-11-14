@@ -40,7 +40,8 @@ public class CardRewardChest : MonoBehaviour
         // once the card is picked - so beside the chest it has just opened.
         var exit = StageExit.Instance;
         Vector2 anchor = exit != null && exit.WayCount == 1 && Vector2.Distance(exit.ExitPoint, feet) < 22f ? exit.ExitPoint : feet;
-        go.transform.position = FindSpot(map, anchor);
+        // A fork stage: exactly between where its two portals will rise.
+        go.transform.position = exit != null && exit.ForkCentre(feet) is Vector2 mid ? mid : FindSpot(map, anchor);
         go.transform.localScale = Vector3.one * BaseScale;
         chest.Build();
         WorldPropFx.PlayItemFeedback(go.transform.position + Vector3.up * 0.65f, 0.65f);

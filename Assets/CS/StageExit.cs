@@ -249,14 +249,29 @@ public class StageExit : MonoBehaviour
     // every window size. A constant, not the camera's size - in a batch capture that reports the tiny batch window.
     static float ViewHeight(Camera cam) => 8.65f;
 
+    // The card chest's place: the middle of where the fork will stand for a cat at `feet`, so the two portals rise
+    // either side of the chest it has just opened (OpenFork). Null where the stage has no fork or no floor for one.
+    Vector2 stageMid;
+    Vector2? chestSpot;
+    public Vector2? ForkCentre(Vector2 feet)
+    {
+        var map = StageMap.Instance;
+        chestSpot = null;
+        if (!fork || IsFork || map == null) return null;
+        // a free flat run close by; else the nearest one, its low ledges to be cut when the portals rise
+        if (PlaceStaged(map, feet, false, 9f, false) || PlaceStaged(map, feet, true, 30f, false)) chestSpot = stageMid;
+        return chestSpot;
+    }
+
     // cutLedges: one-way ledges through an arch don't count, and are taken out when the stage is set (CutLedges).
-    bool PlaceStaged(StageMap map, Vector2 feet, bool cutLedges = false)
+    // reach: how far from `feet` the stage's middle may be. place false: only finds the middle (stageMid).
+    bool PlaceStaged(StageMap map, Vector2 feet, bool cutLedges = false, float reach = 30f, bool place = true)
     {
         float half = StageHalf();
         float floorY = FloorAt(map, feet.x, feet.y);
         if (float.IsNaN(floorY)) { Debug.Log($"[StageExit] staged: no floor under the cat at {feet}"); return false; }
         int nFloor = 0, nRoom = 0, nWalk = 0;
-        for (float off = 0f; off <= 30f; off += 0.5f) // nearest first, out to where a low ledge ends
+        for (float off = 0f; off <= reach; off += 0.5f) // nearest first, out to where a low ledge ends
             foreach (float sgn in new[] { 1f, -1f })
             {
                 if (off == 0f && sgn < 0f) continue;
@@ -269,6 +284,8 @@ public class StageExit : MonoBehaviour
                 // (no HUD test here: the camera reframes on the stage as it opens, so where it is now says nothing)
                 if (!PortalRoom(map, a, cutLedges) || !PortalRoom(map, b, cutLedges)) { nRoom++; continue; }
                 if (!Walkable(map, a, b)) { nWalk++; continue; }
+                stageMid = new Vector2(c, floorY);
+                if (!place) return true;
                 if (cutLedges) { CutLedges(map, a); CutLedges(map, b); }
                 foreach (var w in ways) DestroyWay(w);
                 ways.Clear();
@@ -585,7 +602,9 @@ public class StageExit : MonoBehaviour
             // an authored stage, not a hunt for gaps: the two rise either side of the cat on its own floor, a fixed step
             // apart that fits the screen (4:3 too); a short floor moves the stage to the nearest flat run wide enough;
             // only where there is none does the old search run
-            if (!PlaceStaged(map, at) && !PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f && !UnderHud(s), closed: false)
+            // first: either side of the card chest, where ForkCentre said the stage would stand
+            if (chestSpot.HasValue && (PlaceStaged(map, chestSpot.Value, false, 0f) || PlaceStaged(map, chestSpot.Value, true, 0f))) { }
+            else if (!PlaceStaged(map, at) && !PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f && !UnderHud(s), closed: false)
                 && !PlaceStaged(map, at, cutLedges: true)) return false; // last: the nearest flat run, its low ledges taken out
             ClearOut();
             foreach (var w in ways) StartCoroutine(Appear(w.log));
