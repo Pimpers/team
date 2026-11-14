@@ -43,7 +43,7 @@ chest.hits = 평타  {0}/{1}
 # Corruption
 corruption.none = 기본 난이도
 corruption.easy = 적 공격 -반칸  ·  적 체력 -30%\n<color=$muted>타락도 해금 없음</color>
-corruption.selector.easy = <color=$key>편하게</color>
+corruption.selector.easy = <color=$good>편하게</color>
 corruption.enemy_hp_speed = 적 체력 +{0}%  ·  이동 속도 +{1}%
 corruption.enemy_damage_full = \n적 공격 +1칸
 corruption.enemy_damage_half = \n적 공격 +반칸
@@ -508,7 +508,7 @@ sheet.corruption = <color=$danger>타락도 {0}</color>  {1}
 set.hunt_spread = 독 전염!
 set.treat_gold = 간식 골드 +2
 result.card_count = 카드 {0}장\n
-result.news = \n<nobr><size=85%><color=$gold>{0}</color></size></nobr>
+result.news = \n<nobr><size=85%><color=$boardnews>{0}</color></size></nobr>
 result.unlock.corruption = 타락도 {0} 해금! <size=80%>(월드맵)</size>
 result.unlock.first_win = 첫 승리!
 result.unlock.best = 최고 기록 갱신!

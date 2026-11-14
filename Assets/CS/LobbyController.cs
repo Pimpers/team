@@ -230,8 +230,8 @@ public class LobbyController : MonoBehaviour
         // extra hearts and parry showed nowhere).
         // (In place of def.role, "근접 · 검으로 베기": the badge above already says it, and a fourth line ran over the badge.)
         if (descriptionText != null) descriptionText.text = $"{def.description}\n<size=95%><color=#8a3f00>{Loc.T(def.ranged ? "lobby.traits.archer" : "lobby.traits.knight")}</color></size>";
-        // The name given last time is already in the box: typed again only to change it (it started empty every visit).
-        nameInput.text = CharacterSelection.GetName(index);
+        // The box always opens empty (placeholder "이름 입력"): the name is typed fresh on every visit.
+        nameInput.text = "";
         ShowHint(false);
         if (GameInput.UsingGamepad) StartCoroutine(SelectConfirmNextFrame()); // the A that picked the cat must not press 출정
         else StartCoroutine(FocusNameInput());

@@ -3,8 +3,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
-// ESC pause menu in the stage scenes, built at runtime by RunManager (no scene edits). Three buttons; ESC again
+// ESC pause menu in the stage scenes, built at runtime by RunManager (no scene edits). Four buttons; ESC again
 // goes back to the fight (a window opened from the menu closes first):
+//   계속하기          - back to the fight (same as ESC)
 //   조작키            - the key window (KeyBindPanel): what each key does, and rebinding
 //   설정              - the settings window (TitleSettings)
 //   포기하고 마을로    - press twice to confirm; ends the run like a defeat: the gold
@@ -16,7 +17,7 @@ public class PauseMenu : MonoBehaviour
     GameObject root;
     TMP_Text giveUpLabel;
     bool confirmGiveUp;
-    Button resumeButton; // the first button (조작키): the pad's selection when the menu opens
+    Button resumeButton; // the first button (계속하기): the pad's selection when the menu opens
 
     public static bool IsOpen { get; private set; }
 
@@ -50,18 +51,22 @@ public class PauseMenu : MonoBehaviour
         // A small wooden board, the title on its ribbon, and three buttons - nothing else: the controls (the key
         // window), give the run up, the settings window. ESC goes back to the fight. (It was an open book with the
         // controls, hints, the run's numbers, a resume and a quit button.)
-        var board = MakeImage(blockRt, "Board", Vector2.zero, new Vector2(560f, 520f));
+        var board = MakeImage(blockRt, "Board", Vector2.zero, new Vector2(560f, 650f));
         UiPanels.Board(board);
         var prt = board.rectTransform;
         UiPanels.Ribbon(prt, Loc.T("pause.title"), font, 400f);
 
+        // The one way forward (UI_STYLE: the green "go" sprite) on top, the way out last and apart from it.
         var wood = skin != null ? skin.buttonWood : null;
-        resumeButton = MakeButton(prt, "ControlsButton", Loc.T("pause.controls"), new Vector2(0f, 120f), wood, font, out _);
-        resumeButton.onClick.AddListener(() => KeyBindPanel.Show(GetComponentInParent<Canvas>().rootCanvas, font));
-        var giveUp = MakeButton(prt, "GiveUpButton", Loc.T("pause.give_up"), new Vector2(0f, -15f), wood, font, out giveUpLabel);
-        giveUp.onClick.AddListener(GiveUp);
-        var settings = MakeButton(prt, "SettingsButton", Loc.T("pause.settings"), new Vector2(0f, -150f), wood, font, out _);
+        var go = skin != null ? skin.buttonRed : null;
+        resumeButton = MakeButton(prt, "ResumeButton", Loc.T("pause.resume"), new Vector2(0f, 185f), go ?? wood, font, out _);
+        resumeButton.onClick.AddListener(Close);
+        var controls = MakeButton(prt, "ControlsButton", Loc.T("pause.controls"), new Vector2(0f, 50f), wood, font, out _);
+        controls.onClick.AddListener(() => KeyBindPanel.Show(GetComponentInParent<Canvas>().rootCanvas, font));
+        var settings = MakeButton(prt, "SettingsButton", Loc.T("pause.settings"), new Vector2(0f, -85f), wood, font, out _);
         settings.onClick.AddListener(() => TitleSettings.Show(GetComponentInParent<Canvas>().rootCanvas, font));
+        var giveUp = MakeButton(prt, "GiveUpButton", Loc.T("pause.give_up"), new Vector2(0f, -220f), wood, font, out giveUpLabel);
+        giveUp.onClick.AddListener(GiveUp);
 
         root.SetActive(false);
     }

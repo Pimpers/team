@@ -132,8 +132,26 @@ public class DashBar : MonoBehaviour
         lastLeft = -1;
     }
 
+    // The key hint beside the bars is a lesson, not a fixture: it fades out once the stage has been running a while.
+    const float HintSeconds = 40f, HintFade = 1.5f;
+    float hintAge;
+    Image hintBand;
+
+    void FadeHint()
+    {
+        if (label == null || !label.enabled) return;
+        hintAge += Time.deltaTime; // game time: a paused fight does not use it up
+        if (hintAge < HintSeconds) return;
+        float a = Mathf.Clamp01(1f - (hintAge - HintSeconds) / HintFade);
+        label.alpha = a;
+        if (hintBand == null) { var t = transform.Find(label.name + "_Backdrop"); if (t != null) hintBand = t.GetComponent<Image>(); }
+        if (hintBand != null) { var c = hintBand.color; c.a = UiTheme.TextBand.a * a; hintBand.color = c; }
+        if (a <= 0f) label.enabled = false; // (its backdrop hides itself with it)
+    }
+
     void Update()
     {
+        FadeHint();
         if (body == null && PlayerStats.Instance != null) body = PlayerStats.Instance.Body;
         if (body == null) return;
 

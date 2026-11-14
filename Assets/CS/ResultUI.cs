@@ -36,7 +36,8 @@ public class ResultUI : MonoBehaviour
         var img = panel != null ? panel.GetComponent<Image>() : null;
         if (img == null || BookUI.Get("UIBundle/MedievalBoard") == null) return;
         BookUI.Slice(img, "UIBundle/MedievalBoard", 6f);
-        if (goldText != null) goldText.color = UISkin.BannerText;
+        // The gold lines sit on the board's orange planks (light ground), so dark ink rather than the banner's cream.
+        if (goldText != null) goldText.color = (Color)new Color32(0x3a, 0x1c, 0x0c, 0xff);
         boardStyled = true;
     }
     bool boardStyled;
@@ -213,7 +214,6 @@ public class ResultUI : MonoBehaviour
             Loc.T("result.title") +
             Loc.F("result.reached", reached) +
             Loc.F("result.time", RunStats.TimeText) +
-            Loc.F("result.seed", RunStats.Seed) +
             Loc.F("result.kills", RunStats.Kills) + (RunStats.EliteKills > 0 ? Loc.F("result.elite_kills", RunStats.EliteKills) : "") + "\n" +
             Loc.F("result.damage_dealt", RunStats.DamageDealt) +
             Loc.F("result.damage_taken", RunStats.DamageTaken) + cause + worst + tip + reroll;
