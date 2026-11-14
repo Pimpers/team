@@ -49,6 +49,13 @@ corruption.enemy_damage_full = \n적 공격 +1칸
 corruption.enemy_damage_half = \n적 공격 +반칸
 corruption.elites =   ·  정예 +{0}
 corruption.elite_rage = \n정예는 체력 절반에서 격노
+corruption.traps = \n함정 2배
+corruption.clear_heal = \n클리어 회복 절반
+corruption.death_burst = \n죽은 적이 잠시 뒤 폭발
+corruption.boss_phase = \n보스가 2페이즈로 시작
+tutorial.tip.parry = 기사는 <color=$gold>공격하는 중</color>에 맞으면 쳐내요 (4초에 한 번)
+damage.corruption_burst = 타락 폭발
+skill.parry = 쳐냄!
 corruption.gold = \n<color=$amber>보상  골드 x{0}  (+{1}%)</color>
 
 # CorruptionSelector
@@ -250,7 +257,7 @@ tier.Rare = 희귀
 tier.Epic = 전설
 tag.Claw = 발톱
 set.Claw.1 = 피해 +12%
-set.Claw.2 = 피해 +25%, 치명타 +10%
+set.Claw.2 = 피해 +25%, 치명타 +10%·기절
 tag.Wind = 바람
 set.Wind.1 = 이동·공격 속도 +10%
 set.Wind.2 = 스킬 대기시간 -15%
@@ -259,10 +266,10 @@ set.Fur.1 = 최대 하트 +1칸
 set.Fur.2 = 피격 무적 +0.4초, 클리어 회복 +1칸
 tag.Hunt = 사냥
 set.Hunt.1 = 기절·유혹 시간 +40%
-set.Hunt.2 = 상태이상 적에게 피해 +30%
+set.Hunt.2 = 상태이상 적 피해 +30%, 처치 시 독 전염
 tag.Treat = 간식
 set.Treat.1 = 처치 시 골드 +1
-set.Treat.2 = 처치 시 20%로 하트 반 칸 회복
+set.Treat.2 = 처치 시 20% 회복, 가득이면 골드 +2
 enhance.basic = 평타
 enhance.dash = 대시
 enhance.jump_attack = 점프 공격

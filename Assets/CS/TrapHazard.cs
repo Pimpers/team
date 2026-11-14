@@ -52,6 +52,8 @@ public class TrapHazard : MonoBehaviour
         for (int i = 0; i < plan.Count; i++)
             if (RunRng.Value < 0.35f) plan[i] = any[RunRng.Range(0, any.Length)];
 
+        if (Corruption.DoubleTraps(Corruption.Level)) plan.AddRange(new List<Kind>(plan)); // 타락도 1+
+
         var pool = SafeSlots(map);
         // Stage 4's upper half was the quiet part: half its traps go there first.
         bool upperFirst = stage >= 4 && map.verticalLayout;

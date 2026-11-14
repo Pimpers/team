@@ -30,6 +30,11 @@ public static class Corruption
     public static int ExtraElites(int lv) => Mathf.Max(0, (lv + 1) / 2);         // +1 at 1, +2 at 3, +3 at 5
     public static bool EliteRage(int lv) => lv >= 3; // a rule, not a number: an elite at half health turns faster and strikes sooner (Enemy.ReceiveDamage)
     public static float GoldMultiplier(int lv) => lv < 0 ? 1f : 1f + 0.25f * lv;  // +25% per tier
+    // More rules (each tier keeps the ones below it): the tiers used to differ only by their numbers.
+    public static bool DoubleTraps(int lv) => lv >= 1;             // twice the traps in stages 2-4 (TrapHazard)
+    public static float ClearHeal(int lv) => lv >= 2 ? 0.5f : 1f;  // the heal for clearing a stage, halved (RunManager)
+    public static bool DeathBurst(int lv) => lv >= 4;              // a dead monster bursts a moment later (CorruptionBurst)
+    public static bool BossPhaseTwo(int lv) => lv >= 5;            // the boss opens in its second phase (BossBrain)
 
     // Shown on the world map selector and the stage HUD.
     public static string Describe(int lv)
@@ -40,7 +45,11 @@ public static class Corruption
         float dmg = ExtraDamage(lv);
         if (dmg > 0f) s += Loc.T(dmg >= 1f ? "corruption.enemy_damage_full" : "corruption.enemy_damage_half");
         s += Loc.F("corruption.elites", ExtraElites(lv));
+        if (DoubleTraps(lv)) s += Loc.T("corruption.traps");
+        if (ClearHeal(lv) < 1f) s += Loc.T("corruption.clear_heal");
         if (EliteRage(lv)) s += Loc.T("corruption.elite_rage");
+        if (DeathBurst(lv)) s += Loc.T("corruption.death_burst");
+        if (BossPhaseTwo(lv)) s += Loc.T("corruption.boss_phase");
         s += Loc.F("corruption.gold", GoldMultiplier(lv).ToString("0.##"), 25 * lv); // the reward, as a number next to the cost
         return s;
     }
@@ -66,6 +75,34 @@ public static class Corruption
         GameSave.Data.corruptionUnlocked = next;
         GameSave.Save();
         return next;
+    }
+}
+
+// 타락도 4+: where a monster died, a "!" and - Delay later - a burst that takes half a heart from a cat still within
+// Radius. Step away after a kill; killing in a crowd at point-blank costs.
+public class CorruptionBurst : MonoBehaviour
+{
+    const float Delay = 0.8f, Radius = 1.6f;
+    float timer = Delay;
+
+    public static void Spawn(Vector3 at)
+    {
+        var go = new GameObject("CorruptionBurst");
+        go.transform.position = at;
+        go.AddComponent<CorruptionBurst>();
+        DamagePopup.SpawnLabel(at + Vector3.up * 0.8f, "!", new Color(0.85f, 0.35f, 0.95f));
+        Vfx.Play("blink", at, 0.6f);
+    }
+
+    void Update()
+    {
+        if ((timer -= Time.deltaTime) > 0f) return;
+        Vfx.Play("explosion", transform.position, 1f);
+        Sfx.Play("slam", 0.6f, 1.4f);
+        var cat = PlayerStats.Instance;
+        if (cat != null && Vector2.Distance(cat.transform.position, transform.position) < Radius)
+            cat.TakeDamage(0.5f, Loc.T("damage.corruption_burst"));
+        Destroy(gameObject);
     }
 }
 

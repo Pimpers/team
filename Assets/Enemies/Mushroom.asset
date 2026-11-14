@@ -46,7 +46,7 @@ MonoBehaviour:
   attackHitFrame: 2
   hp: 12
   goldReward: 1
-  damage: 0.5
+  damage: 1
   moveSpeed: 2.2
   scale: 0.6933333
   hitRadius: 0.6933333

@@ -169,7 +169,7 @@ public static class EnemyAssets
             mushroom.idleFps = 4f; mushroom.moveFps = 8f; mushroom.attackFps = 8f; mushroom.deathFps = 4f;
             mushroom.walkStridePixels = 3.5f; // little feet, quick steps (at 8 fps it slid ~6 px a frame)
             mushroom.attackHitFrame = 2;     // draw back, raise, SLASH, recover
-            mushroom.hp = 12; mushroom.goldReward = 1; mushroom.damage = 0.5f;
+            mushroom.hp = 12; mushroom.goldReward = 1; mushroom.damage = 1f; // a whole heart: its charge is telegraphed, and every monster hitting for half made none of them the one to watch
             mushroom.moveSpeed = 2.2f;
             mushroom.scale = 1.3f * W; mushroom.hitRadius = 1.3f * W; mushroom.bodyHalfWidth = 0.8f * W;
             mushroom.aggroRange = 7f; mushroom.attackRange = 2.0f * W; mushroom.attackCooldown = 1.2f;

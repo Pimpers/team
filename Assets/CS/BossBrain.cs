@@ -77,6 +77,7 @@ public class BossBrain : MonoBehaviour
     {
         introDone = true;
         enemy.engaged = true;
+        if (Corruption.BossPhaseTwo(Corruption.Level)) { phase = 2; ApplyPhaseStats(); } // 타락도 5: no first phase (the pound and the leap from the start)
         CameraFollow.Focus(enemy.Renderer.bounds.center, 2f); // it usually roars off screen: the view swings over to it
         enemy.Face(enemy.ToPlayerFeet().x);
         Begin(Move.Roar, RoarTime + 0.5f);

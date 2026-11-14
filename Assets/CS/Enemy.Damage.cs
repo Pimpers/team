@@ -69,8 +69,16 @@ public partial class Enemy
             if (finisher && hp > 0 && definition.scale < 1f) { hopHeight = 0.35f; hopTimer = HopTime; } // small ones are popped up
         }
 
+        // 발톱 세트 완성: a critical hit dazes a monster for a moment (not the boss - it has its own stagger).
+        if (crit && !quiet && !isBoss && hp > 0 && PlayerStats.Instance != null && PlayerStats.Instance.CritStuns) Stun(0.5f);
+
         if (hp <= 0)
         {
+            if (!isBoss && Corruption.DeathBurst(Corruption.Level)) CorruptionBurst.Spawn(b.center); // 타락도 4+
+            // 사냥 세트 완성: a dazed, lured or poisoned monster's death poisons the ones near it (and theirs the next).
+            if ((IsStunned || IsLured || IsPoisoned) && PlayerStats.Instance != null && PlayerStats.Instance.HuntChain)
+                foreach (var e in All)
+                    if (e != null && e != this && !e.IsDead && Vector2.Distance(e.transform.position, transform.position) < 3f) e.Poison(1, 2f);
             // The killing blow lands harder: a longer freeze, and it is flung away with a hop; the boss's last
             // hit is a held freeze, then half a second of slow motion.
             if (!quiet)

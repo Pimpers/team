@@ -66,6 +66,10 @@ public class PlayerStats : MonoBehaviour
 
     float ClawDamage => SetLv(CardPool.Tag.Claw) >= 2 ? 1.25f : SetLv(CardPool.Tag.Claw) == 1 ? 1.12f : 1f;
     float ClawCrit => SetLv(CardPool.Tag.Claw) >= 2 ? 0.1f : 0f;
+    public bool CritStuns => SetLv(CardPool.Tag.Claw) >= 2; // a critical hit dazes (Enemy.ReceiveDamage)
+    // Finished sets: 발톱 dazes (above), 사냥 spreads poison, 간식 turns a wasted heal into gold (OnKill); 바람 and
+    // 털가죽 stay plain numbers. (Four of the five dazed for a while: they read as one effect and stacked.)
+    public bool HuntChain => SetLv(CardPool.Tag.Hunt) >= 2;  // a dazed / lured / poisoned monster's death poisons those near it (Enemy.ReceiveDamage)
     float WindSpeed => SetLv(CardPool.Tag.Wind) >= 1 ? 1.1f : 1f;
     public float SkillCooldownMultiplier => SetLv(CardPool.Tag.Wind) >= 2 ? 0.85f : 1f;
     public float StatusDurationMultiplier => SetLv(CardPool.Tag.Hunt) >= 1 ? 1.4f : 1f;
@@ -300,13 +304,22 @@ public class PlayerStats : MonoBehaviour
     {
         float steal = CardPool.Lifesteal(CardLevel("lifesteal"));
         if (SetLv(CardPool.Tag.Treat) >= 2) steal = 1f - (1f - steal) * 0.8f; // 간식 세트: its own 20% roll on top
-        if (steal > 0f && CurrentHP < MaxHP && RunRng.Value < steal)
+        bool full = CurrentHP >= MaxHP, treat2 = SetLv(CardPool.Tag.Treat) >= 2;
+        int spare = 0;
+        if (steal > 0f && (!full || treat2) && RunRng.Value < steal)
         {
-            Heal(0.5f);
-            DamagePopup.SpawnLabel(transform.position + Vector3.up * 1.1f, Loc.T("player.healed"), new Color(1f, 0.45f, 0.55f));
+            if (full) spare = 2; // 간식 세트 완성: a heal with nowhere to go is 2 gold instead
+            else
+            {
+                Heal(0.5f);
+                DamagePopup.SpawnLabel(transform.position + Vector3.up * 1.1f, Loc.T("player.healed"), new Color(1f, 0.45f, 0.55f));
+            }
         }
-        return CardLevel("greed") + (SetLv(CardPool.Tag.Treat) >= 1 ? 1 : 0);
+        return CardLevel("greed") + (SetLv(CardPool.Tag.Treat) >= 1 ? 1 : 0) + spare;
     }
+
+    const float ParryCooldown = 4f;
+    float parryReadyAt;
 
     // Returns false if the hit was dodged (so the attacker skips its knockback too).
     public bool TakeDamage(float amount, string source = "")
@@ -314,6 +327,19 @@ public class PlayerStats : MonoBehaviour
         if (IsInvulnerable || (animator != null && animator.IsDead)) return false;
         // 식빵 자세 (shield) / 수염 센서 (counter) can eat the hit.
         if (SkillSystem.Instance != null && SkillSystem.Instance.TryBlockHit()) return false;
+        // 쳐내기 (the knight only): a hit that lands while the sword is swinging is knocked aside, once every
+        // ParryCooldown. The knight fights inside every claw's reach; attacking is its guard.
+        if (Job == CardPool.Job.Knight && animator != null && animator.IsAttacking && Time.time >= parryReadyAt)
+        {
+            parryReadyAt = Time.time + ParryCooldown;
+            hurtTimer = Mathf.Max(hurtTimer, 0.4f); // a second claw in the same swing doesn't land either
+            Vfx.Play("hit_mid", transform.position + Vector3.right * animator.FacingSign * 0.5f, 1f, tint: new Color(1f, 0.9f, 0.6f));
+            Sfx.Play("hit_strong", 0.8f, 1.5f);
+            DamagePopup.SpawnLabel(transform.position + Vector3.up * 1.1f, Loc.T("skill.parry"), new Color(1f, 0.9f, 0.6f));
+            HitStop.Do(0.06f);
+            OneTimeTip.ShowInRun("parry"); // the first time: what just happened
+            return false;
+        }
 
         CurrentHP -= amount;
         RunStats.RecordDamage(source, amount);

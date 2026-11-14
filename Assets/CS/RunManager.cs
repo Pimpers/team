@@ -334,6 +334,7 @@ public class RunManager : MonoBehaviour
         Sfx.Play("stage_clear");
         HitStop.Slow(0.45f, 0.35f); // the last kill hangs in the air for a moment
         float clearHeal = stageClearHeal + PlayerStats.Instance.ClearHealBonus; // 털가죽 세트
+        clearHeal = Mathf.Round(clearHeal * Corruption.ClearHeal(Corruption.Level) * 2f) / 2f; // 타락도 2+: halved (in half hearts)
         PlayerStats.Instance.Heal(clearHeal);
         if (hudText != null && hudText.canvas != null)
             StageBanner.Show(hudText.canvas.rootCanvas, hudText.font, Loc.T("stage.clear"), Loc.F("stage.clear_heal", clearHeal), 1.1f);
