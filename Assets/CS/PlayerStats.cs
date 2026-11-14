@@ -308,7 +308,11 @@ public class PlayerStats : MonoBehaviour
         int spare = 0;
         if (steal > 0f && (!full || treat2) && RunRng.Value < steal)
         {
-            if (full) spare = 2; // 간식 세트 완성: a heal with nowhere to go is 2 gold instead
+            if (full) // 간식 세트 완성: a heal with nowhere to go is 2 gold instead
+            {
+                spare = 2;
+                DamagePopup.SpawnLabel(transform.position + Vector3.up * 1.1f, Loc.T("set.treat_gold"), UiTheme.Gold);
+            }
             else
             {
                 Heal(0.5f);

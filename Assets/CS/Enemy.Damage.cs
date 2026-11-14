@@ -77,8 +77,12 @@ public partial class Enemy
             if (!isBoss && Corruption.DeathBurst(Corruption.Level)) CorruptionBurst.Spawn(b.center); // 타락도 4+
             // 사냥 세트 완성: a dazed, lured or poisoned monster's death poisons the ones near it (and theirs the next).
             if ((IsStunned || IsLured || IsPoisoned) && PlayerStats.Instance != null && PlayerStats.Instance.HuntChain)
+            {
+                bool spread = false;
                 foreach (var e in All)
-                    if (e != null && e != this && !e.IsDead && Vector2.Distance(e.transform.position, transform.position) < 3f) e.Poison(1, 2f);
+                    if (e != null && e != this && !e.IsDead && Vector2.Distance(e.transform.position, transform.position) < 3f) { e.Poison(1, 2f); spread = true; }
+                if (spread) DamagePopup.SpawnLabel(new Vector3(transform.position.x, BodyTopY + 0.4f, 0f), Loc.T("set.hunt_spread"), new Color(0.65f, 0.95f, 0.45f)); // said, or the set looks like it does nothing
+            }
             // The killing blow lands harder: a longer freeze, and it is flung away with a hop; the boss's last
             // hit is a held freeze, then half a second of slow motion.
             if (!quiet)

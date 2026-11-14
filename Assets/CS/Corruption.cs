@@ -36,6 +36,18 @@ public static class Corruption
     public static bool DeathBurst(int lv) => lv >= 4;              // a dead monster bursts a moment later (CorruptionBurst)
     public static bool BossPhaseTwo(int lv) => lv >= 5;            // the boss opens in its second phase (BossBrain)
 
+    // The rules a tier turns on, on one line (the Tab sheet shows it mid-run; Describe has the numbers too).
+    public static string Rules(int lv)
+    {
+        var r = new System.Collections.Generic.List<string>();
+        if (DoubleTraps(lv)) r.Add(Loc.T("corruption.traps").Trim());
+        if (ClearHeal(lv) < 1f) r.Add(Loc.T("corruption.clear_heal").Trim());
+        if (EliteRage(lv)) r.Add(Loc.T("corruption.elite_rage").Trim());
+        if (DeathBurst(lv)) r.Add(Loc.T("corruption.death_burst").Trim());
+        if (BossPhaseTwo(lv)) r.Add(Loc.T("corruption.boss_phase").Trim());
+        return string.Join(" · ", r);
+    }
+
     // Shown on the world map selector and the stage HUD.
     public static string Describe(int lv)
     {

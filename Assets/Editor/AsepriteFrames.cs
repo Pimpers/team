@@ -66,8 +66,14 @@ public static class AsepriteFrames
                     }
                 rects[i] = Padded(ase, AseReader.Bounds(f, W, H));
             }
-            tex.SetPixels32(px);
-            File.WriteAllBytes(path, tex.EncodeToPNG());
+            // A strip that exists is kept: some were touched up by hand after the export (Knight_Attack_1 / 4,
+            // Archer_Attack_2 / 4, Archer_Tag), and writing them again from the .ase undid that on every scene build.
+            // Delete the PNG to export it afresh.
+            if (!File.Exists(path))
+            {
+                tex.SetPixels32(px);
+                File.WriteAllBytes(path, tex.EncodeToPNG());
+            }
             UnityEngine.Object.DestroyImmediate(tex);
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
 

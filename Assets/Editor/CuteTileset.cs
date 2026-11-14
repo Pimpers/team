@@ -309,6 +309,7 @@ public static class CuteTileset
         for (int c = 0; c < 3; c++)
         {
             string path = $"{SpriteDir}/cute_plat_grass_{suffix[c]}.png";
+            if (File.Exists(path)) continue; // made once: the committed pieces differ from a fresh one by a pixel, and every build rewrote them
             var top = tex.GetPixels(c * Cell, (Rows - 1 - 0) * Cell, Cell, Cell);
             var bottom = tex.GetPixels(c * Cell, (Rows - 1 - 2) * Cell, Cell, Cell);
             var px = new Color[Cell * Cell];

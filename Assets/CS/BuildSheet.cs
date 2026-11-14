@@ -102,6 +102,19 @@ public class BuildSheet : MonoBehaviour
         setsText.enableAutoSizing = true;
         setsText.fontSizeMax = UiTheme.TextSmall;
         setsText.fontSizeMin = 14f;
+
+        // This run's 타락도 rules on a line under the board: they were shown only on the world map, and a rule like
+        // the death burst is forgotten by stage 3.
+        string rules = Corruption.Rules(Corruption.Level);
+        if (rules.Length > 0)
+        {
+            var line = Text(root, "CorruptionRules", UiTheme.TextSmall, TextAlignmentOptions.Center, new Vector2(0f, -Height - 10f), new Vector2(Width, 36f));
+            line.text = Loc.F("sheet.corruption", Corruption.Level, rules);
+            line.enableAutoSizing = true; // five rules at tier 5: shrinks rather than runs past the board
+            line.fontSizeMax = UiTheme.TextSmall;
+            line.fontSizeMin = PixelText.Dot;
+            UiTheme.Backdrop(line);
+        }
     }
 
     void Update()

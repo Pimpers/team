@@ -38,3 +38,5 @@ crashlytics-buildsettings.json
 .claude/settings.local.json
 .mcp.json
 .claude/skills/
+.agents/
+skills-lock.json

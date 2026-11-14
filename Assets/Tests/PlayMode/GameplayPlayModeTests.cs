@@ -68,7 +68,7 @@ public class GameplayPlayModeTests
         var feet = body.Feet;
         var way = exit.RoutePoint(hunt);
         body.transform.position += new Vector3(way.x - feet.x, way.y - 0.5f - feet.y, 0f);
-        float settle = Time.realtimeSinceStartup + 1f; // set down by the mouth: a frame or a few to land
+        float settle = Time.realtimeSinceStartup + 3f; // set down by the mouth: a frame or a few to land (1 s was missed now and then on a slow run)
         while (!StageExit.Entering && Time.realtimeSinceStartup < settle) yield return null;
         Assert.That(StageExit.Entering, Is.True, "not drawn in");
         int other = exit.WayIsHunt(0) == hunt ? 1 : 0;

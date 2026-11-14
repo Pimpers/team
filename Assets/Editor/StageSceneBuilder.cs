@@ -678,8 +678,15 @@ public static class StageSceneBuilder
     // ---------------------------------------------------------------- scenes
     static void BuildStage(StageDef def)
     {
-        if (File.Exists(def.ScenePath)) AssetDatabase.DeleteAsset(def.ScenePath);
-        if (!AssetDatabase.CopyAsset(SourceScene, def.ScenePath))
+        byte[] before = File.Exists(def.ScenePath) ? File.ReadAllBytes(def.ScenePath) : null; // (see the end: put back if nothing but IDs changed)
+        // An existing scene is overwritten in place, keeping its .meta: deleting and copying gave it a new GUID on
+        // every build.
+        if (File.Exists(def.ScenePath))
+        {
+            File.Copy(SourceScene, def.ScenePath, true);
+            AssetDatabase.ImportAsset(def.ScenePath, ImportAssetOptions.ForceUpdate);
+        }
+        else if (!AssetDatabase.CopyAsset(SourceScene, def.ScenePath))
             throw new System.Exception($"Could not copy {SourceScene} to {def.ScenePath}");
 
         Scene scene = EditorSceneManager.OpenScene(def.ScenePath, OpenSceneMode.Single);
@@ -895,6 +902,26 @@ public static class StageSceneBuilder
 
         EditorSceneManager.MarkSceneDirty(scene);
         UISkinApplier.ApplyAndSave(scene); // re-skins the UI (Kenney Pixel Adventure) and saves
+
+        // Unity numbers the objects made here afresh on every build, so an unchanged stage still rewrote ~1300 lines
+        // of its scene file. The same scene but for those numbers: the old file goes back.
+        if (before != null && NormalizeIds(System.Text.Encoding.UTF8.GetString(before)) == NormalizeIds(File.ReadAllText(def.ScenePath)))
+        {
+            File.WriteAllBytes(def.ScenePath, before);
+            AssetDatabase.ImportAsset(def.ScenePath, ImportAssetOptions.ForceUpdate);
+        }
+    }
+
+    // A scene's text with every object ID (its "&123" anchors and "fileID: 123" references) blanked and its lines
+    // sorted: Unity writes the objects in ID order, so new IDs also move the blocks about, and two builds of the same
+    // stage only read the same once both are taken out.
+    // shortcut: a reference that points at a different object with every line otherwise the same would pass as
+    // unchanged; compare the object graph if a build ever needs to tell that apart.
+    static string NormalizeIds(string text)
+    {
+        var lines = System.Text.RegularExpressions.Regex.Replace(text, @"(&|fileID: )-?\d+", "$1N").Split('\n');
+        System.Array.Sort(lines, System.StringComparer.Ordinal);
+        return string.Join("\n", lines);
     }
 
     const string HeartSpritePath = "Assets/HealthHeartSystem/Graphics/mini-heart.png";

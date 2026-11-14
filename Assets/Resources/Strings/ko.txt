@@ -504,6 +504,9 @@ sheet.card = {0}  <color=$gold>Lv.{1}/{2}</color>
 sheet.no_cards = 아직 고른 카드가 없어요
 sheet.sets = 세트  {0}
 sheet.no_sets = <color=$dimlabel>세트 없음</color>
+sheet.corruption = <color=$danger>타락도 {0}</color>  {1}
+set.hunt_spread = 독 전염!
+set.treat_gold = 간식 골드 +2
 result.card_count = 카드 {0}장\n
 result.news = \n<nobr><size=85%><color=$gold>{0}</color></size></nobr>
 result.unlock.corruption = 타락도 {0} 해금! <size=80%>(월드맵)</size>

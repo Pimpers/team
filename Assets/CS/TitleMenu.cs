@@ -109,10 +109,26 @@ public static class TitleSettings
             label.text = GameSettings.ToggleText(toggle);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); label.text = GameSettings.ToggleText(toggle); });
         }
-        var keys = MakeButton(prt, Loc.T("keys.title"), new Vector2(-130f, -330f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
+        // In a stage the bottom row has a third button, 게임 종료 (the pause menu is the only way here, and it has
+        // no quit of its own); on the title screen the menu's own quit button does that.
+        bool inRun = RunManager.Instance != null;
+        var wood = skin != null ? skin.buttonWood : null;
+        var size = new Vector2(inRun ? 200f : 240f, 72f);
+        var keys = MakeButton(prt, Loc.T("keys.title"), new Vector2(inRun ? -215f : -130f, -330f), size, wood, font);
         keys.onClick.AddListener(() => KeyBindPanel.Show(canvas, font));
-        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(130f, -330f), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font);
+        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(inRun ? 0f : 130f, -330f), size, wood, font);
         close.onClick.AddListener(() => Object.Destroy(shade));
+        if (inRun)
+        {
+            var quit = MakeButton(prt, Loc.T("ui.quit"), new Vector2(215f, -330f), size, wood, font);
+            var quitLabel = quit.GetComponentInChildren<TMP_Text>();
+            bool sure = false; // two clicks, like giving up (the run's gold is banked by RunManager.OnApplicationQuit)
+            quit.onClick.AddListener(() =>
+            {
+                if (!sure) { sure = true; quitLabel.text = Loc.T("ui.quit_confirm"); return; }
+                GameSettings.Quit();
+            });
+        }
         GameInput.SelectForPad(close);
     }
 
