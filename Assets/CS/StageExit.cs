@@ -892,7 +892,12 @@ public class StageExit : MonoBehaviour
         }
 
         // Walking into an open mouth.
-        if (entering || body.IsAirborne) return;
+        if (entering) return;
+        // W is the jump key too: the press that asks to go in has often already lifted the cat off the floor (which
+        // script ran first decided it), and "airborne" then cancelled the entry - W at a log worked only now and then.
+        // With W held the cat goes in from the hop as well; walking in without a key (AutoEnter) still needs the floor.
+        bool up = GameInput.Move.y > 0.5f;
+        if (body.IsAirborne && !up) return;
         Vector2 feet = body.Feet;
         foreach (var w in ways)
         {
@@ -902,7 +907,7 @@ public class StageExit : MonoBehaviour
             if (into > -0.45f && into < 1.2f && Mathf.Abs(feet.y - w.floorY) < 0.8f)
             {
                 // At the mouth, W / Up goes in. Touching it used to: a cat walking past a fork's log was taken down that way.
-                if (AutoEnter || GameInput.Move.y > 0.5f) { StartCoroutine(Enter(w)); return; }
+                if (AutoEnter || up) { StartCoroutine(Enter(w)); return; }
                 if (w.word == null)
                 {
                     var at = new GameObject("EnterWord").transform;
