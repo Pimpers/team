@@ -445,7 +445,7 @@ worldmap.region.labyrinth = 쥐잡이 미궁
 worldmap.region.mountain = 야옹 산
 worldmap.region.volcano = 불꼬리 화산
 worldmap.region.crypt = 파도뼈 무덤
-worldmap.region.forest = 고대 숲
+worldmap.region.forest = CHAPTER 1  고대 숲
 worldmap.region.lagoon = 해골 석호
 worldmap.region.atoll = 생선뼈 환초
 
@@ -507,6 +507,11 @@ result.all_clear = 모든 타락도 정복! 기록에 도전!
 # BuildSheet (held Tab)
 sheet.title = 지금 내 고양이
 sheet.cards_head = 고른 카드
+sheet.head_cat = ① 캐릭터 능력치
+sheet.head_skills = ② 장착 스킬
+sheet.skills_sub = 현재 사용 가능한 액티브 스킬
+sheet.head_passive = 패시브 효과
+sheet.slot_empty = 비어 있음
 sheet.progress = 스테이지 {0}/{1}  ·  처치 {2}
 sheet.stats = 공격력  <color=$gold>{0}</color>\n하트  <color=$gold>{1} / {2}</color>\n이동 속도  <color=$gold>{3}%</color>\n공격 속도  <color=$gold>{4}%</color>\n치명타  <color=$gold>{5}%</color>\n사거리  <color=$gold>{6}%</color>\n대시  <color=$gold>{7}회</color>\n공중 점프  <color=$gold>{8}회</color>
 sheet.card = {0}  <color=$gold>Lv.{1}/{2}</color>
