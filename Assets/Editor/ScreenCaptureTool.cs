@@ -66,6 +66,8 @@ public static class ScreenCaptureTool
         Add("WorldMapScene", "worldmap_easy", () => { Corruption.Level = Corruption.Easy; Find<CorruptionSelector>().Refresh(); });
         Add("Tutorial", "tutorial", () => Find<TutorialController>().JumpToStepForCapture(7));
         Add("LobbyScene", "lobby");
+        Add("LobbyScene", "lobby_knight", () => Find<LobbyController>().PickForPlaytest(0), wait: 1f);
+        Add("LobbyScene", "lobby_archer", () => Find<LobbyController>().PickForPlaytest(1), wait: 1f);
         Add("Stage1", "legend"); // the first stage shows the minimap legend for its first seconds
         Add("Stage2B", "stage2b"); Add("Stage3B", "stage3b"); Add("Stage4B", "stage4b"); // the other-direction scenes of stages 2-4
         Add("Stage2", "tip_skills", () => { GameSave.Data.seenTips = ""; OneTimeTip.ShowInRun("skills"); }); // a one-time tip in a run

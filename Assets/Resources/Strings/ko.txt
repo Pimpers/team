@@ -91,6 +91,8 @@ enemy.rage = 격노!
 lobby.name_prompt = 이름을 알려주세요!
 lobby.name_max = 최대 {0}글자
 lobby.role_group = 역할군  |  {0}
+lobby.traits.knight = 하트 +2칸 · 피해 +25% · 공격 중 쳐내기
+lobby.traits.archer = 멀리서 사격 · 공중에서 움직이며 사격
 
 # OptionsUI
 options.music = 음악 볼륨

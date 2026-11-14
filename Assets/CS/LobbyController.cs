@@ -206,6 +206,10 @@ public class LobbyController : MonoBehaviour
         cam.transform.position = new Vector3(Mathf.Lerp(p.x, center.x, t), Mathf.Lerp(p.y, center.y, t), p.z);
     }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+    public void PickForPlaytest(int index) => Select(index); // (screen captures: the naming panel)
+#endif
+
     void Select(int index)
     {
         selected = index;
@@ -222,7 +226,10 @@ public class LobbyController : MonoBehaviour
         if (speciesText != null) speciesText.text = def.displayName;
         if (roleBadge != null) roleBadge.color = def.roleColor;
         roleText.text = Loc.F("lobby.role_group", def.roleGroup);
-        if (descriptionText != null) descriptionText.text = $"{def.description}\n<size=95%><color=#8a3f00>{def.role}</color></size>";
+        // What actually differs in play, under the flavour text: it was only found out by playing (the knight's
+        // extra hearts and parry showed nowhere).
+        // (In place of def.role, "근접 · 검으로 베기": the badge above already says it, and a fourth line ran over the badge.)
+        if (descriptionText != null) descriptionText.text = $"{def.description}\n<size=95%><color=#8a3f00>{Loc.T(def.ranged ? "lobby.traits.archer" : "lobby.traits.knight")}</color></size>";
         // The name given last time is already in the box: typed again only to change it (it started empty every visit).
         nameInput.text = CharacterSelection.GetName(index);
         ShowHint(false);
