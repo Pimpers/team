@@ -185,7 +185,7 @@ public class TutorialController : MonoBehaviour
         prt.anchorMin = Vector2.zero; prt.anchorMax = Vector2.one;
         prt.offsetMin = new Vector2(140f, 10f); prt.offsetMax = new Vector2(-40f, -10f); // left: clear of the step counter
 
-        counterText = Text(rt, "Counter", 26f, UISkin.InkSoft, font, TextAlignmentOptions.Left);
+        counterText = Text(rt, "Counter", 26f, UISkin.Ink, font, TextAlignmentOptions.Left); // (InkSoft was faint on the cream panel)
         var crt = counterText.rectTransform;
         crt.anchorMin = new Vector2(0f, 0f); crt.anchorMax = new Vector2(0f, 1f); crt.pivot = new Vector2(0f, 0.5f);
         crt.anchoredPosition = new Vector2(34f, 0f); crt.sizeDelta = new Vector2(90f, 0f);

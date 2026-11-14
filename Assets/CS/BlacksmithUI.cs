@@ -488,7 +488,7 @@ public class BlacksmithUI : MonoBehaviour
                 else lockedImg.color = DisabledColor;
                 continue;
             }
-            rowLabels[i].text = $"<b>{Names[i]}</b>  Lv.{lv}/{max}\n<size=75%><color={UiTheme.Html("amber")}>{Change(i, lv, maxed)}</color></size>";
+            rowLabels[i].text = $"<b>{Names[i]}</b>  Lv.{lv}/{max}\n<size=75%><color={UiTheme.Html("ink")}>{Change(i, lv, maxed)}</color></size>"; // (ink: amber was faint on the tan row)
             buyLabels[i].text = maxed ? Loc.T("smith.max") : Loc.F("smith.cost", Currency.Amount(cost));
             bool available = !maxed && gold >= cost;
             var img = (Image)buyButtons[i].targetGraphic;

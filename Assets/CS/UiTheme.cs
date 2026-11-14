@@ -15,8 +15,10 @@ public static class UiTheme
     public static readonly Color DisabledText = new Color(0.6f, 0.55f, 0.5f); // a button you can't use yet
     public static readonly Color Wood = new Color(0.45f, 0.3f, 0.18f);        // fallback when a panel sprite is missing
     public static readonly Color Wine = new Color(0.62f, 0.16f, 0.22f, 1f);   // buy buttons, role badges
-    public static readonly Color Plate = new Color(0.07f, 0.05f, 0.08f, 0.88f); // dark plate behind world labels
-    public static readonly Color TextBand = new Color(0.06f, 0.04f, 0.05f, 0.7f); // band under text on the picture (0.55 left red keywords faint over the bright village)
+    // Dark wood, not black: the plates and bands sit beside the wooden boards and ribbons, and near-black read as
+    // holes in the picture. Still dark enough for cream and gold text.
+    public static readonly Color Plate = new Color(0.17f, 0.1f, 0.06f, 0.9f); // dark plate behind world labels
+    public static readonly Color TextBand = new Color(0.15f, 0.09f, 0.05f, 0.76f); // band under text on the picture (0.55 left red keywords faint over the bright village)
 
     // Set-tag colours for text on a dark plate or the game picture (CardPool.TagColors are the dark inks for the cream
     // cards; on dark they sank - the Tab sheet's red #발톱). Rule: dark ground, these; cream ground, TagColors.

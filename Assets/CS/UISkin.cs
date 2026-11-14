@@ -31,7 +31,7 @@ public class UISkin : ScriptableObject
     public static readonly Color BannerText = new Color32(0xff, 0xf1, 0xd6, 0xff);
     public static readonly Color OverlayText = new Color32(0xff, 0xf1, 0xd6, 0xff);
     public static readonly Color OverlayMuted = new Color32(0xc9, 0xb4, 0x8a, 0xff);
-    public static readonly Color OverlayBack = new Color(0.045f, 0.035f, 0.055f, 0.92f);
+    public static readonly Color OverlayBack = new Color(0.14f, 0.085f, 0.05f, 0.93f); // dark wood (was near-black violet: see UiTheme.Plate)
     public static readonly Color ModalShade = new Color(0.02f, 0.015f, 0.03f, 0.78f);
 
     // On the pixel font's grid (PixelText.Dot = 12, see UiTheme): the old 40 / 20 / 18 were snapped to 36 / 24 / 24
