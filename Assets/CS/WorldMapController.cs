@@ -52,22 +52,12 @@ public class WorldMapController : MonoBehaviour
     // to x1.13 (hover and pulse), so the gaps allow for that.
     void PlaceRingAndTag()
     {
-        const float Gap = 0.12f; // ~12 px at this camera
-        var label = GameObject.Find("Label_forest");
-        var plate = label != null ? label.GetComponent<SpriteRenderer>() : null;
-        if (ring == null || plate == null) return;
+        // The ring stays on the middle of the forest (where the builder put it - it used to be lifted clear of the
+        // "고대 숲" plate), and the click area is the ring itself: click inside it and the voyage starts.
+        if (ring == null) return;
         var rb = ring.bounds;
-        float grow = rb.extents.y * 0.13f;
-        float lift = plate.bounds.max.y + Gap + grow - rb.min.y;
-        if (lift > 0f) ring.transform.position += Vector3.up * lift;
-        rb = ring.bounds;
-        if (marker == null) return;
-        var tag = marker.GetComponentInChildren<SpriteRenderer>(true);
-        float half = tag != null ? tag.bounds.extents.y : 0.3f;
-        // to the ring's right, over the sea: above it ran into the next region's plate
-        float halfW = tag != null ? tag.bounds.extents.x : 1f;
-        marker.position = new Vector3(rb.max.x + grow + Gap + halfW, rb.center.y, marker.position.z);
-        markerPos = marker.localPosition;
+        forestCenter = rb.center;
+        forestRadius = new Vector2(rb.extents.x, rb.extents.y);
     }
 
     void Start()

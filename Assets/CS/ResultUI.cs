@@ -56,7 +56,7 @@ public class ResultUI : MonoBehaviour
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
         rt.offsetMin = new Vector2(-4000f, -4000f); rt.offsetMax = new Vector2(4000f, 4000f); // any aspect ratio
         var img = go.GetComponent<Image>();
-        img.color = new Color(0.46f, 0.46f, 0.48f, 0.74f);
+        img.color = new Color(0.2f, 0.2f, 0.22f, 0.84f); // a dark grey: the picture is left dim and colourless
         img.raycastTarget = false;
     }
 

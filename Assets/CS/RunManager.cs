@@ -227,8 +227,6 @@ public class RunManager : MonoBehaviour
         string lines = "";
         if (tutorial) lines = Loc.T("hud.tutorial");
         if (IsStageScene && Corruption.Level > 0) lines += Loc.F("hud.corruption", Corruption.Level);
-        if (IsStageScene && stageNumber == 1 && RunStats.CardDrafts == 0 && !string.IsNullOrEmpty(PlayerStats.Instance.StarterCardName))
-            lines += Loc.F("hud.starter", PlayerStats.Instance.StarterCardName);
         // Big maps: how many are still out there (the minimap shows where); red when it's the last few.
         int left = Mathf.Max(0, monstersRemaining);
         if (!bossStage) lines += Loc.F("hud.enemies_left", UiTheme.Html(left <= 3 ? "hurt" : "white"), left);
