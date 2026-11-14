@@ -463,6 +463,15 @@ draft.reroll_short = 생선뼈 부족
 # Blacksmith: the fourth upgrade (MetaProgress.Upgrade.Reroll)
 smith.reroll = 행운의 방울
 smith.reroll.effect = 판마다 다시 뽑기 1회 무료
+smith.value.attack = 공격력 {0}
+smith.value.speed = 이동 속도 {0}%
+smith.value.heart = 하트 {0}칸
+smith.value.reroll = 무료 다시 뽑기 {0}회
+boss.warn.charge = → 돌진!
+boss.warn.pound = ▼ 내려찍기!
+boss.warn.leap = ↑ 도약!
+boss.warn.throw = ● 돌 던지기!
+boss.warn.shake = ◆ 발판 흔들기!
 smith.starter = 든든한 출발
 smith.starter.effect = 첫 싸움 전에 카드 1장 선택
 route.treasure.title = 사냥 길 보물!

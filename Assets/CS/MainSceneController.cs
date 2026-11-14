@@ -171,7 +171,7 @@ public class MainSceneController : MonoBehaviour
         if (options != null && options.IsOpen) return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
         Vector2 world = cam.ScreenToWorldPoint(mouse.position.ReadValue());
-        if (shipArea.Contains(world)) Depart();
+        if (shipArea.Contains(world)) { PressFeedback.World(world); Depart(); }
     }
 
     void Depart()

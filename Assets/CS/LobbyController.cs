@@ -141,7 +141,7 @@ public class LobbyController : MonoBehaviour
 
         Vector2 world = cam.ScreenToWorldPoint(mouse.position.ReadValue());
         for (int i = 0; i < displays.Length; i++)
-            if (displays[i].Contains(world)) { Select(i); break; }
+            if (displays[i].Contains(world)) { PressFeedback.World(world); Select(i); break; }
     }
 
     // Gamepad in the overview: left / right walks along the cats (the one pointed at strikes its pose), A picks it,

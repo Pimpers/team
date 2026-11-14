@@ -460,6 +460,16 @@ public class BlacksmithUI : MonoBehaviour
         }
     }
 
+    // The row's second line: what the cat has now and what the next level makes it ("공격력 4 → 5"), not only the
+    // step ("공격력 +1"). Maxed: the value alone. The starter draft has no number: its effect text.
+    static readonly string[] ValueKeys = { "smith.value.attack", "smith.value.speed", "smith.value.heart", "smith.value.reroll", null };
+    static string Change(int i, int lv, bool maxed)
+    {
+        if (ValueKeys[i] == null) return Effects[i];
+        string Value(int l) => Loc.F(ValueKeys[i], i == 0 ? PlayerStats.BaseAttack + l : i == 1 ? 100 + 15 * l : i == 2 ? 5 + l : l); // (5: PlayerStats.baseMaxHP)
+        return maxed ? Value(lv) : $"{Value(lv)} → {Value(lv + 1)}";
+    }
+
     void Refresh()
     {
         int gold = MetaProgress.Gold;
@@ -478,7 +488,7 @@ public class BlacksmithUI : MonoBehaviour
                 else lockedImg.color = DisabledColor;
                 continue;
             }
-            rowLabels[i].text = $"<b>{Names[i]}</b>  Lv.{lv}/{max}\n<size=75%><color={UiTheme.Html("amber")}>{Effects[i]}</color></size>";
+            rowLabels[i].text = $"<b>{Names[i]}</b>  Lv.{lv}/{max}\n<size=75%><color={UiTheme.Html("amber")}>{Change(i, lv, maxed)}</color></size>";
             buyLabels[i].text = maxed ? Loc.T("smith.max") : Loc.F("smith.cost", Currency.Amount(cost));
             bool available = !maxed && gold >= cost;
             var img = (Image)buyButtons[i].targetGraphic;

@@ -129,6 +129,7 @@ public class WorldMapController : MonoBehaviour
         if (InsideForest(world))
         {
             leaving = true;
+            PressFeedback.World(world);
             // First voyage: the tutorial first (it starts the real run when finished or skipped).
             SceneLoader.Load(TutorialProgress.Done ? stageSceneName : TutorialProgress.SceneName);
         }

@@ -232,6 +232,11 @@ public class BossBrain : MonoBehaviour
         moveTimer = time;
     }
 
+    // What is coming, over the bear's head: each special has its own mark, word and colour (they all showed the
+    // same "!", and the pose alone had to tell a charge from a leap).
+    void Warn(string key, Color color, float up = 0f) =>
+        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY + up, 0f), Loc.T(key), color, 1.3f);
+
     void StartCharge()
     {
         chargeDir = Mathf.Sign(enemy.ToPlayerFeet().x);
@@ -240,7 +245,7 @@ public class BossBrain : MonoBehaviour
         Sfx.Play("dash", 1f, 0.6f); // charge rush
         Vfx.Play("dust_side", transform.position, 1.8f, flipX: chargeDir < 0f); // dust kicked up as it starts to run
         enemy.AnimHold(Pose(0)); // head down, ready to rush
-        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY, 0f), "!", UiTheme.Alert);
+        Warn("boss.warn.charge", new Color(1f, 0.6f, 0.2f));
         Begin(Move.ChargeWindup, ChargeWindupTime);
     }
 
@@ -249,7 +254,7 @@ public class BossBrain : MonoBehaviour
     {
         enemy.Face(enemy.ToPlayerFeet().x);
         enemy.AnimHold(Pose(1));
-        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY, 0f), "!", UiTheme.Alert);
+        Warn("boss.warn.pound", new Color(1f, 0.32f, 0.26f));
         Sfx.Play("boss_roar", 0.6f, 0.9f); // a short growl as it rises
         Begin(Move.PoundWindup, phase >= 3 ? PoundWindupTime * 0.75f : PoundWindupTime);
     }
@@ -258,7 +263,7 @@ public class BossBrain : MonoBehaviour
     {
         enemy.Face(enemy.ToPlayerFeet().x);
         enemy.AnimHold(Pose(1));
-        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY, 0f), "!", UiTheme.Alert);
+        Warn("boss.warn.shake", new Color(0.6f, 0.95f, 0.5f));
         var cat = PlayerStats.Instance != null ? PlayerStats.Instance.Body : null;
         if (cat != null) DamagePopup.SpawnLabel(cat.transform.position + Vector3.up * 1.6f, "!", UiTheme.Alert); // over the cat too: the bear may be off screen
         Sfx.Play("boss_roar", 0.6f, 0.8f);
@@ -418,7 +423,7 @@ public class BossBrain : MonoBehaviour
         enemy.Face(to.x);
         leapToX = LandingX(transform.position.x + to.x);
         enemy.AnimHold(Pose(0));
-        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY, 0f), "!", UiTheme.Alert);
+        Warn("boss.warn.leap", new Color(0.82f, 0.55f, 1f));
         Sfx.Play("boss_roar", 0.5f, 1.1f);
         Begin(Move.LeapWindup, phase >= 3 ? LeapWindupTime * 0.8f : LeapWindupTime);
         float half = enemy.definition.bodyHalfWidth + 0.6f;
@@ -475,7 +480,7 @@ public class BossBrain : MonoBehaviour
     {
         enemy.Face(enemy.ToPlayerFeet().x);
         enemy.AnimHold(Pose(1));
-        DamagePopup.SpawnLabel(new Vector3(transform.position.x, enemy.BodyTopY + 1f, 0f), "!", UiTheme.Alert);
+        Warn("boss.warn.throw", new Color(0.95f, 0.86f, 0.5f), 1f);
         Sfx.Play("boss_roar", 0.45f, 1.2f);
         Begin(Move.ThrowWindup, phase >= 3 ? ThrowWindupTime * 0.8f : ThrowWindupTime);
         var sprite = enemy.definition.fallingRock;

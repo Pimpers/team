@@ -473,7 +473,10 @@ public class CardDraftUI : MonoBehaviour
         nameLabel.fontSize = nameLabel.fontSizeMax;
         float plateW = Mathf.Min(NameSize.x, nameLabel.GetPreferredValues(card.name).x + 28f);
         var plate = Child<Image>(button, "CardNamePlate", NamePos, new Vector2(plateW, NameSize.y - 2f));
-        plate.color = UiTheme.Plate;
+        // New or a level-up, told by the plate's colour without reading: dark for a card not held yet, amber for
+        // one more level of a card already held (its text says "Lv.1 → 2").
+        bool levelUp = card.maxLevel > 0 && PlayerStats.Instance != null && PlayerStats.Instance.CardLevel(card.id) > 0;
+        plate.color = levelUp ? new Color(0.58f, 0.36f, 0.06f, 1f) : UiTheme.Plate;
         plate.raycastTarget = false;
         plate.transform.SetSiblingIndex(nameLabel.transform.GetSiblingIndex());
 
