@@ -3,8 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 
 // World map panel for picking the 타락도 (difficulty tier) of the next run: "<  타락도 N  >"
-// plus what the tier changes. Built at runtime by WorldMapController. Always there: below the normal tier sits
-// 편하게 (Corruption.Easy), open from the start; the higher tiers appear once the chapter has been beaten.
+// plus what the tier changes. Built at runtime by WorldMapController. The tiers start at
+// 타락도 0 (편하게, Corruption.Easy, is no longer offered); the higher tiers appear once the chapter has been beaten.
 public class CorruptionSelector : MonoBehaviour
 {
     TMP_Text levelText, descText;
@@ -23,11 +23,12 @@ public class CorruptionSelector : MonoBehaviour
         // One strip in the top row, level with 항구: the 470 x 190 box covered the map's top-right corner once the
         // map filled the screen's width.
         rt.anchoredPosition = new Vector2(-24f, -10f);
-        rt.sizeDelta = new Vector2(PanelWidth, 86f); // room between the arrows and the words (they touched at 660)
+        rt.sizeDelta = new Vector2(PanelWidth, 72f); // room between the arrows and the words (they touched at 660)
+        if (Corruption.Level < 0) Corruption.Level = 0; // 편하게 is not offered here: the tiers start at 타락도 0
         UISkin.Apply(panel.GetComponent<Image>(), skin != null ? skin.panel : null, UISkin.LargeScale);
 
         var sel = panel.AddComponent<CorruptionSelector>();
-        sel.levelText = Text(rt, "Level", "", 36f, UISkin.InkTitle, font, Vector2.zero, new Vector2(480f, 56f));
+        sel.levelText = Text(rt, "Level", "", 36f, UISkin.InkTitle, font, Vector2.zero, new Vector2(LevelBox, 56f));
         // What the tier changes hangs under the strip, as tall as its lines (Refresh): inside the strip (280 x 76) three
         // or four lines ran out over its top and bottom and off the screen.
         var drop = new GameObject("DescPanel", typeof(RectTransform), typeof(Image));
@@ -45,13 +46,13 @@ public class CorruptionSelector : MonoBehaviour
         sel.descText.rectTransform.offsetMax = new Vector2(-DescPad, 0f);
         sel.descText.textWrappingMode = TextWrappingModes.Normal;
         sel.descText.lineSpacing = 2f;
-        sel.prev = ArrowButton(rt, "Prev", "<", new Vector2(-318f, 0f), font, () => sel.Step(-1));
-        sel.next = ArrowButton(rt, "Next", ">", new Vector2(318f, 0f), font, () => sel.Step(1));
+        sel.prev = ArrowButton(rt, "Prev", "<", new Vector2(-(PanelWidth * 0.5f - 42f), 0f), font, () => sel.Step(-1));
+        sel.next = ArrowButton(rt, "Next", ">", new Vector2(PanelWidth * 0.5f - 42f, 0f), font, () => sel.Step(1));
         sel.Refresh();
         return sel;
     }
 
-    const float PanelWidth = 720f, DescPad = 24f;
+    const float PanelWidth = 600f, DescPad = 24f, LevelBox = 440f; // (it was 720 x 86: it covered the map)
 
     void Step(int d)
     {
@@ -61,11 +62,15 @@ public class CorruptionSelector : MonoBehaviour
 
     public void Refresh()
     {
+        if (Corruption.Level < 0) Corruption.Level = 0;
         int lv = Corruption.Level;
-        levelText.text = lv < 0 ? Loc.T("corruption.selector.easy") : lv == 0 ? Loc.T("corruption.selector.none") : Loc.F("corruption.selector.level", lv);
+        levelText.text = lv == 0 ? Loc.T("corruption.selector.none") : Loc.F("corruption.selector.level", lv);
+        // 36 when the line fits its box, else 24: the pixel font is sharp only at these steps.
+        levelText.fontSize = 36f;
+        if (levelText.GetPreferredValues(levelText.text).x > LevelBox) levelText.fontSize = UiTheme.TextSmall;
         descText.text = Corruption.Describe(lv);
         descPanel.sizeDelta = new Vector2(PanelWidth, descText.GetPreferredValues(descText.text, PanelWidth - DescPad * 2f, 0f).y + 28f);
-        prev.interactable = lv > Corruption.Easy;
+        prev.interactable = lv > 0;
         next.interactable = lv < Corruption.Unlocked;
         if (Corruption.Unlocked > 0) OneTimeTip.Show("corruption", GetComponentInParent<Canvas>(), levelText.font); // the first tier on offer
     }

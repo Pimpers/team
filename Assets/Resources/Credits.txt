@@ -23,7 +23,7 @@ UI User Interface (무료판) / ToffeeCraft
 UI Pack - Pixel Adventure / Kenney
 UI Pack (RPG Expansion) / Kenney (CC0)
 Pixel Speech Bubbles – Free Dialog UI Pack / icelivin (itch.io, 무료·상업 사용 가능, 재배포 금지; 대장장이 말풍선, 색 바꿈)
-재배포 금지 에셋: SpeechBoard, SpeechTail (Resources/UIBook). 저장소 공개 전 제외할 것.
+# TODO (dev): 재배포 금지 에셋 SpeechBoard, SpeechTail (Resources/UIBook) - 저장소 공개 전 제외할 것.
 HarborVillage 재가공, 카드 앞면 3장, 카드 뒷면 3장, 로고, 이펙트(화산, 모닥불, 굴뚝 연기, 폭발), 스킬 이펙트(쥐덫, 방울 와이어, 생선가시, 식빵 자세, 츄르 유인, 야간 시야, 하악질, 캣닙, 츄르 착지, 기폭 젤리, 쥐덫 끈끈이, 캣타워 관측, 캔따개, 캔따개 명중, 연속 사격): Aether(aetherforgeai.com) 생성 후 가공
 Free UI Nature Pack / Qiuro
 Cryo's Mini GUI / PaperHatLizard (CC BY 4.0)
@@ -36,7 +36,8 @@ Health Heart System (하트 HUD)
 Fantasy Adventure Quest / Alex Morgan (Pixabay)
 The Jolly Tankard / Kaazoom (Pixabay)
 GrassLands Theme / DST (OpenGameArt, CC0)
-Heavy Boss Battle 1 / MintoDog - CC0 (OpenGameArt: opengameart.org/content/heavy-boss-battle-1, 원 페이지 라이선스 칸 직접 확인 필요)
+# TODO (dev): Heavy Boss Battle 1 - 원 페이지(opengameart.org/content/heavy-boss-battle-1) 라이선스 칸 직접 확인.
+Heavy Boss Battle 1 / MintoDog (OpenGameArt, CC0)
 Dark Shrine Loop / qubodup, remix of yd (OpenGameArt, CC0)
 Determined Pursuit / Emma_MA (OpenGameArt, CC0)
 A Sailor's Chant / Thimras (OpenGameArt, CC0)
@@ -47,7 +48,8 @@ RPG Audio, Impact Sounds, Interface Sounds / Kenney (CC0)
 ## 글꼴
 Galmuri11 / Lee Minseo (SIL OFL 1.1)
 Departure Mono / Helena Zhang (OFL)
-DreamHeumulKR (보조 한글 글꼴, 출처·라이선스 확인 필요)
+# TODO (dev): DreamHeumulKR - 출처·라이선스 확인 필요 (확인 전까지 정식 빌드에 넣지 말 것).
+DreamHeumulKR (보조 한글 글꼴)
 
 ## 도구
 pixelfx / Patch, Hugo Duprez (MIT) - 스탯 카드 그림, 배경 이펙트

@@ -41,7 +41,7 @@ draft.set_complete = <b>{0} 완성!</b>
 chest.hits = 평타  {0}/{1}
 
 # Corruption
-corruption.none = 기본 난이도
+corruption.none = 적 체력 +0%  ·  이동 속도 +0%
 corruption.easy = 적 공격 -반칸  ·  적 체력 -30%\n<color=$muted>타락도 해금 없음</color>
 corruption.selector.easy = <color=$good>편하게</color>
 corruption.enemy_hp_speed = 적 체력 +{0}%  ·  이동 속도 +{1}%
@@ -59,7 +59,7 @@ skill.parry = 쳐냄!
 corruption.gold = \n<color=$amber>보상  골드 x{0}  (+{1}%)</color>
 
 # CorruptionSelector
-corruption.selector.none = 타락도 없음
+corruption.selector.none = 타락도 0 · 기본 난이도
 corruption.selector.level = <color=$key>타락도 {0}</color>
 
 # CreditsPanel
@@ -120,7 +120,15 @@ controls.attack = 공격 · 3단 콤보
 controls.skills = 카드 스킬
 controls.air_click = 공중에서 클릭
 controls.slam = 내려찍기
-pause.controls = 조작키
+controls.title = 조작 방법
+controls.sec_move = 기본 이동
+controls.sec_combat = 전투 조작
+controls.sec_info = 정보 확인
+controls.stats = 능력치와 고른 카드 보기
+pause.controls = 조작 방법
+pause.to_village = 마을로 돌아가기
+pause.stats = 스테이지 {0}/{1}  ·  {2}  ·  처치 {3}
+pause.hint = ESC · 닫기 / 게임으로 돌아가기
 pause.give_up_confirm = 정말 포기하기
 
 # PlayerStats
@@ -132,7 +140,7 @@ player.healed = 회복!
 # ResultUI
 result.retry = 바로 재도전
 result.win = 의뢰 완수!
-result.lose = 쓰러지고 말았다...
+result.lose = 사망...
 result.gold = 획득 {0}+{1} (보유 {2})
 # the second line under the gold: the blacksmith hint, or (in its place) a newly opened 타락도 tier
 result.gold_hint = \n<size=80%>마을 대장간에서 강화할 수 있습니다</size>
@@ -499,6 +507,7 @@ result.all_clear = 모든 타락도 정복! 기록에 도전!
 # BuildSheet (held Tab)
 sheet.title = 지금 내 고양이
 sheet.cards_head = 고른 카드
+sheet.progress = 스테이지 {0}/{1}  ·  처치 {2}
 sheet.stats = 공격력  <color=$gold>{0}</color>\n하트  <color=$gold>{1} / {2}</color>\n이동 속도  <color=$gold>{3}%</color>\n공격 속도  <color=$gold>{4}%</color>\n치명타  <color=$gold>{5}%</color>\n사거리  <color=$gold>{6}%</color>\n대시  <color=$gold>{7}회</color>\n공중 점프  <color=$gold>{8}회</color>
 sheet.card = {0}  <color=$gold>Lv.{1}/{2}</color>
 sheet.no_cards = 아직 고른 카드가 없어요
@@ -536,13 +545,12 @@ card.bounty.text = 정예를 처치하면\n하트 반 칸 회복
 card.bounty.text2 = 정예를 처치하면\n하트 한 칸 회복
 goals.title = 다음 목표
 goals.smith_locked = · 대장간 {0}번째 방문: <color=$gold>행운의 방울</color>\n
-goals.smith_ready = · 대장간: <color=$gold>지금 강화할 수 있어요!</color>\n
-goals.smith_need = · 대장간: 다음 강화까지 생선뼈 {0}개\n
-goals.smith_done = · 대장간: 모든 강화 완료\n
-goals.corruption_first = · 보스를 이기면 <color=$gold>타락도 1</color> 해금\n
-goals.corruption_next = · 타락도 {1}로 이기면 <color=$gold>타락도 {0}</color> 해금\n
-goals.corruption_done = · 모든 타락도 해금 완료\n
-goals.cards = · 이 고양이가 뽑을 수 있는 카드 {0}장
+goals.smith_ready = · 장비 강화 {0}/{1}레벨: <color=$gold>지금 가능!</color>\n
+goals.smith_need = · 장비 강화 {0}/{1}레벨 (생선뼈 {2}개 더)\n
+goals.smith_done = · 장비 강화 {0}/{1}레벨 완료\n
+goals.corruption_first = · <color=$gold>고대 숲</color> 클리어하기\n
+goals.corruption_next = · <color=$gold>타락도 {1}</color> 클리어하기\n
+goals.corruption_done = · 모든 타락도 클리어 완료\n
 pause.settings = 설정
 pause.open_settings = 설정 열기
 pause.tab_hint = 능력치와 고른 카드는\n전투 중 <color=$key>Tab</color>(패드 View)을\n누르고 있으면 볼 수 있어요

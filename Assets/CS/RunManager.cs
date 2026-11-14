@@ -117,7 +117,8 @@ public class RunManager : MonoBehaviour
         // Top-left corner of the text box, whatever the text's own pivot is.
         Vector2 topLeft = rt.anchoredPosition + new Vector2(-rt.pivot.x * rt.rect.width, (1f - rt.pivot.y) * rt.rect.height);
         hudBacking.anchoredPosition = topLeft + new Vector2(-HudPadX, HudPadY);
-        hudBacking.sizeDelta = new Vector2(size.x + HudPadX * 2f, size.y + HudPadY * 2f);
+        // No lines (the boss stage at 타락도 0, now the fish bones have their own plate): no plate.
+        hudBacking.sizeDelta = string.IsNullOrEmpty(hudText.text) ? Vector2.zero : new Vector2(size.x + HudPadX * 2f, size.y + HudPadY * 2f);
     }
 
     SetHUD setHud;
@@ -152,6 +153,7 @@ public class RunManager : MonoBehaviour
             {
                 setHud = SetHUD.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font); // the build's sets, bottom-left
                 setHud.transform.SetAsFirstSibling(); // under the popups (card draft, result board)
+                StageHudExtras.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font, stageNumber); // fish plate top centre, stage bottom-left
             }
             if (!tutorial && StageMap.Instance != null) StageExit.Create(stageNumber, HasFork); // the log out (and in), or the fork's two - see StageExit
             if (!tutorial && StageMap.Instance != null && stageNumber >= 2 && stageNumber < totalStages) StartCoroutine(SetupTraps()); // none in the boss arena
@@ -231,7 +233,9 @@ public class RunManager : MonoBehaviour
         int left = Mathf.Max(0, monstersRemaining);
         if (!bossStage) lines += Loc.F("hud.enemies_left", UiTheme.Html(left <= 3 ? "hurt" : "white"), left);
         // HP is shown as hearts by HeartHUD.
-        hudText.text = $"{lines}<color={UiTheme.Html("gold")}>{Currency.Amount(PlayerStats.Instance.Gold)}</color>";
+        // (The fish-bone count has its own plate at the top centre in the stage scenes: StageHudExtras.)
+        bool goldOnPlate = !(IsStageScene && !tutorial && hudBacking != null);
+        hudText.text = goldOnPlate ? $"{lines}<color={UiTheme.Html("gold")}>{Currency.Amount(PlayerStats.Instance.Gold)}</color>" : lines.TrimEnd('\n');
         FitHudBacking();
     }
 

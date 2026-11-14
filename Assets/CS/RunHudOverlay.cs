@@ -38,7 +38,7 @@ public class RunHudOverlay : MonoBehaviour
     void Scan()
     {
         groups.Clear();
-        Add<HeartHUD>(); Add<DashBar>(); Add<StageMinimap>(); Add<MonsterTracker>(); Add<SetHUD>();
+        Add<HeartHUD>(); Add<DashBar>(); Add<StageMinimap>(); Add<MonsterTracker>(); Add<SetHUD>(); Add<StageHudExtras>();
         var run = RunManager.Instance;
         if (run != null && run.hudText != null)
         {

@@ -22,7 +22,9 @@ public class BuildSheet : MonoBehaviour
     // A card's art beside each number (attack, hearts, speed, attack speed, crit, reach, dashes, air jumps).
     static readonly string[] StatIcons = { "attack", "heart", "speed", "haste", "crit", "reach", "dash_more", "jump" };
     readonly TextMeshProUGUI[] statRows = new TextMeshProUGUI[StatIcons.Length];
-    const float StatRow = 60f;
+    const float StatRow = 50f, StatTop = 76f; // the cat's name sits above the rows (StatTop), the run's progress under them
+    TextMeshProUGUI progressText;
+    int shownProgress = -1;
     RectTransform cardArea;
     string shownKey;
     TextMeshProUGUI moreHint; // "more cards come from clearing stages" under a short list
@@ -74,13 +76,24 @@ public class BuildSheet : MonoBehaviour
         UiPanels.Ribbon(root, Loc.T("sheet.title"), font, 440f);
 
         var statsSlot = (RectTransform)UiPanels.Inset(root, "StatsSlot", new Vector2(36f, -64f), new Vector2(400f, 540f)).transform;
+        // The cat's own name over its numbers (when it has been named in the lounge).
+        string catName = CharacterSelection.SelectedName;
+        if (!string.IsNullOrEmpty(catName))
+        {
+            var head = Text(statsSlot, "CatName", UiTheme.TextLarge, TextAlignmentOptions.MidlineLeft, new Vector2(24f, -14f), new Vector2(352f, 48f));
+            head.text = catName;
+            head.color = UiTheme.Gold;
+        }
         for (int i = 0; i < StatIcons.Length; i++)
         {
-            float y = -24f - i * StatRow - StatRow * 0.5f;
+            float y = -StatTop - i * StatRow - StatRow * 0.5f;
             var card = CardPool.Get(StatIcons[i]);
             UiPanels.Icon(statsSlot, card != null ? card.Art : null, new Vector2(42f, y), 44f);
             statRows[i] = Text(statsSlot, "Stat" + i, UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(78f, y + StatRow * 0.5f), new Vector2(312f, StatRow));
         }
+        // Where the run stands, under the numbers.
+        progressText = Text(statsSlot, "Progress", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, -StatTop - StatIcons.Length * StatRow - 10f), new Vector2(352f, 40f));
+        progressText.color = UiTheme.Subtitle;
 
         var cardsSlot = (RectTransform)UiPanels.Inset(root, "CardsSlot", new Vector2(452f, -64f), new Vector2(632f, 456f)).transform;
         var cardsHead = Text(cardsSlot, "CardsHead", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(24f, -16f), new Vector2(620f, 32f));
@@ -135,6 +148,12 @@ public class BuildSheet : MonoBehaviour
     void Refresh(PlayerStats s)
     {
         var body = s.Body;
+        int progress = RunStats.Stage * 100000 + RunStats.Kills; // the text is built only when one of them changes
+        if (progress != shownProgress)
+        {
+            shownProgress = progress;
+            progressText.text = Loc.F("sheet.progress", Mathf.Max(1, RunStats.Stage), RunManager.Instance != null ? RunManager.Instance.totalStages : 5, RunStats.Kills);
+        }
         int dashes = body != null ? body.MaxDashes : 2 + s.ExtraDashes;
         int hash = System.HashCode.Combine(s.AttackPower, s.CurrentHP, s.MaxHP, s.MoveSpeed, s.AttackSpeedMultiplier, s.CritChance, s.ReachMultiplier, System.HashCode.Combine(dashes, s.ExtraAirJumps));
         if (hash != shownStatsHash)

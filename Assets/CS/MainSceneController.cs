@@ -68,6 +68,9 @@ public class MainSceneController : MonoBehaviour
         {
             VillageGoals.Create(profileName.canvas.rootCanvas, profileName.font, def.ranged); // what the next runs open
             OneTimeTip.Show("village", profileName.canvas, profileName.font); // first time here: what the harbour is for
+            // ESC: the screen stops, 계속하기 / 게임 종료 - but not over a window of the village that is already up.
+            var menu = VillageMenu.Create(profileName.canvas.rootCanvas, profileName.font);
+            menu.canOpen = () => !(options != null && options.IsOpen) && !(blacksmith != null && blacksmith.IsOpen) && !KeyBindPanel.IsOpen;
         }
         SetUpPadNavigation();
     }
@@ -87,7 +90,7 @@ public class MainSceneController : MonoBehaviour
 
     void KeepPadSelection()
     {
-        if (KeyBindPanel.IsOpen) return; // it keeps its own selection
+        if (KeyBindPanel.IsOpen || VillageMenu.IsOpen) return; // they keep their own selection
         if (blacksmith != null && blacksmith.panel != null && blacksmith.panel.activeInHierarchy) GameInput.KeepPadSelection(blacksmith.panel.transform);
         else if (blacksmith != null && blacksmith.IsOpen) return; // the blacksmith is talking: A moves the line on
         else if (options != null && options.IsOpen) GameInput.KeepPadSelection(options.panel.transform);

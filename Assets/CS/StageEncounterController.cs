@@ -147,7 +147,7 @@ public abstract class StageEncounterController : MonoBehaviour
             rt.SetParent(hud.canvas.rootCanvas.transform, false);
             rt.SetAsFirstSibling(); // under the popups
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 1f);
-            rt.anchoredPosition = new Vector2(0f, -24f);
+            rt.anchoredPosition = new Vector2(0f, -84f); // under the fish-bone plate (StageHudExtras: 16 to 76 down)
             rt.sizeDelta = new Vector2(520f, 40f);
             notice.font = hud.font;
             notice.fontSize = GameSettings.ReadingSize;

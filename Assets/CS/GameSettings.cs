@@ -84,9 +84,8 @@ public static class GameSettings
     public static readonly ToggleSetting[] Toggles =
     {
         new ToggleSetting { onKey = "options.fullscreen.on", offKey = "options.fullscreen.off", get = () => Fullscreen, set = v => Fullscreen = v },
-        new ToggleSetting { onKey = "options.hitstop.on", offKey = "options.hitstop.off", get = () => HitStopEnabled, set = v => HitStopEnabled = v },
+        // (히트스톱 and 큰 글씨 are no longer offered: HitStopEnabled / LargeText keep their saved or default values.)
         new ToggleSetting { onKey = "options.colorblind.on", offKey = "options.colorblind.off", get = () => Colorblind, set = v => Colorblind = v },
-        new ToggleSetting { onKey = "options.largetext.on", offKey = "options.largetext.off", get = () => LargeText, set = v => LargeText = v },
     };
 
     // The rebindable keys (KeyBindPanel, opened from both settings screens' "키 설정" button).

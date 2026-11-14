@@ -3,20 +3,21 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
-// ESC pause menu in the stage scenes, built at runtime by RunManager (no scene edits). Four buttons; ESC again
-// goes back to the fight (a window opened from the menu closes first):
+// ESC pause menu in the stage scenes, built at runtime by RunManager (no scene edits). A strip with the run so far,
+// then five buttons; ESC again goes back to the fight (a window opened from the menu closes first):
 //   계속하기          - back to the fight (same as ESC)
-//   조작키            - the key window (KeyBindPanel): what each key does, and rebinding
+//   조작 방법          - the controls window (KeyBindPanel): what each key does
 //   설정              - the settings window (TitleSettings)
-//   포기하고 마을로    - press twice to confirm; ends the run like a defeat: the gold
+//   마을로 돌아가기    - press twice to confirm; ends the run like a defeat: the gold
 //                      collected so far is deposited, then back to the village.
+//   게임 종료          - press twice to confirm.
 // Pausing holds the GameClock like the card draft, so the player, enemies and attacks
 // all stop. Not available while the card draft or the result screen is up.
 public class PauseMenu : MonoBehaviour
 {
     GameObject root;
-    TMP_Text giveUpLabel;
-    bool confirmGiveUp;
+    TMP_Text giveUpLabel, quitLabel, statsText;
+    bool confirmGiveUp, confirmQuit;
     Button resumeButton; // the first button (계속하기): the pad's selection when the menu opens
 
     public static bool IsOpen { get; private set; }
@@ -48,27 +49,42 @@ public class PauseMenu : MonoBehaviour
         blockRt.offsetMin = blockRt.offsetMax = Vector2.zero;
         root.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.55f);
 
-        // A small wooden board, the title on its ribbon, and three buttons - nothing else: the controls (the key
-        // window), give the run up, the settings window. ESC goes back to the fight. (It was an open book with the
-        // controls, hints, the run's numbers, a resume and a quit button.)
-        var board = MakeImage(blockRt, "Board", Vector2.zero, new Vector2(560f, 650f));
+        // One wooden board: the run so far on a dark strip (stage, time, kills), the one way forward in green, the
+        // controls and the settings side by side, and below them the two ways out - back to the village, quit the
+        // game. The X in the corner and ESC also go back to the fight.
+        var board = MakeImage(blockRt, "Board", Vector2.zero, new Vector2(640f, 560f));
         UiPanels.Board(board);
         var prt = board.rectTransform;
         UiPanels.Ribbon(prt, Loc.T("pause.title"), font, 400f);
+        UiPanels.CloseButton(prt, font, Close, 16f, 72f); // ends 88 down: clear of the strip at 92
 
-        // The one way forward (UI_STYLE: the green "go" sprite) on top, the way out last and apart from it.
+        var strip = (RectTransform)UiPanels.Inset(prt, "RunStrip", new Vector2(30f, -92f), new Vector2(580f, 64f)).transform;
+        statsText = MakeText(strip, "Stats", "", UiTheme.TextSmall, UISkin.OverlayText, font, Vector2.zero, new Vector2(560f, 56f));
+
         var wood = skin != null ? skin.buttonWood : null;
-        var go = skin != null ? skin.buttonRed : null;
-        resumeButton = MakeButton(prt, "ResumeButton", Loc.T("pause.resume"), new Vector2(0f, 185f), go ?? wood, font, out _);
+        var go = skin != null ? skin.buttonRed : null; // the green "go" sprite (UI_STYLE): the one way forward
+        var big = new Vector2(580f, 100f);
+        var half = new Vector2(282f, 84f);
+        resumeButton = MakeButton(prt, "ResumeButton", Loc.T("pause.resume"), new Vector2(0f, 40f), go != null ? go : wood, font, out _, big);
         resumeButton.onClick.AddListener(Close);
-        var controls = MakeButton(prt, "ControlsButton", Loc.T("pause.controls"), new Vector2(0f, 50f), wood, font, out _);
+        var controls = MakeButton(prt, "ControlsButton", Loc.T("pause.controls"), new Vector2(-149f, -66f), wood, font, out _, half, UiTheme.TextSmall);
         controls.onClick.AddListener(() => KeyBindPanel.Show(GetComponentInParent<Canvas>().rootCanvas, font));
-        var settings = MakeButton(prt, "SettingsButton", Loc.T("pause.settings"), new Vector2(0f, -85f), wood, font, out _);
+        var settings = MakeButton(prt, "SettingsButton", Loc.T("pause.settings"), new Vector2(149f, -66f), wood, font, out _, half, UiTheme.TextSmall);
         settings.onClick.AddListener(() => TitleSettings.Show(GetComponentInParent<Canvas>().rootCanvas, font));
-        var giveUp = MakeButton(prt, "GiveUpButton", Loc.T("pause.give_up"), new Vector2(0f, -220f), wood, font, out giveUpLabel);
+        var giveUp = MakeButton(prt, "GiveUpButton", Loc.T("pause.to_village"), new Vector2(-149f, -162f), wood, font, out giveUpLabel, half, UiTheme.TextSmall);
         giveUp.onClick.AddListener(GiveUp);
+        var quit = MakeButton(prt, "QuitButton", Loc.T("ui.quit"), new Vector2(149f, -162f), wood, font, out quitLabel, half, UiTheme.TextSmall);
+        quit.onClick.AddListener(Quit);
+        // The hint sits straight on the board's orange planks, so it is dark ink, not cream.
+        MakeText(prt, "Hint", Loc.T("pause.hint"), UiTheme.TextSmall, new Color32(0x3a, 0x1c, 0x0c, 0xff), font, new Vector2(0f, -243f), new Vector2(580f, 40f));
 
         root.SetActive(false);
+    }
+
+    void RefreshStats()
+    {
+        int total = RunManager.Instance != null ? RunManager.Instance.totalStages : 5;
+        statsText.text = Loc.F("pause.stats", Mathf.Max(1, RunStats.Stage), total, RunStats.TimeText, RunStats.Kills);
     }
 
     void Update()
@@ -100,8 +116,10 @@ public class PauseMenu : MonoBehaviour
     void Open()
     {
         IsOpen = true;
-        confirmGiveUp = false;
-        giveUpLabel.text = Loc.T("pause.give_up");
+        confirmGiveUp = confirmQuit = false;
+        giveUpLabel.text = Loc.T("pause.to_village");
+        quitLabel.text = Loc.T("ui.quit");
+        RefreshStats();
         transform.SetAsLastSibling(); // the skill bar / monster tracker are created after this menu: stay above them
         GameInput.SelectForPad(resumeButton);
         root.SetActive(true);
@@ -131,11 +149,27 @@ public class PauseMenu : MonoBehaviour
         if (!confirmGiveUp)
         {
             confirmGiveUp = true;
+            confirmQuit = false;
+            quitLabel.text = Loc.T("ui.quit");
             giveUpLabel.text = Loc.T("pause.give_up_confirm");
             return;
         }
         IsOpen = false;
         if (RunManager.Instance != null) RunManager.Instance.GiveUp();
+    }
+
+    // Quit the game: two presses, like giving up (the run's gold is banked by RunManager.OnApplicationQuit).
+    void Quit()
+    {
+        if (!confirmQuit)
+        {
+            confirmQuit = true;
+            confirmGiveUp = false;
+            giveUpLabel.text = Loc.T("pause.to_village");
+            quitLabel.text = Loc.T("ui.quit_confirm");
+            return;
+        }
+        GameSettings.Quit();
     }
 
     void OnDestroy()
@@ -172,9 +206,9 @@ public class PauseMenu : MonoBehaviour
         return t;
     }
 
-    static Button MakeButton(RectTransform parent, string name, string label, Vector2 pos, Sprite sprite, TMP_FontAsset font, out TMP_Text text)
+    internal static Button MakeButton(RectTransform parent, string name, string label, Vector2 pos, Sprite sprite, TMP_FontAsset font, out TMP_Text text, Vector2? size = null, float fontSize = 0f)
     {
-        var img = MakeImage(parent, name, pos, new Vector2(420f, 110f));
+        var img = MakeImage(parent, name, pos, size ?? new Vector2(420f, 110f));
         if (sprite != null) UISkin.Apply(img, sprite, UISkin.SmallScale);
         var btn = img.gameObject.AddComponent<Button>();
         img.gameObject.AddComponent<ButtonSound>();
@@ -182,7 +216,7 @@ public class PauseMenu : MonoBehaviour
         colors.highlightedColor = new Color(1f, 0.92f, 0.8f);
         colors.pressedColor = new Color(0.8f, 0.72f, 0.6f);
         btn.colors = colors;
-        text = MakeText(img.rectTransform, "Label", label, UISkin.FontButton, Color.white, font, Vector2.zero, Vector2.zero);
+        text = MakeText(img.rectTransform, "Label", label, fontSize > 0f ? fontSize : UISkin.FontButton, Color.white, font, Vector2.zero, Vector2.zero);
         var trt = text.rectTransform;
         trt.anchorMin = Vector2.zero;
         trt.anchorMax = Vector2.one;

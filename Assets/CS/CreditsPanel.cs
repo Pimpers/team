@@ -4,7 +4,7 @@ using TMPro;
 
 // The credits window (opened from the settings window's "크레딧" button): everything in the game that wasn't made
 // for it, by whom, under which licence - some of the packs require the credit (Crusenho's UI book pack), the rest
-// appreciate it. Two columns on a dark wood board; click "닫기" or anywhere outside to close. Built at runtime.
+// appreciate it. Two columns on a dark wood board; click the corner X or anywhere outside to close. Built at runtime.
 public class CreditsPanel : MonoBehaviour
 {
     // The list itself lives in Resources/Credits.txt (one place to update when an asset is added):
@@ -21,7 +21,11 @@ public class CreditsPanel : MonoBehaviour
             if (line.StartsWith("## ")) { cols[col].Append("<size=200%><color=" + UiTheme.Html("gold") + ">").Append(line.Substring(3)).Append("</color></size>\n"); continue; }
             if (line.StartsWith("# ")) continue;
             if (line.StartsWith("> ")) { cols[col].Append("<color=" + UiTheme.Html("note") + ">").Append(line.Substring(2)).Append("</color>\n"); continue; }
-            cols[col].Append(line).Append('\n');
+            // "Asset name / maker (licence)": the name stays bright, the maker and licence go quieter, so the
+            // list reads as names first. (Lines without " / " - notes, the sound packs - stay as written.)
+            int slash = line.IndexOf(" / ", System.StringComparison.Ordinal);
+            if (slash > 0) cols[col].Append(line, 0, slash).Append("<color=" + UiTheme.Html("note") + ">").Append(line, slash, line.Length - slash).Append("</color>\n");
+            else cols[col].Append(line).Append('\n');
         }
         left = cols[0].ToString().TrimEnd();
         right = cols[1].ToString().TrimEnd();
@@ -66,17 +70,8 @@ public class CreditsPanel : MonoBehaviour
         Text(srt, "Left", Left, 16f, new Vector2(-380f, 0f), new Vector2(740f, 720f), TextAlignmentOptions.TopLeft, font);
         Text(srt, "Right", Right, 16f, new Vector2(390f, 0f), new Vector2(720f, 720f), TextAlignmentOptions.TopLeft, font);
 
-        var close = new GameObject("Close", typeof(RectTransform), typeof(Image), typeof(Button));
-        var crt = (RectTransform)close.transform;
-        crt.SetParent(brt, false);
-        crt.anchoredPosition = new Vector2(0f, -440f);
-        crt.sizeDelta = new Vector2(240f, 72f);
-        var cimg = close.GetComponent<Image>();
-        if (UISkin.Instance != null) UISkin.Apply(cimg, UISkin.Instance.buttonWood, UISkin.SmallScale);
-        else cimg.color = UiTheme.Wood;
-        close.GetComponent<Button>().onClick.AddListener(open.Close);
-        close.AddComponent<ButtonSound>();
-        Text(crt, "Label", Loc.T("ui.close"), 32f, Vector2.zero, crt.sizeDelta, TextAlignmentOptions.Center, font);
+        // The X in the board's corner closes it (a click outside the board does too).
+        UiPanels.CloseButton(brt, font, open.Close, 28f, 72f);
     }
 
     static TextMeshProUGUI Text(RectTransform parent, string name, string text, float size, Vector2 pos, Vector2 box, TextAlignmentOptions align, TMP_FontAsset font)

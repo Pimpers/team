@@ -18,9 +18,7 @@ public class OptionsUI : MonoBehaviour
     Slider[] sliders;
     TMP_Text[] values;
     TMP_Text[] toggleLabels;
-    TMP_Text quitLabel;
-    Button quitButton, creditsButton;
-    bool confirmQuit;
+    Button creditsButton;
 
     public bool IsOpen => panel != null && panel.activeSelf;
 
@@ -44,7 +42,6 @@ public class OptionsUI : MonoBehaviour
 
     public void Open()
     {
-        confirmQuit = false;
         panel.SetActive(true);
         for (int i = 0; i < sliders.Length; i++)
         {
@@ -70,20 +67,20 @@ public class OptionsUI : MonoBehaviour
         var valueT = volumeValue != null ? volumeValue.rectTransform : null;
         if (frame == null || labelT == null || valueT == null) return; // an older layout: leave it alone
 
-        frame.sizeDelta = new Vector2(780f, 940f);
-        inner.sizeDelta = new Vector2(768f, 928f);
-        Move(inner.Find("Title"), 0f, 402f);
-        Move(inner.Find("Divider"), 0f, 340f);
+        frame.sizeDelta = new Vector2(780f, 850f);
+        inner.sizeDelta = new Vector2(768f, 838f);
+        Move(inner.Find("Title"), 0f, 357f);
+        Move(inner.Find("Divider"), 0f, 295f);
 
         // Master row (existing), then music, effects and screen shake cloned from it.
         // Rows 128 apart, each slider 58 under its label: the label of the next row no longer sits on the slider above.
-        PlaceRow(labelT, valueT, volumeSlider.transform as RectTransform, 286f);
+        PlaceRow(labelT, valueT, volumeSlider.transform as RectTransform, 241f);
         int n = GameSettings.Sliders.Length;
         System.Array.Resize(ref sliders, n);
         System.Array.Resize(ref values, n);
         for (int i = 1; i < n; i++)
         {
-            sliders[i] = CloneRow(inner, labelT, valueT, volumeSlider, "Setting" + i, Loc.T(GameSettings.Sliders[i].labelKey), 286f - 128f * i, out values[i]);
+            sliders[i] = CloneRow(inner, labelT, valueT, volumeSlider, "Setting" + i, Loc.T(GameSettings.Sliders[i].labelKey), 241f - 128f * i, out values[i]);
             Hook(i);
         }
 
@@ -96,16 +93,7 @@ public class OptionsUI : MonoBehaviour
             var b = CloneButton("Toggle" + i, GridSlot(i), new Vector2(240f, 80f), wood, out toggleLabels[i]);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); RefreshButtons(); });
         }
-        // 키 설정 (KeyBindPanel), after the toggles in their grid.
-        var keys = CloneButton("KeysButton", GridSlot(GameSettings.Toggles.Length), new Vector2(240f, 80f), wood, out var keysLabel);
-        if (keysLabel != null) keysLabel.text = Loc.T("keys.title");
-        keys.onClick.AddListener(() =>
-        {
-            var canvas = panel != null ? panel.GetComponentInParent<Canvas>() : null;
-            KeyBindPanel.Show(canvas, keysLabel != null ? keysLabel.font : null);
-        });
-        quitButton = CloneButton("QuitButton", new Vector2(-250f, BottomRow), new Vector2(230f, 80f), wood, out quitLabel); // wood, not the green "go" button
-        quitButton.onClick.AddListener(OnQuit);
+        // (No 키 설정 or 게임 종료 here: the controls are in the pause menu, quitting is on the village's ESC menu.)
         creditsButton = CloneButton("CreditsButton", new Vector2(0f, BottomRow), new Vector2(230f, 80f), wood, out var creditsLabel);
         if (creditsLabel != null) creditsLabel.text = Loc.T("credits.title");
         creditsButton.onClick.AddListener(() =>
@@ -114,15 +102,18 @@ public class OptionsUI : MonoBehaviour
             if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
             CreditsPanel.Show(canvas, creditsLabel != null ? creditsLabel.font : null);
         });
+        // 닫기 becomes the X in the window's top-right corner (it was cloned above, so the other buttons keep its look).
         var close = (RectTransform)closeButton.transform;
-        close.anchoredPosition = new Vector2(250f, BottomRow);
-        close.sizeDelta = new Vector2(230f, 80f);
+        close.anchoredPosition = new Vector2(334f, 369f); // 14 in from the 768 x 838 panel's corner
+        close.sizeDelta = new Vector2(72f, 72f);
+        var closeLabel = closeButton.GetComponentInChildren<TMP_Text>();
+        if (closeLabel != null) { closeLabel.text = "X"; closeLabel.enableAutoSizing = false; closeLabel.fontSize = UiTheme.TextLarge; }
         RefreshButtons();
     }
 
-    // The toggles and 키 설정 fill a grid of three per row under the sliders; quit / credits / close below it.
-    const float GridTop = -230f, GridRow = 90f, BottomRow = -410f;
-    static Vector2 GridSlot(int i) => new Vector2(-250f + 250f * (i % 3), GridTop - GridRow * (i / 3));
+    // The toggles fill a grid of two per row under the sliders; the credits button below it.
+    const float GridTop = -275f, GridRow = 90f, BottomRow = -365f;
+    static Vector2 GridSlot(int i) => new Vector2(-125f + 250f * (i % 2), GridTop - GridRow * (i / 2));
 
     static void Move(Transform t, float x, float y)
     {
@@ -179,18 +170,11 @@ public class OptionsUI : MonoBehaviour
         return btn;
     }
 
-    void OnQuit()
-    {
-        if (!confirmQuit) { confirmQuit = true; RefreshButtons(); return; }
-        GameSettings.Quit();
-    }
-
     void RefreshButtons()
     {
         if (toggleLabels != null)
             for (int i = 0; i < toggleLabels.Length; i++)
                 if (toggleLabels[i] != null) { toggleLabels[i].text = GameSettings.ToggleText(GameSettings.Toggles[i]); FitLabel(toggleLabels[i]); }
-        if (quitLabel != null) quitLabel.text = confirmQuit ? Loc.T("ui.quit_confirm") : Loc.T("ui.quit");
     }
 
     static void Show(TMP_Text t, float v)

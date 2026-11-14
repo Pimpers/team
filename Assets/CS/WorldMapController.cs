@@ -86,6 +86,9 @@ public class WorldMapController : MonoBehaviour
         var tagText = marker != null ? marker.GetComponentInChildren<TMP_Text>(true) : null;
         WorldMapLabels.Build(mapSize, tagPlate, tagText != null ? tagText.font : null);
         PlaceRingAndTag();
+        // The CHAPTER tag only lent its plate to the region labels (Build, above): the gold ring and the "고대 숲" plate
+        // already say where to go, so the tag itself is not shown.
+        if (marker != null) marker.gameObject.SetActive(false);
         var recordCanvas = backButton != null ? backButton.GetComponentInParent<Canvas>() : null;
         if (recordCanvas != null) ShowRecords(recordCanvas.rootCanvas, messageText != null ? messageText.font : null);
         // After the first clear: pick the 타락도 (difficulty) of the next run.
@@ -172,8 +175,8 @@ public class WorldMapController : MonoBehaviour
         var rt = (RectTransform)go.transform;
         rt.SetParent(canvas.transform, false);
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 0f);
-        rt.anchoredPosition = new Vector2(30f, 30f);
-        rt.sizeDelta = new Vector2(260f, 80f);
+        rt.anchoredPosition = new Vector2(24f, 24f);
+        rt.sizeDelta = new Vector2(180f, 60f); // a small side button (it was 260 x 80)
         var skin = UISkin.Instance;
         UISkin.Apply(go.GetComponent<Image>(), skin != null ? skin.buttonWood : null, UISkin.SmallScale);
         var btn = go.AddComponent<Button>();
@@ -186,7 +189,7 @@ public class WorldMapController : MonoBehaviour
         var t = labelGo.GetComponent<TextMeshProUGUI>();
         if (font != null) t.font = font;
         t.text = Loc.T("hud.tutorial_name");
-        t.fontSize = UiTheme.TextBody;
+        t.fontSize = UiTheme.TextSmall;
         t.color = Color.white;
         t.alignment = TextAlignmentOptions.Center;
         t.raycastTarget = false;

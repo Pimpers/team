@@ -86,50 +86,35 @@ public static class TitleSettings
         var panel = new GameObject("Panel", typeof(RectTransform), typeof(Image));
         var prt = (RectTransform)panel.transform;
         prt.SetParent(srt, false);
-        prt.sizeDelta = new Vector2(700f, 800f);
+        prt.sizeDelta = new Vector2(700f, 660f);
         var pimg = panel.GetComponent<Image>();
         var skin = UISkin.Instance;
         if (skin != null && skin.buttonCream != null) UISkin.Apply(pimg, skin.buttonCream, 3f);
         else pimg.color = new Color(1f, 0.95f, 0.82f);
         panel.AddComponent<Button>().transition = Selectable.Transition.None; // clicks on the panel don't reach the shade
 
-        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 340f), new Vector2(600f, 64f), font, UISkin.InkTitle);
+        const float dy = -93f; // the content is centred in the shorter panel
+        Text(prt, Loc.T("harbor.settings"), UiTheme.TextTitle, new Vector2(0f, 340f + dy), new Vector2(600f, 64f), font, UISkin.InkTitle);
         // The same rows as the village's settings (GameSettings.Sliders / Toggles).
         for (int i = 0; i < GameSettings.Sliders.Length; i++)
         {
             var s = GameSettings.Sliders[i];
-            Row(prt, Loc.T(s.labelKey), s.get(), s.set, 250f - 100f * i, font);
+            Row(prt, Loc.T(s.labelKey), s.get(), s.set, 250f + dy - 100f * i, font);
         }
+        Button firstToggle = null;
         for (int i = 0; i < GameSettings.Toggles.Length; i++)
         {
             var toggle = GameSettings.Toggles[i];
-            // Two per row (the toggles grew to four: 색약 모드, 큰 글씨).
-            var b = MakeButton(prt, "", new Vector2(-165f + 330f * (i % 2), -150f - 85f * (i / 2)), new Vector2(310f, 72f), skin != null ? skin.buttonWood : null, font);
+            // Two per row.
+            var b = MakeButton(prt, "", new Vector2(-165f + 330f * (i % 2), -150f + dy - 85f * (i / 2)), new Vector2(310f, 72f), skin != null ? skin.buttonWood : null, font);
             var label = b.GetComponentInChildren<TMP_Text>();
             label.text = GameSettings.ToggleText(toggle);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); label.text = GameSettings.ToggleText(toggle); });
+            if (firstToggle == null) firstToggle = b;
         }
-        // In a stage the bottom row has a third button, 게임 종료 (the pause menu is the only way here, and it has
-        // no quit of its own); on the title screen the menu's own quit button does that.
-        bool inRun = RunManager.Instance != null;
-        var wood = skin != null ? skin.buttonWood : null;
-        var size = new Vector2(inRun ? 200f : 240f, 72f);
-        var keys = MakeButton(prt, Loc.T("keys.title"), new Vector2(inRun ? -215f : -130f, -330f), size, wood, font);
-        keys.onClick.AddListener(() => KeyBindPanel.Show(canvas, font));
-        var close = MakeButton(prt, Loc.T("ui.close"), new Vector2(inRun ? 0f : 130f, -330f), size, wood, font);
-        close.onClick.AddListener(() => Object.Destroy(shade));
-        if (inRun)
-        {
-            var quit = MakeButton(prt, Loc.T("ui.quit"), new Vector2(215f, -330f), size, wood, font);
-            var quitLabel = quit.GetComponentInChildren<TMP_Text>();
-            bool sure = false; // two clicks, like giving up (the run's gold is banked by RunManager.OnApplicationQuit)
-            quit.onClick.AddListener(() =>
-            {
-                if (!sure) { sure = true; quitLabel.text = Loc.T("ui.quit_confirm"); return; }
-                GameSettings.Quit();
-            });
-        }
-        GameInput.SelectForPad(close);
+        // 닫기 is the X in the corner. (No 키 설정 or 게임 종료 here: the pause menu has the controls and the quit.)
+        var close = UiPanels.CloseButton(prt, font, () => Object.Destroy(shade), 20f, 72f);
+        GameInput.SelectForPad(firstToggle != null ? firstToggle : close);
     }
 
     static void Row(RectTransform panel, string label, float value, System.Action<float> set, float y, TMP_FontAsset font)

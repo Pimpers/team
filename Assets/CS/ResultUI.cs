@@ -42,6 +42,24 @@ public class ResultUI : MonoBehaviour
     }
     bool boardStyled;
 
+    // A defeat greys the world out: a grey veil over the picture and under the board (which keeps its colours).
+    // shortcut: a veil that mixes the picture toward grey, not true greyscale (that would need a post-process volume);
+    // upgrade if the 2D renderer's post-processing is enabled.
+    void GrayBehindBoard()
+    {
+        var parent = panel != null ? panel.transform.parent : null;
+        if (parent == null || parent.Find("DeathGray") != null) return;
+        var go = new GameObject("DeathGray", typeof(RectTransform), typeof(Image));
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(parent, false);
+        rt.SetSiblingIndex(panel.transform.GetSiblingIndex()); // just under the board
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        rt.offsetMin = new Vector2(-4000f, -4000f); rt.offsetMax = new Vector2(4000f, 4000f); // any aspect ratio
+        var img = go.GetComponent<Image>();
+        img.color = new Color(0.46f, 0.46f, 0.48f, 0.74f);
+        img.raycastTarget = false;
+    }
+
     // The outline needs the text set up, which an inactive panel's text isn't in Awake: done on Show.
     void OutlineOnBoard()
     {
@@ -107,7 +125,7 @@ public class ResultUI : MonoBehaviour
     // 마을로 돌아가기 button), the hearts, map and counters showed round it. The run is over, nothing brings them back.
     static void HideRunHud()
     {
-        var kinds = new[] { typeof(SkillHUD), typeof(HeartHUD), typeof(DashBar), typeof(StageMinimap), typeof(MonsterTracker), typeof(SetHUD) };
+        var kinds = new[] { typeof(SkillHUD), typeof(HeartHUD), typeof(DashBar), typeof(StageMinimap), typeof(MonsterTracker), typeof(SetHUD), typeof(StageHudExtras) };
         foreach (var kind in kinds)
             foreach (var o in Object.FindObjectsByType(kind)) ((Component)o).gameObject.SetActive(false);
         var run = RunManager.Instance;
@@ -125,6 +143,7 @@ public class ResultUI : MonoBehaviour
         StageBanner.ClearAll();
         HideRunHud();
         if (panel != null) panel.SetActive(true);
+        if (!win) GrayBehindBoard();
         OutlineOnBoard();
         BuildSummary(win);
         if (resultTitleText != null)

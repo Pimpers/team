@@ -76,6 +76,37 @@ public static class UiPanels
         return label;
     }
 
+    // The close button every window shares: a small wooden "X" in the board's top-right corner, in place of a
+    // "닫기" button along the bottom. `margin` is its distance from the corner.
+    public static Button CloseButton(RectTransform board, TMP_FontAsset font, System.Action onClose, float margin = 24f, float size = 72f)
+    {
+        var go = new GameObject("CloseX", typeof(RectTransform), typeof(Image), typeof(Button));
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(board, false);
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 1f);
+        rt.anchoredPosition = new Vector2(-margin, -margin);
+        rt.sizeDelta = new Vector2(size, size);
+        var img = go.GetComponent<Image>();
+        if (UISkin.Instance != null && UISkin.Instance.buttonWood != null) UISkin.Apply(img, UISkin.Instance.buttonWood, UISkin.SmallScale);
+        else img.color = UiTheme.Wood;
+        go.AddComponent<ButtonSound>();
+
+        var label = new GameObject("Label", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+        label.rectTransform.SetParent(rt, false);
+        label.rectTransform.anchorMin = Vector2.zero; label.rectTransform.anchorMax = Vector2.one;
+        label.rectTransform.offsetMin = label.rectTransform.offsetMax = Vector2.zero;
+        if (font != null) label.font = font;
+        label.text = "X";
+        label.fontSize = UiTheme.TextLarge;
+        label.color = UiTheme.Cream;
+        label.alignment = TextAlignmentOptions.Center;
+        label.raycastTarget = false;
+
+        var btn = go.GetComponent<Button>();
+        btn.onClick.AddListener(() => onClose?.Invoke());
+        return btn;
+    }
+
     // A small icon (a card's art) at `pos` (its centre) inside `parent`.
     public static Image Icon(RectTransform parent, Sprite sprite, Vector2 pos, float size)
     {

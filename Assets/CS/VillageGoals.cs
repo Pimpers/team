@@ -9,7 +9,6 @@ using TMPro;
 public class VillageGoals : MonoBehaviour
 {
     TextMeshProUGUI text;
-    CardPool.Job job;
     int shownGold = -1, shownVisits = -1;
 
     public static VillageGoals Create(Canvas canvas, TMP_FontAsset font, bool ranged)
@@ -27,7 +26,6 @@ public class VillageGoals : MonoBehaviour
         var slot = (RectTransform)UiPanels.Inset(rt, "Slot", new Vector2(18f, -40f), new Vector2(464f, 138f)).transform;
 
         var goals = go.AddComponent<VillageGoals>();
-        goals.job = ranged ? CardPool.Job.Archer : CardPool.Job.Knight;
         goals.text = new GameObject("Text", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
         var trt = goals.text.rectTransform;
         trt.SetParent(slot, false);
@@ -54,21 +52,26 @@ public class VillageGoals : MonoBehaviour
         shownGold = MetaProgress.Gold;
         shownVisits = GameSave.Data.smithVisits;
         var sb = new System.Text.StringBuilder();
-        sb.Append(SmithLine());
+        // Goals, not facts: where to clear next, and how far the gear is upgraded.
         sb.Append(CorruptionLine());
-        sb.Append(Loc.F("goals.cards", CardsFor(job)));
-        text.text = sb.ToString();
+        sb.Append(SmithLine());
+        text.text = sb.ToString().TrimEnd('\n');
     }
 
-    // The cheapest upgrade not maxed: affordable now, or how much gold is still missing.
+    // The gear upgrades as a level count (n of the most the blacksmith offers), with what is next: affordable now,
+    // or how much gold is still missing. The 행운의 방울 behind the counter is its own goal until it opens.
     static string SmithLine()
     {
         if (BlacksmithUI.RerollLocked) return Loc.F("goals.smith_locked", BlacksmithUI.RerollUnlockVisit);
-        int best = int.MaxValue;
+        int best = int.MaxValue, level = 0, max = 0;
         foreach (MetaProgress.Upgrade u in System.Enum.GetValues(typeof(MetaProgress.Upgrade)))
+        {
+            level += MetaProgress.Level(u);
+            max += MetaProgress.MaxLevel(u);
             if (!MetaProgress.IsMaxed(u)) best = Mathf.Min(best, MetaProgress.Cost(u));
-        if (best == int.MaxValue) return Loc.T("goals.smith_done");
-        return MetaProgress.Gold >= best ? Loc.T("goals.smith_ready") : Loc.F("goals.smith_need", best - MetaProgress.Gold);
+        }
+        if (best == int.MaxValue) return Loc.F("goals.smith_done", level, max);
+        return MetaProgress.Gold >= best ? Loc.F("goals.smith_ready", level, max) : Loc.F("goals.smith_need", level, max, best - MetaProgress.Gold);
     }
 
     static string CorruptionLine()
@@ -76,13 +79,5 @@ public class VillageGoals : MonoBehaviour
         int unlocked = Corruption.Unlocked;
         if (unlocked >= Corruption.MaxLevel) return Loc.T("goals.corruption_done");
         return unlocked == 0 ? Loc.T("goals.corruption_first") : Loc.F("goals.corruption_next", unlocked + 1, unlocked);
-    }
-
-    // The cards a run can draw for this cat (its job's skills and the shared ones).
-    static int CardsFor(CardPool.Job job)
-    {
-        int n = 0;
-        foreach (var c in CardPool.All) if (c.job == CardPool.Job.Any || c.job == job) n++;
-        return n;
     }
 }
