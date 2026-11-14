@@ -64,6 +64,10 @@ public class KeyBindPanel : MonoBehaviour
             open.keyButtons[i].onClick.AddListener(() => open.BeginWait(row));
         }
         float bottom = -top + 60f;
+        // The keys that can't be changed, under the rows: this window is also the pause menu's 조작키 list, and the
+        // space was empty.
+        Text(brt, $"A / D  {Loc.T("controls.move")}     S  {Loc.T("controls.drop")}\n{Loc.T("controls.air_click")}  {Loc.T("controls.slam")}     ESC  {Loc.T("pause.title")}",
+             UiTheme.TextSmall, new Vector2(0f, bottom + 150f), new Vector2(680f, 90f), font, UISkin.InkSoft);
         MakeButton(brt, Loc.T("keys.reset"), new Vector2(-140f, bottom), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font, out _)
             .onClick.AddListener(() => { GameInput.ResetBindings(); open.waiting = -1; open.Refresh(); });
         MakeButton(brt, Loc.T("ui.close"), new Vector2(140f, bottom), new Vector2(240f, 72f), skin != null ? skin.buttonWood : null, font, out _)

@@ -67,6 +67,7 @@ public static class ScreenCaptureTool
         Add("Tutorial", "tutorial", () => Find<TutorialController>().JumpToStepForCapture(7));
         Add("LobbyScene", "lobby");
         Add("Stage1", "legend"); // the first stage shows the minimap legend for its first seconds
+        Add("Stage2B", "stage2b"); Add("Stage3B", "stage3b"); Add("Stage4B", "stage4b"); // the other-direction scenes of stages 2-4
         Add("Stage2", "tip_skills", () => { GameSave.Data.seenTips = ""; OneTimeTip.ShowInRun("skills"); }); // a one-time tip in a run
         Add("Stage2", "hud", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); });
         Add("Stage2", "pause", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<PauseMenu>().OpenForPlaytest(); });

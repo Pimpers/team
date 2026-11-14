@@ -361,7 +361,7 @@ public class CardDraftUI : MonoBehaviour
     // The text box is kept inside the cream area: the frame's corner ornaments cut into its sides and bottom,
     // and a box as wide as the frame let a long line or a fourth line run onto them.
     static readonly Vector2[] TextPos = { new Vector2(0f, -136f), new Vector2(0f, -136f), new Vector2(0f, -136f) }; // the text box: -65 to -172 on all three fronts (art rows 472-703)
-    static readonly Vector2[] TextSize = { new Vector2(224f, 70f), new Vector2(224f, 70f), new Vector2(224f, 70f) };
+    static readonly Vector2[] TextSize = { new Vector2(212f, 70f), new Vector2(212f, 70f), new Vector2(212f, 70f) }; // (224 let a full line touch the frame's side ornament)
     static readonly Vector2 NamePos = new Vector2(0f, -84f), NameSize = new Vector2(224f, 36f); // the box's top line (no name ribbon on these fronts)
 
     // Ink per grade, readable on that card's text box (cream / pale blue / lavender).

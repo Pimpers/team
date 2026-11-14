@@ -239,7 +239,8 @@ public class ResultUI : MonoBehaviour
         for (int t = 0; t < CardPool.TagNames.Length; t++)
         {
             int lv = stats.SetLv((CardPool.Tag)t);
-            if (lv > 0) sets.Add(lv >= 2 ? Loc.F("result.set_complete", CardPool.TagNames[t]) : Loc.F("result.set", CardPool.TagNames[t]));
+            // (<nobr>: with five sets the line broke inside one - "사냥 / 세트")
+            if (lv > 0) sets.Add("<nobr>" + (lv >= 2 ? Loc.F("result.set_complete", CardPool.TagNames[t]) : Loc.F("result.set", CardPool.TagNames[t])) + "</nobr>");
         }
         if (sets.Count > 0) sb.Append("<color=" + UiTheme.Html("tip") + ">").Append(string.Join(" · ", sets)).Append("</color>");
         return sb.ToString();
