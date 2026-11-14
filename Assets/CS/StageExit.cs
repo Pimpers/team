@@ -249,7 +249,8 @@ public class StageExit : MonoBehaviour
     // every window size. A constant, not the camera's size - in a batch capture that reports the tiny batch window.
     static float ViewHeight(Camera cam) => 8.65f;
 
-    bool PlaceStaged(StageMap map, Vector2 feet)
+    // cutLedges: one-way ledges through an arch don't count, and are taken out when the stage is set (CutLedges).
+    bool PlaceStaged(StageMap map, Vector2 feet, bool cutLedges = false)
     {
         float half = StageHalf();
         float floorY = FloorAt(map, feet.x, feet.y);
@@ -266,8 +267,9 @@ public class StageExit : MonoBehaviour
                 var a = new Vector2(c - half, floorY); var b = new Vector2(c + half, floorY);
                 // on the staged floor a ledge may pass over a portal as long as the arch (3 tall) stands clear under it
                 // (no HUD test here: the camera reframes on the stage as it opens, so where it is now says nothing)
-                if (!PortalRoom(map, a) || !PortalRoom(map, b)) { nRoom++; continue; }
+                if (!PortalRoom(map, a, cutLedges) || !PortalRoom(map, b, cutLedges)) { nRoom++; continue; }
                 if (!Walkable(map, a, b)) { nWalk++; continue; }
+                if (cutLedges) { CutLedges(map, a); CutLedges(map, b); }
                 foreach (var w in ways) DestroyWay(w);
                 ways.Clear();
                 AddWay(b, -1f, "_hunt", false);
@@ -281,14 +283,32 @@ public class StageExit : MonoBehaviour
 
     // Room for one portal (2.5 wide, 3 tall): ground under its step, nothing solid and no ledge through the arch (a
     // ledge just above it is fine). The 4-wide log test was stricter than a portal needs.
-    static bool PortalRoom(StageMap map, Vector2 p)
+    // A ledge through a portal's arch is taken out whole, in a puff of dust. Stage 1's low branches left no flat run
+    // free for two portals, so its fork always fell back to the route window; the stage is cleared by now, and the
+    // scene reloads for the next one, so nothing needs the ledge.
+    static void CutLedges(StageMap map, Vector2 p)
+    {
+        var tm = map.platforms;
+        if (tm == null) return;
+        for (float dx = -1.4f; dx <= 1.41f; dx += 0.7f)
+            for (float dy = 0.4f; dy <= 3.2f; dy += 0.4f)
+            {
+                var c = tm.WorldToCell(new Vector3(p.x + dx, p.y + dy, 0f));
+                if (!tm.HasTile(c)) continue;
+                Vfx.Play("dust_mid", tm.GetCellCenterWorld(c), 1.2f);
+                for (var r = c + Vector3Int.right; tm.HasTile(r); r += Vector3Int.right) tm.SetTile(r, null);
+                for (var l = c; tm.HasTile(l); l += Vector3Int.left) tm.SetTile(l, null); // (c itself first)
+            }
+    }
+
+    static bool PortalRoom(StageMap map, Vector2 p, bool ledgesOk = false)
     {
         for (float dx = -1.4f; dx <= 1.41f; dx += 0.7f)
         {
             for (float dy = 0.4f; dy <= 3.2f; dy += 0.4f)
             {
                 var at = new Vector2(p.x + dx, p.y + dy);
-                if (map.IsSolid(at) || map.IsPlatform(at)) return false;
+                if (map.IsSolid(at) || (!ledgesOk && map.IsPlatform(at))) return false;
             }
             if (Mathf.Abs(dx) <= 1.21f)
             {
@@ -565,7 +585,8 @@ public class StageExit : MonoBehaviour
             // an authored stage, not a hunt for gaps: the two rise either side of the cat on its own floor, a fixed step
             // apart that fits the screen (4:3 too); a short floor moves the stage to the nearest flat run wide enough;
             // only where there is none does the old search run
-            if (!PlaceStaged(map, at) && !PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f && !UnderHud(s), closed: false)) return false;
+            if (!PlaceStaged(map, at) && !PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f && !UnderHud(s), closed: false)
+                && !PlaceStaged(map, at, cutLedges: true)) return false; // last: the nearest flat run, its low ledges taken out
             ClearOut();
             foreach (var w in ways) StartCoroutine(Appear(w.log));
         }

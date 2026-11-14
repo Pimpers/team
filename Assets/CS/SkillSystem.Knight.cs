@@ -37,6 +37,7 @@ public partial class SkillSystem
         Vfx.Play("land_dust", Feet, 1f);
         Sfx.Play("jump", 1f, 0.9f);
         invulnTimer = Mathf.Max(invulnTimer, 0.4f);
+        float floorY = Feet.y; // the slash reaches back down to here: a monster on the floor it leapt from is cut too
         body.Launch(17f);
         if (body.jumpFrames != null && body.jumpFrames.Length > 0) body.PlayAttack(new[] { body.jumpFrames[body.jumpFrames.Length / 2] }, 1f / 0.12f);
         yield return new WaitForSeconds(0.12f);
@@ -44,7 +45,8 @@ public partial class SkillSystem
         if (w > 0f) yield return new WaitForSeconds(w);
         Sfx.Play("swing", 1f, 0.8f);
         Vfx.Play("k_highcut_fx", new Vector3(Me.x + Facing * 0.9f, Me.y + 0.6f, 0f), 1f, flipX: Facing < 0f, parent: transform);
-        HitBox(new Vector2(Mathf.Min(Me.x - Facing * 0.5f, Me.x + Facing * 2.4f), Me.y - 1.6f),
+        // (from the floor up: the cat is ~3 up by the strike, and a box 1.6 under it hit only what stood above)
+        HitBox(new Vector2(Mathf.Min(Me.x - Facing * 0.5f, Me.x + Facing * 2.4f), Mathf.Min(Me.y - 1.6f, floorY)),
                new Vector2(Mathf.Max(Me.x - Facing * 0.5f, Me.x + Facing * 2.4f), Me.y + 3.2f), 3.5f * Power("k_highcut"), Facing);
         CameraFollow.Shake(0.15f, 0.12f);
         yield return new WaitForSeconds(0.12f);

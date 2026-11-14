@@ -34,7 +34,13 @@ public class CardRewardChest : MonoBehaviour
         chest.onOpened = onOpened;
         var run = RunManager.Instance;
         chest.hitsRequired = run != null && run.stageNumber > 1 ? 1 : 2;
-        go.transform.position = FindSpot(map, (player.Body != null ? player.Body.Feet : (Vector2)player.transform.position));
+        Vector2 feet = player.Body != null ? player.Body.Feet : (Vector2)player.transform.position;
+        // By the way out, where one already stands within reach (a stage with its closed portal at the end): the chest
+        // came up anywhere round the cat, often the other way from the portal. A fork's portals rise beside the cat
+        // once the card is picked - so beside the chest it has just opened.
+        var exit = StageExit.Instance;
+        Vector2 anchor = exit != null && exit.WayCount == 1 && Vector2.Distance(exit.ExitPoint, feet) < 22f ? exit.ExitPoint : feet;
+        go.transform.position = FindSpot(map, anchor);
         go.transform.localScale = Vector3.one * BaseScale;
         chest.Build();
         WorldPropFx.PlayItemFeedback(go.transform.position + Vector3.up * 0.65f, 0.65f);
