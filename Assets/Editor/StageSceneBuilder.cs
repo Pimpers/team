@@ -52,6 +52,9 @@ public static class StageSceneBuilder
         public string innerTopLeft, innerTopRight; // fill cell whose up-left / up-right is open
         public string[] center;                    // fill variants, picked by position
         public string platLeft, platMid, platRight, platSingle;
+        // Grass fringe variants (null = use `top` / `platMid`): one tile repeated left a notch at every seam and an even
+        // 16 px beat. The variants share their end columns, so any order of them joins without a seam.
+        public string[] topVariants, platMidVariants;
     }
 
     static readonly Terrain Grass = new Terrain
@@ -62,6 +65,8 @@ public static class StageSceneBuilder
         innerTopLeft = "cute_3_0", innerTopRight = "cute_4_0",
         center = new[] { "cute_1_1", "cute_5_1", "cute_6_1" },
         platLeft = "cute_plat_grass_l", platMid = "cute_plat_grass_m", platRight = "cute_plat_grass_r", platSingle = "cute_5_2",
+        topVariants = new[] { "cute_top_a", "cute_top_b", "cute_top_c" },
+        platMidVariants = new[] { "cute_plat_grass_m1", "cute_plat_grass_m2", "cute_plat_grass_m3" },
     };
 
     // (The brick terrain and cobble wall of the old temple / altar stages are gone: every stage is forest now.)
@@ -1007,7 +1012,7 @@ public static class StageSceneBuilder
         var t = def.terrain;
         bool up = SolidAt(def, r - 1, c, cols, rows), down = SolidAt(def, r + 1, c, cols, rows);
         bool left = SolidAt(def, r, c - 1, cols, rows), right = SolidAt(def, r, c + 1, cols, rows);
-        if (!up) return !left && right ? t.topLeft : left && !right ? t.topRight : t.top;
+        if (!up) return !left && right ? t.topLeft : left && !right ? t.topRight : t.topVariants != null ? Variant(t.topVariants, c, r) : t.top;
         if (!down) return !left ? t.bottomLeft : !right ? t.bottomRight : t.bottom;
         if (!left) return t.left;
         if (!right) return t.right;
@@ -1020,7 +1025,7 @@ public static class StageSceneBuilder
     {
         var t = def.terrain;
         bool left = At(def, r, c - 1) == '=', right = At(def, r, c + 1) == '=';
-        return left && right ? t.platMid : right ? t.platLeft : left ? t.platRight : t.platSingle;
+        return left && right ? (t.platMidVariants != null ? Variant(t.platMidVariants, c, r) : t.platMid) : right ? t.platLeft : left ? t.platRight : t.platSingle;
     }
 
     static Sprite[] LoadAnsimuzForest()

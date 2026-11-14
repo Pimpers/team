@@ -178,6 +178,32 @@ public class TrapHazard : MonoBehaviour
                 break;
         }
         trap.timer = RunRng.Range(0f, trap.idleTime); // traps do not all fire together
+        // Nothing hides: a red strip on the floor always marks the zone the trap hurts (the saw is plain to see already).
+        if (kind != Kind.Saw) trap.MakeZoneMark(kind == Kind.Toxic || kind == Kind.Spikes ? 1.7f : kind == Kind.Fire ? 0.9f : 1.0f);
+    }
+
+    Transform zone;
+    SpriteRenderer zoneSr;
+
+    // A thin red strip under the trap, over the ground and any platform it stands on, pulsing; brighter while it warns.
+    void MakeZoneMark(float width)
+    {
+        var go = new GameObject("ZoneMark");
+        zone = go.transform;
+        zone.SetParent(transform, false);
+        zone.position = new Vector3(feet.x, feet.y + 0.07f, 0f);
+        zone.localScale = new Vector3(width, 0.14f, 1f);
+        zoneSr = go.AddComponent<SpriteRenderer>();
+        zoneSr.sprite = RuntimeGeneratedAssets.WhiteSprite();
+        zoneSr.sortingOrder = 7;
+        zoneSr.color = new Color(1f, 0.3f, 0.22f, 0.5f);
+    }
+
+    void PulseZoneMark()
+    {
+        if (zoneSr == null) return;
+        float a = state == 1 ? 0.95f : 0.35f + 0.25f * Mathf.PingPong(Time.time * 1.6f, 1f);
+        zoneSr.color = new Color(1f, state == 1 ? 0.55f : 0.3f, 0.22f, a);
     }
 
     void FindRail(StageMap map)
@@ -216,9 +242,11 @@ public class TrapHazard : MonoBehaviour
         {
             // Every monster is down: the reward chest and the exit log can land anywhere, so the traps go quiet.
             sr.color = Color.Lerp(sr.color, new Color(1f, 1f, 1f, 0f), Time.deltaTime * 4f);
+            if (zoneSr != null) zoneSr.color = new Color(1f, 0.3f, 0.22f, sr.color.a * 0.5f);
             if (sr.color.a < 0.05f) Destroy(gameObject);
             return;
         }
+        PulseZoneMark();
         // Only on screen: a trap on another floor (or behind a seal) never fires out of sight.
         if (Vector2.Distance(player.transform.position, transform.position) > ActiveRange || !OnScreen()) return;
 
@@ -232,7 +260,7 @@ public class TrapHazard : MonoBehaviour
         if (state == 0)
         {
             sr.sprite = frames[0];
-            sr.color = new Color(1f, 1f, 1f, 0.55f);
+            sr.color = Color.white; // (it rested at 55 % and read as a hidden trap)
             if (timer >= idleTime) { state = 1; timer = 0f; Warn(); }
         }
         else if (state == 1)

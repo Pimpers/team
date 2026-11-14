@@ -346,7 +346,9 @@ public class StageMinimap : MonoBehaviour
 
     void UpdateOne(RectTransform marker, Image image, StageExit exit, int i, int count)
     {
-        bool show = exit != null && i < count && exit.WayOpen(i);
+        // On the map from the start, so the way out is known at once: dim while the log is still vined shut, bright
+        // (and pulsing near it) once it is open.
+        bool show = exit != null && i < count && exit.WayVisible(i);
         if (marker.gameObject.activeSelf != show)
         {
             marker.gameObject.SetActive(show);
@@ -356,8 +358,9 @@ public class StageMinimap : MonoBehaviour
         if (!show) return;
         Vector2 point = exit.WayPoint(i);
         marker.anchoredPosition = ToMap(point);
-        bool near = player != null && Vector2.Distance(player.position, point) < 6f;
-        float pulse = near ? 0.55f + 0.45f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 3f)) : 1f;
+        bool open = exit.WayOpen(i);
+        bool near = open && player != null && Vector2.Distance(player.position, point) < 6f;
+        float pulse = near ? 0.55f + 0.45f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 3f)) : open ? 1f : 0.6f;
         var c = exit.WayColor(i);
         image.color = new Color(c.r, c.g, c.b, pulse);
         marker.localScale = Vector3.one * (near ? 1f + 0.2f * pulse : 1f);

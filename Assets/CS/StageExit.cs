@@ -89,6 +89,8 @@ public class StageExit : MonoBehaviour
     public int WayCount => ways.Count;
     public Vector2 WayPoint(int i) => Point(ways[i]);
     public bool WayOpen(int i) => open && !entering && ways[i].open && !ways[i].shut;
+    // The way is on the map from the start (the minimap marks where it will be), open or not yet.
+    public bool WayVisible(int i) => !entering && !ways[i].shut;
     public bool WayIsHunt(int i) => ways[i].hunt;
     // The fork's colours: red for the hard way, green for the easy one; 색약: vermilion and yellow (the shapes differ too).
     public Color WayColor(int i)

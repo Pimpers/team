@@ -360,9 +360,9 @@ public class CardDraftUI : MonoBehaviour
     const float IconSize = 128f; // the 64 px skill icons at exactly x2 (0.78 x 160 = 125 drew uneven pixels)
     // The text box is kept inside the cream area: the frame's corner ornaments cut into its sides and bottom,
     // and a box as wide as the frame let a long line or a fourth line run onto them.
-    static readonly Vector2[] TextPos = { new Vector2(0f, -139f), new Vector2(0f, -139f), new Vector2(0f, -139f) }; // the text box: -65 to -172 on all three fronts (art rows 472-703)
-    static readonly Vector2[] TextSize = { new Vector2(212f, 68f), new Vector2(212f, 68f), new Vector2(212f, 68f) }; // (224 let a full line touch the frame's side ornament)
-    static readonly Vector2 NamePos = new Vector2(0f, -85f), NameSize = new Vector2(224f, 42f); // the box's top line (no name ribbon on these fronts); 42 high for the name at 36
+    static readonly Vector2[] TextPos = { new Vector2(0f, -136f), new Vector2(0f, -136f), new Vector2(0f, -136f) }; // the text box: -65 to -172 on all three fronts (art rows 472-703)
+    static readonly Vector2[] TextSize = { new Vector2(212f, 70f), new Vector2(212f, 70f), new Vector2(212f, 70f) }; // (224 let a full line touch the frame's side ornament)
+    static readonly Vector2 NamePos = new Vector2(0f, -84f), NameSize = new Vector2(224f, 36f); // the box's top line (no name ribbon on these fronts)
 
     // Ink per grade, readable on that card's text box (cream / pale blue / lavender).
     static readonly (string name, string level, Color body, Color medallion)[] Inks =
@@ -459,13 +459,13 @@ public class CardDraftUI : MonoBehaviour
         var nameLabel = Child<TextMeshProUGUI>(button, "CardName", NamePos, NameSize);
         nameLabel.font = label.font;
         nameLabel.text = card.name;
-        nameLabel.color = Color.white; // the name must read at a glance: white on a near-black plate, as big as fits (36, else 24)
+        nameLabel.color = UISkin.OverlayText;
         nameLabel.alignment = TextAlignmentOptions.Center;
         nameLabel.textWrappingMode = TextWrappingModes.NoWrap;
         nameLabel.overflowMode = TextOverflowModes.Truncate;
         nameLabel.enableAutoSizing = true;
-        nameLabel.fontSizeMax = UiTheme.TextLarge;
-        nameLabel.fontSizeMin = UiTheme.TextSmall;
+        nameLabel.fontSizeMax = 28f;
+        nameLabel.fontSizeMin = 18f;
         nameLabel.outlineWidth = 0.28f;
         nameLabel.outlineColor = new Color32(24, 14, 10, 255);
         nameLabel.raycastTarget = false;
@@ -476,7 +476,7 @@ public class CardDraftUI : MonoBehaviour
         // New or a level-up, told by the plate's colour without reading: dark for a card not held yet, amber for
         // one more level of a card already held (its text says "Lv.1 → 2").
         bool levelUp = card.maxLevel > 0 && PlayerStats.Instance != null && PlayerStats.Instance.CardLevel(card.id) > 0;
-        plate.color = levelUp ? new Color(0.5f, 0.3f, 0.04f, 1f) : new Color(0.08f, 0.05f, 0.04f, 1f);
+        plate.color = levelUp ? new Color(0.58f, 0.36f, 0.06f, 1f) : UiTheme.Plate;
         plate.raycastTarget = false;
         plate.transform.SetSiblingIndex(nameLabel.transform.GetSiblingIndex());
 
