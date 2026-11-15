@@ -143,8 +143,8 @@ public static class GameSave
         };
         value.characterNames[0] = PlayerPrefs.GetString("mercenary_name_0", "");
         value.characterNames[1] = PlayerPrefs.GetString("mercenary_name_1", "");
-        RefundLegacyExcess(value, ref value.attackLevel, 3, 25);
-        RefundLegacyExcess(value, ref value.speedLevel, 3, 20);
+        RefundLegacyExcess(value, ref value.attackLevel, MetaProgress.MaxLevel(MetaProgress.Upgrade.Attack), 25);
+        RefundLegacyExcess(value, ref value.speedLevel, MetaProgress.MaxLevel(MetaProgress.Upgrade.Speed), 20);
         RefundLegacyExcess(value, ref value.hpLevel, 5, 12);
         return value;
     }
@@ -195,8 +195,8 @@ public static class GameSave
         }
         data.version = CurrentVersion;
         data.gold = Mathf.Max(0, data.gold);
-        data.attackLevel = Mathf.Clamp(data.attackLevel, 0, 3);
-        data.speedLevel = Mathf.Clamp(data.speedLevel, 0, 3);
+        data.attackLevel = Mathf.Clamp(data.attackLevel, 0, MetaProgress.MaxLevel(MetaProgress.Upgrade.Attack));
+        data.speedLevel = Mathf.Clamp(data.speedLevel, 0, MetaProgress.MaxLevel(MetaProgress.Upgrade.Speed));
         RefundLegacyExcess(data, ref data.hpLevel, 3, 20); // hearts stop at 3 now: levels 4 and 5 give their gold back (80, 100)
         data.hpLevel = Mathf.Clamp(data.hpLevel, 0, 3);
         data.rerollLevel = Mathf.Clamp(data.rerollLevel, 0, 2);

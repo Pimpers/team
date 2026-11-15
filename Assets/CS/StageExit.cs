@@ -300,6 +300,27 @@ public class StageExit : MonoBehaviour
         return false;
     }
 
+    // The last resort of the fork: both portals go on the cat's own floor, a stage's half either side of it, whatever
+    // stands there (ledges through the arches are taken out; solid ground is not). Two portals set into the scenery
+    // are better than none - without them the stage had no way on but the old route window, which is gone.
+    bool PlaceForced(StageMap map, Vector2 feet)
+    {
+        float half = StageHalf();
+        float floorY = FloorAt(map, feet.x, feet.y);
+        if (float.IsNaN(floorY)) floorY = feet.y;
+        float yl = FloorAt(map, feet.x - half, floorY), yr = FloorAt(map, feet.x + half, floorY);
+        var a = new Vector2(feet.x - half, float.IsNaN(yl) ? floorY : yl);
+        var b = new Vector2(feet.x + half, float.IsNaN(yr) ? floorY : yr);
+        foreach (var w in ways) DestroyWay(w);
+        ways.Clear();
+        CutLedges(map, a); CutLedges(map, b);
+        AddWay(b, -1f, "_hunt", false);
+        AddWay(a, -1f, "_safe", false);
+        foreach (var w in ways) MakeSign(w);
+        Debug.Log($"[StageExit] fork: no flat run near {feet}; portals set on the cat's floor");
+        return true;
+    }
+
     // Room for one portal (2.5 wide, 3 tall): ground under its step, nothing solid and no ledge through the arch (a
     // ledge just above it is fine). The 4-wide log test was stricter than a portal needs.
     // A ledge through a portal's arch is taken out whole, in a puff of dust. Stage 1's low branches left no flat run
@@ -607,7 +628,8 @@ public class StageExit : MonoBehaviour
             // first: either side of the card chest, where ForkCentre said the stage would stand
             if (chestSpot.HasValue && (PlaceStaged(map, chestSpot.Value, false, 0f) || PlaceStaged(map, chestSpot.Value, true, 0f))) { }
             else if (!PlaceStaged(map, at) && !PlaceFork(map, s => Mathf.Abs(s.x - at.x) <= 14f && Mathf.Abs(s.y - at.y) <= 6f && !UnderHud(s), closed: false)
-                && !PlaceStaged(map, at, cutLedges: true)) return false; // last: the nearest flat run, its low ledges taken out
+                && !PlaceStaged(map, at, cutLedges: true)
+                && !PlaceForced(map, at)) return false; // last: the nearest flat run with its ledges out; then no search at all
             ClearOut();
             foreach (var w in ways) StartCoroutine(Appear(w.log));
         }

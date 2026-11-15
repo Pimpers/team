@@ -178,16 +178,36 @@ public class CardDraftUI : MonoBehaviour
         rerollLabel.color = afford ? UiTheme.Cream : UiTheme.DisabledText;
     }
 
+    // Editor capture only (ScreenCaptureTool): -1 draws as usual, 0 / 1 / 2 deals three cards of that grade.
+    public static int ForceTierForCapture = -1;
+
     void Deal()
     {
         offered = PlayerStats.Instance != null ? CardPool.Draw(PlayerStats.Instance, 3) : new List<CardPool.Card>();
+        if (ForceTierForCapture >= 0 && PlayerStats.Instance != null) // (the capture tool asks for a given grade only)
+        {
+            offered = new List<CardPool.Card>();
+            foreach (var c in CardPool.All)
+                if ((int)c.tier == ForceTierForCapture && (c.job == PlayerStats.Instance.Job || c.job == CardPool.Job.Any) && offered.Count < 3) offered.Add(c);
+        }
         var labels = new[] { card1Label, card2Label, card3Label };
         for (int i = 0; i < labels.Length; i++)
         {
             if (labels[i] == null) continue;
             bool has = i < offered.Count;
             if (labels[i].transform.parent != null) labels[i].transform.parent.gameObject.SetActive(has);
-            if (has) { Dress(labels[i], offered[i]); labels[i].text = CardText(offered[i]); }
+            if (has)
+            {
+                // The three cards stand CardSpacing apart round the middle (the scene's own spacing was made for 320 wide).
+                var rt = labels[i].transform.parent as RectTransform;
+                if (rt != null)
+                {
+                    float y = homePos.TryGetValue(rt, out var home) ? home.y : rt.anchoredPosition.y;
+                    rt.anchoredPosition = new Vector2((i - 1) * CardSpacing, y);
+                    homePos[rt] = rt.anchoredPosition;
+                }
+                Dress(labels[i], offered[i]); labels[i].text = CardText(offered[i]);
+            }
         }
         if (offered.Count == 0) { onChosenCallback?.Invoke(); return; } // everything maxed
 
@@ -352,20 +372,23 @@ public class CardDraftUI : MonoBehaviour
 
     // ---- Card face by grade (CardPool.Tier). Layout in card units (the card is 320 x 480, the
     // 512 x 768 art scaled by 0.625): medallion at the top, picture window, text box below it.
-    const float CardW = 320f, CardH = 480f;
+    // (Was 320 x 480; 1.2 x for readability: the art, the window, the picture and the text box are all that much
+    // larger, the picture at x3 on the 64 px icons, and the three cards stand CardSpacing apart.)
+    const float CardW = 384f, CardH = 576f, CardSpacing = 450f;
     public const float CardWidth = CardW, CardHeight = CardH;
-    static readonly Vector2 MedallionPos = new Vector2(0f, 186f), MedallionSize = new Vector2(70f, 34f); // the Aether fronts' circle (art rows 44-130 of 768)
+    // The art's circle sits a little right of the card's middle (+5): the grade word was centred on the card, not on it.
+    static readonly Vector2 MedallionPos = new Vector2(5f, 223f), MedallionSize = new Vector2(84f, 41f); // the Aether fronts' circle (art rows 44-130 of 768)
     // In the picture window (art rows ~130-440 of 768: +159 to -35), under the set badge at its top (+140).
-    static readonly Vector2 PicturePos = new Vector2(0f, 56f), PictureSize = new Vector2(160f, 160f);
-    const float IconSize = 128f; // the 64 px skill icons at exactly x2 (0.78 x 160 = 125 drew uneven pixels)
+    static readonly Vector2 PicturePos = new Vector2(0f, 67f), PictureSize = new Vector2(192f, 192f);
+    const float IconSize = 192f; // the 64 px skill icons at exactly x3 (a non-whole scale draws uneven pixels)
     // The text box is kept inside the cream area: the frame's corner ornaments cut into its sides and bottom,
     // and a box as wide as the frame let a long line or a fourth line run onto them.
     // The name now sits on the dark band between the picture window and the cream box (its plate covers the
     // ornament there), so the cream box (-65 to -172 on all three fronts, art rows 472-703) is all body text:
     // 104 high instead of 70, enough for four lines held at 24.
-    static readonly Vector2[] TextPos = { new Vector2(0f, -119f), new Vector2(0f, -119f), new Vector2(0f, -119f) };
-    static readonly Vector2[] TextSize = { new Vector2(212f, 104f), new Vector2(212f, 104f), new Vector2(212f, 104f) }; // (224 let a full line touch the frame's side ornament)
-    static readonly Vector2 NamePos = new Vector2(0f, -45f), NameSize = new Vector2(224f, 36f);
+    static readonly Vector2[] TextPos = { new Vector2(0f, -143f), new Vector2(0f, -143f), new Vector2(0f, -143f) };
+    static readonly Vector2[] TextSize = { new Vector2(254f, 125f), new Vector2(254f, 125f), new Vector2(254f, 125f) }; // (268 let a full line touch the frame's side ornament)
+    static readonly Vector2 NamePos = new Vector2(0f, -54f), NameSize = new Vector2(269f, 43f);
 
     // Ink per grade, readable on that card's text box (cream / pale blue / lavender).
     static readonly (string name, string level, Color body, Color medallion)[] Inks =
@@ -439,6 +462,20 @@ public class CardDraftUI : MonoBehaviour
         tier.fontStyle = FontStyles.Bold;
         TextOutline.Attach(tier, UiTheme.Cream, 2f); // one light 1 px rim round the dark letters
 
+        // The grade as stars in the medallion instead of the word (Resources/Cards/tier_1|2|3: one, two, three), at
+        // exactly x2 so the pixels stay whole; the word stays only when a star sprite is missing. The epic card also
+        // gets sparkles round its frame (CardSparkles).
+        var stars = Child<Image>(button, "CardTierStars", MedallionPos, Vector2.zero);
+        var starSprite = Resources.Load<Sprite>("Cards/tier_" + (t + 1));
+        stars.sprite = starSprite;
+        stars.enabled = starSprite != null;
+        stars.raycastTarget = false;
+        stars.preserveAspect = true;
+        if (starSprite != null) stars.rectTransform.sizeDelta = starSprite.rect.size * 3f; // x3 (the stars are drawn 20 / 11 / 8 px tall for it)
+        tier.gameObject.SetActive(starSprite == null);
+        var sparkles = Child<CardSparkles>(button, "EpicSparkles", Vector2.zero, new Vector2(CardW, CardH));
+        sparkles.gameObject.SetActive(t == 2);
+
         // (Tags used to be their own label between the picture and the text box: it ran over the frame and, on the
         // blue card, the name. They are a line of the card text now - see CardText.)
         var oldTags = button.Find("CardTags");
@@ -452,8 +489,8 @@ public class CardDraftUI : MonoBehaviour
         label.textWrappingMode = TextWrappingModes.Normal;
         label.alignment = TextAlignmentOptions.Top;
         label.enableAutoSizing = true;
-        label.fontSizeMin = 20f; // a very long effect still shrinks to fit (held at 24 its last line was cut off); the taller box keeps most at 24
-        label.fontSizeMax = UiTheme.TextSmall;
+        label.fontSizeMin = 24f; // a very long effect still shrinks to fit (never under 24); the 1.2 x larger box keeps most at 30
+        label.fontSizeMax = 30f;
         label.overflowMode = TextOverflowModes.Ellipsis; // a long effect ends in … rather than running onto the frame
         label.overflowMode = TextOverflowModes.Truncate;
         label.lineSpacing = -6f; // four lines (kind, tags, two of effect) fit the cream box above the corner curls
@@ -467,8 +504,8 @@ public class CardDraftUI : MonoBehaviour
         nameLabel.textWrappingMode = TextWrappingModes.NoWrap;
         nameLabel.overflowMode = TextOverflowModes.Truncate;
         nameLabel.enableAutoSizing = true;
-        nameLabel.fontSizeMax = 28f;
-        nameLabel.fontSizeMin = 18f;
+        nameLabel.fontSizeMax = 34f;
+        nameLabel.fontSizeMin = 22f;
         nameLabel.outlineWidth = 0.28f;
         nameLabel.outlineColor = new Color32(24, 14, 10, 255);
         nameLabel.raycastTarget = false;
@@ -485,8 +522,8 @@ public class CardDraftUI : MonoBehaviour
 
         // Set badge over the top of the picture when this card would open or finish a set.
         string badge = SetBadge(card);
-        var badgePlate = Child<Image>(button, "SetBadgePlate", new Vector2(0f, 140f), new Vector2(230f, 38f));
-        var badgeText = Child<TextMeshProUGUI>(button, "SetBadge", new Vector2(0f, 140f), new Vector2(230f, 38f));
+        var badgePlate = Child<Image>(button, "SetBadgePlate", new Vector2(0f, 168f), new Vector2(276f, 46f));
+        var badgeText = Child<TextMeshProUGUI>(button, "SetBadge", new Vector2(0f, 168f), new Vector2(276f, 46f));
         badgePlate.color = UiTheme.Plate;
         badgePlate.raycastTarget = false;
         badgeText.font = label.font;
@@ -713,5 +750,67 @@ public class CardHover : MonoBehaviour, UnityEngine.EventSystems.IPointerEnterHa
         // whole-pixel steps (4 units = one art pixel), out and back twice a second
         float k = Mathf.Repeat(Time.unscaledTime * 2f, 1f) < 0.5f ? 0f : 8f;
         corners.rectTransform.sizeDelta = new Vector2(CardDraftUI.CardWidth + 28f + k, CardDraftUI.CardHeight + 28f + k);
+    }
+}
+
+// Four small gold sparkles blinking round the epic card's frame (corners and the top medallion's sides), one after
+// another, on unscaled time (the draft pauses the game). Whole-pixel steps: small, big, small. Only the epic card
+// shows this (CardDraftUI.Dress switches the object on for grade 2 only).
+public class CardSparkles : MonoBehaviour
+{
+    // On the frame's four corner ornaments (inside the card's 384 x 576), not outside its edge.
+    static readonly Vector2[] Spots = { new Vector2(-146f, 244f), new Vector2(146f, 244f), new Vector2(-146f, -246f), new Vector2(146f, -246f) };
+    static Sprite sprite;
+    UnityEngine.UI.Image[] images;
+
+    // A 7 x 7 plus-shaped glint (point filtered): gold arms, a lighter middle.
+    static Sprite Glint()
+    {
+        if (sprite != null) return sprite;
+        var tex = new Texture2D(7, 7, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        var clear = new Color32(0, 0, 0, 0);
+        var gold = new Color32(247, 209, 84, 255);
+        var pale = new Color32(255, 243, 190, 255);
+        for (int y = 0; y < 7; y++)
+            for (int x = 0; x < 7; x++)
+            {
+                bool arm = (x == 3 && y != 3) || (y == 3 && x != 3);
+                bool near = Mathf.Abs(x - 3) + Mathf.Abs(y - 3) <= 1;
+                tex.SetPixel(x, y, near ? pale : (arm ? gold : clear));
+            }
+        tex.Apply();
+        sprite = Sprite.Create(tex, new Rect(0, 0, 7, 7), new Vector2(0.5f, 0.5f), 100f);
+        return sprite;
+    }
+
+    void Awake()
+    {
+        images = new UnityEngine.UI.Image[Spots.Length];
+        for (int i = 0; i < Spots.Length; i++)
+        {
+            var go = new GameObject("Glint" + i, typeof(RectTransform), typeof(UnityEngine.UI.Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(transform, false);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = Spots[i];
+            var img = go.GetComponent<UnityEngine.UI.Image>();
+            img.sprite = Glint();
+            img.raycastTarget = false;
+            images[i] = img;
+        }
+    }
+
+    void Update()
+    {
+        float t = Time.unscaledTime;
+        for (int i = 0; i < images.Length; i++)
+        {
+            float phase = (t * 0.8f + i * 0.27f) % 1f;
+            bool on = phase < 0.4f;
+            images[i].enabled = on;
+            if (!on) continue;
+            int step = (phase < 0.12f || phase > 0.28f) ? 3 : 5; // x3 / x5 of the 7 px glint: 21 / 35 px
+            images[i].rectTransform.sizeDelta = Vector2.one * (7f * step);
+        }
     }
 }

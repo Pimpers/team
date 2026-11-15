@@ -22,10 +22,10 @@ public static class MetaProgress
     }
 
     public static int MaxLevel(Upgrade upgrade) =>
-        upgrade == Upgrade.Attack ? 3 : upgrade == Upgrade.Speed ? 3 : upgrade == Upgrade.Reroll ? 2 : upgrade == Upgrade.Starter ? 1 : 3; // hearts: 3 (five doubled the cat's health; SaveData refunds levels 4 and 5)
+        upgrade == Upgrade.Attack ? 10 : upgrade == Upgrade.Speed ? 5 : upgrade == Upgrade.Reroll ? 2 : upgrade == Upgrade.Starter ? 1 : 3; // hearts: 3 (five doubled the cat's health; SaveData refunds levels 4 and 5)
     // One curve for every upgrade: 20, 40, 60... (the next level costs 20 more). A lost run brings ~10-20 gold, so
     // each first level comes within a run and the last ones take a few good runs.
-    const int CostStep = 20; // all upgrades 720 (attack 120, speed 120, hearts 120, bell 60, starter 300)
+    const int CostStep = 20; // attack 1100 (10 levels), speed 300 (5), hearts 120, bell 60, starter 300: 1880 in all
     static int BaseCost(Upgrade upgrade) => upgrade == Upgrade.Starter ? 300 : CostStep;
 
     public static int Level(Upgrade upgrade)

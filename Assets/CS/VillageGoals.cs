@@ -18,7 +18,7 @@ public class VillageGoals : MonoBehaviour
         rt.SetParent(canvas.transform, false);
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 1f);
         rt.anchoredPosition = new Vector2(-24f, -270f);
-        rt.sizeDelta = new Vector2(500f, 196f); // the ribbon over the top, three lines in the slot
+        rt.sizeDelta = new Vector2(500f, 196f); // the ribbon over the top, three lines in the slot (no wider: BlacksmithUI.RightColumn keeps the bubble clear of 560)
         var bg = go.GetComponent<Image>();
         UiPanels.Board(bg); // the riveted wooden board, the title on the red ribbon across its top
         bg.raycastTarget = false;
@@ -35,7 +35,7 @@ public class VillageGoals : MonoBehaviour
         goals.text.fontSize = UiTheme.TextSmall;
         goals.text.color = UISkin.OverlayText;
         goals.text.alignment = TextAlignmentOptions.TopLeft;
-        goals.text.textWrappingMode = TextWrappingModes.NoWrap;
+        goals.text.textWrappingMode = TextWrappingModes.Normal; // two goals in a three-line slot: a long upgrade name wraps instead of running off the board
         goals.text.lineSpacing = 6f;
         goals.text.raycastTarget = false;
         goals.Refresh();
@@ -58,20 +58,24 @@ public class VillageGoals : MonoBehaviour
         text.text = sb.ToString().TrimEnd('\n');
     }
 
-    // The gear upgrades as a level count (n of the most the blacksmith offers), with what is next: affordable now,
-    // or how much gold is still missing. The 행운의 방울 behind the counter is its own goal until it opens.
+    // The next gear upgrade as its own goal ("공격력 2레벨 강화"), the cheapest one still open: affordable now, or how
+    // much gold is still missing. (It used to be every upgrade's levels added into one "12/12" count.) The 행운의 방울
+    // behind the counter is its own goal until it opens.
     static string SmithLine()
     {
         if (BlacksmithUI.RerollLocked) return Loc.F("goals.smith_locked", BlacksmithUI.RerollUnlockVisit);
-        int best = int.MaxValue, level = 0, max = 0;
+        int best = int.MaxValue;
+        MetaProgress.Upgrade next = MetaProgress.Upgrade.Attack;
         foreach (MetaProgress.Upgrade u in System.Enum.GetValues(typeof(MetaProgress.Upgrade)))
         {
-            level += MetaProgress.Level(u);
-            max += MetaProgress.MaxLevel(u);
-            if (!MetaProgress.IsMaxed(u)) best = Mathf.Min(best, MetaProgress.Cost(u));
+            if (MetaProgress.IsMaxed(u)) continue;
+            int cost = MetaProgress.Cost(u);
+            if (cost < best) { best = cost; next = u; }
         }
-        if (best == int.MaxValue) return Loc.F("goals.smith_done", level, max);
-        return MetaProgress.Gold >= best ? Loc.F("goals.smith_ready", level, max) : Loc.F("goals.smith_need", level, max, best - MetaProgress.Gold);
+        if (best == int.MaxValue) return Loc.T("goals.smith_done");
+        string name = Loc.T("smith." + next.ToString().ToLowerInvariant()); // smith.attack / speed / heart / reroll / starter
+        int target = MetaProgress.Level(next) + 1;
+        return MetaProgress.Gold >= best ? Loc.F("goals.smith_ready", name, target) : Loc.F("goals.smith_need", name, target, best - MetaProgress.Gold);
     }
 
     static string CorruptionLine()

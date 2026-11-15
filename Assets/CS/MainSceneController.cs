@@ -59,6 +59,7 @@ public class MainSceneController : MonoBehaviour
         if (portrait != null) portrait.sprite = def.idleFrames[0];
         ShowFrame(def.idleFrames[0]);
 
+        TuneVillageIcons();
         departButton.onClick.AddListener(Depart);
         if (tavernButton != null) tavernButton.onClick.AddListener(() => SceneLoader.Load(lobbySceneName));
         if (blacksmithButton != null) blacksmithButton.onClick.AddListener(() => blacksmith.Open());
@@ -97,6 +98,33 @@ public class MainSceneController : MonoBehaviour
         else if (departButton != null) GameInput.KeepPadSelection(departButton.transform.parent, departButton);
     }
 
+    // The gear and the anvil are smaller than the scene builder's 160 px icons (they filled the screen's corners), and
+    // each icon's name plate then sits right under its drawn picture instead of where the big icon ended.
+    // (Done here, not in LobbySceneBuilder: that would rewrite the baked village scene.)
+    void TuneVillageIcons()
+    {
+        Shrink(settingsButton, 0.7f);
+        Shrink(blacksmithButton, 0.8f);
+        foreach (var b in new[] { blacksmithButton, tavernButton, settingsButton }) TightenLabel(b);
+    }
+
+    static void Shrink(Button b, float k)
+    {
+        if (b == null) return;
+        var rt = (RectTransform)b.transform;
+        rt.sizeDelta *= k;
+    }
+
+    static void TightenLabel(Button b)
+    {
+        if (b == null) return;
+        var plate = b.transform.Find("LabelPlate") as RectTransform;
+        if (plate == null) return;
+        // The icon art ends about 14% of its half-height above the image's edge: the plate's top lands 2 px under it.
+        float half = ((RectTransform)b.transform).sizeDelta.y * 0.5f;
+        plate.anchoredPosition = new Vector2(plate.anchoredPosition.x, -Mathf.Round(half * 0.86f + plate.sizeDelta.y * 0.5f + 2f)); // whole pixels: the label smeared at -91.8
+    }
+
     // Saved gold (golden fish bones) on a dark pill just left of the settings gear, styled
     // like the profile's name pill (same sprite and font, reused from it).
     void CreateGoldDisplay()
@@ -110,8 +138,9 @@ public class MainSceneController : MonoBehaviour
         rt.SetSiblingIndex(gear.GetSiblingIndex() + 1); // popups created later still cover it
         rt.anchorMin = rt.anchorMax = gear.anchorMin;
         rt.pivot = new Vector2(1f, 0.5f);
-        rt.anchoredPosition = new Vector2(gear.anchoredPosition.x - gear.sizeDelta.x * 0.5f - 14f, gear.anchoredPosition.y);
-        rt.sizeDelta = new Vector2(240f, 72f);
+        // Smaller (240 x 72 was the biggest thing in the corner) and a little higher, level with the gear's top half.
+        rt.anchoredPosition = new Vector2(gear.anchoredPosition.x - gear.sizeDelta.x * 0.5f - 12f, gear.anchoredPosition.y + 12f);
+        rt.sizeDelta = new Vector2(190f, 56f);
 
         var bg = go.AddComponent<Image>();
         var pill = profileName != null ? profileName.transform.parent.GetComponent<Image>() : null;
@@ -140,7 +169,7 @@ public class MainSceneController : MonoBehaviour
         goldText.textWrappingMode = TextWrappingModes.NoWrap;
         goldText.enableAutoSizing = true;
         goldText.fontSizeMin = 22f;
-        goldText.fontSizeMax = 40f;
+        goldText.fontSizeMax = 32f;
         goldText.raycastTarget = false;
         RefreshGold();
     }

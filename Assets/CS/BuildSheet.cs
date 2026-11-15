@@ -24,7 +24,7 @@ public class BuildSheet : MonoBehaviour
     // A card's art beside each number (attack, hearts, speed, attack speed, crit, reach, dashes, air jumps).
     static readonly string[] StatIcons = { "attack", "heart", "speed", "haste", "crit", "reach", "dash_more", "jump" };
     readonly TextMeshProUGUI[] statRows = new TextMeshProUGUI[StatIcons.Length];
-    const float StatRow = 38f, StatTop = 226f;
+    const float StatRow = 40f, StatTop = 200f; // 8 rows must end inside the 540 high stats slot with a margin (200 + 8 * 40 = 520)
 
     // ② the three active-skill rows (key chip, icon, name) and the passive list (two columns).
     const int SkillSlots = 3, PassiveRows = 4;
@@ -85,13 +85,13 @@ public class BuildSheet : MonoBehaviour
         var head = Text(statsSlot, "Head1", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(24f, -16f), new Vector2(352f, 32f));
         head.text = Loc.T("sheet.head_cat");
         head.color = UiTheme.Gold;
-        portrait = UiPanels.Icon(statsSlot, null, new Vector2(200f, -112f), 104f);
-        nameText = Text(statsSlot, "CatName", UiTheme.TextLarge, TextAlignmentOptions.Center, new Vector2(24f, -170f), new Vector2(352f, 44f));
+        portrait = UiPanels.Icon(statsSlot, null, new Vector2(200f, -100f), 88f);
+        nameText = Text(statsSlot, "CatName", UiTheme.TextLarge, TextAlignmentOptions.Center, new Vector2(24f, -150f), new Vector2(352f, 44f));
         for (int i = 0; i < StatIcons.Length; i++)
         {
             float top = -StatTop - i * StatRow;
             var card = CardPool.Get(StatIcons[i]);
-            UiPanels.Icon(statsSlot, card != null ? card.Art : null, new Vector2(46f, top - StatRow * 0.5f), 32f);
+            UiPanels.Icon(statsSlot, card != null ? card.Art : null, new Vector2(46f, top - StatRow * 0.5f), 40f);
             statRows[i] = Text(statsSlot, "Stat" + i, UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(78f, top), new Vector2(312f, StatRow));
         }
 

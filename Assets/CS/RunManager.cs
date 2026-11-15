@@ -153,7 +153,7 @@ public class RunManager : MonoBehaviour
             {
                 setHud = SetHUD.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font); // the build's sets, bottom-left
                 setHud.transform.SetAsFirstSibling(); // under the popups (card draft, result board)
-                StageHudExtras.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font, stageNumber); // fish plate top centre, stage bottom-left
+                StageHudExtras.Create((RectTransform)hudText.canvas.rootCanvas.transform, hudText.font, stageNumber); // fish-bone count top centre, stage bottom-left
             }
             if (!tutorial && StageMap.Instance != null) StageExit.Create(stageNumber, HasFork); // the log out (and in), or the fork's two - see StageExit
             if (!tutorial && StageMap.Instance != null && stageNumber >= 2 && stageNumber < totalStages) StartCoroutine(SetupTraps()); // none in the boss arena
@@ -219,17 +219,13 @@ public class RunManager : MonoBehaviour
     {
         if (hudText == null || PlayerStats.Instance == null) return;
         shownGold = PlayerStats.Instance.Gold;
-        int total = IsStageScene ? totalStages : 3;
-        bool bossStage = currentStage >= total;
         // A small dim label and a big bright value per line, so each number is found at a glance. The stage itself
         // is announced at the top centre on entering (StageTitle); the plate keeps what changes while playing.
         // Labels share the value's 32 px (in-between sizes smear the pixel font): the text table gives them a dimmer colour.
         string lines = "";
         if (tutorial) lines = Loc.T("hud.tutorial");
         if (IsStageScene && Corruption.Level > 0) lines += Loc.F("hud.corruption", Corruption.Level);
-        // Big maps: how many are still out there (the minimap shows where); red when it's the last few.
-        int left = Mathf.Max(0, monstersRemaining);
-        if (!bossStage) lines += Loc.F("hud.enemies_left", UiTheme.Html(left <= 3 ? "hurt" : "white"), left);
+        // (No "전체 적 N" line any more: the minimap shows where the monsters are, and the zone banner counts the zone's.)
         // HP is shown as hearts by HeartHUD.
         // (The fish-bone count has its own plate at the top centre in the stage scenes: StageHudExtras.)
         bool goldOnPlate = !(IsStageScene && !tutorial && hudBacking != null);
@@ -355,18 +351,16 @@ public class RunManager : MonoBehaviour
             if (HasFork)
             {
                 // Two logs at the stage's end: the red hard way (사냥 길) and the green easy way (안전 길). Walking into
-                // one picks the route. A stage with no room for two falls back to the route window.
+                // one picks the route. A stage with no room for two gets them set on the cat's floor (StageExit.PlaceForced).
                 PlayerStats.Instance.SaveForNextStage();
                 if (StageExit.Instance != null && StageExit.Instance.OpenFork(NextScene(),RouteProgress.SetNextRoute))
                 {
                     OneTimeTip.ShowInRun("route"); // the first fork: what the two logs mean
                     return;
                 }
-                if (hudText != null && hudText.canvas != null)
-                {
-                    StageRouteChoiceUI.Show(this, hudText.canvas.rootCanvas, hudText.font, ChooseNextRoute);
-                    return;
-                }
+                // (No fork possible at all - no stage map or body: the safe way on, not a route window over the stage.)
+                ChooseNextRoute(false);
+                return;
             }
             LoadNextStage();
             return;

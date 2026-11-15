@@ -38,6 +38,46 @@ public static class ScreenCaptureTool
     // real save file - a copy of the project in a temp folder still shares it (same company / product name).
     public static void RunBatch()
     {
+        // Other editor code (the MCP package's RecompileGate syncs define symbols on startup) can force a script
+        // recompile + domain reload a few seconds in; that wipes this class's state mid-run and the batch would hang
+        // forever. So wait until the editor has been quiet for a while first, and carry the wait across a reload.
+        SessionState.SetBool(PendingKey, true);
+        BeginQuietWait();
+    }
+
+    // Batch: only the screens that show icons (the village, the card draft, the Tab sheet, the fight HUD), a minute or two
+    // instead of the whole set:  -executeMethod ScreenCaptureTool.RunIcons
+    public static void RunIcons()
+    {
+        SessionState.SetBool(IconsKey, true);
+        RunBatch();
+    }
+
+    const string IconsKey = "ScreenCaptureTool.icons";
+    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud" };
+    const string PendingKey = "ScreenCaptureTool.pending";
+    const double QuietSeconds = 20;
+    static double quietSince;
+
+    [InitializeOnLoadMethod]
+    static void ResumeAfterReload()
+    {
+        if (Application.isBatchMode && SessionState.GetBool(PendingKey, false) && !EditorApplication.isPlaying) BeginQuietWait();
+    }
+
+    static void BeginQuietWait()
+    {
+        quietSince = EditorApplication.timeSinceStartup;
+        EditorApplication.update += WaitQuiet;
+    }
+
+    static void WaitQuiet()
+    {
+        double now = EditorApplication.timeSinceStartup;
+        if (EditorApplication.isCompiling || EditorApplication.isUpdating) { quietSince = now; return; }
+        if (now - quietSince < QuietSeconds) return;
+        EditorApplication.update -= WaitQuiet;
+        SessionState.SetBool(PendingKey, false);
         GameSave.ResetForTests(GameSave.Parse(JsonUtility.ToJson(GameSave.Data)));
         Start(true);
     }
@@ -74,6 +114,12 @@ public static class ScreenCaptureTool
         Add("Stage2", "hud", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); });
         Add("Stage2", "pause", () => { foreach (var id in cards) PlayerStats.Instance.ApplyCard(id); Find<PauseMenu>().OpenForPlaytest(); });
         Add("Stage2", "draft", () => Find<CardDraftUI>().Show(() => { }));
+        // The three grades on their own (stars in the medallion; the epic card's sparkles).
+        for (int g = 0; g < 3; g++)
+        {
+            int grade = g;
+            Add("Stage2", "draft_tier" + (grade + 1), () => { CardDraftUI.ForceTierForCapture = grade; Find<CardDraftUI>().Show(() => { }); CardDraftUI.ForceTierForCapture = -1; });
+        }
         // The first draft (set tip shown) with a card under the selection, so its preview line shows.
         Add("Stage2", "draft_first", () =>
         {
@@ -167,6 +213,7 @@ public static class ScreenCaptureTool
         Add("Stage1", "a11y_exit_closed", () => { BuildSheet.ForceShow = false; CatBeforeExit(0.3f); }, wait: 0.35f); // (the word lasts 0.7 s)
         Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
 
+        if (SessionState.GetBool(IconsKey, false)) { SessionState.SetBool(IconsKey, false); steps.RemoveAll(s => !IconShots.Contains(s.shot)); }
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
         savedOptions = EditorSettings.enterPlayModeOptions;
         EditorSettings.enterPlayModeOptionsEnabled = true; // keep this class's state across entering play mode

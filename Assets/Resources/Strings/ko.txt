@@ -170,7 +170,6 @@ route.treasure = 보물!  골드 +{0}
 hud.tutorial = 튜토리얼\n
 hud.corruption = <color=$danger>타락도 {0}</color>\n
 hud.starter = <size=85%><color=$label>시작</color> <color=$gold>{0}</color></size>\n
-hud.enemies_left = <color=$label>전체 적</color> <color={0}>{1}</color>\n
 route.hunt = 사냥 길
 route.safe = 안전 길
 route.hunt.hint = 위 길 · 정예와 보물
@@ -551,9 +550,9 @@ card.bounty.text = 정예를 처치하면\n하트 반 칸 회복
 card.bounty.text2 = 정예를 처치하면\n하트 한 칸 회복
 goals.title = 다음 목표
 goals.smith_locked = · 대장간 {0}번째 방문: <color=$gold>행운의 방울</color>\n
-goals.smith_ready = · 장비 강화 {0}/{1}레벨: <color=$gold>지금 가능!</color>\n
-goals.smith_need = · 장비 강화 {0}/{1}레벨 (생선뼈 {2}개 더)\n
-goals.smith_done = · 장비 강화 {0}/{1}레벨 완료\n
+goals.smith_ready = · {0} {1}레벨 강화: <color=$gold>지금 가능!</color>\n
+goals.smith_need = · {0} {1}레벨 (생선뼈 {2}개 더)\n
+goals.smith_done = · 장비 강화 모두 완료\n
 goals.corruption_first = · <color=$gold>고대 숲</color> 클리어하기\n
 goals.corruption_next = · <color=$gold>타락도 {1}</color> 클리어하기\n
 goals.corruption_done = · 모든 타락도 클리어 완료\n
