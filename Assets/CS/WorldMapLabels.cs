@@ -99,8 +99,8 @@ public static class WorldMapLabels
     static Sprite puff;
     static void Fog(Transform root, Vector3 at, Vector2 box, Vector3[] avoid)
     {
-        if (cloud == null) cloud = MakeCloud();
-        if (puff == null) puff = MakePuff();
+        if (cloud == null) cloud = NewCloud(0, 1.8f) ?? MakeCloud();
+        if (puff == null) puff = NewCloud(2, 1.0f) ?? MakePuff();
         var rng = new System.Random(Mathf.RoundToInt(at.x * 100f) ^ Mathf.RoundToInt(at.y * 1000f)); // fixed per region
         float w = cloud.bounds.size.x, h = cloud.bounds.size.y;
         int bigs = Mathf.Max(1, Mathf.CeilToInt(box.x / (w * 0.9f))); // a wide name (the realm's) takes two
@@ -204,6 +204,17 @@ public static class WorldMapLabels
         tex.SetPixels(px);
         tex.Apply();
         return RuntimeGeneratedAssets.Sprite(tex, new Vector2(0.5f, 0.5f), 12.5f);
+    }
+
+    // The new parchment clouds (Resources/UICats/ui_cloud_0..2), re-cut at a pixels-per-unit that makes them `width` world
+    // units wide (the generated ones are 1.9 wide); null if the art is missing.
+    static Sprite NewCloud(int index, float width)
+    {
+        var art = Resources.Load<Sprite>("UICats/ui_cloud_" + index);
+        if (art == null) return null;
+        var sprite = Sprite.Create(art.texture, art.rect, new Vector2(0.5f, 0.5f), art.rect.width / width);
+        sprite.name = "NewCloud" + index;
+        return sprite;
     }
 
     static Sprite MakeCloud()

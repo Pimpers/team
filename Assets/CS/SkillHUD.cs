@@ -11,7 +11,7 @@ public class SkillHUD : MonoBehaviour
 {
     // Big enough to read mid-fight. The pixel font only has 12 / 24 / 36 (PixelText.Dot), so a name that had to
     // shrink to fit an 84 px slot dropped straight to an unreadable 12: names stay 24 and wrap onto a second line.
-    const float SlotSize = 104f, SlotGap = 96f, ChipSize = 56f, ChipGap = 8f, Bottom = 52f; // low (the bar covers less of the floor); the gap leaves room for a one-line name (냥냥 연속 베기)
+    const float SlotSize = 120f, SlotGap = 90f, ChipSize = 56f, ChipGap = 8f, Bottom = 52f; // low (the bar covers less of the floor); the gap leaves room for a one-line name (냥냥 연속 베기)
     const float SlotY = 30f;
     const float NameSize = 24f, PlateOneLine = 36f, PlateTwoLines = 54f; // two lines of 24 with -14 spacing need no more
 
@@ -144,8 +144,13 @@ public class SkillHUD : MonoBehaviour
             s.root.anchoredPosition = new Vector2((i - 1) * (SlotSize + SlotGap), SlotY);
 
             s.frame = MakeImage("Frame", s.root, new Vector2(SlotSize, SlotSize), new Color(0.07f, 0.05f, 0.08f, 0.78f));
-            BookUI.Slice(s.frame, "Slot01a", 3f, new Color(1f, 1f, 1f, 0.95f)); // the book pack's inset slot, 3 units per pixel
-            s.icon = MakeImage("Icon", s.root, new Vector2(SlotSize * 1.25f, SlotSize * 1.25f), Color.white); // effect frames have a wide empty margin
+            // The new vine-and-wood slot (Resources/UICats/ui_slot, 60 px, its own key box top-left) at x2; the book pack's
+            // inset slot when it is missing.
+            var slotArt = Resources.Load<Sprite>("UICats/ui_slot");
+            if (slotArt != null) { s.frame.sprite = slotArt; s.frame.type = Image.Type.Simple; s.frame.color = Color.white; }
+            else BookUI.Slice(s.frame, "Slot01a", 3f, new Color(1f, 1f, 1f, 0.95f)); // the book pack's inset slot, 3 units per pixel
+            float iconSize = slotArt != null ? SlotSize * 0.7f : SlotSize * 1.25f; // (the art's window is ~ 70 % of the slot; effect frames of old had a wide empty margin)
+            s.icon = MakeImage("Icon", s.root, new Vector2(iconSize, iconSize), Color.white);
             s.icon.preserveAspect = true;
             s.shade = MakeImage("Cooldown", s.root, new Vector2(SlotSize - 10f, SlotSize - 10f), new Color(0f, 0f, 0f, 0.62f));
             s.shade.type = Image.Type.Filled;
@@ -154,7 +159,7 @@ public class SkillHUD : MonoBehaviour
             s.shade.fillClockwise = false;
             s.shade.fillAmount = 0f;
             Vector2 keyPosition = new Vector2(-SlotSize * 0.5f + 15f, SlotSize * 0.5f - 15f);
-            s.keycap = MakeImage("Keycap", s.root, new Vector2(26f, 26f), new Color(0.08f, 0.055f, 0.1f, 0.96f));
+            s.keycap = MakeImage("Keycap", s.root, new Vector2(26f, 26f), slotArt != null ? Color.clear : new Color(0.08f, 0.055f, 0.1f, 0.96f)); // (the new slot art draws its own key box)
             s.keycap.rectTransform.anchoredPosition = keyPosition;
             s.key = MakeText("Key", s.root, SkillSystem.SlotKeys[i], UISkin.FontSmall, UISkin.OverlayText,
                              keyPosition, new Vector2(24f, 24f), TextAlignmentOptions.Center);

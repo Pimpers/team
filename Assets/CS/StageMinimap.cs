@@ -116,6 +116,22 @@ public class StageMinimap : MonoBehaviour
 
     void BuildFrame(RectTransform panel)
     {
+        // The new wooden frame (Resources/UICats/ui_minimap, 9 px border, a transparent middle): one sliced image.
+        var frame = Resources.Load<Sprite>("UICats/ui_minimap");
+        if (frame != null)
+        {
+            var go = new GameObject("FrameSliced", typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(panel, false);
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+            rt.offsetMin = new Vector2(-4f, -4f); rt.offsetMax = new Vector2(4f, 4f);
+            var image = go.GetComponent<Image>();
+            image.sprite = frame;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = 1f; // one art pixel = one canvas unit
+            image.raycastTarget = false;
+            return;
+        }
         const float edge = 10f;
         FramePiece(panel, "Top", "top", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, edge), true);
         FramePiece(panel, "Bottom", "bottom", new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), Vector2.zero, new Vector2(0f, edge), true);

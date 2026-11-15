@@ -108,7 +108,65 @@ public class OptionsUI : MonoBehaviour
         close.sizeDelta = new Vector2(72f, 72f);
         var closeLabel = closeButton.GetComponentInChildren<TMP_Text>();
         if (closeLabel != null) { closeLabel.text = "X"; closeLabel.enableAutoSizing = false; closeLabel.fontSize = UiTheme.TextLarge; }
+        SkinClose();
+        SkinSliders();
         RefreshButtons();
+    }
+
+    // The new round wooden X (its cross is in the sprite) in place of the wood button with an "X" label.
+    void SkinClose()
+    {
+        var round = Resources.Load<Sprite>("UICats/ui_close");
+        if (round == null) return;
+        var img = closeButton.GetComponent<Image>();
+        img.sprite = round;
+        img.type = Image.Type.Simple;
+        img.preserveAspect = true;
+        img.color = Color.white;
+        ((RectTransform)closeButton.transform).sizeDelta = round.rect.size * 2f;
+        closeButton.transition = Selectable.Transition.SpriteSwap;
+        var states = closeButton.spriteState;
+        states.pressedSprite = states.selectedSprite = Resources.Load<Sprite>("UICats/ui_close_down");
+        closeButton.spriteState = states;
+        foreach (var label in closeButton.GetComponentsInChildren<TMP_Text>(true)) label.gameObject.SetActive(false);
+    }
+
+    // The new wooden slider: a dark track, a golden fill, a round golden knob (Resources/UICats/ui_slider_*), 4 canvas
+    // units per art pixel. Every slider of the window (the scene's own and its clones).
+    void SkinSliders()
+    {
+        var track = Resources.Load<Sprite>("UICats/ui_slider_track");
+        var fill = Resources.Load<Sprite>("UICats/ui_slider_fill");
+        var knob = Resources.Load<Sprite>("UICats/ui_slider_knob");
+        if (track == null || fill == null || knob == null) return;
+        foreach (var slider in sliders)
+        {
+            if (slider == null) continue;
+            var background = slider.transform.Find("Background");
+            var fillArea = slider.transform.Find("Fill Area");
+            var fillImage = fillArea != null ? fillArea.Find("Fill") : null;
+            var handle = slider.transform.Find("Handle Slide Area/Handle");
+            if (background != null) Sliced(background.GetComponent<Image>(), track);
+            if (fillImage != null) Sliced(fillImage.GetComponent<Image>(), fill);
+            if (handle != null)
+            {
+                var img = handle.GetComponent<Image>();
+                img.sprite = knob;
+                img.type = Image.Type.Simple;
+                img.preserveAspect = true;
+                img.color = Color.white;
+                ((RectTransform)handle).sizeDelta = knob.rect.size * 4f;
+            }
+        }
+    }
+
+    static void Sliced(Image img, Sprite sprite)
+    {
+        if (img == null) return;
+        img.sprite = sprite;
+        img.type = Image.Type.Sliced;
+        img.pixelsPerUnitMultiplier = 0.25f;
+        img.color = Color.white;
     }
 
     // The toggles fill a grid of two per row under the sliders; the credits button below it.

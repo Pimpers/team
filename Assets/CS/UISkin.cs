@@ -129,6 +129,15 @@ public class UISkin : ScriptableObject
     public static void ApplyBanner(Image img)
     {
         var skin = Instance;
+        // The new scroll-ended ribbon (Resources/UICats/ui_ribbon, vine leaves, 16 px ends): sideways stretch only.
+        var ribbon = Resources.Load<Sprite>("UICats/ui_ribbon");
+        if (img != null && ribbon != null)
+        {
+            float rh = img.rectTransform.rect.height;
+            if (rh <= 0f) rh = img.rectTransform.sizeDelta.y;
+            Apply(img, ribbon, Mathf.Max(0.5f, rh / ribbon.rect.height * ribbon.pixelsPerUnit / 100f));
+            return;
+        }
         if (img == null || skin == null || skin.banner == null) return;
         float h = img.rectTransform.rect.height;
         if (h <= 0f) h = img.rectTransform.sizeDelta.y;

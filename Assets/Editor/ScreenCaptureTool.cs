@@ -54,7 +54,7 @@ public static class ScreenCaptureTool
     }
 
     const string IconsKey = "ScreenCaptureTool.icons";
-    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud" };
+    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud", "blacksmith", "options", "pause", "result", "title", "set_banner" };
     const string PendingKey = "ScreenCaptureTool.pending";
     const double QuietSeconds = 20;
     static double quietSince;

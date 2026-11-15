@@ -69,7 +69,26 @@ public static class StageBanner
             sub.rectTransform.sizeDelta = compact ? new Vector2(big ? 900f : 520f, big ? 50f : 38f) : new Vector2(900f, 60f);
             sub.outlineWidth = 0.2f;
             sub.outlineColor = new Color32(40, 20, 10, 255);
-            UiTheme.Backdrop(sub); // the effect line sits on the fight picture: the shared dark band under it
+            // The effect line sits on the fight picture: the new gold-trimmed band (Resources/UICats/ui_band, 21 px at x2)
+            // under it, as wide as the words need; the shared dark band when the art is missing.
+            var bandArt = Resources.Load<Sprite>("UICats/ui_band");
+            if (bandArt != null)
+            {
+                var bandGo = new GameObject("SubtitleBand", typeof(RectTransform), typeof(Image));
+                var bandRt = (RectTransform)bandGo.transform;
+                bandRt.SetParent(rt, false);
+                bandRt.SetSiblingIndex(sub.transform.GetSiblingIndex()); // just under the words
+                bandRt.anchorMin = bandRt.anchorMax = bandRt.pivot = new Vector2(0.5f, 0.5f);
+                bandRt.anchoredPosition = sub.rectTransform.anchoredPosition;
+                float words = sub.GetPreferredValues(subtitle).x;
+                bandRt.sizeDelta = new Vector2(Mathf.Max(320f, words + 120f), bandArt.rect.height * 2f + 6f);
+                var bandImg = bandGo.GetComponent<Image>();
+                bandImg.sprite = bandArt;
+                bandImg.type = Image.Type.Sliced;
+                bandImg.pixelsPerUnitMultiplier = 0.5f; // 2 canvas units per art pixel
+                bandImg.raycastTarget = false;
+            }
+            else UiTheme.Backdrop(sub);
         }
 
         var fade = go.AddComponent<FadeBanner>();

@@ -93,9 +93,9 @@ public static class UISkinApplier
         ("nature_wood", new Vector4(16, 14, 14, 16)),         // dark window, big leaf top-left, vines below
         ("nature_slate", new Vector4(5, 5, 5, 5)),            // plain dark window, wood rim
         ("nature_plank", new Vector4(16, 3, 13, 9)),          // vine-wrapped plank: title banners
-        ("nature_button_wood", new Vector4(6, 5, 6, 5)),
-        ("nature_button_green", new Vector4(6, 5, 6, 5)),    // main action (계속하기, 재도전, 확인...)
-        ("nature_button_grey", new Vector4(6, 5, 6, 5)),
+        ("nature_button_wood", new Vector4(5, 5, 5, 5)),     // (the new wood / green / grey buttons, Assets/UI/Cats; UiCatsImport sets the same border)
+        ("nature_button_green", new Vector4(5, 5, 5, 5)),    // main action (계속하기, 재도전, 확인...)
+        ("nature_button_grey", new Vector4(5, 5, 5, 5)),
         ("nature_button_cream", new Vector4(6, 5, 6, 5)),
         ("nature_knob", Vector4.zero),                        // a leaf for slider handles
     };

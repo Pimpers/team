@@ -87,6 +87,25 @@ public static class UiPanels
         rt.anchoredPosition = new Vector2(-margin, -margin);
         rt.sizeDelta = new Vector2(size, size);
         var img = go.GetComponent<Image>();
+        // The new round wooden button with its X drawn in (Resources/UICats/ui_close, pressed: ui_close_down), at x2.
+        var closeSprite = Resources.Load<Sprite>("UICats/ui_close");
+        var closeDown = Resources.Load<Sprite>("UICats/ui_close_down");
+        if (closeSprite != null)
+        {
+            img.sprite = closeSprite;
+            img.preserveAspect = true;
+            rt.sizeDelta = closeSprite.rect.size * 2f;
+            go.AddComponent<ButtonSound>();
+            var round = go.GetComponent<Button>();
+            round.targetGraphic = img;
+            round.transition = Selectable.Transition.SpriteSwap;
+            var states = round.spriteState;
+            states.pressedSprite = closeDown;
+            states.selectedSprite = closeDown;
+            round.spriteState = states;
+            round.onClick.AddListener(() => onClose?.Invoke());
+            return round;
+        }
         if (UISkin.Instance != null && UISkin.Instance.buttonWood != null) UISkin.Apply(img, UISkin.Instance.buttonWood, UISkin.SmallScale);
         else img.color = UiTheme.Wood;
         go.AddComponent<ButtonSound>();
