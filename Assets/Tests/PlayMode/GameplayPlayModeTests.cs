@@ -157,12 +157,12 @@ public class GameplayPlayModeTests
     }
 
     [UnityTest]
-    public IEnumerator RoleIcons_ShowAtMostTwo_AndClearUp()
+    public IEnumerator RoleIcons_ShowAtMostThree_AndClearUp()
     {
-        for (int i = 0; i < 4; i++) RoleIcon.Show(Vector3.right * i, EnemyDefinition.CombatRole.Chaser);
+        for (int i = 0; i < 5; i++) RoleIcon.Show(Vector3.right * i, EnemyDefinition.CombatRole.Chaser);
         yield return null;
-        Assert.That(Object.FindObjectsByType<RoleIcon>().Length, Is.EqualTo(2));
-        yield return new WaitForSeconds(1.4f);
+        Assert.That(Object.FindObjectsByType<RoleIcon>().Length, Is.EqualTo(3));
+        yield return new WaitForSeconds(1.9f);
         Assert.That(Object.FindObjectsByType<RoleIcon>().Length, Is.Zero);
     }
 }

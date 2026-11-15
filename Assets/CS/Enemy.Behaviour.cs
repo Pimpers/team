@@ -80,6 +80,8 @@ public partial class Enemy
                     if (definition.combatRole == EnemyDefinition.CombatRole.Ambusher) ambushTimer = 1.1f;
                     // A beat to react before it charges in (never an instant bite from off-screen).
                     if (!isBoss) reactTimer = ReactionTime;
+                    // And a little hop on the spot: the body says "I saw you" even when the icon is missed.
+                    if (!isBoss) { hopHeight = 0.3f; hopTimer = HopTime; }
                 }
                 alertTimer = definition.alertTime;
             }
