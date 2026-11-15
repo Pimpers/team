@@ -11,6 +11,22 @@ public class CorruptionSelector : MonoBehaviour
     RectTransform descPanel;
     Button prev, next;
 
+    // The two thin strips (the tier, what it changes): the new cream row with its torn edge (Resources/UICats/ui_row, 3
+    // canvas units per art pixel). The big window frame is far too thick for a strip 72 high; it stays the fallback.
+    static void Strip(Image img, UISkin skin)
+    {
+        var row = Resources.Load<Sprite>("UICats/ui_row");
+        if (row != null)
+        {
+            img.sprite = row;
+            img.type = Image.Type.Sliced;
+            img.pixelsPerUnitMultiplier = 1f / 3f;
+            img.color = Color.white;
+            return;
+        }
+        UISkin.Apply(img, skin != null ? skin.panel : null, UISkin.LargeScale);
+    }
+
     public static CorruptionSelector Create(Canvas canvas, TMP_FontAsset font)
     {
         if (canvas == null) return null;
@@ -25,7 +41,7 @@ public class CorruptionSelector : MonoBehaviour
         rt.anchoredPosition = new Vector2(-24f, -10f);
         rt.sizeDelta = new Vector2(PanelWidth, 72f); // room between the arrows and the words (they touched at 660)
         if (Corruption.Level < 0) Corruption.Level = 0; // 편하게 is not offered here: the tiers start at 타락도 0
-        UISkin.Apply(panel.GetComponent<Image>(), skin != null ? skin.panel : null, UISkin.LargeScale);
+        Strip(panel.GetComponent<Image>(), skin);
 
         var sel = panel.AddComponent<CorruptionSelector>();
         sel.levelText = Text(rt, "Level", "", 36f, UISkin.InkTitle, font, Vector2.zero, new Vector2(LevelBox, 56f));
@@ -37,7 +53,7 @@ public class CorruptionSelector : MonoBehaviour
         sel.descPanel.anchorMin = sel.descPanel.anchorMax = new Vector2(0.5f, 0f);
         sel.descPanel.pivot = new Vector2(0.5f, 1f);
         sel.descPanel.anchoredPosition = new Vector2(0f, -4f);
-        UISkin.Apply(drop.GetComponent<Image>(), skin != null ? skin.panel : null, UISkin.LargeScale);
+        Strip(drop.GetComponent<Image>(), skin);
         drop.GetComponent<Image>().raycastTarget = false;
         sel.descText = Text(sel.descPanel, "Desc", "", 24f, UISkin.Ink, font, Vector2.zero, Vector2.zero); // UiTheme.TextSmall (24): the body size, not smaller
         sel.descText.rectTransform.anchorMin = Vector2.zero;

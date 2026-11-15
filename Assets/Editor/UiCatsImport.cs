@@ -18,13 +18,22 @@ public class UiCatsImport : AssetPostprocessor
         { "ui_tag", new Vector4(16, 18, 16, 16) }, { "ui_slot", new Vector4(16, 16, 16, 16) }, { "ui_slot_cd", new Vector4(16, 16, 16, 16) },
         { "ui_slider_a", new Vector4(6, 3, 6, 3) }, { "ui_slider_b", new Vector4(6, 3, 6, 3) },
         { "ui_slider_track", new Vector4(4, 3, 4, 3) }, { "ui_slider_fill", new Vector4(4, 3, 4, 3) },
+        // the big windows, the inset cells, the list row (also the skin's Nature panel / wood / slate / cream slots)
+        { "ui_panel_dark", new Vector4(18, 16, 18, 16) }, { "ui_panel_cream", new Vector4(18, 16, 18, 16) },
+        { "nature_panel", new Vector4(18, 16, 18, 16) }, { "nature_wood", new Vector4(18, 16, 18, 16) },
+        { "ui_inset_dark", new Vector4(6, 6, 6, 6) }, { "ui_inset_cream", new Vector4(6, 6, 6, 6) }, { "nature_slate", new Vector4(6, 6, 6, 6) },
+        { "ui_row", new Vector4(6, 5, 6, 5) }, { "nature_button_cream", new Vector4(6, 5, 6, 5) },
+        { "ui_dash_track", new Vector4(12, 6, 12, 6) }, { "ui_dash_fill", new Vector4(12, 6, 12, 6) }, { "ui_hud_plate", new Vector4(14, 8, 14, 8) },
+        { "ui_log", new Vector4(18, 6, 18, 6) }, { "ui_log_down", new Vector4(18, 6, 18, 6) }, { "ui_log_grey", new Vector4(18, 6, 18, 6) },
+        { "ui_selector", new Vector4(22, 6, 22, 6) }, { "ui_lock_plate", new Vector4(14, 6, 14, 6) },
+        { "ui_gold", new Vector4(22, 8, 22, 8) }, { "ui_bubble", new Vector4(22, 14, 14, 12) },
     };
 
     void OnPreprocessTexture()
     {
         bool cats = assetPath.StartsWith("Assets/Resources/UICats/");
         string name = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-        bool natureButton = assetPath.StartsWith("Assets/UI/Nature/nature_button_") && Borders.ContainsKey(name);
+        bool natureButton = assetPath.StartsWith("Assets/UI/Nature/") && Borders.ContainsKey(name); // (the skin's Nature slots we replaced)
         if (!cats && !natureButton) return;
         var ti = (TextureImporter)assetImporter;
         ti.textureType = TextureImporterType.Sprite;

@@ -75,8 +75,8 @@ public class PauseMenu : MonoBehaviour
         giveUp.onClick.AddListener(GiveUp);
         var quit = MakeButton(prt, "QuitButton", Loc.T("ui.quit"), new Vector2(149f, -162f), wood, font, out quitLabel, half, UiTheme.TextSmall);
         quit.onClick.AddListener(Quit);
-        // The hint sits straight on the board's orange planks, so it is dark ink, not cream.
-        MakeText(prt, "Hint", Loc.T("pause.hint"), UiTheme.TextSmall, new Color32(0x3a, 0x1c, 0x0c, 0xff), font, new Vector2(0f, -243f), new Vector2(580f, 40f));
+        // The hint sits on the new dark window (it was dark ink on the old orange planks): the muted cream.
+        MakeText(prt, "Hint", Loc.T("pause.hint"), UiTheme.TextSmall, UISkin.OverlayMuted, font, new Vector2(0f, -230f), new Vector2(580f, 40f));
 
         root.SetActive(false);
     }

@@ -55,7 +55,13 @@ public class MainSceneController : MonoBehaviour
             profileName.transform.parent.gameObject.SetActive(false);
         // No name over the cat's head (as in the lobby): the plate by the portrait carries it.
         if (nameTag != null) nameTag.gameObject.SetActive(false);
-        if (profileName != null) { profileName.text = name; FitNamePill(profileName); }
+        if (profileName != null)
+        {
+            // The profile plate wears the new plank (ui_hud_plate, 2 canvas units per art pixel), light text on it.
+            var pillImg = profileName.transform.parent != null ? profileName.transform.parent.GetComponent<Image>() : null;
+            if (pillImg != null && SkinPlate(pillImg, "UICats/ui_hud_plate")) profileName.color = UISkin.OverlayText;
+            profileName.text = name; FitNamePill(profileName);
+        }
         if (portrait != null) portrait.sprite = def.idleFrames[0];
         ShowFrame(def.idleFrames[0]);
 
@@ -144,6 +150,18 @@ public class MainSceneController : MonoBehaviour
         plate.anchoredPosition = new Vector2(plate.anchoredPosition.x, -Mathf.Round(half * 0.86f + plate.sizeDelta.y * 0.5f + 2f)); // whole pixels: the label smeared at -91.8
     }
 
+    // A new plate sprite on an Image: 9-sliced, 2 canvas units per art pixel, white tint. False when the art is missing.
+    static bool SkinPlate(Image img, string path)
+    {
+        var art = Resources.Load<Sprite>(path);
+        if (art == null) return false;
+        img.sprite = art;
+        img.type = Image.Type.Sliced;
+        img.pixelsPerUnitMultiplier = 0.5f;
+        img.color = Color.white;
+        return true;
+    }
+
     // Saved gold (golden fish bones) on a dark pill just left of the settings gear, styled
     // like the profile's name pill (same sprite and font, reused from it).
     void CreateGoldDisplay()
@@ -163,7 +181,8 @@ public class MainSceneController : MonoBehaviour
 
         var bg = go.AddComponent<Image>();
         var pill = profileName != null ? profileName.transform.parent.GetComponent<Image>() : null;
-        if (pill != null && pill.sprite != null)
+        if (SkinPlate(bg, "UICats/ui_gold")) { }
+        else if (pill != null && pill.sprite != null)
         {
             bg.sprite = pill.sprite;
             bg.type = Image.Type.Sliced;

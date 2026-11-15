@@ -32,7 +32,17 @@ public static class TitleMenu
         // The decorated board the result and credits panels use, in place of the plain wood plank (it read as a
         // placeholder under the logo). Before the clones, so all three buttons carry it.
         var plank = quit.GetComponent<Image>();
-        if (plank != null && BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(plank, "UIBundle/MedievalBoard", 3f);
+        // The log-shaped button (Resources/UICats/ui_log, round log ends and a plank between, 3 canvas units per art pixel);
+        // the decorated board the result and credits panels use when the art is missing.
+        var log = Resources.Load<Sprite>("UICats/ui_log");
+        if (plank != null && log != null)
+        {
+            plank.sprite = log;
+            plank.type = Image.Type.Sliced;
+            plank.pixelsPerUnitMultiplier = 1f / 3f;
+            plank.color = Color.white;
+        }
+        else if (plank != null && BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(plank, "UIBundle/MedievalBoard", 3f);
         Clone(rt, "CreditsButton", Loc.T("credits.title"), 1).onClick.AddListener(() => CreditsPanel.Show(canvas, font));
         Clone(rt, "SettingsButton", Loc.T("harbor.settings"), 2).onClick.AddListener(() => TitleSettings.Show(canvas, font));
         // Cream on the bright log board was low in contrast: the shared 1 px dark outline on all three labels

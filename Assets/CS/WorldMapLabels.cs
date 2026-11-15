@@ -76,9 +76,9 @@ public static class WorldMapLabels
                               : Loc.T("worldmap.region." + l.key);
             text.lineSpacing = -12f;
             Vector2 need = text.GetPreferredValues(text.text);
-            Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.4f + (next ? 0.9f : 0f)), Mathf.Max(l.h * mapSize.y, need.y + 0.12f)); // the next one: room for its lock
+            Vector2 size = new Vector2(Mathf.Max(l.w * mapSize.x, need.x + 0.9f + (next ? 1.1f : 0f)), Mathf.Max(l.h * mapSize.y, need.y + 0.12f)); // the next one: room for its lock
             text.rectTransform.sizeDelta = size;
-            if (next) text.rectTransform.anchoredPosition = new Vector2(0.3f, 0f); // beside the lock
+            if (next) text.rectTransform.anchoredPosition = new Vector2(0.35f, 0f); // beside the lock
 
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = plate.sprite;
@@ -86,7 +86,17 @@ public static class WorldMapLabels
             sr.size = size;
             sr.color = next ? plate.color * new Color(0.6f, 0.6f, 0.6f, 1f) : plate.color; // the "?": a duller plate
             sr.sortingOrder = 15; // over the map, under the forest's tag (19 / 20)
-            if (next) Lock(go.transform, new Vector3(-size.x * 0.5f + 0.5f, 0f, 0f));
+            // The new dark plank with its own padlock (Resources/UICats/ui_lock_plate) for the next region; the old plate and
+            // a drawn padlock when the art is missing.
+            // Every other plate (the title, the open region's "CHAPTER" tag) is the new vine-cornered dark plank
+            // (ui_hud_plate). Both are cut at a scale from the plate's HEIGHT, so their borders keep their proportions.
+            var art = Resources.Load<Sprite>(next ? "UICats/ui_lock_plate" : "UICats/ui_hud_plate");
+            if (art != null)
+            {
+                sr.sprite = Sprite.Create(art.texture, art.rect, new Vector2(0.5f, 0.5f), art.rect.height / size.y, 0, SpriteMeshType.FullRect, art.border);
+                sr.color = Color.white;
+            }
+            else if (next) Lock(go.transform, new Vector3(-size.x * 0.5f + 0.5f, 0f, 0f));
         }
     }
 

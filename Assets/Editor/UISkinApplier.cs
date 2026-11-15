@@ -89,9 +89,9 @@ public static class UISkinApplier
     // file, 9-slice border in source px (left, bottom, right, top - Unity's order)
     static readonly (string file, Vector4 border)[] Nature =
     {
-        ("nature_panel", new Vector4(12, 12, 12, 12)),        // cream window, vine frame, leaf corners
-        ("nature_wood", new Vector4(16, 14, 14, 16)),         // dark window, big leaf top-left, vines below
-        ("nature_slate", new Vector4(5, 5, 5, 5)),            // plain dark window, wood rim
+        ("nature_panel", new Vector4(18, 16, 18, 16)),        // cream window in the new vine-corner wooden frame (Assets/Resources/UICats/ui_panel_cream)
+        ("nature_wood", new Vector4(18, 16, 18, 16)),         // dark window in the same frame (ui_panel_dark)
+        ("nature_slate", new Vector4(6, 6, 6, 6)),            // dark inset cell with a gold rim (ui_inset_dark)
         ("nature_plank", new Vector4(16, 3, 13, 9)),          // vine-wrapped plank: title banners
         ("nature_button_wood", new Vector4(5, 5, 5, 5)),     // (the new wood / green / grey buttons, Assets/UI/Cats; UiCatsImport sets the same border)
         ("nature_button_green", new Vector4(5, 5, 5, 5)),    // main action (계속하기, 재도전, 확인...)

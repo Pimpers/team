@@ -51,7 +51,8 @@ public class CreditsPanel : MonoBehaviour
         brt.sizeDelta = new Vector2(1700f, 1000f);
         var img = board.GetComponent<Image>();
         img.color = new Color(0.12f, 0.08f, 0.07f, 0.97f);
-        if (BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(img, "UIBundle/MedievalBoard", 6f);
+        if (UiPanels.NewBoard(img, 4f)) { }
+        else if (BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(img, "UIBundle/MedievalBoard", 6f);
         else if (UISkin.Instance != null) UISkin.Apply(img, UISkin.Instance.slate, 4f);
         board.AddComponent<Button>().transition = Selectable.Transition.None; // clicks on the board don't close it
 

@@ -69,7 +69,9 @@ public class UISkin : ScriptableObject
         if (img == null || sprite == null) return;
         img.sprite = sprite;
         // The Nature pack's vine edges repeat instead of stretching (a stretched vine smears into a bar).
-        bool vines = sprite.texture != null && sprite.texture.name.StartsWith("nature_") && !sprite.texture.name.StartsWith("nature_button"); // plain buttons stretch (tiling repeated their highlight pixel)
+        // (Only the vine plank repeats now: the panels, the wood window and the slate are the new framed art - they stretch, as
+        // do the plain buttons: tiling repeated their highlight pixel.)
+        bool vines = sprite.texture != null && sprite.texture.name == "nature_plank";
         img.type = sprite.border == Vector4.zero ? Image.Type.Simple : vines ? Image.Type.Tiled : Image.Type.Sliced;
         // The vine plank (banners, main buttons) is one board tall: size it to the rect's height so it only
         // repeats sideways - tiled at a fixed scale, a tall button stacked two or three boards.

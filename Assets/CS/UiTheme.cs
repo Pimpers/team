@@ -45,7 +45,7 @@ public static class UiTheme
         { "muted", "#866242" },     // quiet text on parchment
         { "amber", "#b06210" },     // gold / level numbers on parchment
         { "board", "#3a1c0c" },     // text on the orange result board (light ground: dark ink)
-        { "boardnews", "#8a2410" }, // a highlighted line on the orange result board
+        { "boardnews", "#ffb870" }, // a highlighted line on the result board (light orange on the dark window; it was #8a2410 on the old orange board)
         { "label", "#e6d3a8" },     // a label next to a value on dark
         { "dimlabel", "#d8c49a" },  // a quieter label on dark
         { "note", "#c9b48a" },      // a closing note on dark

@@ -316,7 +316,15 @@ public class BlacksmithUI : MonoBehaviour
         bubble.rectTransform.SetParent(brt, false);
         bubble.rectTransform.anchorMin = bubble.rectTransform.anchorMax = bubble.rectTransform.pivot = new Vector2(0f, 0f);
         bubble.raycastTarget = false;
-        BookUI.Slice(bubble, "SpeechBoard", BubbleScale);
+        // The new bubble art (UICats/ui_bubble) has its tail built in at the bottom-left; the old board + loose tail stay as fallback.
+        var art = Resources.Load<Sprite>("UICats/ui_bubble");
+        if (art != null)
+        {
+            bubble.sprite = art;
+            bubble.type = Image.Type.Sliced;
+            bubble.pixelsPerUnitMultiplier = 1f / BubbleScale;
+        }
+        else BookUI.Slice(bubble, "SpeechBoard", BubbleScale);
         if (bubble.sprite == null) bubble.color = new Color(0.91f, 0.84f, 0.68f);
 
         // 5 x 5 art pixels at the bubble's units per pixel, where the sheet has it (6 px in from the board's left);
@@ -328,7 +336,7 @@ public class BlacksmithUI : MonoBehaviour
         tail.rectTransform.anchoredPosition = new Vector2(6f * BubbleScale, BubbleScale); // at the left end: its point lands by his mouth
         tail.rectTransform.sizeDelta = new Vector2(5f * BubbleScale, 5f * BubbleScale);
         tail.sprite = BookUI.Get("SpeechTail");
-        tail.enabled = tail.sprite != null;
+        tail.enabled = tail.sprite != null && art == null;
         tail.raycastTarget = false;
 
         var plate = new GameObject("NamePlate", typeof(RectTransform), typeof(Image)).GetComponent<Image>();

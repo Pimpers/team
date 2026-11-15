@@ -34,7 +34,14 @@ public class ResultUI : MonoBehaviour
     void HangBoard()
     {
         var img = panel != null ? panel.GetComponent<Image>() : null;
-        if (img == null || BookUI.Get("UIBundle/MedievalBoard") == null) return;
+        if (img == null) return;
+        // The new dark wooden window (3 canvas units per art pixel): light text on it, so the gold line keeps its own colour.
+        if (UiPanels.NewBoard(img, 3f))
+        {
+            if (goldText != null) goldText.color = UISkin.OverlayText; // cream on the dark window (it was dark ink on the orange board)
+            return;
+        }
+        if (BookUI.Get("UIBundle/MedievalBoard") == null) return;
         BookUI.Slice(img, "UIBundle/MedievalBoard", 6f);
         // The gold lines sit on the board's orange planks (light ground), so dark ink rather than the banner's cream.
         if (goldText != null) goldText.color = (Color)new Color32(0x3a, 0x1c, 0x0c, 0xff);
@@ -196,8 +203,15 @@ public class ResultUI : MonoBehaviour
             crestT.SetSiblingIndex(0); // behind the sheets, the buttons and the title
         }
         crestT.anchorMin = banner.anchorMin; crestT.anchorMax = banner.anchorMax; crestT.pivot = new Vector2(0.5f, 0.5f);
-        crestT.sizeDelta = art.rect.size * 6f; // x6: the ribbon (58 art px wide) then holds the title at 36
-        crestT.anchoredPosition = banner.anchoredPosition + new Vector2(0f, -14f * 6f);
+        // x4, standing whole on top of the two sheets (its flat bottom edge just under their top), so the ribbon and the
+        // laurels show in full above them; the title is written on the cream under the ribbon, not on the ribbon.
+        const float Scale = 4f;
+        crestT.sizeDelta = art.rect.size * Scale;
+        float sheetTop = statsText != null ? ((RectTransform)statsText.transform.parent).anchoredPosition.y : 300f;
+        float crestY = sheetTop + art.rect.height * Scale * 0.5f + 24f; // a little clear of the sheets: the crest stands higher
+        crestT.anchoredPosition = new Vector2(0f, crestY);
+        banner.anchoredPosition = new Vector2(0f, crestY - 6.5f * Scale); // the middle of the cream below the ribbon
+        banner.sizeDelta = new Vector2(300f, banner.sizeDelta.y);
         var img = crestT.GetComponent<Image>();
         img.sprite = art;
         img.type = Image.Type.Simple;
@@ -393,8 +407,7 @@ public class ResultUI : MonoBehaviour
         rt.sizeDelta = new Vector2(520f, 380f);
         var img = sheet.GetComponent<Image>();
         // A dark inset slot sunk into the board (UiPanels), not a flat dark rectangle laid on it.
-        if (BookUI.Get("Slot01a") != null) BookUI.Slice(img, "Slot01a", UiPanels.InsetScale, new Color(1f, 1f, 1f, 0.96f));
-        else img.color = new Color(0.09f, 0.06f, 0.07f, 0.9f);
+        UiPanels.SkinInset(img);
         img.raycastTarget = false;
         var t = new GameObject("Text", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
         t.rectTransform.SetParent(rt, false);

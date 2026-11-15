@@ -14,8 +14,22 @@ public static class UiPanels
     // The board itself on `img` (falls back to the dark plate when the sprite is missing).
     public static void Board(Image img)
     {
+        if (NewBoard(img, 3f)) return;
         if (BookUI.Get("UIBundle/MedievalBoard") != null) BookUI.Slice(img, "UIBundle/MedievalBoard", BoardScale);
         else img.color = UiTheme.Plate;
+    }
+
+    // The new dark window (Resources/UICats/ui_panel_dark: a wooden frame with vine corners and a dark middle, 18 px
+    // borders) at `scale` canvas units per art pixel. False when the art is missing (the old board is used then).
+    public static bool NewBoard(Image img, float scale)
+    {
+        var board = Resources.Load<Sprite>("UICats/ui_panel_dark");
+        if (img == null || board == null) return false;
+        img.sprite = board;
+        img.type = Image.Type.Sliced;
+        img.pixelsPerUnitMultiplier = 1f / scale;
+        img.color = Color.white;
+        return true;
     }
 
     // A full-screen darkening behind a panel that is smaller than the screen (the card draft's 1192 x 664 box left a
@@ -43,10 +57,24 @@ public static class UiPanels
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);
         rt.anchoredPosition = pos;
         rt.sizeDelta = size;
-        if (BookUI.Get("Slot01a") != null) BookUI.Slice(img, "Slot01a", InsetScale, new Color(1f, 1f, 1f, 0.96f));
-        else img.color = new Color(0.09f, 0.06f, 0.07f, 0.9f);
+        SkinInset(img);
         img.raycastTarget = false;
         return img;
+    }
+
+    // The new dark inset (Resources/UICats/ui_inset_dark, opaque, 6 px borders) on `img`; the old slot art when it is missing.
+    public static void SkinInset(Image img)
+    {
+        var art = Resources.Load<Sprite>("UICats/ui_inset_dark");
+        if (art != null)
+        {
+            img.sprite = art;
+            img.type = Image.Type.Sliced;
+            img.pixelsPerUnitMultiplier = 1f / InsetScale;
+            img.color = Color.white;
+        }
+        else if (BookUI.Get("Slot01a") != null) BookUI.Slice(img, "Slot01a", InsetScale, new Color(1f, 1f, 1f, 0.96f));
+        else img.color = new Color(0.09f, 0.06f, 0.07f, 0.9f);
     }
 
     // The red title ribbon centred on the top edge of `parent`, its label inside.

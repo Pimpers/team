@@ -96,7 +96,7 @@ public class BuildSheet : MonoBehaviour
         }
 
         // ② the skills
-        var skillsSlot = (RectTransform)UiPanels.Inset(root, "SkillsSlot", new Vector2(452f, -64f), new Vector2(632f, 456f)).transform;
+        var skillsSlot = (RectTransform)UiPanels.Inset(root, "SkillsSlot", new Vector2(452f, -64f), new Vector2(632f, 444f)).transform;
         var head2 = Text(skillsSlot, "Head2", UiTheme.TextSmall, TextAlignmentOptions.TopLeft, new Vector2(24f, -14f), new Vector2(584f, 32f));
         head2.text = Loc.T("sheet.head_skills");
         head2.color = UiTheme.Gold;
@@ -136,8 +136,8 @@ public class BuildSheet : MonoBehaviour
         noPassives.color = UiTheme.DisabledText;
 
         // the run: stage and kills, then the sets reached
-        var setsSlot = (RectTransform)UiPanels.Inset(root, "SetsSlot", new Vector2(452f, -532f), new Vector2(632f, 72f)).transform;
-        setsText = Text(setsSlot, "Sets", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, 0f), new Vector2(590f, 72f));
+        var setsSlot = (RectTransform)UiPanels.Inset(root, "SetsSlot", new Vector2(452f, -516f), new Vector2(632f, 88f)).transform; // ends level with the stats slot (-604); two lines need the height
+        setsText = Text(setsSlot, "Sets", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(24f, 0f), new Vector2(590f, 88f));
         setsText.textWrappingMode = TextWrappingModes.Normal; // four or five sets on one line ran off the board
         setsText.enableAutoSizing = true;
         setsText.fontSizeMax = UiTheme.TextSmall;
