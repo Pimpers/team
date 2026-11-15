@@ -377,7 +377,10 @@ public class CardDraftUI : MonoBehaviour
     const float CardW = 384f, CardH = 576f, CardSpacing = 450f;
     public const float CardWidth = CardW, CardHeight = CardH;
     // The art's circle sits a little right of the card's middle (+5): the grade word was centred on the card, not on it.
-    static readonly Vector2 MedallionPos = new Vector2(5f, 223f), MedallionSize = new Vector2(84f, 41f); // the Aether fronts' circle (art rows 44-130 of 768)
+    // Each grade's circle measured on its art (512 x 768 -> x 0.75): common (255.5, 87.5), rare (257.5, 79.5), epic
+    // (255.5, 85.5) - the rare circle is bigger and sits higher.
+    static readonly Vector2[] MedallionPositions = { new Vector2(0f, 220f), new Vector2(3f, 228f), new Vector2(2f, 228f) }; // fine-tuned on the captures: the star's centre on the disc's
+    static readonly Vector2 MedallionSize = new Vector2(84f, 41f);
     // In the picture window (art rows ~130-440 of 768: +159 to -35), under the set badge at its top (+140).
     static readonly Vector2 PicturePos = new Vector2(0f, 67f), PictureSize = new Vector2(192f, 192f);
     const float IconSize = 192f; // the 64 px skill icons at exactly x3 (a non-whole scale draws uneven pixels)
@@ -449,7 +452,7 @@ public class CardDraftUI : MonoBehaviour
         // a 16 px prop x8 (they were 125 / 160 / 96 - three sizes, uneven pixels on the icons).
         picture.rectTransform.sizeDelta = Vector2.one * IconSize;
 
-        var tier = Child<TextMeshProUGUI>(button, "CardTier", MedallionPos, MedallionSize);
+        var tier = Child<TextMeshProUGUI>(button, "CardTier", MedallionPositions[t], MedallionSize);
         tier.font = label.font;
         tier.text = CardPool.TierNames[t];
         tier.fontSize = UISkin.FontBody;
@@ -465,7 +468,7 @@ public class CardDraftUI : MonoBehaviour
         // The grade as stars in the medallion instead of the word (Resources/Cards/tier_1|2|3: one, two, three), at
         // exactly x2 so the pixels stay whole; the word stays only when a star sprite is missing. The epic card also
         // gets sparkles round its frame (CardSparkles).
-        var stars = Child<Image>(button, "CardTierStars", MedallionPos, Vector2.zero);
+        var stars = Child<Image>(button, "CardTierStars", MedallionPositions[t], Vector2.zero);
         var starSprite = Resources.Load<Sprite>("Cards/tier_" + (t + 1));
         stars.sprite = starSprite;
         stars.enabled = starSprite != null;
