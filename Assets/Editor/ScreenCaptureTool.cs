@@ -54,7 +54,7 @@ public static class ScreenCaptureTool
     }
 
     const string IconsKey = "ScreenCaptureTool.icons";
-    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud", "blacksmith", "options", "pause", "result", "title", "set_banner" };
+    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud", "blacksmith", "options", "pause", "result", "title", "set_banner", "result_win", "fork_open", "fork_signs", "fork_closed", "fork_pull_hunt", "fork_camera", "fork_stage2", "a11y_fork", "fork_camera_16x10", "fork_camera_4x3", "fork_sign_clean", "fork_sign_long" };
     const string PendingKey = "ScreenCaptureTool.pending";
     const double QuietSeconds = 20;
     static double quietSince;
@@ -196,6 +196,8 @@ public static class ScreenCaptureTool
         Add("Stage1", "fork_signs", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, wait: 4f); // the banner gone and the camera back: both signs in view
         Add("Stage2", "fork_stage2", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage3", _ => { }); }, wait: 1f);
         Add("Stage3", "fork_stage3", () => { ClearEnemies(); StageExit.Instance.OpenFork("Stage4", _ => { }); }, wait: 1f);
+        // The fork's signs with nothing over them (the starter card draft and its banner are closed first).
+        Add("Stage1", "fork_sign_clean", () => AfterDraft(() => StageExit.Instance.OpenFork("Stage2", _ => { })), wait: 9f);
         Add("Stage1", "exit_iris", () => StageWipe.HoldShutForCapture());
         Add("Stage1", "exit_popout", () => { StageWipe.ArrivedThroughExit = true; SceneManager.LoadScene("Stage2"); }, wait: 0.45f);
         Add("MainScene", "village_return"); // back from a run, the goals board reading the new tier
@@ -212,6 +214,15 @@ public static class ScreenCaptureTool
         Add("Stage1", "a11y_fork", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.OpenFork("Stage2", _ => { }); }, wait: 1f);
         Add("Stage1", "a11y_exit_closed", () => { BuildSheet.ForceShow = false; CatBeforeExit(0.3f); }, wait: 0.35f); // (the word lasts 0.7 s)
         Add("Stage1", "a11y_exit_arrow", () => { BuildSheet.ForceShow = false; ClearEnemies(); StageExit.Instance.Open("Stage2"); CatBeforeExit(-12f); }, wait: 4f); // the cat past the log, the log off screen: its arrow shows
+        // The sign names far longer than the real ones (a Korean line and an English one), 큰 글씨 still on: the words must
+        // shrink to the plank, never run past it.
+        Add("Stage1", "fork_sign_long", () =>
+        {
+            var table = (Dictionary<string, string>)Loc.All;
+            table["route.hunt"] = "아주 길고 위험한 사냥꾼의 길";
+            table["route.safe"] = "A very long and safe road";
+            AfterDraft(() => StageExit.Instance.OpenFork("Stage2", _ => { }));
+        }, wait: 9f);
 
         if (SessionState.GetBool(IconsKey, false)) { SessionState.SetBool(IconsKey, false); steps.RemoveAll(s => !IconShots.Contains(s.shot)); }
         savedOptionsEnabled = EditorSettings.enterPlayModeOptionsEnabled;
@@ -273,6 +284,26 @@ public static class ScreenCaptureTool
     // Puts the cat on the exit log's floor, `gap` units before its mouth.
     // The game opens the exit only once every monster is gone (RunManager.StageCleared): the shots that open it
     // by hand clear them first, so the picture matches play.
+    // The stage's starter card draft opens a moment after the scene loads and would cover the shot: wait for it, close it
+    // (and the banners it raised), clear the enemies, then run `then` (up to 8 s; whichever comes first).
+    static void AfterDraft(Action then)
+    {
+        double giveUp = EditorApplication.timeSinceStartup + 8.0;
+        EditorApplication.CallbackFunction watch = null;
+        watch = () =>
+        {
+            var draft = Find<CardDraftUI>();
+            bool open = draft != null && draft.panel != null && draft.panel.activeInHierarchy;
+            if (!open && EditorApplication.timeSinceStartup < giveUp) return;
+            EditorApplication.update -= watch;
+            if (open) draft.panel.SetActive(false);
+            StageBanner.ClearAll();
+            ClearEnemies();
+            then?.Invoke();
+        };
+        EditorApplication.update += watch;
+    }
+
     static void ClearEnemies()
     {
         foreach (var e in Enemy.All.ToArray()) if (e != null) UnityEngine.Object.Destroy(e.gameObject);

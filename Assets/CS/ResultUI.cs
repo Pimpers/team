@@ -155,6 +155,7 @@ public class ResultUI : MonoBehaviour
             resultTitleText.textWrappingMode = TextWrappingModes.NoWrap;
             resultTitleText.overflowMode = TextOverflowModes.Truncate;
         }
+        ApplyCrest(win);
         if (goldText != null)
         {
             // Two lines at most: a third ran into the buttons, so a newly opened tier takes the hint's place.
@@ -175,6 +176,36 @@ public class ResultUI : MonoBehaviour
         // Upgrades moved to the village blacksmith.
         foreach (var label in new[] { attackButtonLabel, speedButtonLabel, hpButtonLabel })
             if (label != null && label.transform.parent != null) label.transform.parent.gameObject.SetActive(false);
+    }
+
+    // The laurel plate (Resources/UICats/ui_result_win gold / ui_result_lose grey) behind the title: its ribbon takes the
+    // place of the wooden title plate, and the rest of the plate shows only round the title, the record sheets and the
+    // build sheet being drawn over it. x6 (756 x 336); the ribbon's middle sits 14 art px under the plate's top.
+    void ApplyCrest(bool win)
+    {
+        var board = panel != null ? panel.transform as RectTransform : null;
+        var banner = board != null ? board.Find("ResultBanner") as RectTransform : null;
+        var art = Resources.Load<Sprite>(win ? "UICats/ui_result_win" : "UICats/ui_result_lose");
+        if (banner == null || art == null) return;
+        var crestT = board.Find("ResultCrest") as RectTransform;
+        if (crestT == null)
+        {
+            var go = new GameObject("ResultCrest", typeof(RectTransform), typeof(Image));
+            crestT = (RectTransform)go.transform;
+            crestT.SetParent(board, false);
+            crestT.SetSiblingIndex(0); // behind the sheets, the buttons and the title
+        }
+        crestT.anchorMin = banner.anchorMin; crestT.anchorMax = banner.anchorMax; crestT.pivot = new Vector2(0.5f, 0.5f);
+        crestT.sizeDelta = art.rect.size * 6f; // x6: the ribbon (58 art px wide) then holds the title at 36
+        crestT.anchoredPosition = banner.anchoredPosition + new Vector2(0f, -14f * 6f);
+        var img = crestT.GetComponent<Image>();
+        img.sprite = art;
+        img.type = Image.Type.Simple;
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        var plank = banner.GetComponent<Image>();
+        if (plank != null) plank.enabled = false; // (its title text child stays)
+        if (resultTitleText != null) resultTitleText.color = (Color)new Color32(0x3a, 0x1c, 0x0c, 0xff); // dark ink on the cream ribbon
     }
 
     // Set by RunManager when a win beats the best 타락도 cleared so far.

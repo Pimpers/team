@@ -122,6 +122,25 @@ public class MainSceneController : MonoBehaviour
         if (plate == null) return;
         // The icon art ends about 14% of its half-height above the image's edge: the plate's top lands 2 px under it.
         float half = ((RectTransform)b.transform).sizeDelta.y * 0.5f;
+        // The new hanging tag (Resources/UICats/ui_tag: a loop on top, a cream board) at 2 canvas units per art pixel,
+        // its loop touching the icon and the name inked dark on the cream. The old wood plate when the art is missing.
+        var tag = Resources.Load<Sprite>("UICats/ui_tag");
+        var plateImage = plate.GetComponent<Image>();
+        if (tag != null && plateImage != null)
+        {
+            plateImage.sprite = tag;
+            plateImage.type = Image.Type.Sliced;
+            plateImage.pixelsPerUnitMultiplier = 0.5f;
+            plateImage.color = Color.white;
+            plate.sizeDelta = new Vector2(Mathf.Max(plate.sizeDelta.x, 200f), 104f); // tall enough that the cream holds a 36 line
+            plate.anchoredPosition = new Vector2(plate.anchoredPosition.x, -Mathf.Round(half * 0.86f + plate.sizeDelta.y * 0.5f - 12f));
+            foreach (var label in plate.GetComponentsInChildren<TMPro.TMP_Text>(true))
+            {
+                label.color = (Color)new Color32(0x4b, 0x2e, 0x1f, 0xff);
+                label.rectTransform.anchoredPosition = new Vector2(label.rectTransform.anchoredPosition.x, -8f); // the cream sits low in the tag (its top is the rim and the loop)
+            }
+            return;
+        }
         plate.anchoredPosition = new Vector2(plate.anchoredPosition.x, -Mathf.Round(half * 0.86f + plate.sizeDelta.y * 0.5f + 2f)); // whole pixels: the label smeared at -91.8
     }
 

@@ -90,8 +90,9 @@ public class OptionsUI : MonoBehaviour
         for (int i = 0; i < GameSettings.Toggles.Length; i++)
         {
             var toggle = GameSettings.Toggles[i];
-            var b = CloneButton("Toggle" + i, GridSlot(i), new Vector2(240f, 80f), wood, out toggleLabels[i]);
+            var b = CloneButton("Toggle" + i, GridSlot(i), new Vector2(330f, 80f), wood, out toggleLabels[i]);
             b.onClick.AddListener(() => { toggle.set(!toggle.get()); RefreshButtons(); });
+            AddSwitch(b, i);
         }
         // (No 키 설정 or 게임 종료 here: the controls are in the pause menu, quitting is on the village's ESC menu.)
         creditsButton = CloneButton("CreditsButton", new Vector2(0f, BottomRow), new Vector2(230f, 80f), wood, out var creditsLabel);
@@ -171,7 +172,37 @@ public class OptionsUI : MonoBehaviour
 
     // The toggles fill a grid of two per row under the sliders; the credits button below it.
     const float GridTop = -275f, GridRow = 90f, BottomRow = -365f;
-    static Vector2 GridSlot(int i) => new Vector2(-125f + 250f * (i % 2), GridTop - GridRow * (i / 2));
+    static Vector2 GridSlot(int i) => new Vector2(-175f + 350f * (i % 2), GridTop - GridRow * (i / 2)); // (330 wide now: the switch sits at the left)
+
+    // A little on / off switch (Resources/UICats/ui_toggle_off / ui_toggle_on, x2) at the button's left end; the label
+    // takes the rest. The button's green tint (GameSettings.ToggleTint) stays as the second cue.
+    Image[] switches;
+    void AddSwitch(Button button, int i)
+    {
+        var off = Resources.Load<Sprite>("UICats/ui_toggle_off");
+        if (off == null) return;
+        if (switches == null) switches = new Image[GameSettings.Toggles.Length];
+        var go = new GameObject("Switch", typeof(RectTransform), typeof(Image));
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(button.transform, false);
+        rt.anchorMin = rt.anchorMax = new Vector2(0f, 0.5f);
+        rt.pivot = new Vector2(0f, 0.5f);
+        rt.anchoredPosition = new Vector2(16f, 2f);
+        rt.sizeDelta = off.rect.size * 2f;
+        var img = go.GetComponent<Image>();
+        img.sprite = off;
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        switches[i] = img;
+        var label = toggleLabels[i];
+        if (label != null)
+        {
+            var lt = label.rectTransform;
+            lt.anchorMin = Vector2.zero; lt.anchorMax = Vector2.one;
+            lt.offsetMin = new Vector2(16f + rt.sizeDelta.x + 8f, 0f);
+            lt.offsetMax = new Vector2(-10f, 0f);
+        }
+    }
 
     static void Move(Transform t, float x, float y)
     {
@@ -209,7 +240,7 @@ public class OptionsUI : MonoBehaviour
     {
         label.enableAutoSizing = false;
         label.fontSize = UiTheme.TextLarge;
-        float room = ((RectTransform)label.transform.parent).rect.width - 24f;
+        float room = label.rectTransform.rect.width > 0f ? label.rectTransform.rect.width - 8f : ((RectTransform)label.transform.parent).rect.width - 24f;
         if (label.GetPreferredValues(label.text).x > room) label.fontSize = UiTheme.TextSmall;
     }
 
@@ -238,6 +269,8 @@ public class OptionsUI : MonoBehaviour
                     FitLabel(toggleLabels[i]);
                     var img = toggleLabels[i].transform.parent.GetComponent<Image>();
                     if (img != null) img.color = GameSettings.ToggleTint(GameSettings.Toggles[i]);
+                    if (switches != null && i < switches.Length && switches[i] != null)
+                        switches[i].sprite = Resources.Load<Sprite>(GameSettings.Toggles[i].get() ? "UICats/ui_toggle_on" : "UICats/ui_toggle_off");
                 }
     }
 

@@ -523,6 +523,7 @@ public class StageExit : MonoBehaviour
         w.sign = root;
         w.signHome = root.position;
         int order = body.Renderer.sortingOrder;
+        if (BuildArtSign(w, root, dir, order)) return;
         // at 60% of the drawn size (a sign, not a billboard): the post 1.65 tall, the arms near its top
         const float S = 0.6f;
         if (w.hunt)
@@ -571,10 +572,53 @@ public class StageExit : MonoBehaviour
         }
     }
 
+    // The new drawn signs (Resources/UICats/ui_sign_hunt red skull / ui_sign_safe green sprout: a vine-wrapped post, the
+    // icon in a disc, a plank for the name, an arrow tip): one per way, 1.9 world units wide, the post at the root so the
+    // hunt sign stands on the safe one's post, both pointing at their portals. The name is written on the plank (shrunk
+    // to fit it). Returns false (the old arm and pole are built) when the art is missing.
+    const float ArtSignWidth = 1.9f;
+    static Sprite signHuntArt, signSafeArt;
+    bool BuildArtSign(Way w, Transform root, float dir, int order)
+    {
+        var art = Resources.Load<Sprite>(w.hunt ? "UICats/ui_sign_hunt" : "UICats/ui_sign_safe");
+        if (art == null) return false;
+        ref Sprite cached = ref (w.hunt ? ref signHuntArt : ref signSafeArt);
+        if (cached == null) cached = Sprite.Create(art.texture, art.rect, new Vector2(0.03f, 0f), art.rect.width / ArtSignWidth);
+        float height = cached.bounds.size.y;
+        float baseY = w.hunt ? height + 0.04f : 0f; // the hunt sign above the safe one on the same post
+        var plate = new GameObject("SignArt").AddComponent<SpriteRenderer>();
+        plate.transform.SetParent(root, false);
+        plate.sprite = cached;
+        plate.flipX = dir < 0f;
+        plate.transform.localPosition = new Vector3(0f, baseY, 0f);
+        plate.sortingOrder = order - 2;
+        // the name on the plank (the art's plank runs from 0.30 to 0.86 of its width, at the middle of its height)
+        bool large = GameSettings.LargeText;
+        var text = MakeWord(root, Loc.T(w.hunt ? "route.hunt" : "route.safe"), new Color(0.98f, 0.92f, 0.78f), large ? 0.98f : 0.75f, order - 1, false);
+        float room = ArtSignWidth * 0.52f;
+        float wordsW = text.textBounds.size.x;
+        if (wordsW > room * 1.3f)
+        {
+            // Far too long for the plank (a long translation): shrunk to it the name was unreadably small. It goes on a
+            // dark strip at full size instead - above the upper sign, below the lower one - and the plank stays bare.
+            string name = text.text; Color tint = text.color;
+            Destroy(text.gameObject);
+            // (order 56: the strip's backing is drawn at 54 - under it, at the sign's own order, the words hid behind the strip)
+            var strip = MakeWord(root, name, tint, large ? 0.98f : 0.75f, 56, true, 0.92f);
+            strip.transform.localPosition = new Vector3(dir * ArtSignWidth * 0.45f - strip.textBounds.center.x,
+                                                         (w.hunt ? baseY + height + 0.34f : -0.38f) - strip.textBounds.center.y, 0f);
+            return true;
+        }
+        if (wordsW > room) { text.fontSize *= room / wordsW; text.ForceMeshUpdate(); } // a little over: shrink to the plank
+        Vector3 at = new Vector3(dir * ArtSignWidth * 0.55f, baseY + height * 0.5f, 0f);
+        text.transform.localPosition = at - new Vector3(text.textBounds.center.x, text.textBounds.center.y, 0f);
+        return true;
+    }
+
     Color WayColorOf(Way w) => WayColor(ways.IndexOf(w) >= 0 ? ways.IndexOf(w) : 0);
 
     // A short line of world text on a dark strip (the fork's signs and the closed message).
-    TextMeshPro MakeWord(Transform parent, string label, Color color, float scale, int order = 56, bool backing = true)
+    TextMeshPro MakeWord(Transform parent, string label, Color color, float scale, int order = 56, bool backing = true, float backAlpha = 0.85f)
     {
         var go = new GameObject("Word");
         go.transform.SetParent(parent, false);
@@ -593,7 +637,7 @@ public class StageExit : MonoBehaviour
         var back = new GameObject("Back").AddComponent<SpriteRenderer>();
         back.transform.SetParent(go.transform, false);
         back.sprite = RuntimeGeneratedAssets.WhiteSprite(); // 1 unit square
-        back.color = new Color(0.08f, 0.05f, 0.08f, 0.85f);
+        back.color = new Color(0.08f, 0.05f, 0.08f, backAlpha);
         back.sortingOrder = 54;
         var b = tmp.textBounds;
         back.transform.localPosition = new Vector3(b.center.x, b.center.y, 0f);
