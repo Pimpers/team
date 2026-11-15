@@ -108,8 +108,10 @@ public static class TitleSettings
             // Two per row.
             var b = MakeButton(prt, "", new Vector2(-165f + 330f * (i % 2), -150f + dy - 85f * (i / 2)), new Vector2(310f, 72f), skin != null ? skin.buttonWood : null, font);
             var label = b.GetComponentInChildren<TMP_Text>();
-            label.text = GameSettings.ToggleText(toggle);
-            b.onClick.AddListener(() => { toggle.set(!toggle.get()); label.text = GameSettings.ToggleText(toggle); });
+            var bimg = b.GetComponent<Image>();
+            void Refresh() { label.text = GameSettings.ToggleText(toggle); if (bimg != null) bimg.color = GameSettings.ToggleTint(toggle); }
+            Refresh();
+            b.onClick.AddListener(() => { toggle.set(!toggle.get()); Refresh(); });
             if (firstToggle == null) firstToggle = b;
         }
         // 닫기 is the X in the corner. (No 키 설정 or 게임 종료 here: the pause menu has the controls and the quit.)

@@ -360,9 +360,12 @@ public class CardDraftUI : MonoBehaviour
     const float IconSize = 128f; // the 64 px skill icons at exactly x2 (0.78 x 160 = 125 drew uneven pixels)
     // The text box is kept inside the cream area: the frame's corner ornaments cut into its sides and bottom,
     // and a box as wide as the frame let a long line or a fourth line run onto them.
-    static readonly Vector2[] TextPos = { new Vector2(0f, -136f), new Vector2(0f, -136f), new Vector2(0f, -136f) }; // the text box: -65 to -172 on all three fronts (art rows 472-703)
-    static readonly Vector2[] TextSize = { new Vector2(212f, 70f), new Vector2(212f, 70f), new Vector2(212f, 70f) }; // (224 let a full line touch the frame's side ornament)
-    static readonly Vector2 NamePos = new Vector2(0f, -84f), NameSize = new Vector2(224f, 36f); // the box's top line (no name ribbon on these fronts)
+    // The name now sits on the dark band between the picture window and the cream box (its plate covers the
+    // ornament there), so the cream box (-65 to -172 on all three fronts, art rows 472-703) is all body text:
+    // 104 high instead of 70, enough for four lines held at 24.
+    static readonly Vector2[] TextPos = { new Vector2(0f, -119f), new Vector2(0f, -119f), new Vector2(0f, -119f) };
+    static readonly Vector2[] TextSize = { new Vector2(212f, 104f), new Vector2(212f, 104f), new Vector2(212f, 104f) }; // (224 let a full line touch the frame's side ornament)
+    static readonly Vector2 NamePos = new Vector2(0f, -45f), NameSize = new Vector2(224f, 36f);
 
     // Ink per grade, readable on that card's text box (cream / pale blue / lavender).
     static readonly (string name, string level, Color body, Color medallion)[] Inks =
@@ -449,7 +452,7 @@ public class CardDraftUI : MonoBehaviour
         label.textWrappingMode = TextWrappingModes.Normal;
         label.alignment = TextAlignmentOptions.Top;
         label.enableAutoSizing = true;
-        label.fontSizeMin = 16f; // a long effect shrinks to fit: held at 24 its last line was cut off (playtest: "what does this card do?")
+        label.fontSizeMin = 20f; // a very long effect still shrinks to fit (held at 24 its last line was cut off); the taller box keeps most at 24
         label.fontSizeMax = UiTheme.TextSmall;
         label.overflowMode = TextOverflowModes.Ellipsis; // a long effect ends in … rather than running onto the frame
         label.overflowMode = TextOverflowModes.Truncate;

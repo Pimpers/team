@@ -57,6 +57,11 @@ public class LobbyController : MonoBehaviour
     void Awake()
     {
         cam = Camera.main;
+        // The tavern is a dark room, not the forest: its hint strip takes the plain dark plate with the wood rim, not the
+        // vine-edged one the skin gives the other screens' wood panels.
+        var hintStrip = overviewGroup != null ? overviewGroup.transform.Find("HintBanner") : null;
+        var plain = UISkin.Instance != null ? UISkin.Instance.slate : null;
+        if (hintStrip != null && plain != null) UISkin.Apply(hintStrip.GetComponent<Image>(), plain, 2f, new Color(1f, 1f, 1f, 0.94f));
         confirmButton.onClick.AddListener(Confirm);
         cancelButton.onClick.AddListener(Cancel);
         if (backButton != null) backButton.onClick.AddListener(() => SceneManager.LoadScene(titleSceneName));

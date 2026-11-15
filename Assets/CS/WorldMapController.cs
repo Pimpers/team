@@ -55,6 +55,15 @@ public class WorldMapController : MonoBehaviour
         // The ring stays on the middle of the forest (where the builder put it - it used to be lifted clear of the
         // "고대 숲" plate), and the click area is the ring itself: click inside it and the voyage starts.
         if (ring == null) return;
+        // The ring sits on the forest's own art, above the plate that covers its erased name: centred on the builder's
+        // spot it overlapped the plate's top. Lifted once here (the ring, its glow and so the click area).
+        // Smaller and a little higher still: centred on the forest's art, with its bottom (even breathing at x1.13)
+        // clear of the "CHAPTER 1 고대 숲" plate below it. ringScale is what Update breathes from.
+        const float Lift = 0.95f, Shrink = 0.85f;
+        ring.transform.position += Vector3.up * Lift;
+        ring.transform.localScale *= Shrink;
+        ringScale = ring.transform.localScale;
+        if (glow != null) { glow.transform.position += Vector3.up * Lift; glow.transform.localScale *= Shrink; }
         var rb = ring.bounds;
         forestCenter = rb.center;
         forestRadius = new Vector2(rb.extents.x, rb.extents.y);

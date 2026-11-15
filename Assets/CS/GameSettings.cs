@@ -102,6 +102,9 @@ public static class GameSettings
 
     public static string ToggleText(ToggleSetting t) => Loc.T(t.get() ? t.onKey : t.offKey);
 
+    // A toggle's button also shows its state without reading it: green when on, plain wood when off.
+    public static Color ToggleTint(ToggleSetting t) => t.get() ? new Color(0.62f, 0.95f, 0.55f) : Color.white;
+
     public static void Quit()
     {
 #if UNITY_EDITOR

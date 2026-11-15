@@ -206,14 +206,6 @@ public class ResultUI : MonoBehaviour
     {
         if (panel == null) return;
         var board = (RectTransform)panel.transform;
-        board.sizeDelta = new Vector2(1160f, 900f);
-        Place(board.Find("ResultBanner"), 385f);
-        if (goldText != null) { goldText.rectTransform.anchoredPosition = new Vector2(0f, -205f); }
-        foreach (var name in new[] { "RetryButton", "QuickRetryButton" })
-        {
-            var b = board.Find(name) as RectTransform;
-            if (b != null) b.anchoredPosition = new Vector2(b.anchoredPosition.x, -350f);
-        }
         var font = goldText != null ? goldText.font : null;
         if (statsText == null)
         {
@@ -237,11 +229,30 @@ public class ResultUI : MonoBehaviour
             Loc.F("result.damage_dealt", RunStats.DamageDealt) +
             Loc.F("result.damage_taken", RunStats.DamageTaken) + cause + worst + tip + reroll;
         buildText.text = BuildLines();
-        BuildIcons((RectTransform)buildText.transform.parent, buildText);
         // 24 throughout: at 32 (which the pixel font draws as 36) the record ran out of its sheet.
         buildText.fontSize = UiTheme.TextSmall;
         statsText.fontSize = UiTheme.TextSmall;
         statsText.lineSpacing = 2f;
+
+        // The two sheets are as tall as the longer record needs (300 to 380), and the board shrinks with them: the top
+        // half of the board moves down and the bottom half up by half the saving, so nothing else changes its spacing.
+        float need = statsText.GetPreferredValues(statsText.text, 476f, 0f).y + 40f; // (the sheet's 520 less its 22 px insets)
+        float sheetH = Mathf.Clamp(need, 300f, 380f);
+        float d = 380f - sheetH;
+        foreach (var sheet in new[] { (RectTransform)statsText.transform.parent, (RectTransform)buildText.transform.parent })
+        {
+            sheet.sizeDelta = new Vector2(520f, sheetH);
+            sheet.anchoredPosition = new Vector2(sheet.anchoredPosition.x, 300f - d * 0.5f);
+        }
+        board.sizeDelta = new Vector2(1160f, 900f - d);
+        Place(board.Find("ResultBanner"), 385f - d * 0.5f);
+        if (goldText != null) goldText.rectTransform.anchoredPosition = new Vector2(0f, -205f + d * 0.5f);
+        foreach (var name in new[] { "RetryButton", "QuickRetryButton" })
+        {
+            var b = board.Find(name) as RectTransform;
+            if (b != null) b.anchoredPosition = new Vector2(b.anchoredPosition.x, -350f + d * 0.5f);
+        }
+        BuildIcons((RectTransform)buildText.transform.parent, buildText); // (after the size: the strip sits right under the text)
     }
 
     // The build, short: how many cards and the sets reached. The cards themselves are the icon strip below, and the
@@ -292,8 +303,11 @@ public class ResultUI : MonoBehaviour
         var strip = new GameObject("Icons", typeof(RectTransform));
         var srt = (RectTransform)strip.transform;
         srt.SetParent(sheet, false);
-        srt.anchorMin = srt.anchorMax = srt.pivot = new Vector2(0.5f, 0f);
-        srt.anchoredPosition = new Vector2(0f, 16f);
+        // Right under the text, not pinned to the sheet's bottom: a short build left a hole between them.
+        float textH = text.GetPreferredValues(text.text, 476f, 0f).y;
+        float maxTop = sheet.sizeDelta.y - rows * Cell - 16f; // never lower than the bottom edge it used to sit on
+        srt.anchorMin = srt.anchorMax = srt.pivot = new Vector2(0.5f, 1f);
+        srt.anchoredPosition = new Vector2(0f, -Mathf.Min(textH + 36f, maxTop));
         srt.sizeDelta = new Vector2(PerRow * Cell, rows * Cell);
         for (int i = 0; i < shown + (more > 0 ? 1 : 0); i++)
         {

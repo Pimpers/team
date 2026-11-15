@@ -174,7 +174,13 @@ public class OptionsUI : MonoBehaviour
     {
         if (toggleLabels != null)
             for (int i = 0; i < toggleLabels.Length; i++)
-                if (toggleLabels[i] != null) { toggleLabels[i].text = GameSettings.ToggleText(GameSettings.Toggles[i]); FitLabel(toggleLabels[i]); }
+                if (toggleLabels[i] != null)
+                {
+                    toggleLabels[i].text = GameSettings.ToggleText(GameSettings.Toggles[i]);
+                    FitLabel(toggleLabels[i]);
+                    var img = toggleLabels[i].transform.parent.GetComponent<Image>();
+                    if (img != null) img.color = GameSettings.ToggleTint(GameSettings.Toggles[i]);
+                }
     }
 
     static void Show(TMP_Text t, float v)
