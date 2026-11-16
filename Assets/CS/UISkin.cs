@@ -72,7 +72,12 @@ public class UISkin : ScriptableObject
         // (Only the vine plank repeats now: the panels, the wood window and the slate are the new framed art - they stretch, as
         // do the plain buttons: tiling repeated their highlight pixel.)
         bool vines = sprite.texture != null && sprite.texture.name == "nature_plank";
-        img.type = sprite.border == Vector4.zero ? Image.Type.Simple : vines ? Image.Type.Tiled : Image.Type.Sliced;
+        // The big framed windows (120 x 55 px of art) were stretched to ~190 x 200 px: the side vines smeared into long
+        // green bars and the pixels came out uneven. They repeat their edges and middle in whole art tiles instead
+        // (SnapToTiles rounds a free-standing window to whole tiles).
+        string texName = sprite.texture != null ? sprite.texture.name : "";
+        bool window = texName == "nature_panel" || texName == "nature_wood" || texName.StartsWith("ui_panel");
+        img.type = sprite.border == Vector4.zero ? Image.Type.Simple : vines || window ? Image.Type.Tiled : Image.Type.Sliced;
         // The vine plank (banners, main buttons) is one board tall: size it to the rect's height so it only
         // repeats sideways - tiled at a fixed scale, a tall button stacked two or three boards.
         if (vines && sprite.texture.name == "nature_plank")
@@ -124,6 +129,25 @@ public class UISkin : ScriptableObject
         var size = rt.sizeDelta;
         if (tileW > 0f && size.x > edgeW) size.x = edgeW + Mathf.Max(1f, Mathf.Round((size.x - edgeW) / tileW)) * tileW;
         if (tileH > 0f && size.y > edgeH && sprite.texture.name != "nature_plank") size.y = edgeH + Mathf.Max(1f, Mathf.Round((size.y - edgeH) / tileH)) * tileH;
+        rt.sizeDelta = size;
+    }
+
+    // Grows a tiled window (see Apply) to at least `min`, in whole tiles - for a window whose contents need more room
+    // than the tile rounding left it (the naming panel's title and buttons ran over the frame). Free-standing rects only.
+    public static void FitWindow(Image img, Vector2 min, float scale = LargeScale)
+    {
+        var rt = img.rectTransform;
+        var size = Vector2.Max(rt.sizeDelta, min);
+        var sprite = img.sprite;
+        if (sprite != null && img.type == Image.Type.Tiled && rt.anchorMin == rt.anchorMax)
+        {
+            float px = scale * 100f / sprite.pixelsPerUnit; // canvas units per art pixel
+            Vector4 b = sprite.border;
+            float tileW = (sprite.rect.width - b.x - b.z) * px, tileH = (sprite.rect.height - b.y - b.w) * px;
+            float edgeW = (b.x + b.z) * px, edgeH = (b.y + b.w) * px;
+            if (tileW > 0f) size.x = edgeW + Mathf.Max(1f, Mathf.Ceil((size.x - edgeW) / tileW)) * tileW;
+            if (tileH > 0f) size.y = edgeH + Mathf.Max(1f, Mathf.Ceil((size.y - edgeH) / tileH)) * tileH;
+        }
         rt.sizeDelta = size;
     }
 

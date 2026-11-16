@@ -241,10 +241,12 @@ public class BuildSheet : MonoBehaviour
             noPassives.gameObject.SetActive(passives.Count == 0);
             // Eight places: with more passives than that, the last place says how many are not listed.
             int places = Mathf.Min(passives.Count, PassiveRows * 2);
+            // One column, the whole width, while they fit in it (a long name shrank to 12 px in half the width).
+            bool oneColumn = passives.Count <= PassiveRows;
             for (int i = 0; i < places; i++)
             {
                 var c = passives[i];
-                var t = Text(passiveArea, "Passive", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(i / PassiveRows * 296f, -(i % PassiveRows) * 34f), new Vector2(288f, 34f));
+                var t = Text(passiveArea, "Passive", UiTheme.TextSmall, TextAlignmentOptions.MidlineLeft, new Vector2(oneColumn ? 0f : i / PassiveRows * 296f, -(i % PassiveRows) * 34f), new Vector2(oneColumn ? 584f : 288f, 34f));
                 bool rest = passives.Count > places && i == places - 1;
                 t.text = rest ? Loc.F("sheet.more", passives.Count - places + 1) : CardLine(c, s.CardLevel(c.id));
                 t.overflowMode = TextOverflowModes.Ellipsis;

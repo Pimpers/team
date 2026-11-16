@@ -88,7 +88,53 @@ public class BlacksmithUI : MonoBehaviour
             rowLabels[i].verticalAlignment = VerticalAlignmentOptions.Middle;
         }
         closeButton.onClick.AddListener(Close);
+        LayoutWindow();
         panel.SetActive(false);
+    }
+
+    // The window laid out from its contents. The scene's frame (rounded to whole tiles by the skin) came out 730 wide
+    // with rows 720 wide, so the rows ran over the vine border and the window looked too small; and the title sat far
+    // above the gold. Now: the frame is as many whole tiles as the stack needs (3 canvas units per art pixel, like the
+    // other windows), and the title, the gold, the divider, the rows and the close button are one even stack inside it.
+    void LayoutWindow()
+    {
+        var frame = panel != null ? panel.transform.Find("Frame") as RectTransform : null;
+        var inner = frame != null ? frame.Find("Inner") as RectTransform : null;
+        if (frame == null || inner == null) return;
+        // (RowH / RowStep: 104 / 113 makes the stack 827 tall, which with the frame's 96 of border is just under 12 tiles.)
+        const float Margin = 20f, TitleH = 56f, GoldH = 44f, RowH = 104f, RowStep = 113f, CloseH = 84f, Gap = 10f, RowsW = 700f;
+        int n = buyButtons.Length;
+        float need = Margin + TitleH + Gap + GoldH + Gap + 3f + 12f + (n * RowStep - (RowStep - RowH)) + 12f + CloseH + Margin;
+
+        var img = frame.GetComponent<Image>();
+        frame.sizeDelta = new Vector2(860f, need + 96f); // (+ the frame's own 2 x 48 of border)
+        if (img != null && img.sprite != null) { UISkin.Apply(img, img.sprite, 3f); UISkin.FitWindow(img, frame.sizeDelta, 3f); }
+        inner.sizeDelta = new Vector2(RowsW + 40f, need);
+
+        float y = need * 0.5f - Margin; // the top of the stack, measured from the middle
+        Put(inner, "Title", y - TitleH * 0.5f, TitleH, 0f); y -= TitleH + Gap;
+        Put(inner, "Gold", y - GoldH * 0.5f, GoldH, 0f); y -= GoldH + Gap;
+        Put(inner, "Divider", y - 1.5f, 3f, RowsW); y -= 3f + 12f;
+        for (int i = 0; i < n; i++)
+        {
+            Put(inner, "Row" + i, y - RowH * 0.5f, RowH, RowsW);
+            var buy = buyButtons[i].transform as RectTransform;
+            if (buy != null) buy.anchoredPosition = new Vector2(236f, 0f); // inside the 700 wide row, 13 from its edge
+            var label = rowLabels[i] != null ? rowLabels[i].rectTransform : null;
+            if (label != null) label.anchoredPosition = new Vector2(-104f, 0f); // 16 in from the row's left edge (it touched it)
+            y -= RowStep;
+        }
+        y += RowStep - RowH; // the last row's bottom edge
+        Put(inner, "CloseButton", y - 12f - CloseH * 0.5f, 0f, 0f);
+    }
+
+    // Moves the child `name` of `inner` to height `y` (from the middle); a width / height of 0 keeps the current one.
+    static void Put(RectTransform inner, string name, float y, float height, float width)
+    {
+        var t = inner.Find(name) as RectTransform;
+        if (t == null) return;
+        t.anchoredPosition = new Vector2(0f, y);
+        t.sizeDelta = new Vector2(width > 0f ? width : t.sizeDelta.x, height > 0f ? height : t.sizeDelta.y);
     }
 
     // The blacksmith talks first: his portrait (Resources/Village/blacksmith, drawn with pxl) and a dialogue box at

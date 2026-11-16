@@ -169,12 +169,14 @@ public class TutorialController : MonoBehaviour
         rt.SetParent(canvas.transform, false);
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 1f);
         rt.anchoredPosition = new Vector2(0f, -24f);
-        rt.sizeDelta = new Vector2(960f, 120f); // clear of the HUD (top-left) and minimap (top-right)
+        rt.sizeDelta = new Vector2(960f, 156f); // clear of the HUD (top-left) and minimap (top-right)
         promptRect = rt;
         canvasRect = (RectTransform)canvas.transform;
         var img = panel.GetComponent<Image>();
         img.raycastTarget = false;
-        UISkin.Apply(img, skin != null ? skin.panel : null, UISkin.LargeScale);
+        // Half the usual frame size (2 canvas units per art pixel): at 4 the frame's top and bottom alone are 128 tall,
+        // more than a one-line strip, and clipped the text. 156 = the 64 of frame + two 46 tiles: room for two lines.
+        UISkin.Apply(img, skin != null ? skin.panel : null, 2f);
 
         promptText = Text(rt, "Prompt", 36f, UISkin.Ink, font, TextAlignmentOptions.Center);
         promptText.enableAutoSizing = true; // a narrower panel shrinks the text instead of clipping it
@@ -183,7 +185,7 @@ public class TutorialController : MonoBehaviour
         promptText.textWrappingMode = TextWrappingModes.Normal; // a long step takes two lines rather than running out of the panel
         var prt = promptText.rectTransform;
         prt.anchorMin = Vector2.zero; prt.anchorMax = Vector2.one;
-        prt.offsetMin = new Vector2(140f, 10f); prt.offsetMax = new Vector2(-40f, -10f); // left: clear of the step counter
+        prt.offsetMin = new Vector2(140f, 36f); prt.offsetMax = new Vector2(-56f, -36f); // left: clear of the step counter; top / bottom: inside the frame
 
         counterText = Text(rt, "Counter", 26f, UISkin.Ink, font, TextAlignmentOptions.Left); // (InkSoft was faint on the cream panel)
         var crt = counterText.rectTransform;

@@ -26,7 +26,9 @@ public static class UiPanels
         var board = Resources.Load<Sprite>("UICats/ui_panel_dark");
         if (img == null || board == null) return false;
         img.sprite = board;
-        img.type = Image.Type.Sliced;
+        // Tiled, not Sliced: the art is only 117 x 55 px, and stretched to a 1000-odd px window its side edges grew ~13 times
+        // as long and the vines smeared into green bars. Tiled, the edges repeat square pixels (the last tile may end short).
+        img.type = Image.Type.Tiled;
         img.pixelsPerUnitMultiplier = 1f / scale;
         img.color = Color.white;
         return true;

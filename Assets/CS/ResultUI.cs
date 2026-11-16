@@ -155,7 +155,7 @@ public class ResultUI : MonoBehaviour
         BuildSummary(win);
         if (resultTitleText != null)
         {
-            resultTitleText.text = win ? Loc.T("result.win") : Loc.T("result.lose");
+            resultTitleText.text = win ? Loc.T("result.win") : Loc.T("result.lose"); // written on the middle of the frame (ApplyCrest)
             resultTitleText.enableAutoSizing = true;
             resultTitleText.fontSizeMax = UISkin.FontTitle;
             resultTitleText.fontSizeMin = UISkin.FontBody;
@@ -188,6 +188,10 @@ public class ResultUI : MonoBehaviour
     // The laurel plate (Resources/UICats/ui_result_win gold / ui_result_lose grey) behind the title: its ribbon takes the
     // place of the wooden title plate, and the rest of the plate shows only round the title, the record sheets and the
     // build sheet being drawn over it. x6 (756 x 336); the ribbon's middle sits 14 art px under the plate's top.
+    // How much taller the board is made for the crest (BuildSummary). Small: the frame hangs over the board's top edge,
+    // centred on it, about 70 above the edge (its middle ~58 below) - the board is 900 - d + this tall, so even with the
+    // longest record (d = 0) the frame's top stays on screen.
+    const float CrestRoom = 42f;
     void ApplyCrest(bool win)
     {
         var board = panel != null ? panel.transform as RectTransform : null;
@@ -205,13 +209,13 @@ public class ResultUI : MonoBehaviour
         crestT.anchorMin = banner.anchorMin; crestT.anchorMax = banner.anchorMax; crestT.pivot = new Vector2(0.5f, 0.5f);
         // x4, standing whole on top of the two sheets (its flat bottom edge just under their top), so the ribbon and the
         // laurels show in full above them; the title is written on the cream under the ribbon, not on the ribbon.
-        const float Scale = 4f;
+        const float Scale = 3f; // the frame art (188 x 88 px, gold / stone) at 3 canvas units per art pixel, like the other windows
         crestT.sizeDelta = art.rect.size * Scale;
         float sheetTop = statsText != null ? ((RectTransform)statsText.transform.parent).anchoredPosition.y : 300f;
-        float crestY = sheetTop + art.rect.height * Scale * 0.5f + 24f; // a little clear of the sheets: the crest stands higher
+        float crestY = sheetTop + art.rect.height * Scale * 0.5f + 10f; // its flat bottom edge 10 above the sheets' top: the laurels show whole, not cut by the sheets
         crestT.anchoredPosition = new Vector2(0f, crestY);
-        banner.anchoredPosition = new Vector2(0f, crestY - 6.5f * Scale); // the middle of the cream below the ribbon
-        banner.sizeDelta = new Vector2(300f, banner.sizeDelta.y);
+        banner.anchoredPosition = new Vector2(0f, crestY - 8f); // the middle of the frame's cream (a little under the picture's centre: the ribbon is on top)
+        banner.sizeDelta = new Vector2(420f, banner.sizeDelta.y);
         var img = crestT.GetComponent<Image>();
         img.sprite = art;
         img.type = Image.Type.Simple;
@@ -287,15 +291,17 @@ public class ResultUI : MonoBehaviour
         foreach (var sheet in new[] { (RectTransform)statsText.transform.parent, (RectTransform)buildText.transform.parent })
         {
             sheet.sizeDelta = new Vector2(520f, sheetH);
-            sheet.anchoredPosition = new Vector2(sheet.anchoredPosition.x, 300f - d * 0.5f);
+            sheet.anchoredPosition = new Vector2(sheet.anchoredPosition.x, 300f - d * 0.5f - CrestRoom * 0.5f - 10f); // down, under the crest
         }
-        board.sizeDelta = new Vector2(1160f, 900f - d);
+        // The board grows by CrestRoom at the top so the whole crest (ApplyCrest) stands inside its frame; the gold and the
+        // buttons keep their distance from the bottom edge.
+        board.sizeDelta = new Vector2(1160f, 900f - d + CrestRoom);
         Place(board.Find("ResultBanner"), 385f - d * 0.5f);
-        if (goldText != null) goldText.rectTransform.anchoredPosition = new Vector2(0f, -205f + d * 0.5f);
+        if (goldText != null) goldText.rectTransform.anchoredPosition = new Vector2(0f, -205f + d * 0.5f - CrestRoom * 0.5f);
         foreach (var name in new[] { "RetryButton", "QuickRetryButton" })
         {
             var b = board.Find(name) as RectTransform;
-            if (b != null) b.anchoredPosition = new Vector2(b.anchoredPosition.x, -350f + d * 0.5f);
+            if (b != null) b.anchoredPosition = new Vector2(b.anchoredPosition.x, -350f + d * 0.5f - CrestRoom * 0.5f);
         }
         BuildIcons((RectTransform)buildText.transform.parent, buildText); // (after the size: the strip sits right under the text)
     }

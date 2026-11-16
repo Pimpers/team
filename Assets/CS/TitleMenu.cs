@@ -99,7 +99,9 @@ public static class TitleSettings
         prt.sizeDelta = new Vector2(700f, 660f);
         var pimg = panel.GetComponent<Image>();
         var skin = UISkin.Instance;
-        if (skin != null && skin.buttonCream != null) UISkin.Apply(pimg, skin.buttonCream, 3f);
+        // The same vine-edged parchment window as the village's settings (it was a plain cream plate here).
+        if (skin != null && skin.panel != null) { UISkin.Apply(pimg, skin.panel, UISkin.LargeScale); UISkin.FitWindow(pimg, prt.sizeDelta); }
+        else if (skin != null && skin.buttonCream != null) UISkin.Apply(pimg, skin.buttonCream, 3f);
         else pimg.color = new Color(1f, 0.95f, 0.82f);
         panel.AddComponent<Button>().transition = Selectable.Transition.None; // clicks on the panel don't reach the shade
 

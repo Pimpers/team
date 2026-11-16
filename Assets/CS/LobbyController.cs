@@ -89,6 +89,10 @@ public class LobbyController : MonoBehaviour
             nameInput.onSelect.AddListener(_ => ph.color = new Color(shown.r, shown.g, shown.b, 0f));
             nameInput.onDeselect.AddListener(_ => ph.color = shown);
         }
+        // The title (66 px) and the two buttons sit 360 up and 335 down from the middle and 640 apart: the frame must
+        // hold them inside its vine border, whatever whole number of tiles the skin rounded it to.
+        var frame = namingPanel.GetComponent<Image>();
+        if (frame != null) UISkin.FitWindow(frame, new Vector2(820f, 840f));
         namingPanel.SetActive(false);
     }
 

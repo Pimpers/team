@@ -406,6 +406,8 @@ public class CardDraftUI : MonoBehaviour
         new Color(0.85f, 0.3f, 0.25f, 0.18f), new Color(0.35f, 0.75f, 0.85f, 0.18f), new Color(0.95f, 0.8f, 0.45f, 0.2f),
         new Color(0.4f, 0.7f, 0.3f, 0.18f), new Color(0.95f, 0.5f, 0.7f, 0.18f),
     };
+    // Per grade (common, rare, epic): the stretch that makes the drawn frame 456 x 724 art px (see Dress).
+    static readonly Vector2[] FrameFix = { new Vector2(0.95f, 1.0402f), new Vector2(1f, 0.9679f), new Vector2(1.0179f, 1.0056f) };
     static readonly string[] ArtNames = { "card_common", "card_rare", "card_epic" };
     static readonly string[] BackNames = { "back_common", "back_rare", "back_epic" };
     static Sprite[] arts, backs;
@@ -427,7 +429,10 @@ public class CardDraftUI : MonoBehaviour
         var button = label.transform.parent as RectTransform;
         if (button == null) return;
         int t = (int)card.tier;
-        button.sizeDelta = new Vector2(CardW, CardH);
+        // The three grades' frames are not the same size in their 512 x 768 art (the drawn frame, ornaments included, is
+        // 480 x 696 / 456 x 748 / 448 x 720 px): each is stretched a few percent so all show a 456 x 724 frame. Only the
+        // background image changes size; the texts, picture and medallion sit at fixed offsets from the centre.
+        button.sizeDelta = new Vector2(CardW * FrameFix[t].x, CardH * FrameFix[t].y);
 
         var bg = button.GetComponent<Image>();
         var art = Art(card.tier);

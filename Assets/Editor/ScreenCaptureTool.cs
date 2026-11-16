@@ -54,7 +54,7 @@ public static class ScreenCaptureTool
     }
 
     const string IconsKey = "ScreenCaptureTool.icons";
-    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud", "blacksmith", "options", "pause", "result", "title", "set_banner", "result_win", "fork_open", "fork_signs", "fork_closed", "fork_pull_hunt", "fork_camera", "fork_stage2", "a11y_fork", "fork_camera_16x10", "fork_camera_4x3", "fork_sign_clean", "fork_sign_long" };
+    static readonly HashSet<string> IconShots = new HashSet<string> { "village", "worldmap", "draft", "draft_tier1", "draft_tier2", "draft_tier3", "draft_first", "buildsheet", "hud", "blacksmith", "options", "pause", "result", "title", "set_banner", "result_win", "fork_open", "fork_signs", "fork_closed", "fork_pull_hunt", "fork_camera", "fork_stage2", "a11y_fork", "fork_camera_16x10", "fork_camera_4x3", "fork_sign_clean", "fork_sign_long", "title_settings", "credits" };
     const string PendingKey = "ScreenCaptureTool.pending";
     const double QuietSeconds = 20;
     static double quietSince;
@@ -102,6 +102,7 @@ public static class ScreenCaptureTool
         Add("MainScene", "options", () => Find<OptionsUI>().Open());
         Add("MainScene", "keybinds", () => { Find<OptionsUI>().Open(); KeyBindPanel.Show(Find<OptionsUI>().panel.GetComponentInParent<Canvas>(), Find<OptionsUI>().volumeValue.font); });
         Add("TitleScene", "title_settings", () => TitleSettings.Show(Find<Canvas>().rootCanvas, Find<TMPro.TMP_Text>().font));
+        Add("TitleScene", "credits", () => CreditsPanel.Show(Find<Canvas>().rootCanvas, Find<TMPro.TMP_Text>().font));
         Add("WorldMapScene", "worldmap");
         Add("WorldMapScene", "worldmap_easy", () => { Corruption.Level = Corruption.Easy; Find<CorruptionSelector>().Refresh(); });
         Add("Tutorial", "tutorial", () => Find<TutorialController>().JumpToStepForCapture(7));
